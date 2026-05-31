@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "anthropic": {
+      "name": "Anthropic",
+      "models": {
+        "claude-sonnet-4-20250514": {}
+      }
+    }
+  },
+  "plugins": {
+    "oh-my-openagent": {
+      "disabled": false
+    }
+  }
+}
