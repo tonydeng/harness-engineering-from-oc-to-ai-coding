@@ -16,9 +16,17 @@
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/emoji.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-mermaid@10/dist/docsify-mermaid.min.js"></script>
   <script>
     window.$docsify = {
-      basePath: '/harness-engineering-from-oc-to-ai-coding/',
+      basePath: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? '/'
+        : '/harness-engineering-from-oc-to-ai-coding/',
       name: 'Harness Engineering',
       repo: 'https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding',
       loadSidebar: true,

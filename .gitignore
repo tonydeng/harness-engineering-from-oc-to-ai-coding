@@ -25,3 +25,10 @@ docsify.lock
 # Temp
 tmp/
 temp/
+
+# Obsidian
+.obsidian/
+
+# OpenCode
+.opencode/
+.omo/
