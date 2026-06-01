@@ -644,3 +644,83 @@
 - [ ] 包含 Flag 配置方法
 - [ ] 包含至少 1 个 Flag 的完整启用流程
 - [ ] 说明 Flag 的版本演进和废弃机制
+
+---
+
+## 团队协作工作流
+
+### 团队分工
+
+| 角色 | 职责 | 负责文章 |
+|------|------|---------|
+| **安全架构师**（SECURITY） | 安全总览（6 权限模型+YOLO+注入防御）、沙箱与 Hook 系统、MCP 威胁分析、安全基线定义 | Article 6.8, Article 6.9, Article 6.1(安全节) |
+| **后端架构师**（BACKEND） | MCP 服务端开发视角（Node.js/Python SDK）、ToolRegistry 统一架构、性能调优与成本管控、CI/CD 配置 | Article 6.1, Article 6.3, Article 6.5 |
+| **架构顾问**（SYSA） | 上下文工程体系设计、Token 预算分配策略、三级缓存架构、CLAUDE.md 覆盖层架构 | Article 6.4, Article 6.5, Article 6.6, Article 6.10 |
+| **渗透测试员**（REDTEAM） | MCP 注入攻击面分析、沙箱逃逸场景、Plugin Hook 点威胁分析、Prompt 注入防御测试 | Article 6.1(攻击面), Article 6.9(逃逸), Article 6.2(威胁) |
+| **前端架构师**（FRONTEND） | Feature Flags 路线图可视化、可观测性监控面板布局、记忆系统 UI 设计 | Article 6.12, Article 6.11 |
+| **测试工程师**（QA） | 所有配置示例最低版本标注、验证标准细化、可观测性监控规则验证 | 全文(版本标注), Article 6.11 |
+| **UI设计师**（UX） | 监控仪表板布局图、Feature Flag 分类雷达图、12 篇文章图表一致性 | Article 6.11, Article 6.12, 全文图表 |
+
+### 流程规范（Superpowers 工作流映射）
+
+| 阶段 | 本阶段活动 | 交付物 | 负责人 |
+|------|-----------|--------|--------|
+| **头脑风暴** | 收集 12 篇文章的安全/架构/性能需求、确定 P0/P1/P2 分层写作优先级、识别文章间职责边界 | 分层写作计划、边界划分图 | 安全架构师 + 架构顾问 |
+| **计划** | 排序写作依赖：6.1/6.2/6.3(现有修改) → 6.4-6.7(上下文体系) → 6.8-6.10(安全体系) → 6.11/6.12(可观测性+路线图) | 写作计划、依赖关系图 | 敏捷教练 |
+| **实施** | 12 篇文章分 4 批写作，重点解决内容边界划分（6.1↔6.9 沙箱、6.8↔2.5 安全），每批完成后站会同步 | 12 篇文章初稿 | 各角色按分工 |
+| **评审** | 安全体系交叉审查（6.8 与 2.5 不重复）、MCP 技术深度审查、性能数据真实性审查 | 评审报告、边界检查记录 | 安全架构师 + 后端架构师 |
+| **验证** | 所有配置示例格式验证、Mermaid 安全图/架构图渲染验证、跨章节引用准确性、200 行门槛 | 验证报告 | 测试工程师 |
+| **交付** | 分批合并（P0 优先）、更新 _sidebar.md 确认 12 条路径、同步 PRD 第 3.5 节版本号 | 合入确认、版本同步 | 敏捷教练 |
+
+### 评审要求
+
+**检查点 1：内容边界划分（P0 — 第二轮 Review 阻塞项）**
+- Article 6.1（MCP 服务器）与 Article 6.9（沙箱与 Hook）的沙箱内容职责划分清晰：6.1 只写 MCP 进程隔离，6.9 写通用沙箱机制
+- Article 6.8（安全总览）与 Article 2.5（约束系统）的职责划分：6.8 写宏观安全视图（6 权限模型+YOLO+注入防御），2.5 写微观权限配置
+- Article 6.8 与 Article 6.9 的协作关系：6.8 定义安全策略，6.9 实现执行层
+
+**检查点 2：技术深度一致性**
+- MCP 三种传输类型（stdio/SSE/WebSocket）的安全风险对比必须包含 STRIDE 表
+- 三级缓存架构（Session内/跨Session/持久化）的实现说明与 OpenCode v1.15.x 实际 API 一致
+- 沙箱系统 Seatbelt/Bubblewrap 的配置策略与实际平台能力一致
+
+**检查点 3：跨文章引用一致性**
+- 上下文压缩（6.4）→ Token 预算（6.5）→ 提示词缓存（6.6）→ 记忆系统（6.7）的依赖链引用正确
+- 安全总览（6.8）→ 沙箱 Hook（6.9）→ CLAUDE.md（6.10）的安全递进关系清晰
+
+### 质量验收要求
+
+| 门禁类型 | 验收项 | 通过标准 |
+|---------|--------|---------|
+| 🔴 硬性 | 每篇文章有效行数 | ≥ 200 行（Article 6.2/6.6/6.8/6.9 ≥ 250 行） |
+| 🔴 硬性 | Mermaid 渲染正确率 | 100%（12+ 张图表，章节规模最大） |
+| 🔴 硬性 | 内容边界划分 | 6.1↔6.9、6.8↔2.5 职责划分文档化 |
+| 🔴 硬性 | 威胁建模覆盖 | ≥ 4 篇文章包含 STRIDE 表（6.1/6.8/6.9/7.5） |
+| 🟡 质量 | 配置示例标注 | 所有示例标注最低 OpenCode/OMO 版本 |
+| 🟡 质量 | 安全体系完整性 | 权限/Sandbox/Hook/注入防御 4 层全覆盖 |
+| 🟡 质量 | 跨文章引用准确 | 无死链、无循环引用 |
+| 📊 量化 | Mermaid 图表 | ≥ 12 张 |
+| 📊 量化 | 代码/配置示例 | ≥ 15 个 |
+| 📊 量化 | 监控仪表板图 | ≥ 1 张（Article 6.11） |
+
+### 特殊内容技能映射
+
+| 特殊内容 | 所需技能 | 适用文章 | 说明 |
+|---------|---------|---------|------|
+| MCP 集成架构图 | `architecture` | Article 6.1 | ToolRegistry→MCP Client→MCP Servers |
+| 三种传输方式对比图 | `infographic` | Article 6.1 | stdio/SSE/WebSocket 对比 |
+| Plugin Pipeline 执行流程图 | `bpmn` | Article 6.2 | Hook 链执行流程 |
+| Hook 点事件时间线图 | `uml` (时序图) | Article 6.2 | 事件生命周期 |
+| 成本管控三层模型图 | `architecture` | Article 6.3 | 模型选择→Token→压缩 |
+| Compaction 触发流程图 | `uml` | Article 6.4 | 压缩决策流程 |
+| 三级缓存架构图 | `architecture` | Article 6.6 | 三级缓存层级 |
+| Memdir 架构图 | `architecture` | Article 6.7 | 记忆目录结构 |
+| 四层安全架构图 | `security` | Article 6.8 | 权限→分类→隔离→防御 |
+| YOLO 分类决策流程图 | `bpmn` | Article 6.8 | 高/中/低风险分类 |
+| 提示注入攻击树图 | `graphviz` | Article 6.8 | 攻击树分析 |
+| 沙箱架构隔离图 | `security` / `architecture` | Article 6.9 | Seatbelt/Bubblewrap 隔离 |
+| CLAUDE.md 覆盖层架构图 | `architecture` | Article 6.10 | 指令覆盖层级 |
+| @include 指令加载流程图 | `uml` | Article 6.10 | 加载流程 |
+| 5 层遥测架构图 | `architecture` | Article 6.11 | Agent→Session→Tool→Network→System |
+| 监控面板布局图 | `infographic` | Article 6.11 | Dashboard 布局 |
+| Feature Flag 分类雷达图 | `chart-visualization` / `vega` | Article 6.12 | 多维度分类 |

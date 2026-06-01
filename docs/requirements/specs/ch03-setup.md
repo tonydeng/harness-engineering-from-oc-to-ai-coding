@@ -316,3 +316,75 @@
 - [ ] 包含至少 3 套环境的 Profile 配置示例
 - [ ] 包含 $extends 继承机制的完整示例
 - [ ] 包含 Secret 管理的最佳实践
+
+---
+
+## 团队协作工作流
+
+### 团队分工
+
+| 角色 | 职责 | 负责文章 |
+|------|------|---------|
+| **后端架构师**（BACKEND） | Provider 配置深入、国产模型 API 配置验证、多环境 Profile 配置示例、Secret 管理 | Article 3.2, Article 3.4, Article 3.5 |
+| **安全架构师**（SECURITY） | 4 层安全模型配置、威胁建模（STRIDE）、合规映射（NIST/SOC2/等保）、.opencodeignore 配置 | Article 3.2(安全节), Article 3.1(安全检查) |
+| **架构顾问**（SYSA） | 企业级配置管理、CI/CD+Secret Store+监控集成架构、类别路由详解 | Article 3.2(企业集成), Article 3.3 |
+| **前端架构师**（FRONTEND） | OMO Agent 注册表引用、Agent 类型与任务映射表 | Article 3.3 |
+| **UI设计师**（UX） | 三篇 Mermaid 图配色方案统一、环境拓扑图可视化 | Article 3.5 (拓扑图) |
+
+### 流程规范（Superpowers 工作流映射）
+
+| 阶段 | 本阶段活动 | 交付物 | 负责人 |
+|------|-----------|--------|--------|
+| **头脑风暴** | 收集安装/配置常见问题、识别安全配置缺口、确定国产模型覆盖范围 | 配置痛点清单、安全增强需求 | 后端架构师 + 安全架构师 |
+| **计划** | 排序写作依赖（3.1→3.2→3.3→3.4→3.5）、确定安全配置示例范围、分配多环境模板 | 写作计划、安全配置清单 | 敏捷教练 |
+| **实施** | 5 篇文章写作，重点 ensure 所有配置示例可运行，安装命令可执行 | 5 篇文章初稿 | 各角色按分工 |
+| **评审** | 配置示例可运行性验证（重点）、安全配置完整性审查、Profile 继承链测试 | 评审报告、配置测试记录 | 测试工程师 + 安全架构师 |
+| **验证** | `npx docsify serve` 无报错、所有配置命令在测试环境可执行、Mermaid 渲染 | 验证报告 | 测试工程师 |
+| **交付** | 合并、更新示例配置文件到 `examples/` 目录、确认与 OpenCode v1.15.x 兼容 | 合入确认、示例更新 | 敏捷教练 |
+
+### 评审要求
+
+**检查点 1：配置示例可运行性（最重要的检查点）**
+- Article 3.1 安装命令在 Mac/Windows/Linux 三种平台验证
+- Article 3.2 的 `opencode.json` 完整示例格式正确（可通过 JSON 验证器）
+- Article 3.4 国产 Provider 配置示例使用真实 API 端点格式
+- Article 3.5 Profile 继承示例的 `$extends` 链无循环引用
+
+**检查点 2：安全配置完整性**
+- Article 3.1 安全检查段包含 `edit: "ask"`, `bash: "ask"` 完整示例
+- Article 3.2 安全模型段包含 STRIDE 威胁建模表
+- Article 3.2 包含合规映射表（至少 NIST CSF/SOC2/等保 2.0 之一）
+- `.opencodeignore` 默认拒绝路径列表完整（`.env`, `node_modules`, `secrets/` 等）
+
+**检查点 3：文章间依赖一致性**
+- Article 3.2（配置）→ Article 3.3（OMO 集成）→ Article 3.4（国产模型）的配置依赖链正确
+- Article 3.5 Profile 配置与 Article 3.2 的 Profile 段定义一致
+
+### 质量验收要求
+
+| 门禁类型 | 验收项 | 通过标准 |
+|---------|--------|---------|
+| 🔴 硬性 | 每篇文章有效行数 | ≥ 200 行 |
+| 🔴 硬性 | 配置示例格式正确率 | 100%（JSON/YAML 验证通过） |
+| 🔴 硬性 | 安装命令可执行 | 至少 1 种平台验证通过 |
+| 🔴 硬性 | 威胁建模覆盖 | Article 3.2 包含 STRIDE 表 |
+| 🟡 质量 | 多平台覆盖 | 安装说明覆盖 3 种平台 |
+| 🟡 质量 | 安全配置完整性 | 4 层安全防御架构图 + 配置示例 |
+| 🟡 质量 | Secret 管理方案 | 至少包含 1 种方案（环境变量/Secret Store/Git-crypt） |
+| 📊 量化 | Mermaid 图表 | ≥ 6 张（配置图+安全图+架构图+拓扑图+继承图+路由图） |
+| 📊 量化 | 配置示例 | ≥ 8 个完整可运行的配置块 |
+
+### 特殊内容技能映射
+
+| 特殊内容 | 所需技能 | 适用文章 | 说明 |
+|---------|---------|---------|------|
+| 安装流程图 | `bpmn` | Article 3.1 | 按平台分支的流程图 |
+| 配置合并流程图 | `uml` / `graphviz` | Article 3.2 | 4 层优先级覆盖 |
+| 4 层安全防御架构图 | `security` / `architecture` | Article 3.2 | 权限→技能→沙箱→注入 |
+| 类别路由映射图 | `architecture` | Article 3.2 | 任务到类别的路由 |
+| OMO 整体架构图 | `architecture` | Article 3.3 | Sisyphus→Agents 层级 |
+| OMO vs 原生对比图 | `infographic` | Article 3.3 | 能力对比 |
+| 国产 Provider 配置流程图 | `bpmn` | Article 3.4 | 配置步骤 |
+| 国产模型 vs 国际模型成本对比图 | `chart-visualization` | Article 3.4 | 柱状图/对比图 |
+| Profile 继承关系图 | `uml` / `graphviz` | Article 3.5 | $extends 继承链 |
+| 多环境部署架构图 | `architecture` | Article 3.5 | Dev/CI/Production 三环境拓扑 |

@@ -32,3 +32,6 @@ temp/
 # OpenCode
 .opencode/
 .omo/
+
+# Trae
+.trae/
