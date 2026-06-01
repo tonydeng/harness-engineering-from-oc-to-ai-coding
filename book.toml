@@ -44,6 +44,3 @@ level = 0
 
 [output.html.print]
 enable = true
-
-[preprocessor.mermaid]
-optional = true

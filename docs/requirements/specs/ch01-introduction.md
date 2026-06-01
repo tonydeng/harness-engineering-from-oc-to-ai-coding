@@ -13,17 +13,36 @@
 ### Article 1.1: 什么是 Harness Engineer
 - **阅读时间**：15 min
 - **学习目标**：
-  - 理解AI编程三个阶段的演进：代码补全(2021)→对话编程(2024)→工程流水线(2026)
+  - 理解AI编程三阶段演进：提示词工程(2021-2023)→上下文工程(2023-2025)→驾驭工程(2025-2026 探索期)
   - 定义"Harness Engineer"：不是"用AI写代码的人"，而是"驾驭AI Agent完成工程交付的人"
   - 理解Harness Engineer的5个核心能力：需求澄清、工作流设计、Agent编排、质量审查、知识沉淀
 - **前置知识**：无（本文章是全书起点）
 - **源材料映射**：OpenCode实战 01（概念速通，OS类比部分）+ OpenCode实战 04（Profile切换/AGENTS.md理念）
 
 #### 大纲
-1. AI编程的"三次浪潮"
-   - 1.0 代码补全（GitHub Copilot 2021）—— 补全粒度，被动响应
-   - 2.0 对话编程（Cursor/Claude Code 2024-2025）—— 聊天交互，单Agent
-   - 3.0 工程流水线（OpenCode 2026）—— Agent编排，多工具链，工程化
+1. AI编程的三阶段演进
+   - 阶段 1：提示词工程（Prompt Engineering，2021-2023）
+     - 核心能力：零样本/少样本提示、思维链（CoT）、角色扮演、提示链
+     - 国际代表工具：GitHub Copilot（$2B+ ARR, 2000万用户）, Google Gemini Code Assist, OpenAI Codex（历史意义）
+     - 国内代表工具：CodeGeeX（智谱AI，开源可私有化）, 文心快码（百度，IDC 8项满分）, 通义灵码（阿里，Gartner挑战者）
+     - 用户角色：操作员（Operator）—— 需要逐行审查生成代码
+     - 安全关注点：Prompt Injection 防护
+     - 局限：单次交互优化，缺乏持久状态；上下文窗口受限（4K-8K tokens）；无法处理跨文件依赖
+   - 阶段 2：上下文工程（Context Engineering，2023-2025）
+     - 核心能力：检索增强生成（RAG）、长上下文管理（100K-1M tokens）、多文件编辑、项目级理解
+     - 国际代表工具：Cursor（$293亿估值，$2B+ ARR）, Windsurf（Cascade Agent）, Google Project IDX, OpenAI ChatGPT Code Interpreter
+     - 国内代表工具：Trae/MarsCode（字节，25%市场份额）, CodeBuddy（腾讯，92%复杂任务完成率）, CodeArts Snap（华为，鸿蒙生态）
+     - 用户角色：协作者（Collaborator）—— 描述需求，审查结果
+     - 安全关注点：敏感数据过滤、访问控制
+     - 突破：从"单次交互"到"持久会话"；从"文件级"到"项目级"理解；从"被动补全"到"主动编辑"
+     - 局限：仍需人工干预调试；缺乏独立执行环境；工作流无法固化复用
+   - 阶段 3：驾驭工程（Harness Engineering，2025- 探索期）
+     - 核心能力：多 Agent 编排、工作流固化与复用、质量门禁与审计日志、知识沉淀与持续改进
+     - 国际代表工具：Claude Code（Anthropic，72-79% SWE-bench）, OpenCode + OMO, Google Jules（异步自主Agent）, OpenAI Codex CLI, GitHub Copilot Workspace
+     - 国内代表工具：Trae SOLO模式（字节）, CodeBuddy Craft智能体（腾讯）
+     - 用户角色：观察者/审批者（Observer/Approver）—— 设定目标，验收结果
+     - 安全关注点：安全审计、沙箱隔离、合规检查
+     - 突破：从"辅助工具"到"自主系统"；从"单 Agent"到"多 Agent 协作"；从"不可控"到"工程化"
 2. 为什么"对话"不够？
    - Token成本失控：长对话上下文膨胀
    - "失忆"问题：跨Session上下文丢失
@@ -39,16 +58,21 @@
    - 可改进（Improveable）：从每次运行中学习，持续优化
 
 #### 核心概念
-- **三个阶段模型**：这是全书的理论基石，用三维对比表+时间线图清晰展示
+- **三阶段演进模型**：提示词工程 → 上下文工程 → 驾驭工程，这是全书的理论基石
+- **阶段 1（提示词工程）**：通过精心设计的输入指令，最大限度地激发模型的正确能力
+- **阶段 2（上下文工程）**：设计和构建 AI 系统的信息架构，决定哪些信息进入上下文窗口以及如何组织
+- **阶段 3（驾驭工程）**：设计、构建和维护编排 AI Agent 的基础设施，使其在生产环境中可靠运行
 - **Harness Engineer vs Prompt Engineer**：Prompt Engineer关注"怎么写好的提示词"；Harness Engineer关注"怎么设计好的工程流水线"
 - **3个可**原则：可复现/可审计/可改进——全书所有实践都围绕这三个原则展开
+- **安全治理演进**：从 Prompt Injection 防护 → 敏感数据过滤/访问控制 → 安全审计/沙箱隔离/合规检查
 
 #### 代码/配置示例
 - 无（本章以概念阐述为主）
 
 #### Mermaid 图表
-- AI编程三阶段演进时间线图
+- AI编程三阶段演进时间线图（2021-2026，标注探索期）
 - Harness Engineer能力雷达图（5维度）
+- 三阶段对比矩阵图（时间范围、核心能力、代表工具、用户角色、安全关注点）
 
 #### 关联章节
 - → Ch2 Core Concepts（为六概念奠定理解基础）
@@ -56,8 +80,13 @@
 
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
-- [ ] 包含三个阶段的对比表
+- [ ] 包含三阶段演进对比表（时间范围、核心能力、代表工具、用户角色、安全关注点）
 - [ ] 包含Harness Engineer能力雷达图
+- [ ] 每个阶段有明确的时间节点
+- [ ] 每个阶段有代表性的工具示例
+- [ ] 每个阶段有核心特征描述
+- [ ] 阶段 3 明确标注为"探索期"
+- [ ] 安全治理维度贯穿三个阶段
 
 ---
 
@@ -197,7 +226,7 @@
 
 #### 大纲
 1. AI 编程工具全景
-   - OpenCode / Cursor / Claude Code / Codex / Cline / Windsurf
+   - OpenCode / Cursor / Claude Code / Windsurf / Cline / Continue
    - 各工具的定位和核心差异
 2. 多维度对比矩阵
    - 开源性、Provider 自由度、Agent 类型、Plugin/扩展、学习曲线、隐私、价格
