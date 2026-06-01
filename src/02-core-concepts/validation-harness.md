@@ -2,6 +2,12 @@
 
 > 确保 AI 生成代码的"最后一道防线"——从质量门禁到自动修复循环的验证系统。
 
+> **前置条件**
+> - 已完成 [约束系统解析](constraints-system.md)，理解约束系统的三层架构
+> - 已完成 [上下文工程核心](context-engineering-core.md)，理解上下文与约束的协作关系
+> - 已安装 OpenCode CLI 并完成基础配置
+> - 已了解 LSP（Language Server Protocol）和代码质量检查的基本概念
+
 ## 文章概述
 
 如果说约束系统管理 Agent 的"准入"（什么可以做），验证护栏就管理"准出"（做的结果对不对）。这是 AI 编程流水线中防止低质量代码进入仓库的最后一道防线。本章节系统讲解验证护栏的定位——与约束系统的根本区别——以及 Harness Engineering 中验证的三个原则（自动化、可追溯、可配置）。读者将理解质量门禁的三大分级：硬性门禁（编译/语法检查必须通过）、质量门禁（测试覆盖率/代码规范）、量化门禁（性能指标/安全评分），以及门禁的阻断与告警两种模式。
@@ -237,8 +243,7 @@ quality_gates:
 | **安全评分** | 依赖安全评分、代码安全评分 | 评分 ≥ 80 |
 | **技术债务** | 代码重复率、注释覆盖率 | 重复 < 5%，注释 > 20% |
 
-```yaml
-# 量化门禁配置示例
+```yaml:examples/validation/metric-gates.yaml
 metric_gates:
   - name: bundle-size
     type: performance
@@ -702,8 +707,7 @@ const user: User = {
 
 Lint 检查确保代码符合规范：
 
-```yaml
-# ESLint 配置示例
+```yaml:examples/validation/eslint-rules.yaml
 rules:
   # 可能的问题
   "no-unused-vars": error
@@ -1005,8 +1009,7 @@ const cmd = "rm" + " -rf " + "/";
 | **沙箱预执行** | 在隔离环境中预执行，观察行为 |
 | **异常行为检测** | 监控资源消耗、网络请求等异常指标 |
 
-```yaml
-# 增强的 YOLO 分类配置
+```yaml:examples/validation/yolo-classifier.yaml
 yolo_classifier:
   # 多维度特征提取
   feature_extraction:
@@ -1135,8 +1138,7 @@ fix_loop_protection:
 | **变更审计** | 记录所有配置变更 |
 | **基线检查** | 定期检查配置是否偏离安全基线 |
 
-```yaml
-# 配置保护配置
+```yaml:examples/validation/config-protection.yaml
 config_protection:
   # 文件权限
   file_permissions:
@@ -1216,11 +1218,23 @@ flowchart TB
 
 下一章将进入环境搭建实战，读者将学习如何在 OpenCode 中配置完整的验证护栏体系。
 
+---
+
+## 学习检查清单
+
+完成本章学习后，请确认你能够：
+
+- [ ] 解释约束系统与验证护栏的根本区别（准入 vs 准出）
+- [ ] 区分三级质量门禁（硬性/质量/量化）的检查内容和失败后果
+- [ ] 说明 YOLO 分类器的三级风险分类（高/中/低）及其执行策略
+- [ ] 描述 LSP 验证链的四个检查阶段（语法→类型→Lint→语义）
+- [ ] 配置自动修复循环的最大尝试次数和可修复门禁类型
+
 ## 关联章节
 
 - ← [约束系统解析](constraints-system.md)：约束系统是验证的前置条件，约束管"准入"、验证管"准出"
 - ← [上下文工程核心](context-engineering-core.md)：验证结果反馈到上下文，影响后续 Agent 决策
-- → [Ch3 环境搭建](../03-setup/README.md)：验证护栏在 opencode.json 中的具体配置实现
-- → [Ch5 Skill 开发](../05-skills/README.md)：Skill 输出的验证标准与最佳实践
-- → [Ch6 高级话题](../06-advanced/README.md)：安全总览、沙箱与 Hook 系统的深度展开
-- → [Ch7 案例研究](../07-case-studies/README.md)：质量门禁在真实项目中的应用与效果
+- → [环境搭建](../03-setup/)：验证护栏在 opencode.json 中的具体配置实现
+- → [Skill 开发](../05-skills/)：Skill 输出的验证标准与最佳实践
+- → [高级话题](../06-advanced/)：安全总览、沙箱与 Hook 系统的深度展开
+- → [案例研究](../07-case-studies/)：质量门禁在真实项目中的应用与效果

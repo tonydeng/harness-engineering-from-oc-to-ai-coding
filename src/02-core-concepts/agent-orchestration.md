@@ -2,6 +2,11 @@
 
 > 理解 OpenCode 的 Agent 体系——从内置执行单元到 OMO 扩展生态，掌握任务分派与权限隔离的设计哲学。
 
+> **前置条件**
+> - 已完成 [简介](../01-introduction/)，理解 Harness Engineering 基本概念
+> - 已安装 OpenCode CLI 并完成基础配置
+> - 已了解 AI Agent 的基本工作原理
+
 ## 文章概述
 
 Agent 是 OpenCode 生态中一切任务执行的起点。本章节系统梳理 OpenCode 内置的 5 种 Agent 类型（Build/Plan/General/Explore/Scout），讲解 Primary Agent 与 Subagent 的分层设计如何实现权限隔离，以及 Hidden Agent 在后台完成的上下文压缩与会话管理等自动化任务。读者将理解 Plan 模式作为"先思考后执行"工程原则的具体体现，并掌握 @ 子 Agent 调用的语法与权限模型。
@@ -800,10 +805,22 @@ Agent 是 OpenCode 的核心执行单元，理解 Agent 体系是掌握 Harness 
 
 下一篇文章将深入 Skill 系统，了解如何为 Agent 封装领域知识。
 
+---
+
+## 学习检查清单
+
+完成本章学习后，请确认你能够：
+
+- [ ] 解释 Agent 的四要素公式：Agent = Model + Tools + Skills + Memory
+- [ ] 区分 Primary Agent（Build/Plan）与 Subagent（@general/@explore）的权限边界
+- [ ] 说明 Plan 模式的安全价值及其 4 个典型应用场景
+- [ ] 使用 @ 子 Agent 调用语法分派任务
+- [ ] 描述 OMO 扩展的 5 个核心 Agent（Sisyphus/Prometheus/Atlas/Hephaestus/Oracle）的职责分工
+
 ## 关联章节
 
 - → [Skill 系统](skills-system.md)：Agent 是 Skill 的宿主，Skill 通过 Agent 加载和执行
 - → [工作流模式](workflow-patterns.md)：Agent 是工作流的基本执行单元
-- ← [Ch1 简介](../01-introduction/README.md)：承接"为什么需要 Harness Engineering"
-- → [Ch4 工作流实战](../04-workflows/README.md)：多 Agent 协作是复杂工作流的构建基础
-- → [Ch6 高级话题](../06-advanced/README.md)：自定义 Agent 与 Plugin 扩展
+- ← [简介](../01-introduction/)：承接"为什么需要 Harness Engineering"
+- → [工作流实战](../04-workflows/)：多 Agent 协作是复杂工作流的构建基础
+- → [高级话题](../06-advanced/)：自定义 Agent 与 Plugin 扩展

@@ -22,6 +22,6 @@
 
 ## 关联章节
 
-- ← [§2.5 约束系统解析](../02-core-concepts/constraints-system.md)（约束系统基础）
-- ← [§3.2 OpenCode 配置详解](../03-setup/opencode-config.md)（配置中的安全设置）
-- → [§6.9 沙箱与 Hook 系统](sandbox-hooks.md)（沙箱是安全隔离的执行层）
+- ← [约束系统解析](../02-core-concepts/constraints-system.md)（约束系统基础）
+- ← [OpenCode 配置详解](../03-setup/opencode-config.md)（配置中的安全设置）
+- → [沙箱与 Hook 系统](sandbox-hooks.md)（沙箱是安全隔离的执行层）

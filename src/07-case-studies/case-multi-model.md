@@ -28,10 +28,10 @@
 
 ## 关联章节
 
-- ← [§3.4 国产模型供应商配置](../03-setup/chinese-providers.md)（国产模型基础配置）
-- ← [Ch6 高级话题](../06-advanced/README.md)（成本优化方法）
+- ← [国产模型供应商配置](../03-setup/chinese-providers.md)（国产模型基础配置）
+- ← [高级话题](../06-advanced/)（成本优化方法）
 - ← [案例：全流程自动化](case-full-pipeline.md)（混合模型在全流程中的应用）
-- → [Ch4 工作流实战](../04-workflows/README.md)（路由策略在团队协作中的延伸）
+- → [工作流实战](../04-workflows/)（路由策略在团队协作中的延伸）
 
 ## 验证标准
 

@@ -28,8 +28,8 @@
 
 - ← [案例一：从零搭建微服务](real-world-01.md)（本案例的流程模板来源）
 - → [案例：国产模型混合架构](case-multi-model.md)（混合架构在全流程中的应用）
-- ← [Ch4 工作流实战](../04-workflows/README.md)（多 Agent 协作基础）
-- ← [Ch5 Skill 开发](../05-skills/README.md)（自定义 Skill 在流水线各环节的应用）
+- ← [Ch4 工作流实战](../04-workflows/)（多 Agent 协作基础）
+- ← [Ch5 Skill 开发](../05-skills/)（自定义 Skill 在流水线各环节的应用）
 
 ## 验证标准
 

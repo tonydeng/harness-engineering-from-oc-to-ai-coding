@@ -353,7 +353,7 @@ graph LR
 
 ### 三层抽象模型预告
 
-Harness Engineering 的核心架构模式是 **Agent-Skill-Workflow 三层抽象**，这将在 [Ch2 核心概念](../02-core-concepts/README.md) 中详细展开。这里先给出一个概念预览：
+Harness Engineering 的核心架构模式是 **Agent-Skill-Workflow 三层抽象**，这将在 [Ch2 核心概念](../02-core-concepts/) 中详细展开。这里先给出一个概念预览：
 
 - **Agent（执行单元）**：承担特定角色的智能体，如规划 Agent、执行 Agent、审查 Agent
 - **Skill（能力模块）**：可复用的能力单元，封装特定领域的知识和技能
@@ -380,7 +380,7 @@ Harness Engineering 的理论框架在企业场景中具有明确的落地价值
 - Token 消耗、任务耗时、成功率可量化
 - 基于数据持续优化工作流
 
-这些价值将在 [Ch7 案例研究](../07-case-studies/README.md) 中通过具体案例展示。
+这些价值将在 [Ch7 案例研究](../07-case-studies/) 中通过具体案例展示。
 
 ## 小结
 
@@ -398,6 +398,6 @@ Martin Fowler 的 5 大分类法为我们提供了统一的讨论坐标系，帮
 
 - ← 承接 [什么是 Harness Engineer](what-is-harness-engineer.md)（从概念到理论的深化）
 - → [AI 编程工具生态对比](ecosystem-comparison.md)（5 大分类法为工具对比提供理论框架）
-- → [Ch2 核心概念](../02-core-concepts/README.md)（三层抽象模型的详细展开）
-- → [Ch4 工作流实战](../04-workflows/README.md)（编排支柱的实践落地）
-- → [Ch6 高级话题](../06-advanced/README.md)（安全、可观测、成本支柱的深入探讨）
+- → [Ch2 核心概念](../02-core-concepts/)（三层抽象模型的详细展开）
+- → [Ch4 工作流实战](../04-workflows/)（编排支柱的实践落地）
+- → [Ch6 高级话题](../06-advanced/)（安全、可观测、成本支柱的深入探讨）

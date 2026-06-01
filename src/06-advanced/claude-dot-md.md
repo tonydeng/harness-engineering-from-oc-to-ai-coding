@@ -20,6 +20,6 @@
 
 ## 关联章节
 
-- ← [§2.5 约束系统解析](../02-core-concepts/constraints-system.md)（AGENTS.md 定义项目级约束）
-- → [§6.8 安全总览](security-overview.md)（安全指令覆盖策略）
-- → [§4 工作流实战](../04-workflows/README.md)（指令对不同工作流的影响）
+- ← [约束系统解析](../02-core-concepts/constraints-system.md)（AGENTS.md 定义项目级约束）
+- → [安全总览](security-overview.md)（安全指令覆盖策略）
+- → [工作流实战](../04-workflows/)（指令对不同工作流的影响）

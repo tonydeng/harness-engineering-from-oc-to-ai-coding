@@ -192,6 +192,8 @@
 
 ## 章节重构增补
 
+> **源材料说明**：《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）是一本 Engineering（驾驭工程）的中文技术书。它以 Claude Code `v2.1.88` 的公开发布包与 source map 还原结果为分析材料，从真实工程实现中提炼 AI 编码 Agent 的架构模式、上下文策略、权限体系和生产实践。在线阅读：https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/
+
 > **说明**：本章按章节重构计划无现有文章修改，仅新增 2 篇文章。
 
 ### Article 5.4: Skill-MCP 桥接
@@ -201,7 +203,7 @@
   - 掌握如何将外部工具包装为可复用的 Skill
   - 理解 Skill 与 MCP 的分工关系
 - **前置知识**：Article 2.2（Skill 系统），Ch6 MCP 概念
-- **源材料映射**：马书第22章，HE实践 02
+- **源材料映射**：《马书》第22章，HE实践 02
 
 #### 大纲
 1. 为什么需要 Skill-MCP 桥接
@@ -216,8 +218,8 @@
    - 调查研究 Skill + WebSearch MCP
    - 代码审查 Skill + Git MCP
    - 数据查询 Skill + Database MCP
-4. 马书的 MCP 桥接框架
-   - 马书第22章的桥接模式在 OpenCode 中的实现
+4. 《马书》第22章的 MCP 桥接框架
+   - 《马书》第22章的桥接模式在 OpenCode 中的实现
    - Skill-embedded MCPs 配置
 5. 最佳实践与反模式
 
@@ -254,7 +256,7 @@
   - 掌握 Skill 市场的发布和使用方法
   - 理解 Skill 组合的设计模式
 - **前置知识**：Article 5.4（Skill-MCP 桥接）
-- **源材料映射**：马书第22b章
+- **源材料映射**：《马书》第22b章
 
 #### 大纲
 1. Skill 的演进阶段

@@ -129,7 +129,7 @@
 - → Article 6.3（性能调优依赖于成本管控配置）
 
 ### 团队角色评审补充
-- **安全架构师需求（P0）**：Article 3.1 安全检查段增加edit/bash设为ask的完整配置示例；Article 3.2 安全模型段从配置说明升级为威胁建模分析（附STRIDE表），增加.opencodeignore的完整配置和Opencode默认拒绝的敏感文件路径列表，增加安全配置与NIST CSF/SOC2/等保2.0的映射说明。
+- **安全架构师需求（P0）**：Article 3.1 安全检查段增加edit/bash设为ask的完整配置示例；Article 3.2 安全模型段从配置说明升级为威胁建模分析（附STRIDE表），增加.opencodeignore的完整配置和OpenCode默认拒绝的敏感文件路径列表，增加安全配置与NIST CSF/SOC2/等保2.0的映射说明。
 - **架构顾问需求（P0）**：Article 3.2 增加企业级配置管理（Git管理的配置治理、环境隔离、密钥管理）；增加"企业集成架构"小节（CI/CD + Secret Store + 监控 + Issue Tracking）。
 - **后端架构师需求**：Article 3.1 Provider配置段增加企业级管理（Kubernetes Secret管理、团队级Provider配置、多Provider故障切换）。
 - **UI设计师需求**：Ch3 三篇Mermaid图需使用统一配色方案，所有图有Alt文本。
@@ -204,7 +204,7 @@
 
 ### 修改标注（基于章节重构计划）
 
-**Article 3.2（Opencode 配置详解）**：
+**Article 3.2（OpenCode 配置详解）**：
 - 增加 Category 路由配置详解
 - 增加 OMO v4.5+ 新配置项（如自定义 Hook 配置）
 

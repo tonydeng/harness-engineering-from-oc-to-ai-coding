@@ -26,9 +26,9 @@ Skill 市场的核心是**标准化**。所有 Skill 必须遵守统一的 `fron
 
 ## 关联章节
 
-- ← [Ch5 Skill 开发](../05-skills/README.md)（Skill 开发全章节的基础）
-- ← [§5.5 Skill 插件化模式](../05-skills/plugin-patterns.md)（插件化模式的概念基础）
-- → [Ch4 工作流实战](../04-workflows/README.md)（Skill 在团队协作中的应用）
+- ← [Skill 开发](../05-skills/)（Skill 开发全章节的基础）
+- ← [Skill 插件化模式](../05-skills/plugin-patterns.md)（插件化模式的概念基础）
+- → [工作流实战](../04-workflows/)（Skill 在团队协作中的应用）
 
 ## 验证标准
 

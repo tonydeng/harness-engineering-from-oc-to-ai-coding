@@ -190,6 +190,8 @@
 
 ## 章节重构增补
 
+> **源材料说明**：《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）是一本 Engineering（驾驭工程）的中文技术书。它以 Claude Code `v2.1.88` 的公开发布包与 source map 还原结果为分析材料，从真实工程实现中提炼 AI 编码 Agent 的架构模式、上下文策略、权限体系和生产实践。在线阅读：https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/
+
 ### 修改标注（基于章节重构计划）
 
 **Article 4.1（Ultrawork 模式）**：
@@ -208,9 +210,9 @@
   - 理解三种 Agent 派生模式：子Agent、委派、协调者
   - 掌握不同场景下选择合适派生模式的方法
   - 理解派生模式与 Task() API 的关系
-  - 了解马书 Agent 派生体系与 OpenCode 的映射
+  - 了解《马书》第20章 Agent 派生体系与 OpenCode 的映射
 - **前置知识**：Article 4.2（多 Agent 协作基础）
-- **源材料映射**：马书第20章
+- **源材料映射**：《马书》第20章
 
 #### 大纲
 1. Agent 派生的概念
@@ -224,8 +226,8 @@
    - category 参数选择派生目标
    - load_skills 传递技能上下文
    - 结果合并策略
-4. 马书 Agent 派生框架对比
-   - 马书的三种派生模式 vs OpenCode 的实现
+4. 《马书》Agent 派生框架对比
+   - 《马书》的三种派生模式 vs OpenCode 的实现
    - 差异分析和借鉴
 5. 派生模式的工程实践
    - 派生深度限制（避免递归失控）
@@ -266,7 +268,7 @@
   - 理解进程内集群与独立 Agent 的区别
   - 能够设计基于 Team 的工作流
 - **前置知识**：Article 4.4（Agent 派生模式）
-- **源材料映射**：马书第20b章
+- **源材料映射**：《马书》第20b章
 
 #### 大纲
 1. Teams 架构概述

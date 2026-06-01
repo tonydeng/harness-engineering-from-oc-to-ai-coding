@@ -17,7 +17,7 @@
 
 ## 关联章节
 
-- ← [§5.1 创建 Skill](creating-skills.md)（基础格式和加载机制）
-- ← [§5.2 Skill 模板](skill-templates.md)（原则和反模式在模板中的体现）
-- ← [§2.2 Skill 系统](../02-core-concepts/skills-system.md)（理论基础）
-- → [§4.5 Teams 多进程协作](../04-workflows/teams-collaboration.md)（Skill 在团队协作中的应用）
+- ← [创建 Skill](creating-skills.md)（基础格式和加载机制）
+- ← [Skill 模板](skill-templates.md)（原则和反模式在模板中的体现）
+- ← [Skill 系统](../02-core-concepts/skills-system.md)（理论基础）
+- → [Teams 多进程协作](../04-workflows/teams-collaboration.md)（Skill 在团队协作中的应用）

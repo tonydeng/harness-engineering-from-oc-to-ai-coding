@@ -56,26 +56,161 @@ mindmap
 
 ### 核心角色定义
 
-| 角色 | 典型背景 | 核心关注点 |
-|------|----------|-----------|
-| **入门开发者** | 刚接触 AI 编程，基本编程能力 OK | 快速上手 OpenCode，在日常开发中用起来 |
-| **效率开发者** | 已用 AI 工具(Copilot/Cursor)，想升级 | 掌握 Agent 编排，提升 2x+ 效率 |
-| **技术负责人** | 团队技术决策者，关注标准化 | 建立团队级 Harness Engineering 体系 |
-| **Skill 作者** | 有一定 AI 使用经验，想扩展能力 | 掌握 Skill 开发方法，产出高质量 Skill |
-| **工程经理** | 评估团队工具选型 | 判断 OpenCode 的投资回报率 |
+#### 入门开发者
+
+> "每天花大量时间在重复性编码任务上，希望 AI 能帮忙但又担心出错。"
+
+**典型背景**：刚接触 AI 编程，基本编程能力 OK
+
+**核心关注点**：快速上手 OpenCode，在日常开发中用起来
+
+**典型痛点**：刚入行不久，面对复杂项目无从下手；想用 AI 工具但不知道从哪里开始；担心 AI 生成的代码不可靠，不敢放心使用。
+
+---
+
+#### 效率开发者
+
+> "已经用了一段时间 Copilot，但感觉还能更快——只是不知道瓶颈在哪里。"
+
+**典型背景**：已用 AI 工具(Copilot/Cursor)，想升级
+
+**核心关注点**：掌握 Agent 编排，提升 2x+ 效率
+
+**典型痛点**：AI 工具用得顺手，但遇到复杂任务时仍然手忙脚乱；上下文切换频繁，重复解释需求给 AI；想定制工作流但不知如何下手。
+
+---
+
+#### 技术负责人
+
+> "团队里每个人都在用不同的 AI 工具，代码风格五花八门，review 成本越来越高。"
+
+**典型背景**：团队技术决策者，关注标准化
+
+**核心关注点**：建立团队级 Harness Engineering 体系
+
+**典型痛点**：团队成员 AI 使用水平参差不齐，难以形成合力；缺乏统一的工作流和最佳实践；担心 AI 引入带来的安全合规风险。
+
+---
+
+#### Skill 作者
+
+> "每次都要重复写类似的提示词，真希望能封装成一个可复用的模块。"
+
+**典型背景**：有一定 AI 使用经验，想扩展能力
+
+**核心关注点**：掌握 Skill 开发方法，产出高质量 Skill
+
+**典型痛点**：提示词越写越长，维护成本高；想让团队成员复用自己的经验，但缺乏标准化的封装方法；不知道如何设计 Skill 的边界和接口。
+
+---
+
+#### 工程经理
+
+> "老板问 AI 工具的投资回报率，我只能给模糊的'感觉效率提升了'——没有数据支撑。"
+
+**典型背景**：评估团队工具选型
+
+**核心关注点**：判断 OpenCode 的投资回报率
+
+**典型痛点**：AI 工具层出不穷，难以客观对比优劣；团队学习成本如何评估；如何量化 AI 工具带来的效率提升。
+
+---
 
 ### 扩展角色定义
 
-| 角色 | 背景 | 核心目标 |
-|------|------|----------|
-| **需求分析师/产品经理** | 需求分析、产品规划经验 | 验证需求覆盖完整性、评估内容价值主张 |
-| **系统架构师/技术顾问** | 5年以上架构经验，负责技术决策 | 评估 OpenCode 的技术可行性、架构集成与安全合规 |
-| **后端开发者/API 工程师** | 熟悉 REST/GraphQL/微服务/数据库 | 将 AI Agent 嵌入后端开发工作流、MCP 服务端集成 |
-| **前端开发者/UI 工程师** | 熟悉 React/Vue/Angular、组件化开发 | 将 Agent 编排应用到前端场景、类比理解 Skill 系统 |
-| **文档 UX 专家** | 信息架构/开发者文档经验 | 确保文档可读性、Mermaid 规范、移动端/无障碍体验 |
-| **技术审校/QA 编辑** | 测试或技术写作背景 | 建立质量门禁、验证代码示例可运行性、术语一致性 |
-| **安全工程师/架构师** | 安全工程/合规/威胁建模 | 建立 OpenCode 安全基线、评估企业级合规 |
-| **安全研究人员/红队成员** | 渗透测试/安全研究 | 评估 AI Agent 攻击面、利用 Agent 自动化安全测试 |
+#### 需求分析师/产品经理
+
+> "开发说需求不清晰，但我觉得已经写得很清楚了——沟通成本太高。"
+
+**典型背景**：需求分析、产品规划经验
+
+**核心关注点**：验证需求覆盖完整性、评估内容价值主张
+
+**典型痛点**：需求文档写了又改，开发还是说看不懂；想验证 AI 是否能理解业务需求；担心 AI 加速开发后需求遗漏问题更严重。
+
+---
+
+#### 系统架构师/技术顾问
+
+> "新技术栈引入容易，但怎么确保它不会成为明天的技术债务？"
+
+**典型背景**：5年以上架构经验，负责技术决策
+
+**核心关注点**：评估 OpenCode 的技术可行性、架构集成与安全合规
+
+**典型痛点**：AI Agent 的行为不可预测，如何做架构决策；开源工具的安全合规如何评估；如何设计 AI 友好的系统架构。
+
+---
+
+#### 后端开发者/API 工程师
+
+> "数据库 schema 改了，要更新十几个 API 接口——这种重复劳动最耗精力。"
+
+**典型背景**：熟悉 REST/GraphQL/微服务/数据库
+
+**核心关注点**：将 AI Agent 嵌入后端开发工作流、MCP 服务端集成
+
+**典型痛点**：CRUD 代码写腻了，但自动化工具又不够灵活；想用 AI 做代码生成，但生成的代码质量参差不齐；微服务间调用复杂，调试困难。
+
+---
+
+#### 前端开发者/UI 工程师
+
+> "设计稿又改了，组件要跟着调整——如果能自动同步就好了。"
+
+**典型背景**：熟悉 React/Vue/Angular、组件化开发
+
+**核心关注点**：将 Agent 编排应用到前端场景、类比理解 Skill 系统
+
+**典型痛点**：UI 调整频繁，手动同步耗时耗力；组件库文档和代码不同步；想用 AI 辅助开发，但前端场景的提示词不好写。
+
+---
+
+#### 文档 UX 专家
+
+> "文档写了没人看，看了又看不懂——到底是内容问题还是呈现问题？"
+
+**典型背景**：信息架构/开发者文档经验
+
+**核心关注点**：确保文档可读性、Mermaid 规范、移动端/无障碍体验
+
+**典型痛点**：技术文档更新跟不上代码变化；图表渲染在不同平台表现不一致；开发者反馈文档"太长不看"，但删减又怕遗漏关键信息。
+
+---
+
+#### 技术审校/QA 编辑
+
+> "代码示例跑不通、术语前后不一致——这些问题在发布前才发现就晚了。"
+
+**典型背景**：测试或技术写作背景
+
+**核心关注点**：建立质量门禁、验证代码示例可运行性、术语一致性
+
+**典型痛点**：人工审校效率低，容易遗漏问题；代码示例过时快，维护成本高；缺乏自动化的质量检查工具。
+
+---
+
+#### 安全工程师/架构师
+
+> "AI Agent 能访问哪些数据？会不会被提示注入攻击？这些问题让我睡不着。"
+
+**典型背景**：安全工程/合规/威胁建模
+
+**核心关注点**：建立 OpenCode 安全基线、评估企业级合规
+
+**典型痛点**：AI Agent 的权限边界难以界定；缺乏针对 AI 工具的安全评估框架；合规要求日新月异，难以跟上节奏。
+
+---
+
+#### 安全研究人员/红队成员
+
+> "如果能用 AI 自动化渗透测试，效率能提升多少？但会不会也被攻击者利用？"
+
+**典型背景**：渗透测试/安全研究
+
+**核心关注点**：评估 AI Agent 攻击面、利用 Agent 自动化安全测试
+
+**典型痛点**：渗透测试重复劳动多，想用 AI 自动化但担心误报率高；AI Agent 本身的安全漏洞如何发现；攻击者也在用 AI，防御如何跟上。
 
 ---
 
@@ -88,95 +223,95 @@ mindmap
 ```mermaid
 graph TB
     subgraph Ch0["读者导航"]
-        G0_1["§0.1 读者导航"]
-        G0_2["§0.2 多角色阅读路径"]
+        G0_1["读者导航"]
+        G0_2["多角色阅读路径"]
     end
 
-    subgraph Ch1["引言"]
-        G1_1["§1.1 什么是 Harness Engineer"]
-        G1_2["§1.2 为什么选择 OpenCode"]
-        G1_3["§1.3 Harness Engineering 理论框架"]
-        G1_4["§1.4 AI 编程工具生态对比"]
-        G1_5["§1.5 国产 AI 编程生态适配"]
+    subgraph Ch1["简介"]
+        G1_1["什么是 Harness Engineer"]
+        G1_2["为什么选择 OpenCode"]
+        G1_3["Harness Engineering 理论框架"]
+        G1_4["AI 编程工具生态对比"]
+        G1_5["国产 AI 编程生态适配"]
     end
 
     subgraph Ch2["核心概念"]
-        G2_1["§2.1 Agent 编排"]
-        G2_2["§2.2 Skill 系统"]
-        G2_3["§2.3 工作流模式"]
-        G2_4["§2.4 上下文工程核心"]
-        G2_5["§2.5 约束系统解析"]
-        G2_6["§2.6 验证护栏体系"]
+        G2_1["Agent 编排"]
+        G2_2["Skill 系统"]
+        G2_3["工作流模式"]
+        G2_4["上下文工程核心"]
+        G2_5["约束系统解析"]
+        G2_6["验证护栏体系"]
     end
 
     subgraph Ch3["环境搭建"]
-        G3_1["§3.1 快速上手"]
-        G3_2["§3.2 OpenCode 配置详解"]
-        G3_3["§3.3 oh-my-openagent 集成"]
-        G3_4["§3.4 国产模型供应商配置"]
-        G3_5["§3.5 多环境部署方案"]
+        G3_1["快速上手"]
+        G3_2["OpenCode 配置详解"]
+        G3_3["oh-my-openagent 集成"]
+        G3_4["国产模型供应商配置"]
+        G3_5["多环境部署方案"]
     end
 
     subgraph Ch4["工作流实战"]
-        G4_1["§4.1 Ultrawork 模式"]
-        G4_2["§4.2 多 Agent 协作"]
-        G4_3["§4.3 自定义工作流"]
-        G4_4["§4.4 Agent 派生模式"]
-        G4_5["§4.5 Teams 多进程协作"]
+        G4_1["Ultrawork 模式"]
+        G4_2["多 Agent 协作"]
+        G4_3["自定义工作流"]
+        G4_4["Agent 派生模式"]
+        G4_5["Teams 多进程协作"]
     end
 
     subgraph Ch5["Skill 开发"]
-        G5_1["§5.1 创建 Skill"]
-        G5_2["§5.2 Skill 模板"]
-        G5_3["§5.3 Skill 最佳实践"]
-        G5_4["§5.4 Skill-MCP 桥接"]
-        G5_5["§5.5 Skill 插件化模式"]
+        G5_1["创建 Skill"]
+        G5_2["Skill 模板"]
+        G5_3["Skill 最佳实践"]
+        G5_4["Skill-MCP 桥接"]
+        G5_5["Skill 插件化模式"]
     end
 
     subgraph Ch6A["核心扩展"]
-        G6_1["§6.1 MCP 服务器"]
-        G6_2["§6.2 自定义 Agent"]
-        G6_3["§6.3 性能调优"]
+        G6_1["MCP 服务器"]
+        G6_2["自定义 Agent"]
+        G6_3["性能调优"]
     end
 
     subgraph Ch6B["上下文与记忆"]
-        G6_4["§6.4 上下文压缩技术"]
-        G6_5["§6.5 Token 预算策略"]
-        G6_6["§6.6 提示词缓存机制"]
-        G6_7["§6.7 记忆系统设计"]
+        G6_4["上下文压缩技术"]
+        G6_5["Token 预算策略"]
+        G6_6["提示词缓存机制"]
+        G6_7["记忆系统设计"]
     end
 
     subgraph Ch6C["安全与沙箱"]
-        G6_8["§6.8 安全总览"]
-        G6_9["§6.9 沙箱与 Hook 系统"]
-        G6_10["§6.10 CLAUDE.md 约定系统"]
+        G6_8["安全总览"]
+        G6_9["沙箱与 Hook 系统"]
+        G6_10["CLAUDE.md 约定系统"]
     end
 
     subgraph Ch6D["运维与演进"]
-        G6_11["§6.11 可观测性"]
-        G6_12["§6.12 Feature Flags 路线图"]
+        G6_11["可观测性"]
+        G6_12["Feature Flags 路线图"]
     end
 
     subgraph Ch7["案例研究"]
-        G7_1["§7.1 从零搭建微服务"]
-        G7_2["§7.2 遗留系统现代化"]
-        G7_3["§7.3 安全审计流水线"]
-        G7_4["§7.4 全流程自动化"]
-        G7_5["§7.5 国产模型混合架构"]
-        G7_6["§7.6 团队级 Skill 市场"]
+        G7_1["从零搭建微服务"]
+        G7_2["遗留系统现代化"]
+        G7_3["安全审计流水线"]
+        G7_4["全流程自动化"]
+        G7_5["国产模型混合架构"]
+        G7_6["团队级 Skill 市场"]
     end
 
-    %% 读者导航 -> 引言
+    %% 读者导航 -> 简介
     G0_1 --> G1_1
     G0_2 --> G1_1
 
-    %% 引言 内部依赖
+    %% 简介 内部依赖
     G1_1 --> G1_2
     G1_2 --> G1_3
     G1_3 --> G1_4
     G1_4 --> G1_5
 
-    %% 引言 -> 核心概念
+    %% 简介 -> 核心概念
     G1_3 --> G2_1
     G1_3 --> G2_2
     G1_3 --> G2_3
@@ -270,9 +405,9 @@ graph TB
 
 | 优先级 | 定义 | 文章列表 |
 |--------|------|----------|
-| **P0（必备）** | 核心概念、必读章节 | §1.1, §1.2, §1.3, §2.1, §2.2, §2.3, §3.1, §3.2, §4.1, §4.2, §5.1, §5.2, §6.8, §7.1 |
-| **P1（重要）** | 进阶内容、推荐阅读 | §1.4, §2.4, §2.5, §2.6, §3.3, §3.4, §4.3, §4.4, §5.3, §5.4, §6.1, §6.3, §6.4, §6.5, §6.9, §6.11, §7.2, §7.3, §7.4, §7.5, §7.6 |
-| **P2（锦上添花）** | 高级话题、按需阅读 | §1.5, §3.5, §4.5, §5.5, §6.2, §6.6, §6.7, §6.10, §6.12 |
+| **P0（必备）** | 核心概念、必读章节 | [读者导航](./), [多角色阅读路径](reading-paths.md), [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md), [Agent 编排](../02-core-concepts/agent-orchestration.md), [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [快速上手](../03-setup/quickstart.md), [OpenCode 配置详解](../03-setup/opencode-config.md), [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [多 Agent 协作](../04-workflows/multi-agent-collab.md), [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [安全总览](../06-advanced/security-overview.md), [从零搭建微服务](../07-case-studies/real-world-01.md) |
+| **P1（重要）** | 进阶内容、推荐阅读 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [MCP 服务器](../06-advanced/mcp-servers.md), [性能调优](../06-advanced/performance-tuning.md), [上下文压缩技术](../06-advanced/context-compression.md), [Token 预算策略](../06-advanced/token-budget.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [可观测性](../06-advanced/observability.md), [遗留系统现代化](../07-case-studies/real-world-02.md), [安全审计流水线](../07-case-studies/case-security-audit.md), [全流程自动化](../07-case-studies/case-full-pipeline.md), [国产模型混合架构](../07-case-studies/case-multi-model.md), [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) |
+| **P2（锦上添花）** | 高级话题、按需阅读 | [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [多环境部署方案](../03-setup/multi-env-setup.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md), [Skill 插件化模式](../05-skills/plugin-patterns.md), [自定义 Agent](../06-advanced/custom-agents.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md) |
 
 ---
 
@@ -288,21 +423,21 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.1 什么是 Harness Engineer | 精读 | 20min |
-| 2 | §1.2 为什么选择 OpenCode | 精读 | 15min |
-| 3 | §1.4 AI 编程工具生态对比 | 浏览 | 15min |
-| 4 | §2.1 Agent 编排 | 精读 | 30min |
-| 5 | §2.2 Skill 系统 | 精读 | 25min |
-| 6 | §2.3 工作流模式 | 精读 | 25min |
-| 7 | §3.1 快速上手 | 精读 | 30min |
-| 8 | §3.2 OpenCode 配置详解 | 精读 | 30min |
-| 9 | §4.1 Ultrawork 模式 | 精读 | 30min |
-| 10 | §7.1 从零搭建微服务 | 浏览 | 20min |
+| 1 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 精读 | 20min |
+| 2 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 15min |
+| 3 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 浏览 | 15min |
+| 4 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 30min |
+| 5 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 25min |
+| 6 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 精读 | 25min |
+| 7 | [快速上手](../03-setup/quickstart.md) | 精读 | 30min |
+| 8 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 30min |
+| 9 | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) | 精读 | 30min |
+| 10 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 浏览 | 20min |
 
 **跳过建议**：
-- §1.5 国产 AI 编程生态适配（如无国产模型需求）
-- §3.4 国产模型供应商配置（如无国产模型需求）
-- §4.4 Agent 派生模式、§4.5 Teams 多进程协作（高级话题，初期可跳过）
+- [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（如无国产模型需求）
+- [国产模型供应商配置](../03-setup/chinese-providers.md)（如无国产模型需求）
+- [Agent 派生模式](../04-workflows/agent-derivation.md)、[Teams 多进程协作](../04-workflows/teams-collaboration.md)（高级话题，初期可跳过）
 - 高级话题全部（初期可跳过，待基础稳固后再回溯）
 
 **路径特点**：
@@ -322,25 +457,25 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 精读 | 25min |
-| 2 | §2.1 Agent 编排 | 精读 | 35min |
-| 3 | §2.3 工作流模式 | 精读 | 30min |
-| 4 | §2.4 上下文工程核心 | 精读 | 30min |
-| 5 | §2.5 约束系统解析 | 精读 | 25min |
-| 6 | §3.3 oh-my-openagent 集成 | 精读 | 30min |
-| 7 | §4.1 Ultrawork 模式 | 精读 | 35min |
-| 8 | §4.2 多 Agent 协作 | 精读 | 40min |
-| 9 | §4.3 自定义工作流 | 精读 | 35min |
-| 10 | §6.3 性能调优 | 精读 | 25min |
-| 11 | §6.5 Token 预算策略 | 精读 | 20min |
-| 12 | §7.1 从零搭建微服务 | 精读 | 30min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 精读 | 25min |
+| 2 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 35min |
+| 3 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 精读 | 30min |
+| 4 | [上下文工程核心](../02-core-concepts/context-engineering-core.md) | 精读 | 30min |
+| 5 | [约束系统解析](../02-core-concepts/constraints-system.md) | 精读 | 25min |
+| 6 | [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md) | 精读 | 30min |
+| 7 | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) | 精读 | 35min |
+| 8 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 40min |
+| 9 | [自定义工作流](../04-workflows/custom-workflows.md) | 精读 | 35min |
+| 10 | [性能调优](../06-advanced/performance-tuning.md) | 精读 | 25min |
+| 11 | [Token 预算策略](../06-advanced/token-budget.md) | 精读 | 20min |
+| 12 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 30min |
 
 **跳过建议**：
-- §1.1, §1.2（已有 AI 工具使用经验，可快速浏览）
-- §3.1 快速上手（已有 OpenCode 基础，可跳过）
-- §1.5, §3.4（如无国产模型需求）
-- §6.2 自定义 Agent（初期可跳过）
-- §6.6 提示词缓存机制、§6.7 记忆系统设计（高级优化，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md)（已有 AI 工具使用经验，可快速浏览）
+- [快速上手](../03-setup/quickstart.md)（已有 OpenCode 基础，可跳过）
+- [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [国产模型供应商配置](../03-setup/chinese-providers.md)（如无国产模型需求）
+- [自定义 Agent](../06-advanced/custom-agents.md)（初期可跳过）
+- [提示词缓存机制](../06-advanced/prompt-caching.md)、[记忆系统设计](../06-advanced/memory-system.md)（高级优化，按需阅读）
 
 **路径特点**：
 - 跳过入门章节，直接深入核心概念
@@ -359,28 +494,28 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.1 什么是 Harness Engineer | 精读 | 20min |
-| 2 | §1.2 为什么选择 OpenCode | 精读 | 20min |
-| 3 | §1.3 Harness Engineering 理论框架 | 精读 | 30min |
-| 4 | §1.4 AI 编程工具生态对比 | 精读 | 25min |
-| 5 | §2.1 Agent 编排 | 精读 | 30min |
-| 6 | §2.2 Skill 系统 | 精读 | 25min |
-| 7 | §2.3 工作流模式 | 精读 | 25min |
-| 8 | §3.2 OpenCode 配置详解 | 精读 | 35min |
-| 9 | §3.5 多环境部署方案 | 精读 | 30min |
-| 10 | §4.2 多 Agent 协作 | 精读 | 35min |
-| 11 | §4.5 Teams 多进程协作 | 精读 | 30min |
-| 12 | §6.8 安全总览 | 精读 | 35min |
-| 13 | §6.9 沙箱与 Hook 系统 | 精读 | 30min |
-| 14 | §7.1 从零搭建微服务 | 浏览 | 20min |
-| 15 | §7.6 团队级 Skill 市场 | 精读 | 30min |
+| 1 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 精读 | 20min |
+| 2 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 20min |
+| 3 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 精读 | 30min |
+| 4 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 精读 | 25min |
+| 5 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 30min |
+| 6 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 25min |
+| 7 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 精读 | 25min |
+| 8 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 35min |
+| 9 | [多环境部署方案](../03-setup/multi-env-setup.md) | 精读 | 30min |
+| 10 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 35min |
+| 11 | [Teams 多进程协作](../04-workflows/teams-collaboration.md) | 精读 | 30min |
+| 12 | [安全总览](../06-advanced/security-overview.md) | 精读 | 35min |
+| 13 | [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 精读 | 30min |
+| 14 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 浏览 | 20min |
+| 15 | [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) | 精读 | 30min |
 
 **跳过建议**：
-- §3.1 快速上手（评估阶段可跳过）
-- §3.3 oh-my-openagent 集成（可交给团队成员实施）
-- §4.1 Ultrawork 模式（了解即可，无需深入细节）
-- §5.1-5.5 Skill 开发章节（可交给 Skill 作者）
-- §6.4-6.7 上下文与记忆优化（技术细节，可跳过）
+- [快速上手](../03-setup/quickstart.md)（评估阶段可跳过）
+- [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md)（可交给团队成员实施）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（了解即可，无需深入细节）
+- [Skill 开发章节](../05-skills/creating-skills.md)（可交给 Skill 作者）
+- [上下文与记忆优化](../06-advanced/context-compression.md)（技术细节，可跳过）
 
 **路径特点**：
 - 聚焦评估和决策所需信息
@@ -399,25 +534,25 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 浏览 | 15min |
-| 2 | §2.2 Skill 系统 | 精读 | 40min |
-| 3 | §2.5 约束系统解析 | 精读 | 30min |
-| 4 | §3.2 OpenCode 配置详解 | 精读 | 30min |
-| 5 | §5.1 创建 Skill | 精读 | 45min |
-| 6 | §5.2 Skill 模板 | 精读 | 40min |
-| 7 | §5.3 Skill 最佳实践 | 精读 | 40min |
-| 8 | §5.4 Skill-MCP 桥接 | 精读 | 35min |
-| 9 | §5.5 Skill 插件化模式 | 精读 | 30min |
-| 10 | §6.1 MCP 服务器 | 精读 | 35min |
-| 11 | §7.6 团队级 Skill 市场 | 精读 | 30min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 15min |
+| 2 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 40min |
+| 3 | [约束系统解析](../02-core-concepts/constraints-system.md) | 精读 | 30min |
+| 4 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 30min |
+| 5 | [创建 Skill](../05-skills/creating-skills.md) | 精读 | 45min |
+| 6 | [Skill 模板](../05-skills/skill-templates.md) | 精读 | 40min |
+| 7 | [Skill 最佳实践](../05-skills/skill-best-practices.md) | 精读 | 40min |
+| 8 | [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md) | 精读 | 35min |
+| 9 | [Skill 插件化模式](../05-skills/plugin-patterns.md) | 精读 | 30min |
+| 10 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 35min |
+| 11 | [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) | 精读 | 30min |
 
 **跳过建议**：
-- §1.1, §1.2, §1.4（入门章节，可快速浏览）
-- §2.1 Agent 编排（了解即可，无需深入）
-- §3.1 快速上手（已有 OpenCode 使用经验）
-- §4.1-4.5 工作流实战（了解即可，重点在 Skill 开发）
-- §6.2 自定义 Agent（与 Skill 开发关联度较低）
-- §6.4-6.7 上下文与记忆优化（高级优化，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md)（入门章节，可快速浏览）
+- [Agent 编排](../02-core-concepts/agent-orchestration.md)（了解即可，无需深入）
+- [快速上手](../03-setup/quickstart.md)（已有 OpenCode 使用经验）
+- [工作流实战](../04-workflows/ultrawork-mode.md)（了解即可，重点在 Skill 开发）
+- [自定义 Agent](../06-advanced/custom-agents.md)（与 Skill 开发关联度较低）
+- [上下文与记忆优化](../06-advanced/context-compression.md)（高级优化，按需阅读）
 
 **路径特点**：
 - 以 Skill 开发为核心，深入实践
@@ -436,24 +571,24 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.1 什么是 Harness Engineer | 浏览 | 15min |
-| 2 | §1.2 为什么选择 OpenCode | 精读 | 20min |
-| 3 | §1.4 AI 编程工具生态对比 | 精读 | 30min |
-| 4 | §1.3 Harness Engineering 理论框架 | 浏览 | 20min |
-| 5 | §2.1 Agent 编排 | 浏览 | 15min |
-| 6 | §2.2 Skill 系统 | 浏览 | 15min |
-| 7 | §2.3 工作流模式 | 浏览 | 15min |
-| 8 | §6.3 性能调优 | 浏览 | 15min |
-| 9 | §6.5 Token 预算策略 | 浏览 | 15min |
-| 10 | §7.1 从零搭建微服务 | 精读 | 30min |
-| 11 | §7.2 遗留系统现代化 | 精读 | 30min |
-| 12 | §7.4 全流程自动化 | 精读 | 25min |
+| 1 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 浏览 | 15min |
+| 2 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 20min |
+| 3 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 精读 | 30min |
+| 4 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 20min |
+| 5 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 浏览 | 15min |
+| 6 | [Skill 系统](../02-core-concepts/skills-system.md) | 浏览 | 15min |
+| 7 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 浏览 | 15min |
+| 8 | [性能调优](../06-advanced/performance-tuning.md) | 浏览 | 15min |
+| 9 | [Token 预算策略](../06-advanced/token-budget.md) | 浏览 | 15min |
+| 10 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 30min |
+| 11 | [遗留系统现代化](../07-case-studies/real-world-02.md) | 精读 | 30min |
+| 12 | [全流程自动化](../07-case-studies/case-full-pipeline.md) | 精读 | 25min |
 
 **跳过建议**：
-- §3.1-3.5 环境搭建章节（技术实施细节，可交给团队）
-- §4.1-4.5 工作流实战（技术实施细节，可交给团队）
-- §5.1-5.5 Skill 开发（技术实施细节，可交给团队）
-- §6.1, §6.2, §6.4, §6.6-6.12 高级话题（技术细节，可跳过）
+- [环境搭建章节](../03-setup/quickstart.md)（技术实施细节，可交给团队）
+- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节，可交给团队）
+- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节，可交给团队）
+- [MCP 服务器](../06-advanced/mcp-servers.md), [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md) 高级话题（技术细节，可跳过）
 
 **路径特点**：
 - 聚焦工具对比和 ROI 分析
@@ -472,20 +607,20 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §0.1 读者导航 | 精读 | 15min |
-| 2 | §0.2 多角色阅读路径 | 精读 | 25min |
-| 3 | §1.1 什么是 Harness Engineer | 精读 | 20min |
-| 4 | §1.2 为什么选择 OpenCode | 精读 | 15min |
-| 5 | §1.3 Harness Engineering 理论框架 | 精读 | 25min |
-| 6 | §1.4 AI 编程工具生态对比 | 浏览 | 15min |
-| 7 | §2.1-2.6 核心概念（全部） | 浏览 | 60min |
-| 8 | §7.1-7.6 案例研究（全部） | 浏览 | 60min |
+| 1 | [读者导航](./) | 精读 | 15min |
+| 2 | [多角色阅读路径](reading-paths.md) | 精读 | 25min |
+| 3 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 精读 | 20min |
+| 4 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 15min |
+| 5 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 精读 | 25min |
+| 6 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 浏览 | 15min |
+| 7 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 浏览 | 60min |
+| 8 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 浏览 | 60min |
 
 **跳过建议**：
-- §3.1-3.5 环境搭建（技术实施细节）
-- §4.1-4.5 工作流实战（技术实施细节）
-- §5.1-5.5 Skill 开发（技术实施细节）
-- §6.1-6.12 高级话题（技术细节）
+- [环境搭建](../03-setup/quickstart.md)（技术实施细节）
+- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节）
+- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节）
+- [高级话题](../06-advanced/mcp-servers.md)（技术细节）
 
 **路径特点**：
 - 全局视角，验证需求覆盖
@@ -504,28 +639,28 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.2 为什么选择 OpenCode | 精读 | 20min |
-| 2 | §1.3 Harness Engineering 理论框架 | 精读 | 30min |
-| 3 | §1.4 AI 编程工具生态对比 | 精读 | 30min |
-| 4 | §2.1 Agent 编排 | 精读 | 35min |
-| 5 | §2.2 Skill 系统 | 精读 | 30min |
-| 6 | §2.5 约束系统解析 | 精读 | 30min |
-| 7 | §3.2 OpenCode 配置详解 | 精读 | 40min |
-| 8 | §3.5 多环境部署方案 | 精读 | 35min |
-| 9 | §4.2 多 Agent 协作 | 精读 | 35min |
-| 10 | §4.5 Teams 多进程协作 | 精读 | 30min |
-| 11 | §5.3 Skill 最佳实践 | 精读 | 30min |
-| 12 | §6.1 MCP 服务器 | 精读 | 40min |
-| 13 | §6.8 安全总览 | 精读 | 45min |
-| 14 | §6.9 沙箱与 Hook 系统 | 精读 | 40min |
-| 15 | §7.3 安全审计流水线 | 精读 | 35min |
+| 1 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 20min |
+| 2 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 精读 | 30min |
+| 3 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 精读 | 30min |
+| 4 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 35min |
+| 5 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 30min |
+| 6 | [约束系统解析](../02-core-concepts/constraints-system.md) | 精读 | 30min |
+| 7 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 40min |
+| 8 | [多环境部署方案](../03-setup/multi-env-setup.md) | 精读 | 35min |
+| 9 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 35min |
+| 10 | [Teams 多进程协作](../04-workflows/teams-collaboration.md) | 精读 | 30min |
+| 11 | [Skill 最佳实践](../05-skills/skill-best-practices.md) | 精读 | 30min |
+| 12 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 40min |
+| 13 | [安全总览](../06-advanced/security-overview.md) | 精读 | 45min |
+| 14 | [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 精读 | 40min |
+| 15 | [安全审计流水线](../07-case-studies/case-security-audit.md) | 精读 | 35min |
 
 **跳过建议**：
-- §1.1, §1.5（入门和国产模型章节，按需阅读）
-- §3.1, §3.3, §3.4（环境搭建细节，可快速浏览）
-- §4.1, §4.3, §4.4（工作流细节，了解即可）
-- §5.1, §5.2, §5.4, §5.5（Skill 开发细节，了解即可）
-- §6.2, §6.4-6.7, §6.10-6.12（高级话题，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门和国产模型章节，按需阅读）
+- [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md)（环境搭建细节，可快速浏览）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md)（工作流细节，了解即可）
+- [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，了解即可）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 深入架构和安全分析
@@ -544,24 +679,24 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 浏览 | 15min |
-| 2 | §2.1 Agent 编排 | 精读 | 30min |
-| 3 | §2.2 Skill 系统 | 精读 | 25min |
-| 4 | §3.2 OpenCode 配置详解 | 精读 | 30min |
-| 5 | §4.2 多 Agent 协作 | 精读 | 35min |
-| 6 | §5.4 Skill-MCP 桥接 | 精读 | 35min |
-| 7 | §6.1 MCP 服务器 | 精读 | 50min |
-| 8 | §6.8 安全总览 | 精读 | 30min |
-| 9 | §7.1 从零搭建微服务 | 精读 | 40min |
-| 10 | §7.5 国产模型混合架构 | 精读 | 30min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 15min |
+| 2 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 30min |
+| 3 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 25min |
+| 4 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 30min |
+| 5 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 35min |
+| 6 | [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md) | 精读 | 35min |
+| 7 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 50min |
+| 8 | [安全总览](../06-advanced/security-overview.md) | 精读 | 30min |
+| 9 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 40min |
+| 10 | [国产模型混合架构](../07-case-studies/case-multi-model.md) | 精读 | 30min |
 
 **跳过建议**：
-- §1.1, §1.2, §1.4, §1.5（入门章节，可快速浏览）
-- §2.3, §2.4, §2.5, §2.6（核心概念细节，了解即可）
-- §3.1, §3.3, §3.4, §3.5（环境搭建细节，按需阅读）
-- §4.1, §4.3, §4.4, §4.5（工作流细节，了解即可）
-- §5.1, §5.2, §5.3, §5.5（Skill 开发细节，按需阅读）
-- §6.2-6.7, §6.9-6.12（高级话题，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门章节，可快速浏览）
+- [工作流模式](../02-core-concepts/workflow-patterns.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md)（核心概念细节，了解即可）
+- [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
+- [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以 MCP 服务端集成为核心
@@ -580,24 +715,24 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 浏览 | 15min |
-| 2 | §2.2 Skill 系统 | 精读 | 40min |
-| 3 | §2.3 工作流模式 | 精读 | 30min |
-| 4 | §3.2 OpenCode 配置详解 | 精读 | 25min |
-| 5 | §4.1 Ultrawork 模式 | 精读 | 30min |
-| 6 | §5.1 创建 Skill | 精读 | 35min |
-| 7 | §5.2 Skill 模板 | 精读 | 30min |
-| 8 | §5.3 Skill 最佳实践 | 精读 | 35min |
-| 9 | §7.1 从零搭建微服务 | 浏览 | 20min |
-| 10 | §7.4 全流程自动化 | 浏览 | 20min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 15min |
+| 2 | [Skill 系统](../02-core-concepts/skills-system.md) | 精读 | 40min |
+| 3 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 精读 | 30min |
+| 4 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 25min |
+| 5 | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) | 精读 | 30min |
+| 6 | [创建 Skill](../05-skills/creating-skills.md) | 精读 | 35min |
+| 7 | [Skill 模板](../05-skills/skill-templates.md) | 精读 | 30min |
+| 8 | [Skill 最佳实践](../05-skills/skill-best-practices.md) | 精读 | 35min |
+| 9 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 浏览 | 20min |
+| 10 | [全流程自动化](../07-case-studies/case-full-pipeline.md) | 浏览 | 20min |
 
 **跳过建议**：
-- §1.1, §1.2, §1.4, §1.5（入门章节，可快速浏览）
-- §2.1, §2.4, §2.5, §2.6（核心概念细节，了解即可）
-- §3.1, §3.3, §3.4, §3.5（环境搭建细节，按需阅读）
-- §4.2, §4.3, §4.4, §4.5（工作流细节，了解即可）
-- §5.4, §5.5（MCP 和插件化，按需阅读）
-- §6.1-6.12（高级话题，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门章节，可快速浏览）
+- [Agent 编排](../02-core-concepts/agent-orchestration.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md)（核心概念细节，了解即可）
+- [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
+- [多 Agent 协作](../04-workflows/multi-agent-collab.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
+- [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（MCP 和插件化，按需阅读）
+- [高级话题](../06-advanced/mcp-servers.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 通过组件化类比理解 Skill 系统
@@ -616,17 +751,17 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §0.1 读者导航 | 精读 | 15min |
-| 2 | §0.2 多角色阅读路径 | 精读 | 20min |
-| 3 | §1.1-1.5 引言（全部） | 浏览 | 40min |
-| 4 | §2.1-2.6 核心概念（全部） | 浏览 | 50min |
-| 5 | §7.1-7.6 案例研究（全部） | 浏览 | 50min |
+| 1 | [读者导航](./) | 精读 | 15min |
+| 2 | [多角色阅读路径](reading-paths.md) | 精读 | 20min |
+| 3 | [简介（全部）](../01-introduction/what-is-harness-engineer.md) | 浏览 | 40min |
+| 4 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 浏览 | 50min |
+| 5 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 浏览 | 50min |
 
 **跳过建议**：
-- §3.1-3.5 环境搭建（技术实施细节）
-- §4.1-4.5 工作流实战（技术实施细节）
-- §5.1-5.5 Skill 开发（技术实施细节）
-- §6.1-6.12 高级话题（技术细节）
+- [环境搭建](../03-setup/quickstart.md)（技术实施细节）
+- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节）
+- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节）
+- [高级话题](../06-advanced/mcp-servers.md)（技术细节）
 
 **路径特点**：
 - 全局视角，关注文档体验
@@ -645,15 +780,15 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §0.1 读者导航 | 精读 | 15min |
-| 2 | §0.2 多角色阅读路径 | 精读 | 20min |
-| 3 | §1.1-1.5 引言（全部） | 精读 | 60min |
-| 4 | §2.1-2.6 核心概念（全部） | 精读 | 90min |
-| 5 | §3.1-3.5 环境搭建（全部） | 精读 | 90min |
-| 6 | §4.1-4.5 工作流实战（全部） | 精读 | 90min |
-| 7 | §5.1-5.5 Skill 开发（全部） | 精读 | 75min |
-| 8 | §6.1-6.12 高级话题（全部） | 精读 | 120min |
-| 9 | §7.1-7.6 案例研究（全部） | 精读 | 90min |
+| 1 | [读者导航](./) | 精读 | 15min |
+| 2 | [多角色阅读路径](reading-paths.md) | 精读 | 20min |
+| 3 | [简介（全部）](../01-introduction/what-is-harness-engineer.md) | 精读 | 60min |
+| 4 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 精读 | 90min |
+| 5 | [环境搭建（全部）](../03-setup/quickstart.md) | 精读 | 90min |
+| 6 | [工作流实战（全部）](../04-workflows/ultrawork-mode.md) | 精读 | 90min |
+| 7 | [Skill 开发（全部）](../05-skills/creating-skills.md) | 精读 | 75min |
+| 8 | [高级话题（全部）](../06-advanced/mcp-servers.md) | 精读 | 120min |
+| 9 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 精读 | 90min |
 
 **跳过建议**：无（需要全面验证）
 
@@ -674,25 +809,25 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 浏览 | 15min |
-| 2 | §2.5 约束系统解析 | 精读 | 35min |
-| 3 | §3.2 OpenCode 配置详解 | 精读 | 35min |
-| 4 | §4.2 多 Agent 协作 | 精读 | 30min |
-| 5 | §5.3 Skill 最佳实践 | 精读 | 30min |
-| 6 | §6.1 MCP 服务器 | 精读 | 40min |
-| 7 | §6.8 安全总览 | 精读 | 50min |
-| 8 | §6.9 沙箱与 Hook 系统 | 精读 | 45min |
-| 9 | §6.10 CLAUDE.md 约定系统 | 精读 | 30min |
-| 10 | §6.11 可观测性 | 精读 | 30min |
-| 11 | §7.3 安全审计流水线 | 精读 | 40min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 15min |
+| 2 | [约束系统解析](../02-core-concepts/constraints-system.md) | 精读 | 35min |
+| 3 | [OpenCode 配置详解](../03-setup/opencode-config.md) | 精读 | 35min |
+| 4 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 30min |
+| 5 | [Skill 最佳实践](../05-skills/skill-best-practices.md) | 精读 | 30min |
+| 6 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 40min |
+| 7 | [安全总览](../06-advanced/security-overview.md) | 精读 | 50min |
+| 8 | [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 精读 | 45min |
+| 9 | [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md) | 精读 | 30min |
+| 10 | [可观测性](../06-advanced/observability.md) | 精读 | 30min |
+| 11 | [安全审计流水线](../07-case-studies/case-security-audit.md) | 精读 | 40min |
 
 **跳过建议**：
-- §1.1, §1.2, §1.4, §1.5（入门章节，可快速浏览）
-- §2.1, §2.2, §2.3, §2.4, §2.6（核心概念细节，了解即可）
-- §3.1, §3.3, §3.4, §3.5（环境搭建细节，按需阅读）
-- §4.1, §4.3, §4.4, §4.5（工作流细节，了解即可）
-- §5.1, §5.2, §5.4, §5.5（Skill 开发细节，按需阅读）
-- §6.2-6.7, §6.12（高级话题，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门章节，可快速浏览）
+- [Agent 编排](../02-core-concepts/agent-orchestration.md), [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [验证护栏体系](../02-core-concepts/validation-harness.md)（核心概念细节，了解即可）
+- [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
+- [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以安全为核心，深入威胁分析
@@ -711,24 +846,24 @@ graph TB
 
 | 顺序 | 章节/文章 | 阅读模式 | 预计用时 |
 |------|----------|----------|----------|
-| 1 | §1.3 Harness Engineering 理论框架 | 浏览 | 15min |
-| 2 | §2.1 Agent 编排 | 精读 | 30min |
-| 3 | §2.5 约束系统解析 | 精读 | 35min |
-| 4 | §4.2 多 Agent 协作 | 精读 | 35min |
-| 5 | §5.1 创建 Skill | 精读 | 30min |
-| 6 | §5.3 Skill 最佳实践 | 精读 | 30min |
-| 7 | §6.1 MCP 服务器 | 精读 | 35min |
-| 8 | §6.8 安全总览 | 精读 | 45min |
-| 9 | §6.9 沙箱与 Hook 系统 | 精读 | 40min |
-| 10 | §7.3 安全审计流水线 | 精读 | 40min |
+| 1 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 浏览 | 15min |
+| 2 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 30min |
+| 3 | [约束系统解析](../02-core-concepts/constraints-system.md) | 精读 | 35min |
+| 4 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 35min |
+| 5 | [创建 Skill](../05-skills/creating-skills.md) | 精读 | 30min |
+| 6 | [Skill 最佳实践](../05-skills/skill-best-practices.md) | 精读 | 30min |
+| 7 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 35min |
+| 8 | [安全总览](../06-advanced/security-overview.md) | 精读 | 45min |
+| 9 | [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 精读 | 40min |
+| 10 | [安全审计流水线](../07-case-studies/case-security-audit.md) | 精读 | 40min |
 
 **跳过建议**：
-- §1.1, §1.2, §1.4, §1.5（入门章节，可快速浏览）
-- §2.2, §2.3, §2.4, §2.6（核心概念细节，了解即可）
-- §3.1-3.5（环境搭建细节，按需阅读）
-- §4.1, §4.3, §4.4, §4.5（工作流细节，了解即可）
-- §5.2, §5.4, §5.5（Skill 开发细节，按需阅读）
-- §6.2-6.7, §6.10-6.12（高级话题，按需阅读）
+- [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门章节，可快速浏览）
+- [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [验证护栏体系](../02-core-concepts/validation-harness.md)（核心概念细节，了解即可）
+- [环境搭建细节](../03-setup/quickstart.md)（环境搭建细节，按需阅读）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
+- [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以攻击面评估为核心
@@ -746,14 +881,14 @@ graph TB
 ```mermaid
 graph TB
     subgraph 热度分析
-        H1["§1.1-1.3<br/>入门/技术负责人/工程经理/需求分析师<br/>热度: ★★★★☆"]
-        H2["§2.1-2.3<br/>入门/效率/技术负责人/架构师/后端/前端<br/>热度: ★★★★★"]
-        H3["§3.1-3.2<br/>入门/效率/技术负责人/Skill作者/后端/安全工程师<br/>热度: ★★★★☆"]
-        H4["§4.1-4.2<br/>入门/效率/技术负责人/架构师/后端/前端/安全工程师/红队<br/>热度: ★★★★★"]
-        H5["§5.1-5.3<br/>Skill作者/前端/安全工程师/红队<br/>热度: ★★★★☆"]
-        H6["§6.1 MCP服务器<br/>Skill作者/后端/架构师/安全工程师/红队<br/>热度: ★★★★☆"]
-        H7["§6.8-6.9 安全章节<br/>技术负责人/架构师/安全工程师/红队<br/>热度: ★★★★☆"]
-        H8["§7.1-7.6 案例研究<br/>全部角色<br/>热度: ★★★★★"]
+        H1["简介<br/>入门/技术负责人/工程经理/需求分析师<br/>热度: ★★★★☆"]
+        H2["核心概念<br/>入门/效率/技术负责人/架构师/后端/前端<br/>热度: ★★★★★"]
+        H3["环境搭建<br/>入门/效率/技术负责人/Skill作者/后端/安全工程师<br/>热度: ★★★★☆"]
+        H4["工作流实战<br/>入门/效率/技术负责人/架构师/后端/前端/安全工程师/红队<br/>热度: ★★★★★"]
+        H5["Skill 开发<br/>Skill作者/前端/安全工程师/红队<br/>热度: ★★★★☆"]
+        H6["MCP 服务器<br/>Skill作者/后端/架构师/安全工程师/红队<br/>热度: ★★★★☆"]
+        H7["安全章节<br/>技术负责人/架构师/安全工程师/红队<br/>热度: ★★★★☆"]
+        H8["案例研究<br/>全部角色<br/>热度: ★★★★★"]
     end
 
     H1 --> H2
@@ -776,7 +911,7 @@ graph TB
 
 | 重叠区域 | 涉及路径 | 共同关注点 | 切换建议 |
 |----------|----------|------------|----------|
-| **引言** | 入门, 技术负责人, 工程经理, 需求分析师 | 价值主张、工具对比 | 工程经理可快速浏览，技术负责人需精读 |
+| **简介** | 入门, 技术负责人, 工程经理, 需求分析师 | 价值主张、工具对比 | 工程经理可快速浏览，技术负责人需精读 |
 | **核心概念** | 全部路径 | Agent/Skill/Workflow 抽象 | 所有路径必读，是后续章节基础 |
 | **环境搭建** | 入门, 效率, Skill作者, 后端 | 配置详解、集成方案 | 效率/Skill作者可跳过快速上手 |
 | **工作流实战** | 效率, 技术负责人, 架构师, 后端, 前端, 安全工程师, 红队 | Agent 协作、工作流模式 | 不同角色关注不同工作流模式 |
@@ -789,13 +924,13 @@ graph TB
 
 #### 从入门开发者切换到效率开发者
 
-**触发条件**：完成 §3.2 OpenCode 配置详解，理解基本概念后。
+**触发条件**：完成 [OpenCode 配置详解](../03-setup/opencode-config.md)，理解基本概念后。
 
 **切换步骤**：
-1. 跳过 §3.1 快速上手
-2. 深入 §2.4 上下文工程核心、§2.5 约束系统解析
-3. 精读 §4.2 多 Agent 协作、§4.3 自定义工作流
-4. 阅读 §6.3 性能调优、§6.5 Token 预算策略
+1. 跳过 [快速上手](../03-setup/quickstart.md)
+2. 深入 [上下文工程核心](../02-core-concepts/context-engineering-core.md)、[约束系统解析](../02-core-concepts/constraints-system.md)
+3. 精读 [多 Agent 协作](../04-workflows/multi-agent-collab.md)、[自定义工作流](../04-workflows/custom-workflows.md)
+4. 阅读 [性能调优](../06-advanced/performance-tuning.md)、[Token 预算策略](../06-advanced/token-budget.md)
 
 **新增阅读时间**：约 3 小时
 
@@ -806,10 +941,10 @@ graph TB
 **触发条件**：掌握工作流模式后，希望创建自定义 Skill。
 
 **切换步骤**：
-1. 深入 §2.2 Skill 系统
+1. 深入 [Skill 系统](../02-core-concepts/skills-system.md)
 2. 精读 Skill 开发全部章节
-3. 阅读 §6.1 MCP 服务器（如需外部工具集成）
-4. 参考 §7.6 团队级 Skill 市场
+3. 阅读 [MCP 服务器](../06-advanced/mcp-servers.md)（如需外部工具集成）
+4. 参考 [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md)
 
 **新增阅读时间**：约 3 小时
 
@@ -820,10 +955,10 @@ graph TB
 **触发条件**：需要深入评估架构集成和安全合规。
 
 **切换步骤**：
-1. 精读 §2.5 约束系统解析
-2. 深入 §6.1 MCP 服务器
-3. 精读 §6.8 安全总览、§6.9 沙箱与 Hook 系统
-4. 阅读 §7.3 安全审计流水线
+1. 精读 [约束系统解析](../02-core-concepts/constraints-system.md)
+2. 深入 [MCP 服务器](../06-advanced/mcp-servers.md)
+3. 精读 [安全总览](../06-advanced/security-overview.md)、[沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md)
+4. 阅读 [安全审计流水线](../07-case-studies/case-security-audit.md)
 
 **新增阅读时间**：约 3 小时
 
@@ -834,9 +969,9 @@ graph TB
 **触发条件**：关注 MCP 服务端安全，需要评估企业级合规。
 
 **切换步骤**：
-1. 精读 §2.5 约束系统解析
-2. 深入 §6.8 安全总览、§6.9 沙箱与 Hook 系统
-3. 阅读 §7.3 安全审计流水线
+1. 精读 [约束系统解析](../02-core-concepts/constraints-system.md)
+2. 深入 [安全总览](../06-advanced/security-overview.md)、[沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md)
+3. 阅读 [安全审计流水线](../07-case-studies/case-security-audit.md)
 
 **新增阅读时间**：约 2.5 小时
 
@@ -847,10 +982,10 @@ graph TB
 **触发条件**：需要评估攻击面，利用 Agent 进行安全测试。
 
 **切换步骤**：
-1. 精读 §2.1 Agent 编排（关注攻击链）
-2. 深入 §4.2 多 Agent 协作（关注并行攻击）
-3. 精读 §5.1 创建 Skill、§5.3 Skill 最佳实践（关注安全测试 Skill）
-4. 参考 §7.3 安全审计流水线
+1. 精读 [Agent 编排](../02-core-concepts/agent-orchestration.md)（关注攻击链）
+2. 深入 [多 Agent 协作](../04-workflows/multi-agent-collab.md)（关注并行攻击）
+3. 精读 [创建 Skill](../05-skills/creating-skills.md)、[Skill 最佳实践](../05-skills/skill-best-practices.md)（关注安全测试 Skill）
+4. 参考 [安全审计流水线](../07-case-studies/case-security-audit.md)
 
 **新增阅读时间**：约 2.5 小时
 
@@ -892,7 +1027,7 @@ graph TB
 
 ## 关联章节
 
-- → [读者导航](README.md)
-- → [引言](../01-introduction/README.md)
-- → [核心概念](../02-core-concepts/README.md)
-- → [案例研究](../07-case-studies/README.md)
+- → [读者导航](./)
+- → [简介](../01-introduction/)
+- → [核心概念](../02-core-concepts/)
+- → [案例研究](../07-case-studies/)

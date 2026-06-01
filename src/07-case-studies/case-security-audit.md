@@ -26,8 +26,8 @@
 
 ## 关联章节
 
-- ← [Ch4 工作流实战](../04-workflows/README.md)（Team Mode + `security-research` 团队）
-- ← [Ch6 高级话题](../06-advanced/README.md)（安全概念基础）
+- ← [Ch4 工作流实战](../04-workflows/)（Team Mode + `security-research` 团队）
+- ← [Ch6 高级话题](../06-advanced/)（安全概念基础）
 - ← [案例二：遗留系统现代化](real-world-02.md)（安全审计在遗留系统中的应用）
 - → [案例：全流程自动化](case-full-pipeline.md)（安全环节在全流程中的位置）
 

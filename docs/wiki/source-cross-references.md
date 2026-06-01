@@ -5,6 +5,10 @@
 
 ---
 
+《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）是一本 Engineering（驾驭工程）的中文技术书。它以 Claude Code `v2.1.88` 的公开发布包与 source map 还原结果为分析材料，从真实工程实现中提炼 AI 编码 Agent 的架构模式、上下文策略、权限体系和生产实践。在线阅读：https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/
+
+---
+
 ## 第一节：源材料清单
 
 | # | 源文件 | 行数 | 核心主题 | 关键章节 | 质量 | 新鲜度 |
@@ -22,7 +26,7 @@
 ### 01-核心概念速通 → 书籍
 | 源材料章节 | 书籍位置 | 改编说明 |
 |----------------|---------------|----------------|
-| OS类比表（Agent=进程, Skill=驱动, etc.） | Ch1 Art.1.1 | 直接使用 — 完美类比，用于 Harness Engineering 引言 |
+| OS类比表（Agent=进程, Skill=驱动, etc.） | Ch1 Art.1.1 | 直接使用 — 完美类比，用于 Harness Engineering 简介 |
 | Agent：执行主体 | Ch2 Art.2.1 | 直接使用 — 增加 OMO 11+ Agent 扩展内容 |
 | Skill：专业技能包 | Ch2 Art.2.2 | 直接使用 — 增加 Scoped Skills 和 Marketplace 内容 |
 | Command：快捷指令 | Ch2 Art.2.3 | 直接使用 — 与源材料 04 Profile 切换整合 |
@@ -59,7 +63,7 @@
 | Token 预算机制 | Ch6 Art.6.5 | 直接使用 — 预算分配策略 |
 | 提示词缓存架构 | Ch6 Art.6.6 | 改编 — 聚焦三级缓存 |
 | 记忆系统架构 | Ch6 Art.6.7 | 直接使用 — Memdir 架构 |
-| 安全架构与权限模型 | Ch6 Art.6.8 | 直接使用 — 扩展马书6模式视角 |
+| 安全架构与权限模型 | Ch6 Art.6.8 | 直接使用 — 扩展《马书》第6章模式视角 |
 | 沙箱与Hook点 | Ch6 Art.6.9 | 直接使用 — 53+ Hook分类 |
 | 可观测性54+事件 | Ch6 Art.6.11 | 直接使用 — 5层遥测架构 |
 | Feature Flags 路线图 | Ch6 Art.6.12 | 直接使用 — 89 Flag分类 |
@@ -133,7 +137,7 @@
 | 书籍章节 | 主要源材料 | 次要源材料 | 需要网络调研？ |
 |-------------|---------------|-----------------|--------------------------|
 | Ch0: 读者决策指南 | — | PRD §5.2 (读者画像), 团队评审画像 | 否 — 源自 PRD |
-| Ch1 Art.1.1: 什么是 Harness Engineer | 01 (OS类比, 引言) | 04 (Profile/AGENTS.md理念) | 否 |
+| Ch1 Art.1.1: 什么是 Harness Engineer | 01 (OS类比, 简介) | 04 (Profile/AGENTS.md理念) | 否 |
 | Ch1 Art.1.2: 为什么选择 OpenCode | 01 (FAQ, 附录) | 02 (架构对比) | 是 — 当前市场对比 |
 | Ch1 Art.1.3: Harness Engineering理论 | HE实践 01 | — | 否 |
 | Ch1 Art.1.4: 工具生态对比 | HE实践 04 | — | 是 — 6工具最新对比 |
@@ -141,9 +145,9 @@
 | Ch2 Art.2.1: Agent 系统 | 01 (Agent 章节) | 02 (OMO Agent体系) | 否 |
 | Ch2 Art.2.2: Skill 系统 | 01 (Skill 章节) | 03 (Scoped Skills) | 否 |
 | Ch2 Art.2.3: Workflow 模式 | 01 (Command 章节) | 03 (AGENTS.md) + 04 (Profile) | 否 |
-| Ch2 Art.2.4: 上下文工程核心 | 马书第3-4篇 | HE实践 03 §实践一 | 否 |
-| Ch2 Art.2.5: 约束系统 | 马书第5篇 | HE实践 03 §实践二 | 否 |
-| Ch2 Art.2.6: 验证护栏 | 马书第17章 | HE实践 03 §实践三 | 否 |
+| Ch2 Art.2.4: 上下文工程核心 | 《马书》[第3章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch03) | HE实践 03 §实践一 | 否 |
+| Ch2 Art.2.5: 约束系统 | 《马书》[第5章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch05) | HE实践 03 §实践二 | 否 |
+| Ch2 Art.2.6: 验证护栏 | 《马书》[第17章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch17) | HE实践 03 §实践三 | 否 |
 | Ch3 Art.3.1: 快速开始 | 01 (附录 A/B) | 04 (附录安装指南) | 是 — 最新安装命令 |
 | Ch3 Art.3.2: 配置深入 | 03 (Config 章节) | 02 (配置路径/安全架构/成本) | 否 |
 | Ch3 Art.3.3: OMO 集成 | 02 (OMO 整章) | — | 是 — 最新 OMO v4.5 特性 |
@@ -152,31 +156,31 @@
 | Ch4 Art.4.1: Ultrawork 模式 | 02 (Ultrawork) | 03 (对比表) | 否 |
 | Ch4 Art.4.2: 多 Agent | 03 (7-Agent Pipeline) | 04 (Pipeline as Team) | 否 |
 | Ch4 Art.4.3: 自定义工作流 | 02 (Team Mode) | 03 (Hyperplan/security-research) | 否 |
-| Ch4 Art.4.4: Agent派生模式 | 马书第20章 | — | 否 |
-| Ch4 Art.4.5: Teams多进程协作 | 马书第20b章 | — | 否 |
+| Ch4 Art.4.4: Agent派生模式 | 《马书》[第20章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch20) | — | 否 |
+| Ch4 Art.4.5: Teams多进程协作 | 《马书》第20b章 | — | 否 |
 | Ch5 Art.5.1: 创建 Skill | 01 (SKILL.md 格式) | 05 (Skill 开发附录) | 否 |
 | Ch5 Art.5.2: Skill 模板 | 01 (agile-coach 示例) | 04 (DSL, 工作台模式) | 否 |
 | Ch5 Art.5.3: 最佳实践 | 03 (反模式) | 04 (技巧) + 05 (调试清单) | 否 |
-| Ch5 Art.5.4: Skill-MCP桥接 | 马书第22章 | HE实践 02 | 否 |
-| Ch5 Art.5.5: Skill插件化模式 | 马书第22b章 | — | 否 |
+| Ch5 Art.5.4: Skill-MCP桥接 | 《马书》[第22章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch22) | HE实践 02 | 否 |
+| Ch5 Art.5.5: Skill插件化模式 | 《马书》第22b章 | — | 否 |
 | Ch6 Art.6.1: MCP 服务器 | 01 (MCP 章节) | 02 (MCP 集成架构) | 是 — 最新 MCP 协议规范 |
 | Ch6 Art.6.2: 自定义 Agent 和 Plugin | 01 (Plugin 章节) | 04 (Env Guard 完整代码) + 02 (OMO Hook点) | 否 |
 | Ch6 Art.6.3: 性能调优 | 02 (成本架构) | 03 (Token优化) + 04 (模型降级链) | 否 |
-| Ch6 Art.6.4: 上下文压缩 | 马书第9-11章 | — | 否 |
-| Ch6 Art.6.5: Token预算策略 | 马书第12章 | — | 否 |
-| Ch6 Art.6.6: 提示词缓存 | 马书第13-15章 | — | 否 |
-| Ch6 Art.6.7: 记忆系统 | 马书第24章 | — | 否 |
-| Ch6 Art.6.8: 安全总览 | 马书第16-17b章 | — | 否 |
-| Ch6 Art.6.9: 沙箱与Hook系统 | 马书第18-18b章 | OMO Hook | 否 |
-| Ch6 Art.6.10: CLAUDE.md系统 | 马书第19章 | — | 否 |
-| Ch6 Art.6.11: 可观测性 | 马书第29章 | OMO 54+事件 | 否 |
-| Ch6 Art.6.12: Feature Flags | 马书第23章 | — | 否 |
+| Ch6 Art.6.4: 上下文压缩 | 《马书》[第9章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch09) | — | 否 |
+| Ch6 Art.6.5: Token预算策略 | 《马书》[第12章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch12) | — | 否 |
+| Ch6 Art.6.6: 提示词缓存 | 《马书》[第13章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch13) | — | 否 |
+| Ch6 Art.6.7: 记忆系统 | 《马书》[第24章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch24) | — | 否 |
+| Ch6 Art.6.8: 安全总览 | 《马书》[第16章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch16) | — | 否 |
+| Ch6 Art.6.9: 沙箱与Hook系统 | 《马书》[第18章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch18) | OMO Hook | 否 |
+| Ch6 Art.6.10: CLAUDE.md系统 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) | — | 否 |
+| Ch6 Art.6.11: 可观测性 | 《马书》[第29章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch29) | OMO 54+事件 | 否 |
+| Ch6 Art.6.12: Feature Flags | 《马书》[第23章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch23) | — | 否 |
 | Ch7 Art.7.1: 微服务案例 | 05 (案例1) | 03 (全链路图) | 否 |
 | Ch7 Art.7.2: 遗留系统案例 | 05 (案例2, 案例3) | 03 (7-Agent Pipeline) | 否 |
-| Ch7 Art.7.3: 安全审计流水线 | HE实践 02 (Cline案例) | 马书第30章 | 否 |
+| Ch7 Art.7.3: 安全审计流水线 | HE实践 02 (Cline案例) | 《马书》[第30章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch30) | 否 |
 | Ch7 Art.7.4: 全流程自动化 | HE实践 02 (Codex案例) | — | 否 |
 | Ch7 Art.7.5: 国产模型混合架构 | HE实践 04 §国产 | — | 是 — 国产模型最新动态 |
-| Ch7 Art.7.6: 团队Skill市场 | 马书第22-22b章 | HE实践 03 | 否 |
+| Ch7 Art.7.6: 团队Skill市场 | 《马书》[第22章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch22) | HE实践 03 | 否 |
 
 ---
 
@@ -207,25 +211,25 @@
 | Scoped Skills | 02 §作用域技能(v4.3) | Ch5 Art.5.1 | target_agent, 可见性控制 |
 | Command | 01 §Command + 03 §1 C+A | Ch2 Art.2.3, Ch4 Art.4.3 | 内置/自定义, 模板语法, 团队命令库 |
 | Plugin | 01 §Plugin + 06 §Env Guard | Ch6 Art.6.2 | Hook点, Pipeline模式, 工具优先级 |
-| 上下文工程 (Context Engineering) | 马书第3-4篇 | Ch2 Art.2.4 | 压缩, 缓存, Token预算, 三层模型 |
-| 约束系统 (Constraints System) | 马书第5篇 | Ch2 Art.2.5 | 权限模型, 架构护栏, Lint规则 |
-| 验证护栏 (Validation Harness) | 马书第17章 | Ch2 Art.2.6 | 质量门禁, YOLO分类, 自动验证 |
+| 上下文工程 (Context Engineering) | 《马书》[第3章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch03) | Ch2 Art.2.4 | 压缩, 缓存, Token预算, 三层模型 |
+| 约束系统 (Constraints System) | 《马书》[第5章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch05) | Ch2 Art.2.5 | 权限模型, 架构护栏, Lint规则 |
+| 验证护栏 (Validation Harness) | 《马书》[第17章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch17) | Ch2 Art.2.6 | 质量门禁, YOLO分类, 自动验证 |
 | 工具生态对比 (Ecosystem) | HE实践 04 | Ch1 Art.1.4 | 6工具对比, 选型决策树 |
 | 国产AI生态 (Chinese Ecosystem) | HE实践 04 §国产 | Ch1 Art.1.5, Ch3 Art.3.4 | Trae/CodeGeeX/通义灵码/文心快码 |
 | Harness Engineering理论框架 | HE实践 01 | Ch1 Art.1.3 | 5大分类法, 演进时间线 |
-| Agent派生 (Agent Derivation) | 马书第20章 | Ch4 Art.4.4 | 子Agent, 委派, 协调者 |
-| Teams多进程协作 (Teams) | 马书第20b章 | Ch4 Art.4.5 | 消息传递, 进程内集群 |
-| MCP桥接 (Skill-MCP Bridge) | 马书第22章 | Ch5 Art.5.4 | Skill作为桥接层, 外部工具包装 |
-| Skill插件化 (Plugin Patterns) | 马书第22b章 | Ch5 Art.5.5 | 组合Skill, Skills Marketplace |
-| 上下文压缩 (Compaction) | 马书第9-11章 | Ch6 Art.6.4 | 自动压缩, 微压缩, 压缩后恢复 |
-| Token预算 (Token Budget) | 马书第12章 | Ch6 Art.6.5 | 预算分配, 估算规则, 超限处理 |
-| 提示词缓存 (Prompt Caching) | 马书第13-15章 | Ch6 Art.6.6 | 三级缓存, 缓存断点, 7+优化模式 |
-| 记忆系统 (Memory System) | 马书第24章 | Ch6 Art.6.7 | Memdir架构, Auto-Dream, Compaction |
-| 安全模型 (Security Model) | 马书第16-17b章 | Ch6 Art.6.8 | 6权限模式, YOLO分类器, 注入防御 |
-| 沙箱隔离 (Sandbox) | 马书第18-18b章 | Ch6 Art.6.9 | Seatbelt/Bubblewrap, 53+Hook |
-| CLAUDE.md指令层 | 马书第19章 | Ch6 Art.6.10 | 用户指令覆盖, @include系统 |
-| 可观测性 (Observability) | 马书第29章 | Ch6 Art.6.11 | logEvent, 5层遥测, 生产监控 |
-| Feature Flags路线图 | 马书第23章 | Ch6 Art.6.12 | 89 Flags, 产品演进 |
+| Agent派生 (Agent Derivation) | 《马书》[第20章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch20) | Ch4 Art.4.4 | 子Agent, 委派, 协调者 |
+| Teams多进程协作 (Teams) | 《马书》第20b章 | Ch4 Art.4.5 | 消息传递, 进程内集群 |
+| MCP桥接 (Skill-MCP Bridge) | 《马书》[第22章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch22) | Ch5 Art.5.4 | Skill作为桥接层, 外部工具包装 |
+| Skill插件化 (Plugin Patterns) | 《马书》第22b章 | Ch5 Art.5.5 | 组合Skill, Skills Marketplace |
+| 上下文压缩 (Compaction) | 《马书》[第9章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch09) | Ch6 Art.6.4 | 自动压缩, 微压缩, 压缩后恢复 |
+| Token预算 (Token Budget) | 《马书》[第12章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch12) | Ch6 Art.6.5 | 预算分配, 估算规则, 超限处理 |
+| 提示词缓存 (Prompt Caching) | 《马书》[第13章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch13) | Ch6 Art.6.6 | 三级缓存, 缓存断点, 7+优化模式 |
+| 记忆系统 (Memory System) | 《马书》[第24章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch24) | Ch6 Art.6.7 | Memdir架构, Auto-Dream, Compaction |
+| 安全模型 (Security Model) | 《马书》[第16章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch16) | Ch6 Art.6.8 | 6权限模式, YOLO分类器, 注入防御 |
+| 沙箱隔离 (Sandbox) | 《马书》[第18章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch18) | Ch6 Art.6.9 | Seatbelt/Bubblewrap, 53+Hook |
+| CLAUDE.md指令层 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) | Ch6 Art.6.10 | 用户指令覆盖, @include系统 |
+| 可观测性 (Observability) | 《马书》[第29章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch29) | Ch6 Art.6.11 | logEvent, 5层遥测, 生产监控 |
+| Feature Flags路线图 | 《马书》[第23章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch23) | Ch6 Art.6.12 | 89 Flags, 产品演进 |
 | Team Mode | 02 §Team Mode + 03 §4 T+S | Ch4 Art.4.3 | 12 tools, 成员类型, 内置Skills |
 | MCP | 01 §MCP + 02 §MCP集成 | Ch6 Art.6.1 | stdio/SSE/WebSocket, ToolRegistry统一 |
 | Category Routing | 02 §类别路由 | Ch3 Art.3.3 | 工作流路由 + 模型路由 |

@@ -18,6 +18,6 @@
 
 ## 关联章节
 
-- → [§3.2 OpenCode 配置详解](opencode-config.md) — 基本安装后的深入配置
-- ← [§1 引言](../01-introduction/README.md) — 前置概念理解
-- ← [§2 核心概念](../02-core-concepts/README.md) — Agent、Skill、Workflow 基础
+- → [OpenCode 配置详解](opencode-config.md) — 基本安装后的深入配置
+- ← [简介](../01-introduction/) — 前置概念理解
+- ← [核心概念](../02-core-concepts/) — Agent、Skill、Workflow 基础

@@ -2,6 +2,11 @@
 
 > 理解 Skill 的结构规范、发现路径与加载机制——从定义领域知识包到实现精确权限控制。
 
+> **前置条件**
+> - 已完成 [Agent 编排](agent-orchestration.md)，理解 Agent 的加载和执行机制
+> - 已安装 OpenCode CLI 并完成基础配置
+> - 已了解 YAML frontmatter 和 Markdown 格式
+
 ## 文章概述
 
 Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每次从零学习，而是像加载驱动程序一样按需获取专业技能。本章节详细讲解 SKILL.md 的完整格式规范，包括 frontmatter 元数据字段（name、description、allowed-tools、target_agent）、正文结构（工作流 + 指令 + 输出规范）以及捆绑资源目录（scripts/、templates/、reference/）。读者将理解 Skill 与普通 Prompt 的核心差异——权限控制、工具绑定和元数据索引——这是 Skill 能够工程化复用的根基。
@@ -569,8 +574,7 @@ allowed-tools:
 
 OMO 配置可以覆盖 SKILL.md 中的默认值：
 
-```jsonc
-// opencode.json
+```jsonc:opencode.json
 {
   "skills": {
     "frontend-architect": {
@@ -689,9 +693,21 @@ Skill 是 OpenCode 生态中将领域知识工程化的核心载体。通过 fro
 
 ---
 
+## 学习检查清单
+
+完成本章学习后，请确认你能够：
+
+- [ ] 解释 Skill 与普通 Prompt 的核心差异（权限控制、工具绑定、元数据索引）
+- [ ] 编写符合规范的 SKILL.md 文件，包含 frontmatter 和正文结构
+- [ ] 描述 Skill 的三级搜索路径（项目级→用户级→内置）及其优先级
+- [ ] 配置 allowed-tools 字段并理解最小权限原则
+- [ ] 说明渐进式披露机制的三阶段加载过程
+
+---
+
 ## 关联章节
 
 - ← [Agent 编排](agent-orchestration.md)：Skill 由 Agent 加载和执行，理解 Agent 是理解 Skill 的前提
 - → [工作流模式](workflow-patterns.md)：Command 可指定 Skill，工作流编排中 Skill 是能力单元
-- → [Ch5 Skill 开发](../05-skills/README.md)：Skill 模板和开发实操，最佳实践的深度展开
-- → [Ch6 安全总览](../06-advanced/security-overview.md)：权限控制的深度分析和安全审计
+- → [Skill 开发](../05-skills/)：Skill 模板和开发实操，最佳实践的深度展开
+- → [安全总览](../06-advanced/security-overview.md)：权限控制的深度分析和安全审计

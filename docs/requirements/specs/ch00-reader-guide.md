@@ -58,7 +58,7 @@
    - 大模型训练或微调
 
 4. **版本声明**
-   - OpenCode v1.15.x / OMO v4.5.x / Docsify v4 / Mermaid v10+
+   - OpenCode v1.15.x / OMO v4.5.x / mdBook v0.4.x / Mermaid v10+
    - 版本更新说明和 CHANGELOG 链接
 
 #### 核心概念
@@ -234,7 +234,7 @@
 #### 关联章节
 
 - ← [Article 0.2](ch00-reader-guide.md)（阅读路径前置）
-- → [Ch1 引言](../01-introduction/README.md)（阅读模式决定了如何进入正文）
+- → [Ch1 简介](../01-introduction/README.md)（阅读模式决定了如何进入正文）
 
 #### ✏️ 现有内容修改点
 

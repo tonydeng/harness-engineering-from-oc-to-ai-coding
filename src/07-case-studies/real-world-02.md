@@ -26,9 +26,9 @@
 
 ## 关联章节
 
-- ← [Ch4 工作流实战](../04-workflows/README.md)（Team Mode / 7-Agent Pipeline）
-- ← [Ch6 高级话题](../06-advanced/README.md)（MCP 用于安全查询、Feature Flags 用于灰度）
-- ← [Ch5 Skill 开发](../05-skills/README.md)（Skill 用于安全审计）
+- ← [Ch4 工作流实战](../04-workflows/)（Team Mode / 7-Agent Pipeline）
+- ← [Ch6 高级话题](../06-advanced/)（MCP 用于安全查询、Feature Flags 用于灰度）
+- ← [Ch5 Skill 开发](../05-skills/)（Skill 用于安全审计）
 - → [案例：安全审计流水线](case-security-audit.md)（安全审计的独立深化）
 
 ## 验证标准

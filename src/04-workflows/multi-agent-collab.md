@@ -20,6 +20,6 @@
 
 ## 关联章节
 
-- ← [§4.1 Ultrawork 模式](ultrawork-mode.md) — 单 Agent → 多 Agent
-- → [§4.3 自定义工作流](custom-workflows.md) — Team Mode 是更高级的协作形式
-- ← [§2.3 工作流模式](../02-core-concepts/workflow-patterns.md) — Command 触发 Pipeline
+- ← [Ultrawork 模式](ultrawork-mode.md) — 单 Agent → 多 Agent
+- → [自定义工作流](custom-workflows.md) — Team Mode 是更高级的协作形式
+- ← [工作流模式](../02-core-concepts/workflow-patterns.md) — Command 触发 Pipeline

@@ -22,6 +22,6 @@
 
 ## 关联章节
 
-- ← [§2.4 上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础）
-- → [§6.5 Token 预算策略](token-budget.md)（Token 预算与压缩的配合）
-- → [§6.11 可观测性](observability.md)（可观测性监控压缩效果）
+- ← [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础）
+- → [Token 预算策略](token-budget.md)（Token 预算与压缩的配合）
+- → [可观测性](observability.md)（可观测性监控压缩效果）

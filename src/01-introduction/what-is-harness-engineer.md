@@ -357,14 +357,13 @@ flowchart LR
 
 基于以上定义，我们可以提炼出 Harness Engineer 的五大核心能力框架：
 
-```mermaid
-radar-beta
-    title Harness Engineer 能力雷达图
-    axis 需求澄清["需求澄清"], 工作流设计["工作流设计"], Agent编排["Agent编排"], 质量审查["质量审查"], 知识沉淀["知识沉淀"]
-    
-    curve{能力要求: 80} : 85, 90, 88, 82, 78
-    curve{入门水平: 40} : 35, 30, 25, 40, 20
-```
+| 能力维度 | 能力要求 | 入门水平 | 差距 |
+|---------|---------|---------|-----|
+| 需求澄清 | 85 | 35 | +50 |
+| 工作流设计 | 90 | 30 | +60 |
+| Agent 编排 | 88 | 25 | +63 |
+| 质量审查 | 82 | 40 | +42 |
+| 知识沉淀 | 78 | 20 | +58 |
 
 #### 1. 需求澄清能力
 
@@ -439,7 +438,7 @@ flowchart TB
 
 建立自动化质量门禁，而非依赖人工检查。
 
-```yaml
+```yaml:examples/quality-gates/example-gates.yaml
 quality_gates:
   - name: test-coverage
     condition: coverage >= 80%
@@ -530,7 +529,7 @@ workflow:
 
 **安全审计日志示例**：
 
-```json
+```json:examples/audit-logs/security-audit.json
 {
   "timestamp": "2026-06-01T14:32:15Z",
   "session_id": "sess-abc123",
@@ -625,6 +624,6 @@ Harness Engineering 的三大原则——可复现、可审计、可改进——
 
 - → [为什么选择 OpenCode](why-opencode.md)（理解概念后，自然延伸至工具选择）
 - → [Harness Engineering 理论框架](harness-engineering-theory.md)（从概念到理论的深化）
-- → [Ch2 核心概念](../02-core-concepts/README.md)（为理解 Agent、Skill、Workflow 等概念奠定基础）
-- → [Ch4 工作流实战](../04-workflows/README.md)（工程流水线的具体实现与最佳实践）
-- ← 承接 [第 0 章 读者导航](../00-guide/README.md)（建立对全书结构的基本认知后，从这里正式开始）
+- → [核心概念](../02-core-concepts/)（为理解 Agent、Skill、Workflow 等概念奠定基础）
+- → [工作流实战](../04-workflows/)（工程流水线的具体实现与最佳实践）
+- ← 承接 [读者导航](../00-guide/)（建立对全书结构的基本认知后，从这里正式开始）

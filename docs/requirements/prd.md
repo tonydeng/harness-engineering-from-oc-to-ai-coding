@@ -50,7 +50,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
   ├── reading-paths（13 角色阅读路径推荐）
   └── how-to-read（2 种阅读方式：线性通读 / 按角色跳读）
 
-第1章: 引言 (5 篇文章)
+第1章: 简介 (5 篇文章)
   ├── 什么是 Harness Engineer（增补 Mitchell Hashimoto 原始定义 + Harrison Chase 公式）
   ├── 为什么选择 OpenCode（增补 OMO v4.5+ 特性）
   ├── harness-engineering-theory（理论框架、5大分类法、演进时间线 2024→2026）
@@ -58,9 +58,9 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
   └── chinese-ecosystem（国产方案全景：Trae、CodeGeeX、通义灵码、文心快码）
 
 第2章: 核心概念 (6 篇文章)
-  ├── Agent 编排（增补马书 Agent Loop 状态机视角）
+  ├── Agent 编排（增补《马书》第4章 Agent Loop 状态机视角）
   ├── Skill 系统
-  ├── 工作流模式（增补马书 6 种工作流模式引用）
+  ├── 工作流模式（增补《马书》第6章 6 种工作流模式引用）
   ├── context-engineering-core（上下文工程：压缩、缓存、Token预算）
   ├── constraints-system（约束系统：权限模型、架构护栏、lint规则）
   └── validation-harness（验证护栏：质量门禁、YOLO分类、自动验证）
@@ -111,9 +111,11 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 
 ### 3.2 内容来源映射
 
+> **源材料说明**：《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）是一本 Engineering（驾驭工程）的中文技术书。它以 Claude Code `v2.1.88` 的公开发布包与 source map 还原结果为分析材料，从真实工程实现中提炼 AI 编码 Agent 的架构模式、上下文策略、权限体系和生产实践。在线阅读：https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/
+
 | 书本章节 | 来源 | 来源描述 | 内容比例 |
 |---------|------|---------|---------|
-| Ch1 引言 | OpenCode实战 01 + 04 | 核心概念速通 + 工作台方案 | 部分引用 |
+| Ch1 简介 | OpenCode实战 01 + 04 | 核心概念速通 + 工作台方案 | 部分引用 |
 | Ch2 核心概念 | OpenCode实战 01 | 核心概念速通（1051行） | 主要来源 |
 | Ch3 环境搭建 | OpenCode实战 02 | 架构全景解析（1541+行） | 主要来源 |
 | Ch4 工作流 | OpenCode实战 03 | 概念联动实战（1365行） | 主要来源 |
@@ -259,7 +261,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 | P0 | Ch2 核心概念, Ch3 环境搭建 | 基础知识，读者必须先读 |
 | P0 | Ch7 案例研究 | 最大吸引力和实用性 |
 | P1 | Ch4 工作流实战, Ch5 Skill 开发 | 进阶内容，高价值 |
-| P2 | Ch1 引言 | 框架性内容，篇幅较小 |
+| P2 | Ch1 简介 | 框架性内容，篇幅较小 |
 | P2 | Ch6 高级话题 | 专项深入，受众较窄 |
 
 ### 6.2 内容重用策略
