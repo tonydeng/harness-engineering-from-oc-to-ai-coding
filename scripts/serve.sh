@@ -1,3 +1,3 @@
 #!/bin/bash
-# 本地启动 docsify 预览
-npx docsify serve ./src
+# 本地启动 mdBook 预览
+mdbook serve

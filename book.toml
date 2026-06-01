@@ -1,0 +1,49 @@
+[book]
+title = "Harness Engineering — From OpenCode to AI Coding"
+authors = ["Tony Deng"]
+language = "zh-CN"
+src = "src"
+
+[build]
+build-dir = "_book"
+create-missing = false
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+mathjax-support = true
+no-section-label = true
+git-repository-url = "https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding"
+edit-url-template = "https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/edit/main/{path}"
+additional-css = [
+  "theme/simple-lightbox.min.css",  # 本地 CSS
+  "theme/pagetoc.css",
+  "theme/custom.css",
+  "theme/mermaid.css"  # 新增 Mermaid 样式文件
+]
+additional-js = [
+  "theme/simple-lightbox.min.js",   # 本地 JS（必须在 mermaid-init.js 前）
+  "theme/pagetoc.js",
+  "theme/mermaid.min.js",
+  "theme/mermaid-init.js"
+]
+
+[output.html.search]
+enable = true
+limit-results = 30
+use-boolean-and = true
+boost-title = 3
+boost-hierarchy = 2
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+[output.html.fold]
+enable = true
+level = 0
+
+[output.html.print]
+enable = true
+
+[preprocessor.mermaid]
+optional = true

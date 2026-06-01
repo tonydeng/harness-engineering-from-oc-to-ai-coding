@@ -24,13 +24,13 @@
 
 ```bash
 # 本地预览书籍
-npx docsify serve ./src
+mdbook serve
 ```
 
 ## 目录说明
 
 ```
-src/               - 书籍正文（docsify 源目录）
+src/               - 书籍正文（mdBook 源目录）
 docs/              - 编写计划与需求文档
 assets/            - 图片等静态资源
 examples/          - 配套配置和代码示例

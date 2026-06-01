@@ -10,19 +10,19 @@
 ## 唯一命令
 
 ```bash
-npx docsify serve ./src    # 本地预览，端口 3000
+mdbook serve    # 本地预览，默认端口 3000
 ```
 
 ## CI/CD
 
-`.github/workflows/deploy-docsify.yml`：push 到 main 时直接将 `src/` 目录上传到 GitHub Pages。无构建步骤。
+`.github/workflows/deploy-mdbook.yml`：push 到 main 时构建 mdBook 并部署到 GitHub Pages。
 
 ## 目录结构（关键路径）
 
 | 路径 | 用途 |
 |------|------|
 | `src/` | 书籍正文，8 章 46 篇文章（19 篇完成 + 27 篇 stub） |
-| `src/_sidebar.md` | **手动导航** — 增删/重命名页面时必须同步更新，否则页面不可达 |
+| `src/SUMMARY.md` | **目录导航** — 增删/重命名页面时必须同步更新，否则页面不可达 |
 | `docs/` | 项目管理：写作计划、PRD、评审报告、wiki |
 | `examples/` | 示例配置（`opencode-configs/` + `skills/`） |
 | `.opencode/AGENTS.md` | OpenCode 会话的指令文件（与本书内容无关） |
@@ -46,7 +46,7 @@ npx docsify serve ./src    # 本地预览，端口 3000
 
 全书统一 **`OpenCode`**（大写 C）。`src/README.md` 中出现的 `Opencode`（小写 c）是遗留问题。
 
-## 章节编号（基于 `_sidebar.md` 条目顺序）
+## 章节编号（基于 `SUMMARY.md` 条目顺序）
 
 | 章 | 文章数 | §X.Y 最大范围 |
 |----|--------|--------------|
@@ -68,8 +68,8 @@ npx docsify serve ./src    # 本地预览，端口 3000
 ```bash
 # 检查所有内部 .md 链接是否有效（macOS/Linux 通用）
 find src -name '*.md' -exec grep -n '\](' {} + | grep '\.md)'
-# 验证侧边栏所有链接目标文件都存在
-awk -F '[()]' '/\.md\)/ {print $2}' src/_sidebar.md | while read f; do [ -f "src/$f" ] || echo "BROKEN: src/$f"; done
+# 验证 SUMMARY.md 所有链接目标文件都存在
+awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do [ -f "src/$f" ] || echo "BROKEN: src/$f"; done
 ```
 
 全书当前约 269 条内部链接，无断链残留。

@@ -161,24 +161,23 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 
 ### 4.1 平台要求
 
-- **渲染引擎**：Docsify v4（vue.css 主题）
+- **渲染引擎**：mdBook v0.4.x
 - **部署平台**：GitHub Pages
 - **源码格式**：Markdown + Mermaid 图表
-- **本地预览**：`npx docsify serve ./src`
+- **本地预览**：`mdbook serve`
 - **响应式设计**：支持桌面端和移动端阅读
 
 #### 4.1.1 前端技术栈
 
 | 组件 | 选型 | 说明 |
 |------|------|------|
-| 渲染引擎 | Docsify v4 | vue.css 主题 |
-| 代码高亮 | Prism.js | 支持：bash, json, javascript, typescript, yaml, python, markdown |
-| 图表引擎 | Mermaid (docsify-mermaid) | 30+ 张架构/流程图 |
-| 搜索 | docsify-search | 全文搜索 |
-| 页面导航 | docsify-pagination | 前后文章导航 |
-| 代码复制 | docsify-copy-code | 代码块一键复制 |
-| 编辑链接 | docsify-edit-on-github | "在 GitHub 上编辑此页" |
-| 暗色模式 | docsify-dark-mode（可选） | 读者偏好切换 |
+| 渲染引擎 | mdBook v0.4.x | Rust 编写的静态站点生成器 |
+| 代码高亮 | mdBook 内置 | 基于 syntect，支持 200+ 语言 |
+| 图表引擎 | mdbook-mermaid | Mermaid 预处理器 |
+| 搜索 | mdBook 内置 | 全文搜索 |
+| 页面导航 | mdBook 内置 | 上一章/下一章导航 |
+| 主题 | mdBook 内置 | rust/ayu/coal/navy |
+| 编辑链接 | mdBook 内置 | "在 GitHub 上编辑此页" |
 
 #### 4.1.2 移动端体验要求
 
@@ -304,7 +303,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 
 ### 7.2 技术验收
 
-- [ ] `npx docsify serve ./src` 本地预览无错误
+- [ ] `mdbook serve` 本地预览无错误
 - [ ] GitHub Pages 部署成功
 - [ ] 移动端阅读排版正常（375px/414px 视口测试通过）
 - [ ] 所有内部链接有效（无 404，CI 检查）
