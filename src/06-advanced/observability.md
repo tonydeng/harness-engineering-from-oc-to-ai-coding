@@ -22,6 +22,6 @@
 
 ## 关联章节
 
-- ← [§6.9 沙箱与 Hook 系统](sandbox-hooks.md)（Hook 点是可观测性的基础）
-- ← [§6.3 性能调优与成本管理](performance-tuning.md)（基于可观测性做性能调优）
-- → [§7 案例研究](../07-case-studies/README.md)（案例中的监控配置）
+- ← [沙箱与 Hook 系统](sandbox-hooks.md)（Hook 点是可观测性的基础）
+- ← [性能调优与成本管理](performance-tuning.md)（基于可观测性做性能调优）
+- → [案例研究](../07-case-studies/)（案例中的监控配置）

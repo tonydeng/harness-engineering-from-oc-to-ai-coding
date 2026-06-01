@@ -15,7 +15,7 @@ Harness Engineering — From OpenCode to AI Coding
 | 章节 | 标题 | 现有文章 | 新增文章 | 修改文章 | 总计 |
 |------|------|---------|---------|---------|------|
 | Ch0 | 读者导航 | 1 | 2 | 1 | 3 |
-| Ch1 | 引言 | 2 | 3 | 2 | 5 |
+| Ch1 | 简介 | 2 | 3 | 2 | 5 |
 | Ch2 | 核心概念 | 3 | 3 | 2 | 6 |
 | Ch3 | 环境搭建 | 3 | 2 | 2 | 5 |
 | Ch4 | 工作流实战 | 3 | 2 | 2 | 5 |
@@ -32,7 +32,7 @@ Harness Engineering — From OpenCode to AI Coding
 
 3 个外部资料库驱动的内容增补：
 - HE实践（4 文件 4073 行）
-- 马书读书笔记（30 章）
+- 《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）读书笔记（30 章）
 - cc-to-ai-book（7 部分）
 
 详见 [chapter-restructuring-plan.md](./chapter-restructuring-plan.md) 和 [source-cross-references.md](../wiki/source-cross-references.md)。

@@ -19,6 +19,6 @@
 
 ## 关联章节
 
-- ← [§4.4 Agent 派生模式](agent-derivation.md) — 派生是 Team 的基础
-- → [§7 案例研究](../07-case-studies/README.md) — 案例中的 Team Mode 应用
-- → [§6.2 自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 在 Team 中的集成
+- ← [Agent 派生模式](agent-derivation.md) — 派生是 Team 的基础
+- → [案例研究](../07-case-studies/) — 案例中的 Team Mode 应用
+- → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 在 Team 中的集成

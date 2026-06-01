@@ -16,4 +16,4 @@
 | [Agent 派生模式](agent-derivation.md) | 从父 Agent 动态生成子 Agent 处理子任务的设计模式 |
 | [Teams 多进程协作](teams-collaboration.md) | 多 Agent 进程并行工作的协调机制与通信协议 |
 
-> [上一页：环境搭建](../03-setup/README.md) | [下一页：Skill 开发 →](../05-skills/README.md)
+> [上一页：环境搭建](../03-setup/) | [下一页：Skill 开发 →](../05-skills/)

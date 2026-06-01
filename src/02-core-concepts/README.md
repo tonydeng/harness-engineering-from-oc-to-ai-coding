@@ -17,4 +17,4 @@
 | [约束系统解析](constraints-system.md) | 约束的层级结构（全局/会话/任务级）、冲突检测与优先级规则 |
 | [验证护栏体系](validation-harness.md) | 输出验证机制、自动修复循环、质量门禁的工程实现 |
 
-> [上一页：引言](../01-introduction/README.md) | [下一页：环境搭建 →](../03-setup/README.md)
+> [上一页：简介](../01-introduction/) | [下一页：环境搭建 →](../03-setup/)

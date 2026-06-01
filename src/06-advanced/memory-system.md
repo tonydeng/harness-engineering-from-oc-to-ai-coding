@@ -22,6 +22,6 @@
 
 ## 关联章节
 
-- ← [§6.6 提示词缓存机制](prompt-caching.md)（缓存是记忆的基础设施）
-- ← [§2.4 上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础）
-- → [§6.11 可观测性](observability.md)（可观测性监控记忆效果）
+- ← [提示词缓存机制](prompt-caching.md)（缓存是记忆的基础设施）
+- ← [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础）
+- → [可观测性](observability.md)（可观测性监控记忆效果）

@@ -2,7 +2,7 @@
 
 > **给执行代理：** 本计划定义章节级别的内容增补顺序和范围，非逐文件实现任务。实际写作任务需进一步分解为文章级任务。
 
-**目标：** 基于3个外部资料库（HE实践、马书、马书读书笔记）和现有13个读者角色45个用户故事的深度分析，重构本书7章的内容结构和覆盖范围。
+**目标：** 基于3个外部资料库（HE实践、《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（中文别名：《马书》）、马书读书笔记）和现有13个读者角色45个用户故事的深度分析，重构本书7章的内容结构和覆盖范围。
 
 **架构：** 保留现有的7章框架 + Ch0，每章按"概念讲解 → 实战示例 → 最佳实践"三层结构增补内容。4个P0缺口优先填充，P1缺口按依赖顺序推进。
 
@@ -15,19 +15,19 @@
 
 ## 内容缺口优先级总览
 
-| 优先级 | 缺口 | 影响章节 | 外部资料依据 | 工作量 |
-|--------|------|---------|-------------|--------|
-| **P0** | Harness Engineering 理论框架完整性 | Ch1 | HE实践 01（584行），马书第25-27章 | L |
-| **P0** | 上下文工程 / 记忆系统 / 提示词缓存 | Ch6 新增 | 马书第3-4篇（12章 + 长篇），HE实践 02 | XL |
-| **P0** | 安全防御体系（权限/注入防御/沙箱/Hooks） | Ch6 | 马书第5篇（6章），HE实践 02 §2 | L |
-| **P0** | 可观测性与监控（Hook点/Telemetry） | Ch6 | 马书第29章，OMO 54+ 事件体系 | M |
-| **P1** | 工具生态对比表 | Ch1 | HE实践 04（678行），包含 24+ 工具 | M |
-| **P1** | 国产 AI 工具链配置 | Ch3 | HE实践 04 §国产工具，Trae/CodeGeeX/通义灵码 | S |
-| **P1** | 角色阅读路径 | Ch0 | 马书读书笔记有 4 种路径推荐 | S |
-| **P1** | 案例研究扩展到 4-5 个 | Ch7 | HE实践 02（1137行），马书第30章 | L |
-| **P2** | Agent派生 / Teams 多进程协作工作流 | Ch4 | 马书第20-20b章 | M |
-| **P2** | MCP 桥接与插件系统 | Ch5/Ch6 | 马书第22-22b章，HE实践 02 | M |
-| **P2** | Effort/Fast Mode/Thinking 优化 | Ch6 | 马书第21章 | S |
+| 优先级    | 缺口                           | 影响章节    | 外部资料依据                           | 工作量 |
+| ------ | ---------------------------- | ------- | -------------------------------- | --- |
+| **P0** | Harness Engineering 理论框架完整性  | Ch1     | HE实践 01（584行），《马书》第25-27章          | L   |
+| **P0** | 上下文工程 / 记忆系统 / 提示词缓存         | Ch6 新增  | 《马书》第3-4篇（12章 + 长篇），HE实践 02        | XL  |
+| **P0** | 安全防御体系（权限/注入防御/沙箱/Hooks）     | Ch6     | 《马书》第5篇（6章），HE实践 02 §2             | L   |
+| **P0** | 可观测性与监控（Hook点/Telemetry）     | Ch6     | 《马书》第29章，OMO 54+ 事件体系              | M   |
+| **P1** | 工具生态对比表                      | Ch1     | HE实践 04（678行），包含 24+ 工具          | M   |
+| **P1** | 国产 AI 工具链配置                  | Ch3     | HE实践 04 §国产工具，Trae/CodeGeeX/通义灵码 | S   |
+| **P1** | 角色阅读路径                       | Ch0     | 马书读书笔记有 4 种路径推荐                  | S   |
+| **P1** | 案例研究扩展到 4-5 个                | Ch7     | HE实践 02（1137行），《马书》第30章            | L   |
+| **P2** | Agent派生 / Teams 多进程协作工作流     | Ch4     | 《马书》第20-20b章                       | M   |
+| **P2** | MCP 桥接与插件系统                  | Ch5/Ch6 | 《马书》第22-22b章，HE实践 02               | M   |
+| **P2** | Effort/Fast Mode/Thinking 优化 | Ch6     | 《马书》第21章                           | S   |
 
 ---
 
@@ -48,7 +48,7 @@
 
 ---
 
-### Ch1: 引言（大幅增补）
+### Ch1: 简介（大幅增补）
 
 **当前状态：** 2 篇文章，偏薄
 **目标状态：** Harness Engineering 完整理论框架 + 工具生态全景
@@ -69,18 +69,18 @@
 ### Ch2: 核心概念（中等增补）
 
 **当前状态：** 3 篇文章（Agent/Skill/Workflow），基本结构合理
-**目标状态：** 补充 3 个新核心概念 + 马书体系交叉引用
+**目标状态：** 补充 3 个新核心概念 + 《马书》体系交叉引用
 
 **新增文章：**
 | 文章 | 内容 | 来源 |
 |------|------|------|
-| `context-engineering-core.md` | 上下文工程作为核心概念：压缩、缓存、Token预算 | 马书第3-4篇，HE实践 03 §实践一 |
-| `constraints-system.md` | 约束系统：权限模型、架构护栏、lint规则 | 马书第5篇（权限），HE实践 03 §实践二 |
-| `validation-harness.md` | 验证护栏：质量门禁、YOLO分类、自动验证 | 马书第17章，HE实践 03 §实践三 |
+| `context-engineering-core.md` | 上下文工程作为核心概念：压缩、缓存、Token预算 | 《马书》第3-4篇，HE实践 03 §实践一 |
+| `constraints-system.md` | 约束系统：权限模型、架构护栏、lint规则 | 《马书》第5篇（权限），HE实践 03 §实践二 |
+| `validation-harness.md` | 验证护栏：质量门禁、YOLO分类、自动验证 | 《马书》第17章，HE实践 03 §实践三 |
 
 **改写文章：**
-- `agent-orchestration.md`：增加马书 Agent Loop 状态机视角的对比
-- `workflow-patterns.md`：增加马书 6 种工作流模式引用
+- `agent-orchestration.md`：增加《马书》Agent Loop 状态机视角的对比
+- `workflow-patterns.md`：增加《马书》6 种工作流模式引用
 
 ---
 
@@ -109,8 +109,8 @@
 **新增文章：**
 | 文章 | 内容 | 来源 |
 |------|------|------|
-| `agent-derivation.md` | Agent 派生模式：子Agent、委派、协调者模式 | 马书第20章 |
-| `teams-collaboration.md` | 多进程协作：Teams 架构、消息传递、进程内集群 | 马书第20b章 |
+| `agent-derivation.md` | Agent 派生模式：子Agent、委派、协调者模式 | 《马书》第20章 |
+| `teams-collaboration.md` | 多进程协作：Teams 架构、消息传递、进程内集群 | 《马书》第20b章 |
 
 **修改文章：**
 - `ultrawork-mode.md`：增补 Ralph Loop / /ulw-loop 机制详解
@@ -126,8 +126,8 @@
 **新增文章：**
 | 文章 | 内容 | 来源 |
 |------|------|------|
-| `skill-mcp-bridge.md` | Skill 作为 MCP 桥接层：如何包装外部工具为可复用 Skill | 马书第22章，HE实践 02 |
-| `plugin-patterns.md` | Skill 插件化：从独立 Skill → Skill 市场 → 组合 Skill | 马书第22b章 |
+| `skill-mcp-bridge.md` | Skill 作为 MCP 桥接层：如何包装外部工具为可复用 Skill | 《马书》第22章，HE实践 02 |
+| `plugin-patterns.md` | Skill 插件化：从独立 Skill → Skill 市场 → 组合 Skill | 《马书》第22b章 |
 
 ---
 
@@ -139,19 +139,19 @@
 **新增文章：**
 | 文章 | 内容 | 来源 | 优先级 |
 |------|------|------|--------|
-| `context-compression.md` | 自动压缩原理 + 微压缩 + 压缩后恢复 | 马书第9-11章 | **P0** |
-| `token-budget.md` | Token预算策略、估算规则、预算分配 | 马书第12章 | **P0** |
-| `prompt-caching.md` | 三级缓存架构、缓存断点、中断检测、7+优化模式 | 马书第13-15章 | **P0** |
-| `memory-system.md` | 跨会话记忆：Memdir架构、Auto-Dream、Compaction | 马书第24章 | **P0** |
-| `security-overview.md` | 安全总览：权限模型(6模式)、YOLO分类器、提示注入防御 | 马书第16-17b章 | **P0** |
-| `sandbox-hooks.md` | 沙箱系统(Seatbelt/Bubblewrap) + Hook点(53+事件) | 马书第18-18b章，OMO Hook | **P0** |
-| `claude-dot-md.md` | CLAUDE.md 用户指令覆盖层 + @include 指令系统 | 马书第19章 | **P0** |
-| `observability.md` | 可观测性：logEvent、5层遥测架构、生产级监控 | 马书第29章，OMO 54+事件 | **P0** |
-| `feature-flags.md` | OMO 89个Feature Flag 路线图、产品演进方向 | 马书第23章 | P2 |
+| `context-compression.md` | 自动压缩原理 + 微压缩 + 压缩后恢复 | 《马书》第9-11章 | **P0** |
+| `token-budget.md` | Token预算策略、估算规则、预算分配 | 《马书》第12章 | **P0** |
+| `prompt-caching.md` | 三级缓存架构、缓存断点、中断检测、7+优化模式 | 《马书》第13-15章 | **P0** |
+| `memory-system.md` | 跨会话记忆：Memdir架构、Auto-Dream、Compaction | 《马书》第24章 | **P0** |
+| `security-overview.md` | 安全总览：权限模型(6模式)、YOLO分类器、提示注入防御 | 《马书》第16-17b章 | **P0** |
+| `sandbox-hooks.md` | 沙箱系统(Seatbelt/Bubblewrap) + Hook点(53+事件) | 《马书》第18-18b章，OMO Hook | **P0** |
+| `claude-dot-md.md` | CLAUDE.md 用户指令覆盖层 + @include 指令系统 | 《马书》第19章 | **P0** |
+| `observability.md` | 可观测性：logEvent、5层遥测架构、生产级监控 | 《马书》第29章，OMO 54+事件 | **P0** |
+| `feature-flags.md` | OMO 89个Feature Flag 路线图、产品演进方向 | 《马书》第23章 | P2 |
 
 **修改文章：**
 - `mcp-servers.md`：扩展 MCP 协议深度（stdio/SSE/WebSocket）、ToolRegistry 统一、MCP 服务器沙箱
-- `custom-agents.md`：增加马书三种Agent派生模式 + Effort/Fast Mode/Thinking 配置
+- `custom-agents.md`：增加《马书》三种Agent派生模式 + Effort/Fast Mode/Thinking 配置
 - `performance-tuning.md`：增加模型降级链、成本优化、Token预算策略
 
 ---
@@ -164,10 +164,10 @@
 **新增案例文章：**
 | 案例 | 内容 | 来源 | 优先级 |
 |------|------|------|--------|
-| `case-security-audit.md` | 安全审计流水线：红队+蓝队全流程，渗透测试自动化 | HE实践 02（Cline案例），马书第30章 | P1 |
+| `case-security-audit.md` | 安全审计流水线：红队+蓝队全流程，渗透测试自动化 | HE实践 02（Cline案例），《马书》第30章 | P1 |
 | `case-full-pipeline.md` | 需求→PR 全流程自动化：需求分析→设计→开发→测试→Review→部署 | HE实践 02（Codex案例） | P1 |
 | `case-multi-model.md` | 国产模型+OpenCode 混合架构：DeepSeek经济模型 + GPT 复杂推理的 Harness 设计 | HE实践 04 §国产工具 | P1 |
-| `case-skills-marketplace.md` | 团队级 Skill 市场建设：从零构建内部 Skill 生态 | 马书第22-22b章，HE实践 03 | P2 |
+| `case-skills-marketplace.md` | 团队级 Skill 市场建设：从零构建内部 Skill 生态 | 《马书》第22-22b章，HE实践 03 | P2 |
 
 **修改文章：**
 - `real-world-01.md`：增补 Martin Fowler Harness Template 对照分析
@@ -229,7 +229,7 @@ Phase 3: 生态与案例
 引用外部资料时遵循：
 ```
 来源：HE实践 01 §[章节名]
-来源：马书 第X章 §[小节名] — [在线链接]
+来源：《马书》[第X章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/chXX) §[小节名]
 来源：cc-to-ai 第X部分 §[内容描述]
 ```
 
@@ -238,5 +238,5 @@ Phase 3: 生态与案例
 ---
 
 > **版本**: v1.0 | **创建**: 2026-05-31 | **制作者**: 敏捷教练
-> **前置输入**: HE实践（4文件4073行）、马书读书笔记（30章）、cc-to-ai book（7部分）
+> **前置输入**: HE实践（4文件4073行）、《马书》读书笔记（30章）、cc-to-ai book（7部分）
 > **基于**: 13读者角色45用户故事 + 8角色团队评审结果

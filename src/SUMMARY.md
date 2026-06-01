@@ -1,6 +1,10 @@
+# Summary
+
+- [Harness Engineering — From OpenCode to AI Coding](README.md)
 - [读者导航](00-guide/README.md)
   - [多角色阅读路径](00-guide/reading-paths.md)
   - [如何使用本书](00-guide/how-to-read.md)
+  - [5 分钟快速体验](00-guide/quick-start.md)
 - [简介](01-introduction/README.md)
   - [什么是 Harness Engineer](01-introduction/what-is-harness-engineer.md)
   - [为什么选择 OpenCode](01-introduction/why-opencode.md)
@@ -52,3 +56,5 @@
   - [案例：全流程自动化](07-case-studies/case-full-pipeline.md)
   - [案例：国产模型混合架构](07-case-studies/case-multi-model.md)
   - [案例：团队级 Skill 市场](07-case-studies/case-skills-marketplace.md)
+- [附录 A](appendix-a/README.md)
+  - [术语表](appendix-a/glossary.md)

@@ -20,6 +20,6 @@
 
 ## 关联章节
 
-- ← [§6.8 安全总览](security-overview.md)（安全的执行层）
-- → [§6.2 自定义 Agent 与 Plugin](custom-agents.md)（Plugin 开发中的 Hook 使用）
-- → [§7 案例研究](../07-case-studies/README.md)（案例中的安全配置）
+- ← [安全总览](security-overview.md)（安全的执行层）
+- → [自定义 Agent 与 Plugin](custom-agents.md)（Plugin 开发中的 Hook 使用）
+- → [案例研究](../07-case-studies/)（案例中的安全配置）

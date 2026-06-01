@@ -19,6 +19,6 @@
 
 ## 关联章节
 
-- ← [§4.2 多 Agent 协作](multi-agent-collab.md) — Pipeline 是基础，Team 是升级
-- ← [§2.3 工作流模式](../02-core-concepts/workflow-patterns.md) — Command 触发 Team 工作流
-- → [§7 案例研究](../07-case-studies/README.md) — Team Mode 在案例中的应用
+- ← [多 Agent 协作](multi-agent-collab.md) — Pipeline 是基础，Team 是升级
+- ← [工作流模式](../02-core-concepts/workflow-patterns.md) — Command 触发 Team 工作流
+- → [案例研究](../07-case-studies/) — Team Mode 在案例中的应用

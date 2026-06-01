@@ -16,4 +16,4 @@
 | [国产模型供应商配置](chinese-providers.md) | 国内大模型 API 接入（DeepSeek/Qwen/GLM 等）与网络代理设置 |
 | [多环境部署方案](multi-env-setup.md) | 开发/测试/生产环境的配置分离与 CI/CD 集成要点 |
 
-> [上一页：核心概念](../02-core-concepts/README.md) | [下一页：工作流实战 →](../04-workflows/README.md)
+> [上一页：核心概念](../02-core-concepts/) | [下一页：工作流实战 →](../04-workflows/)

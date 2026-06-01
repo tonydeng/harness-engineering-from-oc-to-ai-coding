@@ -19,8 +19,8 @@ yarn-error.log*
 .env.local
 .env.*.local
 
-# Docsify
-docsify.lock
+# mdBook
+_book/
 
 # Temp
 tmp/
@@ -32,3 +32,6 @@ temp/
 # OpenCode
 .opencode/
 .omo/
+
+# Trae
+.trae/

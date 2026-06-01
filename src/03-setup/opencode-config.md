@@ -18,6 +18,6 @@
 
 ## 关联章节
 
-- ← [§3.1 快速上手](quickstart.md) — 基础配置的深化
-- → [§4 工作流实战](../04-workflows/README.md) — 工作流模式依赖正确的类别路由配置
-- → [§6.3 性能调优与成本管理](../06-advanced/performance-tuning.md) — 成本管控配置的进阶应用
+- ← [快速上手](quickstart.md) — 基础配置的深化
+- → [工作流实战](../04-workflows/) — 工作流模式依赖正确的类别路由配置
+- → [性能调优与成本管理](../06-advanced/performance-tuning.md) — 成本管控配置的进阶应用

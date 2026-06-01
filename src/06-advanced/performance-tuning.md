@@ -22,6 +22,6 @@
 
 ## 关联章节
 
-- ← [§3.2 OpenCode 配置详解](../03-setup/opencode-config.md)（成本管控是配置的一部分）
-- ← [§4.1 Ultrawork 模式](../04-workflows/ultrawork-mode.md)（工作流效率与 Token 消耗的平衡）
-- → [§7 案例研究](../07-case-studies/README.md)（大型案例中的成本考量）
+- ← [OpenCode 配置详解](../03-setup/opencode-config.md)（成本管控是配置的一部分）
+- ← [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（工作流效率与 Token 消耗的平衡）
+- → [案例研究](../07-case-studies/)（大型案例中的成本考量）

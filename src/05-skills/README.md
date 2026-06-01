@@ -16,4 +16,4 @@ Skill 是 OpenCode 生态中最具扩展性的抽象。第 5 章从 Skill 的基
 | [Skill-MCP 桥接](skill-mcp-bridge.md) | 通过 MCP 协议让 Skill 调用外部 API、数据库和工具的标准化方案 |
 | [Skill 插件化模式](plugin-patterns.md) | 将 Skill 设计为可插拔插件的架构模式与依赖管理 |
 
-> [上一页：工作流实战](../04-workflows/README.md) | [下一页：高级话题 →](../06-advanced/README.md)
+> [上一页：工作流实战](../04-workflows/) | [下一页：高级话题 →](../06-advanced/)

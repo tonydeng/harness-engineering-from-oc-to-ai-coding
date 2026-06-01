@@ -36,4 +36,4 @@
 | [可观测性](observability.md) | Agent 行为的日志、追踪和指标体系设计 |
 | [Feature Flags 路线图](feature-flags.md) | OpenCode 路线图中的 Feature Flags、A/B 测试和多版本策略 |
 
-> [上一页：Skill 开发](../05-skills/README.md) | [下一页：案例研究 →](../07-case-studies/README.md)
+> [上一页：Skill 开发](../05-skills/) | [下一页：案例研究 →](../07-case-studies/)

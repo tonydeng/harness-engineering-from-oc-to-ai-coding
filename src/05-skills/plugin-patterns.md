@@ -17,6 +17,6 @@
 
 ## 关联章节
 
-- ← [§5.4 Skill-MCP 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
-- → [§7.6 案例：团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md)（企业级 Skill 市场的真实落地）
-- ← [§2.2 Skill 系统](../02-core-concepts/skills-system.md)（Skill 作为可组合组件的基础抽象）
+- ← [Skill-MCP 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
+- → [案例：团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md)（企业级 Skill 市场的真实落地）
+- ← [Skill 系统](../02-core-concepts/skills-system.md)（Skill 作为可组合组件的基础抽象）

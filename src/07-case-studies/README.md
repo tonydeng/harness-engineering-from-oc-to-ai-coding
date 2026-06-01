@@ -17,4 +17,4 @@
 | [案例：国产模型混合架构](case-multi-model.md) | 多国产模型混合调度架构与 Failover 策略 |
 | [案例：团队级 Skill 市场](case-skills-marketplace.md) | 团队内部 Skill 的创建、发布、发现和治理机制 |
 
-> [上一页：高级话题](../06-advanced/README.md) | [返回首页](../README.md)
+> [上一页：高级话题](../06-advanced/) | [返回首页](../)

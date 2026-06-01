@@ -4,7 +4,7 @@
 
 ## 这是什么？
 
-本项目是一本**开源书籍**，也是一份**工程实践指南**，旨在系统化地讲解如何通过 [Opencode](https://opencode.ai) 及其生态（oh-my-openagent / MCP / Skills）构建高效的 AI 编程工作流。
+本项目是一本**开源书籍**，也是一份**工程实践指南**，旨在系统化地讲解如何通过 [OpenCode](https://opencode.ai) 及其生态（oh-my-openagent / MCP / Skills）构建高效的 AI 编程工作流。
 
 ## 书籍大纲
 
@@ -24,13 +24,13 @@
 
 ```bash
 # 本地预览书籍
-npx docsify serve ./src
+mdbook serve
 ```
 
 ## 目录说明
 
 ```
-src/               - 书籍正文（docsify 源目录）
+src/               - 书籍正文（mdBook 源目录）
 docs/              - 编写计划与需求文档
 assets/            - 图片等静态资源
 examples/          - 配套配置和代码示例

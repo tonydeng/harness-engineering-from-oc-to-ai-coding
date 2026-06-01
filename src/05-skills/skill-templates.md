@@ -18,6 +18,6 @@
 
 ## 关联章节
 
-- ← [§5.1 创建 Skill](creating-skills.md)（所有模板基于 SKILL.md 格式）
-- → [§5.3 Skill 最佳实践](skill-best-practices.md)（模板设计中的设计原则和反模式）
-- ← [§2.2 Skill 系统](../02-core-concepts/skills-system.md)（模板体现 Skill 可组合的设计理念）
+- ← [创建 Skill](creating-skills.md)（所有模板基于 SKILL.md 格式）
+- → [Skill 最佳实践](skill-best-practices.md)（模板设计中的设计原则和反模式）
+- ← [Skill 系统](../02-core-concepts/skills-system.md)（模板体现 Skill 可组合的设计理念）
