@@ -12,65 +12,65 @@
 
 | # | 问题 | Yes → 跳转 | No → 继续 |
 |---|------|-----------|----------|
-| **Q1** | 你是否刚接触 AI 编程工具（如 Copilot、Cursor、Claude Code）？ | → **BEGINNER** | → Q2 |
-| **Q2** | 你是否已有 AI 编程工具使用经验，想系统提升效率？ | → **POWER** | → Q3 |
-| **Q3** | 你是否负责团队技术决策或工具选型？ | → **LEAD** 或 **MANAGER** | → Q4 |
-| **Q4** | 你是否需要开发自定义 Skill 或集成外部工具？ | → **SKILL** 或 **BACKEND** | → Q5 |
-| **Q5** | 你是否关注安全合规、威胁建模或渗透测试？ | → **SECURITY** 或 **REDTEAM** | → **其他角色** |
+| **Q1** | 你是否刚接触 AI 编程工具（如 Copilot、Cursor、Claude Code）？ | → **入门开发者** | → Q2 |
+| **Q2** | 你是否已有 AI 编程工具使用经验，想系统提升效率？ | → **效率开发者** | → Q3 |
+| **Q3** | 你是否负责团队技术决策或工具选型？ | → **技术负责人** 或 **工程经理** | → Q4 |
+| **Q4** | 你是否需要开发自定义 Skill 或集成外部工具？ | → **Skill 作者** 或 **后端开发者** | → Q5 |
+| **Q5** | 你是否关注安全合规、威胁建模或渗透测试？ | → **安全工程师** 或 **红队成员** | → **其他角色** |
 
 ```mermaid
 flowchart TB
     START((开始诊断)) --> Q1{Q1: 刚接触<br/>AI 编程?}
-    Q1 -->|Yes| BEGINNER[BEGINNER<br/>入门开发者]
+    Q1 -->|Yes| 入门[入门<br/>入门开发者]
     Q1 -->|No| Q2{Q2: 已有经验<br/>想提升效率?}
-    
-    Q2 -->|Yes| POWER[POWER<br/>效率开发者]
+
+    Q2 -->|Yes| 效率[效率<br/>效率开发者]
     Q2 -->|No| Q3{Q3: 负责团队<br/>技术决策?}
-    
+
     Q3 -->|Yes| Q3a{管理职责?}
-    Q3a -->|偏管理| MANAGER[MANAGER<br/>工程经理]
-    Q3a -->|偏技术| LEAD[LEAD<br/>技术负责人]
+    Q3a -->|偏管理| 工程经理[工程经理]
+    Q3a -->|偏技术| 技术负责人[技术负责人]
     Q3 -->|No| Q4{Q4: 需要开发<br/>自定义 Skill?}
-    
+
     Q4 -->|Yes| Q4a{开发类型?}
-    Q4a -->|Skill 开发| SKILL[SKILL<br/>Skill 作者]
-    Q4a -->|后端/MCP| BACKEND[BACKEND<br/>后端开发者]
-    Q4a -->|前端场景| FRONTEND[FRONTEND<br/>前端开发者]
+    Q4a -->|Skill 开发| Skill作者[Skill 作者]
+    Q4a -->|后端/MCP| 后端[后端<br/>后端开发者]
+    Q4a -->|前端场景| 前端[前端<br/>前端开发者]
     Q4 -->|No| Q5{Q5: 关注安全<br/>合规?}
-    
+
     Q5 -->|Yes| Q5a{安全视角?}
-    Q5a -->|防御/合规| SECURITY[SECURITY<br/>安全工程师]
-    Q5a -->|攻击/测试| REDTEAM[REDTEAM<br/>红队成员]
-    Q5 -->|No| OTHER[其他角色<br/>ANALYST/SYSA/UX/QA]
-    
+    Q5a -->|防御/合规| 安全工程师[安全工程师]
+    Q5a -->|攻击/测试| 红队[红队<br/>红队成员]
+    Q5 -->|No| 其他角色[其他角色<br/>需求分析师/架构师/UX/QA]
+
     classDef start fill:#4A90D9,stroke:#2E5A8C,color:#fff
     classDef core fill:#50C878,stroke:#2E8B57,color:#fff
     classDef ext fill:#FF9F43,stroke:#D35400,color:#fff
     classDef other fill:#A66CFF,stroke:#7D3C98,color:#fff
-    
+
     class START start
-    class BEGINNER,POWER,LEAD,SKILL,MANAGER core
-    class BACKEND,FRONTEND,SECURITY,REDTEAM ext
-    class OTHER other
+    class 入门,效率,技术负责人,Skill作者,工程经理 core
+    class 后端,前端,安全工程师,红队 ext
+    class 其他角色 other
 ```
 
 ### 13 种读者角色速查
 
-| 角色 | 标识 | 典型特征 | 核心目标 | 推荐优先级 |
+| 角色 | 简称 | 典型特征 | 核心目标 | 推荐优先级 |
 |------|------|----------|----------|------------|
-| **入门开发者** | BEGINNER | 刚接触 AI 编程，基本编程能力 OK | 快速上手 OpenCode | ★★★★★ |
-| **效率开发者** | POWER | 已用 AI 工具，想升级到 Agent 编排 | 提升 2x+ 效率 | ★★★★★ |
-| **技术负责人** | LEAD | 团队技术决策者，关注标准化 | 建立团队级体系 | ★★★★★ |
-| **Skill 作者** | SKILL | 有 AI 使用经验，想扩展能力 | 开发高质量 Skill | ★★★★★ |
-| **工程经理** | MANAGER | 评估团队工具选型 | 判断投资回报率 | ★★★★☆ |
-| **需求分析师** | ANALYST | 需求分析、产品规划经验 | 验证需求覆盖完整性 | ★★★☆☆ |
-| **系统架构师** | SYSA | 5 年以上架构经验 | 评估技术可行性 | ★★★★☆ |
-| **后端开发者** | BACKEND | 熟悉 REST/微服务/数据库 | MCP 服务端集成 | ★★★★☆ |
-| **前端开发者** | FRONTEND | 熟悉 React/Vue/Angular | 前端工作流应用 | ★★★☆☆ |
+| **入门开发者** | 入门 | 刚接触 AI 编程，基本编程能力 OK | 快速上手 OpenCode | ★★★★★ |
+| **效率开发者** | 效率 | 已用 AI 工具，想升级到 Agent 编排 | 提升 2x+ 效率 | ★★★★★ |
+| **技术负责人** | 技术负责人 | 团队技术决策者，关注标准化 | 建立团队级体系 | ★★★★★ |
+| **Skill 作者** | Skill 作者 | 有 AI 使用经验，想扩展能力 | 开发高质量 Skill | ★★★★★ |
+| **工程经理** | 工程经理 | 评估团队工具选型 | 判断投资回报率 | ★★★★☆ |
+| **需求分析师** | 需求分析师 | 需求分析、产品规划经验 | 验证需求覆盖完整性 | ★★★☆☆ |
+| **系统架构师** | 架构师 | 5 年以上架构经验 | 评估技术可行性 | ★★★★☆ |
+| **后端开发者** | 后端 | 熟悉 REST/微服务/数据库 | MCP 服务端集成 | ★★★★☆ |
+| **前端开发者** | 前端 | 熟悉 React/Vue/Angular | 前端工作流应用 | ★★★☆☆ |
 | **文档 UX 专家** | UX | 信息架构/开发者文档经验 | 文档体验优化 | ★★☆☆☆ |
 | **技术审校** | QA | 测试或技术写作背景 | 建立质量门禁 | ★★★☆☆ |
-| **安全工程师** | SECURITY | 安全工程/合规/威胁建模 | 建立安全基线 | ★★★★☆ |
-| **红队成员** | REDTEAM | 渗透测试/安全研究 | 评估攻击面 | ★★★★☆ |
+| **安全工程师** | 安全工程师 | 安全工程/合规/威胁建模 | 建立安全基线 | ★★★★☆ |
+| **红队成员** | 红队 | 渗透测试/安全研究 | 评估攻击面 | ★★★★☆ |
 
 ### 跨角色比对表：技术深度 vs 管理职责
 
@@ -83,29 +83,29 @@ quadrantChart
     quadrant-2 "技术管理者"
     quadrant-3 "入门学习者"
     quadrant-4 "业务决策者"
-    BEGINNER: [0.15, 0.20]
-    POWER: [0.25, 0.75]
-    LEAD: [0.75, 0.85]
-    SKILL: [0.20, 0.90]
-    MANAGER: [0.85, 0.35]
-    ANALYST: [0.60, 0.30]
-    SYSA: [0.45, 0.95]
-    BACKEND: [0.20, 0.85]
-    FRONTEND: [0.20, 0.70]
-    UX: [0.30, 0.40]
-    QA: [0.35, 0.55]
-    SECURITY: [0.25, 0.90]
-    REDTEAM: [0.20, 0.95]
+    "入门": [0.15, 0.20]
+    "效率": [0.25, 0.75]
+    "技术负责人": [0.75, 0.85]
+    "Skill作者": [0.20, 0.90]
+    "工程经理": [0.85, 0.35]
+    "需求分析师": [0.60, 0.30]
+    "架构师": [0.45, 0.95]
+    "后端": [0.20, 0.85]
+    "前端": [0.20, 0.70]
+    "UX": [0.30, 0.40]
+    "QA": [0.35, 0.55]
+    "安全工程师": [0.25, 0.90]
+    "红队": [0.20, 0.95]
 ```
 
 | 维度 | 核心角色 (5) | 扩展角色 (8) |
 |------|-------------|-------------|
-| **技术深度高** | SKILL, POWER, LEAD | SYSA, REDTEAM, SECURITY, BACKEND |
-| **技术深度中** | BEGINNER | FRONTEND, QA |
-| **技术深度低** | MANAGER | ANALYST, UX |
-| **管理职责高** | LEAD, MANAGER | ANALYST |
-| **管理职责中** | POWER | SYSA, QA |
-| **管理职责低** | BEGINNER, SKILL | BACKEND, FRONTEND, UX, SECURITY, REDTEAM |
+| **技术深度高** | Skill 作者, 效率, 技术负责人 | 架构师, 红队, 安全工程师, 后端 |
+| **技术深度中** | 入门 | 前端, QA |
+| **技术深度低** | 工程经理 | 需求分析师, UX |
+| **管理职责高** | 技术负责人, 工程经理 | 需求分析师 |
+| **管理职责中** | 效率 | 架构师, QA |
+| **管理职责低** | 入门, Skill 作者 | 后端, 前端, UX, 安全工程师, 红队 |
 
 ---
 
@@ -122,62 +122,62 @@ quadrantChart
 
 ### 完整矩阵
 
-| 章节 | BEGINNER | POWER | LEAD | SKILL | MANAGER | ANALYST | SYSA | BACKEND | FRONTEND | UX | QA | SECURITY | REDTEAM |
-|------|:--------:|:-----:|:----:|:-----:|:-------:|:-------:|:----:|:-------:|:--------:|:--:|:--:|:--------:|:-------:|
-| **Ch0 读者导航** | ● | ○ | ● | ○ | ○ | ● | ○ | ○ | ○ | ● | ● | ○ | ○ |
-| **Ch1 引言** | ● | ◐ | ● | ◐ | ● | ● | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
-| **Ch2 核心概念** | ● | ● | ● | ● | ◐ | ◐ | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
-| **Ch3 环境搭建** | ● | ● | ● | ● | - | - | ◐ | ● | ◐ | - | ● | ● | ◐ |
-| **Ch4 工作流实战** | ● | ● | ● | ◐ | - | - | ● | ● | ● | - | ● | ● | ● |
-| **Ch5 Skill 开发** | ◐ | ◐ | ◐ | ● | - | - | ◐ | ◐ | ● | - | ● | ◐ | ◐ |
-| **Ch6 高级话题** | ○ | ● | ● | ● | ◐ | - | ● | ● | ○ | - | ● | ● | ● |
-| **Ch7 案例研究** | ◐ | ● | ● | ● | ● | ● | ● | ● | ◐ | ◐ | ● | ● | ● |
+| 章节 | 入门 | 效率 | 技术负责人 | Skill 作者 | 工程经理 | 需求分析师 | 架构师 | 后端 | 前端 | UX | QA | 安全工程师 | 红队 |
+|------|:----:|:----:|:----------:|:----------:|:--------:|:----------:|:------:|:----:|:----:|:--:|:--:|:----------:|:----:|
+| **读者导航** | ● | ○ | ● | ○ | ○ | ● | ○ | ○ | ○ | ● | ● | ○ | ○ |
+| **引言** | ● | ◐ | ● | ◐ | ● | ● | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
+| **核心概念** | ● | ● | ● | ● | ◐ | ◐ | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
+| **环境搭建** | ● | ● | ● | ● | - | - | ◐ | ● | ◐ | - | ● | ● | ◐ |
+| **工作流实战** | ● | ● | ● | ◐ | - | - | ● | ● | ● | - | ● | ● | ● |
+| **Skill 开发** | ◐ | ◐ | ◐ | ● | - | - | ◐ | ◐ | ● | - | ● | ◐ | ◐ |
+| **高级话题** | ○ | ● | ● | ● | ◐ | - | ● | ● | ○ | - | ● | ● | ● |
+| **案例研究** | ◐ | ● | ● | ● | ● | ● | ● | ● | ◐ | ◐ | ● | ● | ● |
 
 ### 优先级热力图
 
 ```mermaid
 graph TB
-    subgraph Ch0["Ch0 读者导航"]
-        C0_1["§0.1 读者导航<br/>BEGINNER/LEAD/ANALYST/UX/QA: P0"]
+    subgraph Ch0["读者导航"]
+        C0_1["§0.1 读者导航<br/>入门/技术负责人/需求分析师/UX/QA: P0"]
     end
-    
-    subgraph Ch1["Ch1 引言"]
-        C1_1["§1.1-1.3 核心引言<br/>BEGINNER/LEAD/MANAGER/ANALYST/SYSA: P0"]
-        C1_2["§1.4-1.5 生态对比<br/>LEAD/MANAGER/SYSA: P0<br/>其他: P1"]
+
+    subgraph Ch1["引言"]
+        C1_1["§1.1-1.3 核心引言<br/>入门/技术负责人/工程经理/需求分析师/架构师: P0"]
+        C1_2["§1.4-1.5 生态对比<br/>技术负责人/工程经理/架构师: P0<br/>其他: P1"]
     end
-    
-    subgraph Ch2["Ch2 核心概念"]
-        C2_1["§2.1-2.3 核心三要素<br/>BEGINNER/POWER/LEAD/SKILL: P0"]
-        C2_2["§2.4-2.6 进阶概念<br/>POWER/SKILL/SYSA/SECURITY: P0"]
+
+    subgraph Ch2["核心概念"]
+        C2_1["§2.1-2.3 核心三要素<br/>入门/效率/技术负责人/Skill 作者: P0"]
+        C2_2["§2.4-2.6 进阶概念<br/>效率/Skill 作者/架构师/安全工程师: P0"]
     end
-    
-    subgraph Ch3["Ch3 环境搭建"]
-        C3_1["§3.1-3.2 快速上手<br/>BEGINNER/POWER/LEAD/SKILL/BACKEND/SECURITY: P0"]
-        C3_2["§3.3-3.5 高级配置<br/>POWER/SKILL/SYSA/BACKEND: P1"]
+
+    subgraph Ch3["环境搭建"]
+        C3_1["§3.1-3.2 快速上手<br/>入门/效率/技术负责人/Skill 作者/后端/安全工程师: P0"]
+        C3_2["§3.3-3.5 高级配置<br/>效率/Skill 作者/架构师/后端: P1"]
     end
-    
-    subgraph Ch4["Ch4 工作流实战"]
-        C4_1["§4.1-4.2 核心工作流<br/>BEGINNER/POWER/LEAD/SYSA/BACKEND/FRONTEND: P0"]
-        C4_2["§4.3-4.5 高级协作<br/>POWER/LEAD/SYSA/BACKEND/SECURITY/REDTEAM: P1"]
+
+    subgraph Ch4["工作流实战"]
+        C4_1["§4.1-4.2 核心工作流<br/>入门/效率/技术负责人/架构师/后端/前端: P0"]
+        C4_2["§4.3-4.5 高级协作<br/>效率/技术负责人/架构师/后端/安全工程师/红队: P1"]
     end
-    
-    subgraph Ch5["Ch5 Skill 开发"]
-        C5_1["§5.1-5.3 Skill 核心<br/>SKILL/FRONTEND: P0<br/>其他: P1"]
-        C5_2["§5.4-5.5 高级集成<br/>SKILL/BACKEND/SYSA: P1"]
+
+    subgraph Ch5["Skill 开发"]
+        C5_1["§5.1-5.3 Skill 核心<br/>Skill 作者/前端: P0<br/>其他: P1"]
+        C5_2["§5.4-5.5 高级集成<br/>Skill 作者/后端/架构师: P1"]
     end
-    
-    subgraph Ch6["Ch6 高级话题"]
-        C6_1["§6.1 MCP 服务器<br/>SKILL/BACKEND/SYSA/SECURITY/REDTEAM: P0"]
-        C6_2["§6.3 性能调优<br/>POWER/MANAGER: P0"]
-        C6_3["§6.8-6.9 安全章节<br/>LEAD/SYSA/SECURITY/REDTEAM: P0"]
+
+    subgraph Ch6["高级话题"]
+        C6_1["§6.1 MCP 服务器<br/>Skill 作者/后端/架构师/安全工程师/红队: P0"]
+        C6_2["§6.3 性能调优<br/>效率/工程经理: P0"]
+        C6_3["§6.8-6.9 安全章节<br/>技术负责人/架构师/安全工程师/红队: P0"]
     end
-    
-    subgraph Ch7["Ch7 案例研究"]
-        C7_1["§7.1-7.2 核心案例<br/>POWER/LEAD/MANAGER/BACKEND: P0"]
-        C7_2["§7.3 安全审计<br/>SYSA/SECURITY/REDTEAM: P0"]
-        C7_3["§7.6 Skill 市场<br/>LEAD/SKILL: P0"]
+
+    subgraph Ch7["案例研究"]
+        C7_1["§7.1-7.2 核心案例<br/>效率/技术负责人/工程经理/后端: P0"]
+        C7_2["§7.3 安全审计<br/>架构师/安全工程师/红队: P0"]
+        C7_3["§7.6 Skill 市场<br/>技术负责人/Skill 作者: P0"]
     end
-    
+
     C0_1 --> C1_1
     C1_1 --> C2_1
     C2_1 --> C3_1
@@ -185,11 +185,11 @@ graph TB
     C4_1 --> C5_1
     C5_1 --> C6_1
     C6_1 --> C7_1
-    
+
     classDef p0 fill:#4A90D9,stroke:#2E5A8C,color:#fff
     classDef p1 fill:#50C878,stroke:#2E8B57,color:#fff
     classDef p2 fill:#FF9F43,stroke:#D35400,color:#fff
-    
+
     class C0_1,C1_1,C2_1,C3_1,C4_1,C5_1,C6_1,C6_2,C6_3,C7_1,C7_2,C7_3 p0
     class C1_2,C2_2,C3_2,C4_2,C5_2 p1
 ```
@@ -198,19 +198,19 @@ graph TB
 
 | 角色 | P0 章节 | P1 章节 | 预计用时 |
 |------|---------|---------|----------|
-| **BEGINNER** | Ch0, Ch1, Ch2, Ch3, Ch4 | Ch5, Ch7 | 4-5 小时 |
-| **POWER** | Ch2, Ch3, Ch4, Ch6, Ch7 | Ch1, Ch5 | 5-6 小时 |
-| **LEAD** | Ch0, Ch1, Ch2, Ch3, Ch4, Ch6, Ch7 | Ch5 | 6-7 小时 |
-| **SKILL** | Ch2, Ch3, Ch5, Ch6, Ch7 | Ch1, Ch4 | 5-6 小时 |
-| **MANAGER** | Ch1, Ch7 | Ch2, Ch6 | 3-4 小时 |
-| **ANALYST** | Ch0, Ch1, Ch7 | Ch2 | 4-5 小时 |
-| **SYSA** | Ch1, Ch2, Ch4, Ch6, Ch7 | Ch3, Ch5 | 7-8 小时 |
-| **BACKEND** | Ch3, Ch4, Ch5, Ch6, Ch7 | Ch1, Ch2 | 5-6 小时 |
-| **FRONTEND** | Ch4, Ch5 | Ch1, Ch2, Ch3, Ch7 | 4-5 小时 |
-| **UX** | Ch0, Ch7 | Ch1, Ch2 | 3-4 小时 |
-| **QA** | Ch0, Ch1, Ch2, Ch3, Ch4, Ch5, Ch6, Ch7 | - | 6-7 小时 |
-| **SECURITY** | Ch3, Ch4, Ch5, Ch6, Ch7 | Ch1, Ch2 | 5-6 小时 |
-| **REDTEAM** | Ch4, Ch5, Ch6, Ch7 | Ch1, Ch2 | 5-6 小时 |
+| **入门** | 读者导航, 引言, 核心概念, 环境搭建, 工作流实战 | Skill 开发, 案例研究 | 4-5 小时 |
+| **效率** | 核心概念, 环境搭建, 工作流实战, 高级话题, 案例研究 | 引言, Skill 开发 | 5-6 小时 |
+| **技术负责人** | 读者导航, 引言, 核心概念, 环境搭建, 工作流实战, 高级话题, 案例研究 | Skill 开发 | 6-7 小时 |
+| **Skill 作者** | 核心概念, 环境搭建, Skill 开发, 高级话题, 案例研究 | 引言, 工作流实战 | 5-6 小时 |
+| **工程经理** | 引言, 案例研究 | 核心概念, 高级话题 | 3-4 小时 |
+| **需求分析师** | 读者导航, 引言, 案例研究 | 核心概念 | 4-5 小时 |
+| **架构师** | 引言, 核心概念, 工作流实战, 高级话题, 案例研究 | 环境搭建, Skill 开发 | 7-8 小时 |
+| **后端** | 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | 引言, 核心概念 | 5-6 小时 |
+| **前端** | 工作流实战, Skill 开发 | 引言, 核心概念, 环境搭建, 案例研究 | 4-5 小时 |
+| **UX** | 读者导航, 案例研究 | 引言, 核心概念 | 3-4 小时 |
+| **QA** | 读者导航, 引言, 核心概念, 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | - | 6-7 小时 |
+| **安全工程师** | 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | 引言, 核心概念 | 5-6 小时 |
+| **红队** | 工作流实战, Skill 开发, 高级话题, 案例研究 | 引言, 核心概念 | 5-6 小时 |
 
 ---
 
@@ -321,7 +321,7 @@ graph TB
 |------|------|------|
 | **OpenCode** | v1.15.x | 核心 AI 编程引擎 |
 | **oh-my-openagent** | v4.5.x | Agent 编排套件 |
-| **Docsify** | v4.x | 书籍渲染引擎 |
+| **mdBook** | v0.4.x | 书籍渲染引擎 |
 | **Mermaid** | v10+ | 图表和架构图 |
 | **Node.js** | >=18 | 本地预览环境 |
 
@@ -359,21 +359,21 @@ flowchart LR
     A[打开本书] --> B{有编程基础?}
     B -->|No| C[先学习编程基础]
     B -->|Yes| D{用过 AI 编程工具?}
-    D -->|No| E[BEGINNER 路径]
+    D -->|No| E[入门路径]
     D -->|Yes| F{想提升效率?}
-    F -->|Yes| G[POWER 路径]
+    F -->|Yes| G[效率路径]
     F -->|No| H{负责团队决策?}
-    H -->|Yes| I[LEAD/MANAGER 路径]
+    H -->|Yes| I[技术负责人/工程经理路径]
     H -->|No| J{开发 Skill?}
-    J -->|Yes| K[SKILL 路径]
+    J -->|Yes| K[Skill 作者路径]
     J -->|No| L{关注安全?}
-    L -->|Yes| M[SECURITY/REDTEAM 路径]
+    L -->|Yes| M[安全工程师/红队路径]
     L -->|No| N[其他角色路径]
-    
+
     classDef decision fill:#FF9F43,stroke:#D35400,color:#fff
     classDef action fill:#50C878,stroke:#2E8B57,color:#fff
     classDef exit fill:#E8E8E8,stroke:#BDBDBD,color:#666
-    
+
     class B,D,F,H,J,L decision
     class E,G,I,K,M,N action
     class C exit
@@ -383,11 +383,11 @@ flowchart LR
 
 | 你的角色 | 立即行动 |
 |----------|----------|
-| **BEGINNER** | 跳转到 [§1.1 什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
-| **POWER** | 跳转到 [§2.1 Agent 编排](../02-core-concepts/agent-orchestration.md) |
-| **LEAD** | 跳转到 [§1.3 Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) |
-| **SKILL** | 跳转到 [§2.2 Skill 系统](../02-core-concepts/skills-system.md) |
-| **MANAGER** | 跳转到 [§1.4 AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) |
+| **入门** | 跳转到 [§1.1 什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
+| **效率** | 跳转到 [§2.1 Agent 编排](../02-core-concepts/agent-orchestration.md) |
+| **技术负责人** | 跳转到 [§1.3 Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) |
+| **Skill 作者** | 跳转到 [§2.2 Skill 系统](../02-core-concepts/skills-system.md) |
+| **工程经理** | 跳转到 [§1.4 AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) |
 | **其他角色** | 查看完整 [多角色阅读路径](reading-paths.md) |
 
 ---
