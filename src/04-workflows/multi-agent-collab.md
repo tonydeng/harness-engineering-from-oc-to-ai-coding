@@ -8,7 +8,7 @@
 
 本文系统讲解四种 Agent 协作模式：串行模式（A → B → C 顺序执行）、并行模式（A 同时触发多个子 Agent 并汇总结果）、主从模式（Master 分配任务给 Slave 独立执行）和竞争模式（多个 Agent 从不同角度分析并达成共识）。然后深入 7-Agent Pipeline 的设计和实现——这是当前最成熟的多 Agent 协作方案，包含 Planner、Debater、Implementor、Reviewer、Tester、Linter 和 Committer 七个角色。
 
-你还会学到 `task()` 的子 Agent 调用方法、WORKFLOW_STATE.md 的文件交接模式（比对话历史交接更可审计、可恢复）、各 Agent 的温度策略设计（Planner 0.1、Implementor 0.1、Debater 0.3 等），以及权限隔离方案（Reviewer 和 Tester 字面无法修改代码）。
+你还会学到 `task()` 的子 Agent 调用方法、WORKFLOW_STATE.md 的文件交接模式（比对话历史交接更可审计、可恢复）、各 Agent 的温度策略设计（Planner 0.1、Implementor 0.1、Debater 0.3 等），以及权限隔离方案（Reviewer 和 Tester 在权限层面无法修改代码）。
 
 ---
 
@@ -129,6 +129,10 @@ flowchart TB
 
 主从模式引入一个协调者（Orchestrator）Agent，负责动态分解任务、分配给工作 Agent（Workers）、监控进度并汇总结果。与并行模式的区别在于：主从模式是动态分配，并行模式是静态定义。
 
+→ 此模式在 oh-my-openagent v4.0+ 中被正式封装为 **Team Mode**，提供 12 个 `team_*` 工具和四种 Agent 类型（Sisyphus、Atlas、Sisyphus-Junior、Hephaestus）来构建多 Agent 协作系统。详见[自定义工作流](custom-workflows.md)。
+
+> 注：第 2 章介绍了 OpenCode 的 5 个核心 Agent（Sisyphus、Prometheus、Atlas、Hephaestus、Oracle）。本章的 Team Mode 聚焦于 Sisyphus、Atlas、Hephaestus、Sisyphus-Junior 四种可参与工作流的 Agent 类型。Oracle 作为只读咨询 Agent 不参与流水线执行，Prometheus 作为规划模式已在前文介绍。
+
 ```mermaid
 flowchart TB
     A[Orchestrator<br/>任务协调者] --> B{任务分解}
@@ -189,6 +193,8 @@ flowchart TB
 ### 竞争模式（Adversarial）
 
 竞争模式让多个 Agent 从不同角度分析同一问题，通过辩论或对抗达成共识。这是提高决策质量的有效手段。
+
+→ 此模式在自定义工作流中被形式化为 **Hyperplan**，支持 5 个及以上批评者角色（Security、Performance、Maintainability、Edge Case、Devil's Advocate），并可通过 `consensus_threshold` 和 `veto_power` 配置决策机制。详见[自定义工作流](custom-workflows.md)。
 
 ```mermaid
 flowchart TB
@@ -284,6 +290,18 @@ graph TB
     style G fill:#FF9F43,color:#fff
     style J fill:#A66CFF,color:#fff
 ```
+
+### Token 消耗参考
+
+不同协作模式的 Token 消耗差异显著，在选择时应纳入考量：
+
+| 模式 | 典型 Token 范围 | 说明 |
+|------|----------------|------|
+| **串行模式** | 10K-50K tokens | 步骤串联，每次传递上下文积累 |
+| **并行模式** | 20K-100K tokens | 多个子 Agent 同时调用，总量取决于并行数 |
+| **主从模式** | 30K-150K tokens | 协调开销 + 动态分配，适合复杂探索 |
+| **竞争模式** | 50K-200K tokens | 多轮辩论消耗大量上下文 |
+| **7-Agent Pipeline** | 100K-500K tokens | 全流水线建议在关键任务使用 |
 
 ---
 
@@ -403,6 +421,8 @@ function mergeTaskResults(results, strategy) {
 
 ## 7-Agent Pipeline
 
+> **⚠️ 7-Agent Pipeline 的过度工程风险**：7-Agent Pipeline 虽然功能强大，但对简单任务（如单文件修改、小型 bug 修复）而言是过度工程。启动 7 个 Agent 会带来显著的 Token 开销（全流水线约 100K-500K tokens）和延迟。建议仅在以下场景使用：跨多文件的重构、关键业务逻辑变更、或需要严格审计轨迹的生产级变更。对于简单任务，单个 Agent 或 3-Agent（Implementor → Reviewer → Tester）流水线效率更高。
+
 7-Agent Pipeline 是当前最成熟的多 Agent 协作方案，将软件开发流程拆分为七个独立角色，每个角色专注于单一职责。
 
 ### 七个角色的职责定义
@@ -450,15 +470,19 @@ flowchart TB
 
 权限隔离是 7-Agent Pipeline 的核心安全设计。每个 Agent 只能访问其职责所需的权限，防止越权操作。
 
-| Agent | edit | bash | read | 模型 | 温度 | 职责 |
-|-------|------|------|------|------|------|------|
-| **Planner** | deny | deny | allow | claude-opus-4 | 0.1 | 任务规划 |
-| **Debater** | deny | deny | allow | claude-sonnet-4 | 0.3 | 方案辩论 |
-| **Implementor** | allow | ask | allow | claude-sonnet-4 | 0.1 | 代码实现 |
-| **Reviewer** | deny | deny | allow | claude-opus-4 | 0.1 | 代码审查 |
-| **Tester** | deny | allow | allow | claude-haiku-3.5 | 0.1 | 测试执行 |
-| **Linter** | deny | allow | allow | claude-haiku-3.5 | 0.0 | 代码检查 |
-| **Committer** | ask | deny | allow | claude-sonnet-4 | 0.3 | 提交代码 |
+| Agent | edit | bash | read | 模型等级 | 温度 | 职责 |
+|-------|------|------|------|---------|------|------|
+| **Planner** | deny | deny | allow | best-capability¹ | 0.1 | 任务规划 |
+| **Debater** | deny | deny | allow | balanced² | 0.3 | 方案辩论 |
+| **Implementor** | allow | ask | allow | balanced² | 0.1 | 代码实现 |
+| **Reviewer** | deny | deny | allow | best-capability¹ | 0.1 | 代码审查 |
+| **Tester** | deny | allow | allow | fast³ | 0.1 | 测试执行 |
+| **Linter** | deny | allow | allow | fast³ | 0.0 | 代码检查 |
+| **Committer** | ask | deny | allow | balanced² | 0.3 | 提交代码 |
+
+> ¹ best-capability：当前能力最强的模型（例如 Claude Opus 最新版）
+> ² balanced：性能与成本均衡的模型（例如 Claude Sonnet 最新版）
+> ³ fast：轻量快速模型（例如 Claude Haiku 最新版）
 
 **权限设计原则**：
 
@@ -492,7 +516,7 @@ flowchart TB
     "version": "1.0.0",
     "agents": {
       "planner": {
-        "model": "claude-opus-4",
+        "model": "best-capability-model",
         "temperature": 0.1,
         "skills": ["requirements-analyst", "architecture-consultant"],
         "permissions": {
@@ -503,7 +527,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#plan"
       },
       "debater": {
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "temperature": 0.3,
         "skills": ["contradiction-analysis"],
         "permissions": {
@@ -514,7 +538,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#debate"
       },
       "implementor": {
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "temperature": 0.1,
         "skills": ["backend-architect", "frontend-architect"],
         "permissions": {
@@ -525,7 +549,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#implementation"
       },
       "reviewer": {
-        "model": "claude-opus-4",
+        "model": "best-capability-model",
         "temperature": 0.1,
         "skills": ["requesting-code-review", "security-architect"],
         "permissions": {
@@ -536,7 +560,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#review"
       },
       "tester": {
-        "model": "claude-haiku-3.5",
+        "model": "fast-model",
         "temperature": 0.1,
         "skills": ["qa-engineer", "test-driven-development"],
         "permissions": {
@@ -547,7 +571,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#test"
       },
       "linter": {
-        "model": "claude-haiku-3.5",
+        "model": "fast-model",
         "temperature": 0.0,
         "skills": [],
         "permissions": {
@@ -559,7 +583,7 @@ flowchart TB
         "output": "WORKFLOW_STATE.md#lint"
       },
       "committer": {
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "temperature": 0.3,
         "skills": ["finishing-a-development-branch"],
         "permissions": {
@@ -835,12 +859,12 @@ flowchart TB
 
 ### 前端 Agent 配置
 
-| Agent | 模型 | 权限 | 温度 | 职责 |
-|-------|------|------|------|------|
-| **UI Designer** | claude-sonnet-4 | edit: allow | 0.2 | 组件代码生成 |
-| **UI Reviewer** | claude-opus-4 | edit: deny | 0.1 | 视觉审查、反馈 |
-| **Responsive Adapter** | claude-sonnet-4 | edit: allow | 0.1 | 响应式调整 |
-| **Visual Tester** | claude-haiku-3.5 | edit: deny, bash: allow | 0.0 | 视觉回归测试 |
+| Agent | 模型等级 | 权限 | 温度 | 职责 |
+|-------|---------|------|------|------|
+| **UI Designer** | balanced | edit: allow | 0.2 | 组件代码生成 |
+| **UI Reviewer** | best-capability | edit: deny | 0.1 | 视觉审查、反馈 |
+| **Responsive Adapter** | balanced | edit: allow | 0.1 | 响应式调整 |
+| **Visual Tester** | fast | edit: deny, bash: allow | 0.0 | 视觉回归测试 |
 
 ### 完整配置示例
 
@@ -851,7 +875,7 @@ flowchart TB
     "trigger": "/create-component",
     "agents": {
       "ui-designer": {
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "temperature": 0.2,
         "skills": ["ui-designer", "frontend-architect"],
         "permissions": {
@@ -866,7 +890,7 @@ flowchart TB
         }
       },
       "ui-reviewer": {
-        "model": "claude-opus-4",
+        "model": "best-capability-model",
         "temperature": 0.1,
         "skills": ["steve-jobs-perspective"],
         "permissions": {
@@ -882,7 +906,7 @@ flowchart TB
         ]
       },
       "responsive-adapter": {
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "temperature": 0.1,
         "skills": ["frontend-architect"],
         "permissions": {
@@ -898,7 +922,7 @@ flowchart TB
         }
       },
       "visual-tester": {
-        "model": "claude-haiku-3.5",
+        "model": "fast-model",
         "temperature": 0.0,
         "skills": ["qa-engineer"],
         "permissions": {
@@ -1080,6 +1104,8 @@ flowchart TB
 /implement --pipeline 7-agent "实现用户登录功能"
 ```
 
+> 注：`/pipeline` 命令需要 OMO v4.0+，且需在 `.opencode/pipelines/` 目录下预先定义 Pipeline 配置文件。
+
 ### 观察每个阶段的输出
 
 Pipeline 执行过程中，每个 Agent 会输出其执行状态：
@@ -1185,7 +1211,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 7-Agent Pipeline 是当前最成熟的协作方案，通过 Planner、Debater、Implementor、Reviewer、Tester、Linter、Committer 七个角色的紧密配合，实现了从需求到提交的完整开发流程。WORKFLOW_STATE.md 的文件交接模式让状态持久化、可审计、可恢复，是"可审计"原则的具体实践。
 
-权限隔离和温度策略是 Pipeline 安全和质量的关键保障。Reviewer 和 Tester 字面无法修改代码，防止了审查和测试阶段的意外修改；低温度策略确保了规划和实现的确定性输出。
+权限隔离和温度策略是 Pipeline 安全和质量的关键保障。Reviewer 和 Tester 在权限层面无法修改代码，防止了审查和测试阶段的意外修改；低温度策略确保了规划和实现的确定性输出。
 
 ---
 

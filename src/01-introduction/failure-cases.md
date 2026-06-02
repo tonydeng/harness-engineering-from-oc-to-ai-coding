@@ -379,7 +379,7 @@ rollback:
 
 ### Harness Engineering 的安全价值
 
-这些失败案例正是 Harness Engineering 要解决的核心问题：
+这些失败案例正是 Harness Engineering 要解决的核心问题。这与第 3 篇提出的 **安全支柱**（攻击面覆盖、权限最小化、防护纵深、可审计性）形成对照——安全事故的根本原因往往是对这四个维度的忽视：
 
 ```mermaid
 flowchart TB

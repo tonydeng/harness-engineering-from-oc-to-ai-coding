@@ -61,21 +61,13 @@ description: "帮助开发"
 description: "在 React 18.2.0 版本使用 TypeScript 4.9 时优化 useEffect 性能"
 
 # 正例：精确且完整
-description: |
-  用于需要网络研究的任何问题，替代 WebSearch。
-  提供：系统化的多角度研究方法论，而非单一浅层搜索。
-  适用：当用户询问"什么是 X"、"解释 X"、"比较 X 和 Y"、"研究 X"。
-  不适用：简单的代码修改任务。
+description: "用于需要网络研究的任何问题。提供系统化的多角度研究方法论，而非单一浅层搜索。适用：回答"什么是 X"、"解释 X"、"比较 X 和 Y"。不适用：简单的代码修改任务"
 ```
 
 **description 写作模板**：
 
 ```yaml
-description: |
-  [一句话说明核心能力]
-  提供：[该 Skill 包含的资源]
-  适用：[触发场景1]、[触发场景2]
-  不适用：[边界场景1]
+description: "[一句话说明核心能力]。提供：[该 Skill 包含的资源]。适用：[触发场景]。不适用：[边界场景]"
 ```
 
 #### 权限控制字段
@@ -95,7 +87,7 @@ allowed-tools:
   - Glob      # 搜索文件
   - Grep      # 搜索内容
   # 注意：没有 Write，禁止修改代码
-  # 注意：没有 Bash，禁止执行命令
+  # 注意：没有 RunCommand，禁止执行命令
 ---
 ```
 
@@ -107,14 +99,16 @@ allowed-tools:
 |------------|-------------------|----------|
 | 代码审查 | `Read`, `Glob`, `Grep` | 只读，无修改风险 |
 | 代码生成 | `Read`, `Write`, `Glob` | 需要写入，但禁止命令执行 |
-| 部署脚本 | `Read`, `Write`, `Bash` | 高风险，需严格审计 |
-| 安全审计 | `Read`, `Grep`, `Bash` | 需要执行扫描工具，但禁止写入 |
+| 部署脚本 | `Read`, `Write`, `RunCommand` | 高风险，需严格审计 |
+| 安全审计 | `Read`, `Grep`, `RunCommand` | 需要执行扫描工具，但禁止写入 |
 
 #### 可见性控制字段
 
 | 字段 | 类型 | 必需 | 说明 | 使用场景 |
 |------|------|------|------|----------|
-| `target_agent` | string | ❌ | 限定只有特定 Agent 可以加载此 Skill | 专业 Skill 限定给专业 Agent |
+| `target_agent` | string | ❌ | 限定只有特定 Agent 可以加载此 Skill（oh-my-openagent Team Mode 特有） | 专业 Skill 限定给专业 Agent |
+
+> ⚠️ `target_agent` 和 `category` 字段是 **oh-my-openagent Team Mode** 的功能，在标准（vanilla）OpenCode 中不可用。如果你使用的是标准 OpenCode，可以忽略这些高级字段。
 
 `target_agent` 实现了 Skill 的作用域控制（Scoped Skills），在 Team Mode 中尤为重要：
 
@@ -126,7 +120,7 @@ target_agent: security-audit  # 只有 security-audit Agent 可见
 allowed-tools:
   - Read
   - Grep
-  - Bash
+  - RunCommand
 ---
 ```
 
@@ -142,9 +136,9 @@ allowed-tools:
 
 | 字段 | 类型 | 必需 | 说明 |
 |------|------|------|------|
-| `version` | string | ❌ | Skill 版本号，遵循语义化版本 |
-| `author` | string | ❌ | 作者信息 |
 | `license` | string | ❌ | 许可证类型，发布到 Marketplace 时重要 |
+| `metadata.version` | string | ❌ | Skill 版本号，遵循语义化版本 |
+| `metadata.author` | string | ❌ | 作者信息 |
 | `metadata.tags` | string[] | ❌ | 标签，用于分类和搜索 |
 | `metadata.min_opencode_version` | string | ❌ | 最低 OpenCode 版本要求 |
 | `metadata.compatibility` | object | ❌ | 兼容性声明 |
@@ -153,10 +147,10 @@ allowed-tools:
 ---
 name: frontend-architect
 description: 前端架构设计专家
-version: "2.1.0"
-author: opencode-community
 license: MIT
 metadata:
+  version: "2.1.0"
+  author: opencode-community
   tags:
     - frontend
     - react
@@ -369,7 +363,7 @@ OpenCode 按照以下优先级搜索 Skill：
 | 优先级 | 路径 | 用途 | 版本控制 |
 |--------|------|------|----------|
 | 1（最高） | 项目级 `.opencode/skills/` | 项目特定 Skill | 建议纳入 Git |
-| 2 | 用户级 `~/.opencode/skills/` | 个人 Skill 库 | 可选 |
+| 2 | 用户级 `~/.config/opencode/skills/` | 个人 Skill 库 | 可选 |
 | 3 | 内置 Skills | 官方通用 Skill | 随版本更新 |
 | 4 | Skills Marketplace | 社区第三方 Skill | 独立管理 |
 
@@ -380,13 +374,13 @@ OpenCode 按照以下优先级搜索 Skill：
 /my-project/.opencode/skills/frontend-architect/SKILL.md
 
 # 用户级
-~/.opencode/skills/deep-research/SKILL.md
+~/.config/opencode/skills/deep-research/SKILL.md
 
 # 内置
 /usr/local/lib/opencode/skills/code-reviewer/SKILL.md
 
 # Marketplace（需要安装）
-~/.opencode/marketplace/skills/security-scanner/SKILL.md
+~/.config/opencode/marketplace/skills/security-scanner/SKILL.md
 ```
 
 ### 按需激活机制
@@ -443,6 +437,8 @@ grep -A 10 "allowed-tools:" .opencode/skills/my-skill/SKILL.md
 ```
 
 ## Skills Marketplace 发布
+
+> ⚠️ **前瞻性说明**：Skills Marketplace 是 OpenCode 生态的远景规划功能。下文提到的 `opencode marketplace` CLI 命令、`skill-manifest.yaml` 发布清单、企业私有市场部署方案等属于前瞻性设计，尚未在 OpenCode 当前版本中完整实现。这些内容反映了社区对 Skill 共享与分发机制的期望方向，供读者参考和参与讨论。
 
 ### Marketplace 概述
 
@@ -534,19 +530,16 @@ Run: opencode marketplace update frontend-architect
 ```yaml
 ---
 name: deep-research
-description: |
-  用于需要网络研究的任何问题，替代 WebSearch。
-  提供：系统化的多角度研究方法论，而非单一浅层搜索。
-  适用：当用户询问"什么是 X"、"解释 X"、"比较 X 和 Y"、"研究 X"。
-  不适用：简单的代码修改任务。
+description: "用于需要网络研究的任何问题，替代 WebSearch。提供系统化的多角度研究方法论"
 allowed-tools:
   - WebSearch
   - WebFetch
   - Read
   - Grep
-version: "1.0.0"
-author: opencode-community
 license: MIT
+metadata:
+  version: "1.0.0"
+  author: opencode-community
 ---
 
 # Deep Research Skill
@@ -586,17 +579,14 @@ license: MIT
 ```yaml
 ---
 name: requesting-code-review
-description: |
-  完成任务、实现主要功能或合并之前使用。
-  提供：代码审查清单、最佳实践检查。
-  适用：代码审查、合并前验证。
-  不适用：代码生成任务。
+description: "在完成任务、实现主要功能或合并之前使用，验证工作是否符合需求"
 allowed-tools:
   - Read
   - Grep
-  - SearchCodebase
-version: "1.0.0"
-author: opencode-community
+  - Glob
+metadata:
+  version: "1.0.0"
+  author: opencode-community
 ---
 
 # Code Review Skill
@@ -636,16 +626,13 @@ author: opencode-community
 ```yaml
 ---
 name: agile-coach
-description: |
-  协调安全智能团队或软件研发团队执行敏捷活动。
-  提供：Sprint 规划、站会、评审、回顾。
-  适用：Sprint 规划、站会、评审、回顾、跨团队协作。
-  关键词：敏捷、Sprint、迭代、站会、回顾。
+description: "在需要协调安全智能团队或软件研发团队执行敏捷活动时使用"
 allowed-tools:
   - Read
   - Write
-version: "1.0.0"
-author: opencode-community
+metadata:
+  version: "1.0.0"
+  author: opencode-community
 ---
 
 # Agile Coach Skill
@@ -688,19 +675,16 @@ author: opencode-community
 ```yaml
 ---
 name: security-auditor
-description: |
-  安全漏洞扫描和审计专家。
-  提供：漏洞扫描、安全报告生成。
-  适用：安全审计、漏洞扫描、合规检查。
-  不适用：功能开发任务。
+description: "安全漏洞扫描和审计专家，在需要进行安全审计、漏洞扫描、合规检查时使用"
 allowed-tools:
   - Read
   - Grep
-  - Bash
+  - RunCommand
 target_agent: security-audit
-version: "1.0.0"
-author: security-team
 license: MIT
+metadata:
+  version: "1.0.0"
+  author: security-team
 ---
 
 # Security Auditor Skill
@@ -781,7 +765,7 @@ target_agent: security-audit  # 只有 security-audit Agent 可见
 allowed-tools:
   - Read
   - Grep
-  - Bash
+  - RunCommand
 ---
 ```
 
@@ -859,18 +843,21 @@ allowed-tools:
 | 字段 | 类型 | 必需 | 说明 | 示例值 |
 |------|------|------|------|--------|
 | `name` | string | ✅ | Skill 唯一标识，小写连字符 | `deep-research` |
-| `description` | string | ✅ | 语义匹配的描述文本 | `用于需要网络研究的任何问题` |
+| `description` | string | ✅ | 语义匹配的描述文本，单行格式 | `"用于需要网络研究的任何问题"` |
 | `allowed-tools` | string[] | ❌ | 可调用的工具白名单 | `[Read, Write, Glob]` |
 | `target_agent` | string | ❌ | 绑定到指定 Agent | `security-audit` |
 | `category` | string | ❌ | 按功能分类路由 | `code-review` |
-| `version` | string | ❌ | 语义化版本号 | `"1.0.0"` |
-| `author` | string | ❌ | 作者信息 | `opencode-community` |
 | `license` | string | ❌ | 许可证类型 | `MIT` |
+| `metadata.version` | string | ❌ | 语义化版本号 | `"1.0.0"` |
+| `metadata.author` | string | ❌ | 作者信息 | `opencode-community` |
+| `metadata.changelog` | string[] | ❌ | 变更日志，记录版本历史 | `["1.0.0: 初始版本"]` |
 | `metadata.tags` | string[] | ❌ | 搜索和分类标签 | `[frontend, react]` |
 | `metadata.min_opencode_version` | string | ❌ | 最低 OpenCode 版本 | `"2.0.0"` |
 | `metadata.compatibility` | object | ❌ | 兼容性声明 | `{node_version: ">=18.0.0"}` |
+| `dependencies` | object[] | ❌ | 依赖的其他 Skill 及版本约束 | `[{name: "frontend-architect", version: ">=1.0.0"}]` |
+| `pipeline` | object[] | ❌ | 管道模式配置，定义执行阶段 | `[{stage: "build", skill: "compiler"}]` |
 
-字段选取遵循 **名描权目版，作许标兼** 的口诀：name、description、allowed-tools、target_agent/category、version、author、license、metadata.tags、metadata.compatibility。其中 `name` 和 `description` 是唯二的必填字段，其他字段按需选用。
+字段选取遵循 **名描权许，目类证标，版作日志，依赖管道** 的口诀：name、description、allowed-tools、target_agent/category、license、metadata.*（版本/作者/标签/最低版本/兼容性）、dependencies、pipeline。其中 `name` 和 `description` 是唯二的必填字段，其他字段按需选用。
 
 ## 小结
 

@@ -68,7 +68,11 @@ opencode --version
 OpenCode v1.15.x
 ```
 
-> **故障排查**：如果提示 `command not found`，请确认 Node.js 已正确安装，并检查 `npm` 全局路径是否在 `PATH` 环境变量中。
+> **故障排查**：
+> - **`command not found`**：确认 Node.js >= 18 已正确安装，并检查 npm 全局路径是否在 `PATH` 中。macOS/Linux 可运行 `echo $PATH` 确认 `/usr/local/bin` 或 `~/.npm-global/bin` 在路径中
+> - **`EACCES: permission denied`**：npm 全局安装权限不足时，建议使用 nvm 管理 Node.js 版本（`nvm install --lts`），避免使用 `sudo npm install`
+> - **`node --version` 版本过低**：使用 nvm（推荐）安装 Node.js 18+：`nvm install 18` 或 `nvm install --lts`
+> - **`git not found`**：从 [git-scm.com](https://git-scm.com/) 下载安装，或 macOS 使用 `brew install git`
 
 ---
 

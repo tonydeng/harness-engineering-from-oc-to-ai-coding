@@ -65,7 +65,7 @@ flowchart TB
       {
         "id": "team-lead",
         "role": "coordinator",
-        "model": "claude-opus-4",
+        "model": "best-capability-model",
         "skills": ["overall-planning", "dispatching-parallel-agents"],
         "permissions": {
           "read": "allow",
@@ -78,7 +78,7 @@ flowchart TB
       {
         "id": "vuln-scanner",
         "role": "worker",
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "skills": ["vulnerability-manager", "blue-team-defender"],
         "permissions": {
           "read": "allow",
@@ -91,7 +91,7 @@ flowchart TB
       {
         "id": "code-analyzer",
         "role": "worker",
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "skills": ["security-architect", "penetration-tester"],
         "permissions": {
           "read": "allow",
@@ -104,7 +104,7 @@ flowchart TB
       {
         "id": "poc-engineer",
         "role": "worker",
-        "model": "claude-sonnet-4",
+        "model": "balanced-model",
         "skills": ["elite-red-team-hacker", "penetration-tester"],
         "permissions": {
           "read": "allow",
@@ -860,6 +860,8 @@ graph LR
 
 大规模 Teams 采用分层架构，父 Team 包含子 Team 的分层治理模型：
 
+> **分层架构说明**：此处的"父 Team 包含子 Team"是**业务逻辑层面的分层协调**，而非 API 层面的嵌套。12 个 `team_*` 工具在工具层面不支持嵌套（参见[自定义工作流](custom-workflows.md)中 Team Mode 的限制），但通过消息传递机制，一个 Team 可以向另一个 Team 的 Lead 发送 `task_assignment` 消息，实现逻辑上的分层治理。每个 Team 仍然是独立的进程边界，各自管理自己的成员生命周期。
+
 ```mermaid
 flowchart TB
     subgraph L1["Level 1: 项目级 Team"]
@@ -916,7 +918,7 @@ flowchart TB
         "team": {
           "name": "project-lead",
           "role": "coordinator",
-          "model": "claude-opus-4",
+          "model": "best-capability-model",
           "skills": ["overall-planning", "dispatching-parallel-agents"]
         }
       },
@@ -925,7 +927,7 @@ flowchart TB
         "teams": [
           {
             "name": "frontend-team",
-            "lead": { "model": "claude-sonnet-4", "skills": ["frontend-architect"] },
+            "lead": { "model": "balanced-model", "skills": ["frontend-architect"] },
             "workers": [
               { "id": "ui-developer", "skills": ["ui-designer"] },
               { "id": "component-developer", "skills": ["frontend-architect"] }
@@ -933,7 +935,7 @@ flowchart TB
           },
           {
             "name": "backend-team",
-            "lead": { "model": "claude-sonnet-4", "skills": ["backend-architect"] },
+            "lead": { "model": "balanced-model", "skills": ["backend-architect"] },
             "workers": [
               { "id": "api-developer", "skills": ["backend-architect"] },
               { "id": "db-developer", "skills": ["backend-architect"] }
@@ -941,7 +943,7 @@ flowchart TB
           },
           {
             "name": "security-team",
-            "lead": { "model": "claude-opus-4", "skills": ["security-architect"] },
+            "lead": { "model": "best-capability-model", "skills": ["security-architect"] },
             "workers": [
               { "id": "vuln-scanner", "skills": ["vulnerability-manager"] },
               { "id": "code-auditor", "skills": ["penetration-tester"] }

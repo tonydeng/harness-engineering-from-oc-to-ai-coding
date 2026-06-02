@@ -103,7 +103,7 @@ dependencies:
     version: ">=1.0.0"
   - name: qa-engineer
     version: ">=1.0.0"
-allowed-tools: [Read, Write, Glob, Grep, Bash]
+allowed-tools: [Read, Write, Glob, Grep, RunCommand]
 ---
 
 # Full Stack Dev Skill
@@ -517,6 +517,8 @@ selection_strategy:
 | **后端类比** | 工作流引擎 | ETL 管道 | 服务发现 |
 
 ## Skills Marketplace 发布与管理
+
+> ⚠️ **前瞻性说明**：Skills Marketplace 是 OpenCode 生态的远景规划功能。下文描述的 CLI 发布命令、Enterprise Marketplace YAML 配置、依赖锁定文件（`skill-lock.yaml`）以及版本管理的自动化流程属于前瞻性设计，尚未在 OpenCode 当前版本中完整实现。本节内容反映了社区对 Skill 市场化的期望方向，供读者参考。
 
 ### 发布流程
 

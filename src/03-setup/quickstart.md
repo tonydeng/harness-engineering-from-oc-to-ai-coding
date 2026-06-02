@@ -1,8 +1,10 @@
 # 快速上手
 
-> 5 分钟内完成 OpenCode 安装和第一个 AI 编程任务，感受工程化 AI 编程的基础操作。
+> 预计 20 分钟完成（假设已安装 Node.js 并拥有 API Key）OpenCode 安装和第一个 AI 编程任务，感受工程化 AI 编程的基础操作。
 
-本章是全书动手的起点。之前两章讨论了"为什么要工程化"和"核心概念是什么"，现在到了"怎么做到"的时候。快速上手的定位是让读者在 5 分钟内完成 OpenCode 的安装、Provider 配置、项目初始化和第一个有意义的任务。
+> 如果你已完成《5 分钟快速体验》（第 0 章）的安装步骤，可以直接跳到[配置供应商](opencode-config.md#供应商配置)部分。
+
+本章是全书动手的起点。之前两章讨论了"为什么要工程化"和"核心概念是什么"，现在到了"怎么做到"的时候。快速上手的定位是让读者在约 20 分钟内完成 OpenCode 的安装、Provider 配置、项目初始化和第一个有意义的任务（首次使用需注册 API 账户，约 5 分钟）。
 
 读完这篇文章后，你不会成为配置专家，但会理解 OpenCode 的基本操作循环：配置 Provider、启动 Session、执行任务、查看结果。更重要的是，你会理解 `/init` 命令为什么是项目的"出生证明"，以及安全权限控制为什么是 Harness Engineering 的第一道防线。
 
@@ -10,12 +12,17 @@
 
 在开始之前，你需要：
 
-1. **现代终端模拟器**
+1. **Node.js >= 18**
+   - npm 安装方式需要 Node.js 运行时
+   - 使用 `node --version` 验证版本
+   - 推荐使用 [nvm](https://github.com/nvm-sh/nvm) 管理 Node.js 版本
+
+2. **现代终端模拟器**
    - 跨平台：WezTerm、Alacritty
    - macOS/Linux：Ghostty、Kitty、iTerm2
    - Windows：Windows Terminal、PowerShell
 
-2. **至少一个 LLM Provider 的访问权限**
+3. **至少一个 LLM Provider 的访问权限**
    - OpenCode Zen 账户（推荐新手）
    - 或 Anthropic / OpenAI / Google API Key
    - 或 GitHub Copilot 订阅
@@ -77,11 +84,7 @@ curl -fsSL https://opencode.ai/install | bash
 npm install -g opencode-ai
 ```
 
-**方式四：Bun 安装**
-
-```bash
-bun install -g opencode-ai
-```
+> 中国大陆用户可通过 `npm config set registry https://registry.npmmirror.com` 加速 npm 安装。
 
 ### Windows 安装
 
@@ -211,6 +214,8 @@ OpenCode Zen 是由 OpenCode 团队提供的模型清单，这些模型已经过
 /models
 ```
 
+> 提示：如果浏览器未自动打开，请手动访问 https://opencode.ai/auth 完成认证。
+
 **优势：**
 
 - 无需分别注册多个 Provider
@@ -282,18 +287,20 @@ export GOOGLE_API_KEY="xxxxx"
   "$schema": "https://opencode.ai/config.json",
   "provider": {
     "anthropic": {
-      "apiKey": "$ANTHROPIC_API_KEY"
+      "apiKey": "{env:ANTHROPIC_API_KEY}"
     }
   },
   "models": {
-    "default": "anthropic/claude-sonnet-4-20250514"
+    "default": "balanced-model"
   }
 }
 ```
 
 ### 方式三：GitHub Copilot 登录
 
-如果你已有 GitHub Copilot 订阅（Individual $10/月或 Enterprise），可以在 OpenCode 中复用，无需额外购买 API。
+如果你已有 GitHub Copilot 订阅（Pro $10/月、Business $19/用户或 Enterprise $39/用户），可以在 OpenCode 中复用，无需额外购买 API。
+
+> 此成本对比为写书时（2026年6月）所查询数据，请以当前实际定价为准。
 
 **配置步骤：**
 
@@ -340,13 +347,13 @@ And enter code: XXXX-XXXX
 |------|------|
 | `gpt-4o` | 推荐，旗舰多模态模型 |
 | `gpt-4o-mini` | 快速，低成本 |
-| `claude-sonnet-4-5` | Claude 最新平衡版 |
-| `claude-3-5-haiku` | Claude 快速版 |
-| `o1` | 增强推理模型 |
+| `balanced-model` | 平衡性能与成本 |
+| `fast-model` | 快速响应模型 |
+| `best-capability-model` | 最强推理模型 |
 
 **注意事项：**
 
-- 部分高级模型（如 `o1`、`claude-sonnet-4-5`）可能需要 GitHub Copilot Pro+ 订阅
+- 部分高级模型（如 `best-capability-model`）可能需要 GitHub Copilot Pro+ 订阅
 - 普通订阅可能只能访问部分模型
 - 凭证存储在 `~/.local/share/opencode/auth.json`，请勿提交到 Git
 
@@ -357,6 +364,8 @@ And enter code: XXXX-XXXX
 | **OpenCode Zen** | 新手、想省心的用户 | 一站式、已验证模型、统一计费 | 需要注册 OpenCode 账户 |
 | **自有 API Key** | 已有 API 访问权限的用户 | 灵活、直接控制、无中间层 | 需要管理多个 Key |
 | **GitHub Copilot** | 已有 Copilot 订阅的用户 | 复用现有订阅、无需额外付费 | 模型选择受订阅等级限制 |
+
+> 注意：下文使用层级化模型名称标识模型在能力/成本谱系中的位置，具体映射请参考 OpenCode 官方文档的模型支持列表。
 
 ## 第一个 Session
 

@@ -134,7 +134,7 @@ flowchart LR
 {
   "delegatedAgents": {
     "security-auditor": {
-      "model": "claude-opus-4",
+      "model": "best-capability-model",
       "skills": ["penetration-tester", "vulnerability-manager", "blue-team-defender"],
       "permissions": {
         "read": "allow",
@@ -151,7 +151,7 @@ flowchart LR
       }
     },
     "performance-analyst": {
-      "model": "claude-sonnet-4",
+      "model": "balanced-model",
       "skills": ["backend-architect"],
       "permissions": {
         "read": "allow",
@@ -215,7 +215,7 @@ flowchart TB
 {
   "orchestrator": {
     "name": "development-coordinator",
-    "model": "claude-opus-4",
+    "model": "best-capability-model",
     "skills": ["dispatching-parallel-agents", "overall-planning"],
     "permissions": {
       "read": "allow",
@@ -269,72 +269,22 @@ flowchart TB
 
 `task()` 是 OpenCode 提供的子 Agent 调用 API，它实现了三种派生模式的统一接口。
 
-### task() 参数体系
+### task() 参数体系概述
 
-```json
-{
-  "task": {
-    "category": "subagent",
-    "load_skills": ["security-architect", "penetration-tester"],
-    "prompt": "对当前代码变更进行安全审查，重点关注 SQL 注入和 XSS 漏洞",
-    "description": "安全审查子任务",
-    "context": {
-      "inherit": ["read", "search"],
-      "isolate": ["edit", "bash"]
-    },
-    "timeout": 300000,
-    "onFailure": "report",
-    "priority": "high"
-  }
-}
-```
-
-**参数详解**：
+`task()` API 的核心参数与完整说明已在[多 Agent 协作](multi-agent-collab.md)的"task() 参数体系"一节中详细展开。以下仅列出与派生模式直接相关的关键参数，完整参数说明请参见上文。
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `category` | string | 是 | 派生类型：`subagent`、`delegate`、`orchestrator` |
-| `load_skills` | string[] | 否 | 子 Agent 加载的 Skill 列表 |
+| `category` | string | 是 | 派生类型：`subagent`（子 Agent）、`delegate`（委派）、`orchestrator`（协调者） |
+| `load_skills` | string[] | 否 | 子 Agent 加载的 Skill 列表，不继承父 Agent 已加载的 Skill。如果指定的 Skill 不存在，Agent 会静默跳过该 Skill 并继续执行 |
 | `prompt` | string | 是 | 子 Agent 的任务指令 |
-| `description` | string | 否 | 任务描述，用于日志和审计 |
-| `context` | object | 否 | 上下文继承配置 |
+| `context` | object | 否 | 上下文继承配置：`inherit` 指定继承的权限，`isolate` 指定隔离的权限 |
 | `timeout` | number | 否 | 超时时间（毫秒），默认 300000 |
 | `onFailure` | string | 否 | 失败策略：`report`、`retry`、`abort` |
-| `priority` | string | 否 | 优先级：`high`、`medium`、`low` |
 
-### category 参数选择派生目标
+### category 选择决策
 
-`category` 参数决定派生模式：
-
-```javascript
-function selectDerivationMode(category, task) {
-  switch (category) {
-    case 'subagent':
-      return {
-        mode: 'child',
-        lifecycle: 'task-bound',
-        contextInherit: 'full',
-        permissions: 'inherit'
-      }
-    case 'delegate':
-      return {
-        mode: 'delegated',
-        lifecycle: 'independent',
-        contextInherit: 'partial',
-        permissions: 'independent'
-      }
-    case 'orchestrator':
-      return {
-        mode: 'coordinator',
-        lifecycle: 'independent',
-        contextInherit: 'none',
-        permissions: 'independent'
-      }
-  }
-}
-```
-
-**选择决策**：
+`category` 参数决定派生模式，三种取值对应三种派生方式：
 
 | 场景 | 推荐 category | 原因 |
 |------|--------------|------|

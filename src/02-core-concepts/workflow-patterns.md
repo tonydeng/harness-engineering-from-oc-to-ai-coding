@@ -4,6 +4,19 @@
 
 工作流是 Harness Engineering 的"生产线"。如果说 Agent 是执行者、Skill 是技能包，那么工作流就是将它们串联成高效生产流程的方法论。本章从 Command 系统入手，讲解如何将日常操作固化为可复用的命令，如何通过 Profile 切换适应不同工作状态，以及如何借助 AGENTS.md 实现项目知识的持久化。最后，我们对比 Ultrawork 与 Prometheus 两种高级工作流模式，帮助读者在不同场景下做出合理选择。
 
+### 最小示例
+
+用一个最简单的自定义命令来理解工作流：
+
+```markdown
+# 保存为 .opencode/commands/hello.md
+你好世界
+
+请用中文回复"你好，世界！"，并加上当前时间。
+```
+
+保存后，在 OpenCode 中输入 `/你好世界`，Agent 就会自动执行这条命令。工作流的本质就是**把固定步骤封装为可复用的命令**——就像写 Shell 脚本一样简单。
+
 ### 操作系统类比：Workflow = Shell Pipeline
 
 理解工作流最直观的方式是将其类比为操作系统的 **Shell 流水线**：
@@ -321,6 +334,8 @@ model: claude-opus-4
 ```
 
 `debug-verbose` 继承了 `debug` 的所有配置，并覆盖了日志级别。
+
+> 注：`$extends` 为推荐的配置文件继承模式，具体实现需以 OpenCode 当前版本文档为准。
 
 ### 命令行选择 Profile
 
@@ -732,7 +747,7 @@ sequenceDiagram
 
 ## 马书工作流模式映射
 
-《马书》（《OpenCode Model Context Protocol 完全指南》）提出了 6 种工作流模式，与 OpenCode 的工作流形成对应关系：
+《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（简称《马书》）提出了 6 种工作流模式，与 OpenCode 的工作流形成对应关系：
 
 ### 六种工作流模式
 
