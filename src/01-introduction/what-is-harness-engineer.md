@@ -444,6 +444,41 @@ mindmap
 
 > 注：分数为能力评估分数（满分100），成长差距表示入门开发者需要提升的空间。
 
+### 核心能力雷达图
+
+以下图表从两个视角展示 Harness Engineer 五大核心能力的相对水平。Mermaid 柱状图直观对比能力分数，Vega-Lite 雷达图以极坐标形式呈现能力分布形态：
+
+```mermaid
+---
+config:
+  theme: base
+---
+xychart-beta
+  title "Harness Engineer 核心能力评估"
+  x-axis ["需求分析", "工作流设计", "Agent编排", "质量审查", "知识沉淀"]
+  y-axis "分数" 0 --> 100
+  bar [85, 90, 88, 82, 78]
+```
+
+```vega-lite
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Harness Engineer 五大核心能力雷达图",
+  "data": {"values": [
+    {"能力": "需求分析", "分数": 85},
+    {"能力": "工作流设计", "分数": 90},
+    {"能力": "Agent编排", "分数": 88},
+    {"能力": "质量审查", "分数": 82},
+    {"能力": "知识沉淀", "分数": 78}
+  ]},
+  "mark": {"type": "line", "stroke": "#4A90D9", "strokeWidth": 2, "point": {"size": 80}},
+  "encoding": {
+    "theta": {"field": "能力", "type": "nominal", "scale": {"range": [0, 360]}, "sort": null},
+    "radius": {"field": "分数", "type": "quantitative", "scale": {"domain": [0, 100]}}
+  }
+}
+```
+
 #### 1. 需求澄清能力
 
 将模糊的业务需求转化为 AI 可执行的任务规格。

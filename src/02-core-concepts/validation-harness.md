@@ -14,6 +14,25 @@
 
 YOLO 分类器是验证护栏的智能决策核心。我们深入分析高风险（阻止执行）、中风险（确认后执行）、低风险（自动执行）三种分类的设计依据和训练方法。自动验证机制涵盖 LSP 验证链（语法→类型→lint→语义）、测试自动执行和架构符合性检查。本章还包含威胁建模分析，讨论攻击者如何利用 YOLO 分类器误判绕过门禁、门禁报文伪造等风险及其防御策略。学完本节，读者应能设计并配置适配项目质量要求的验证体系。
 
+### 操作系统类比：验证护栏 = CI 质量门禁
+
+理解验证护栏最直观的方式是将其类比为操作系统和 CI 系统的**质量保障机制**：
+
+| 操作系统概念 | OpenCode 对应 | 说明 |
+|-------------|---------------|------|
+| CI Pipeline 质量门禁 / Git Hook | Validation Gate | 代码入库前必须通过的质量检查关卡 |
+| 防火墙 DPI / 深度包检测 | YOLO Classifier | 深入分析操作内容，智能判定风险等级 |
+| 操作系统自动错误恢复 / fsck | Auto-fix | 检测到问题时自动修复，减少人工介入 |
+| 系统日志 / Event Viewer | Audit Log | 完整记录所有验证过程和结果 |
+| 文件系统配额 | 量化门禁 | 对代码质量、性能指标设置硬性阈值 |
+| 签名校验 / 代码签名 | 验证结果签名 | 防止伪造通过报文，确保验证结果可信 |
+
+这个类比帮助理解几个关键设计：
+
+1. **门禁阻断**：就像 Git Hook 在 commit 前拦截问题，验证门禁在代码入库前拦截低质量代码
+2. **深度检测**：DPI 不仅看报文头，YOLO 也不仅匹配文本模式——两者都深入分析行为特征
+3. **自动修复**：fsck 自动修复文件系统错误，Auto-fix 自动修复代码问题——都是"发现问题→修复→验证"循环
+
 ## 验证护栏的定义
 
 ### 约束管"准入"，验证管"准出"
@@ -312,6 +331,7 @@ flowchart TB
 以下是完整的质量门禁配置示例：
 
 ```json:examples/opencode-configs/quality-gates.jsonc
+// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {
   "$schema": "https://opencode.ai/config.json",
   "validation": {
@@ -951,7 +971,20 @@ auto_fix:
 }
 ```
 
-## 威胁建模分析
+## STRIDE 威胁建模分析
+
+### STRIDE 威胁分类映射
+
+STRIDE 是微软提出的安全威胁分类框架，用于系统性地识别和分析安全威胁。以下将验证护栏面临的主要威胁映射到 STRIDE 分类：
+
+| STRIDE 威胁 | 验证护栏中的体现 | 风险等级 |
+|------------|----------------|---------|
+| **S** Spoofing（身份欺骗） | 伪造验证结果身份，冒充合法验证系统 | 中 |
+| **T** Tampering（数据篡改） | 篡改门禁配置、YOLO 规则、验证结果数据 | 高 |
+| **R** Repudiation（否认） | 否认执行过验证失败的操作，缺少不可否认性 | 中 |
+| **I** Information Disclosure（信息泄露） | 通过验证日志或错误信息泄露敏感代码内容 | 低 |
+| **D** Denial of Service（拒绝服务） | 利用自动修复循环消耗系统资源，耗尽 Token 预算 | 中 |
+| **E** Elevation of Privilege（权限提升） | 绕过 YOLO 分类器，让高风险操作获得自动执行权限 | 高 |
 
 ### 验证护栏的攻击面
 
@@ -1010,6 +1043,7 @@ const cmd = "rm" + " -rf " + "/";
 | **异常行为检测** | 监控资源消耗、网络请求等异常指标 |
 
 ```yaml:examples/validation/yolo-classifier.yaml
+# Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 yolo_classifier:
   # 多维度特征提取
   feature_extraction:
@@ -1139,6 +1173,7 @@ fix_loop_protection:
 | **基线检查** | 定期检查配置是否偏离安全基线 |
 
 ```yaml:examples/validation/config-protection.yaml
+# Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 config_protection:
   # 文件权限
   file_permissions:

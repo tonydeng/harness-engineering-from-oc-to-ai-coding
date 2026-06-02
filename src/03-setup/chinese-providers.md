@@ -84,6 +84,7 @@ Qwen（阿里通义千问）是国产模型中生态最完整的选择。从 0.5
 ### 国产 Provider 配置流程
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#4A90D9', 'secondaryColor':'#50C878', 'tertiaryColor':'#FF9F43'}}}%%
 flowchart TB
     A[选择国产 Provider] --> B{选择配置方式}
     
@@ -512,6 +513,7 @@ Qwen3-Max 支持思考模式（Thinking Mode），通过参数控制：
 国产模型的核心优势之一是成本。以下对比图展示了主流模型的 API 价格差异。
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#4A90D9', 'secondaryColor':'#50C878', 'tertiaryColor':'#FF9F43'}}}%%
 xychart-beta
     title "主流模型 API 价格对比（每百万输入 tokens）"
     x-axis ["GPT-4o", "Claude Sonnet 4", "DeepSeek-V3.2", "Kimi K2.5", "Qwen3-Max"]

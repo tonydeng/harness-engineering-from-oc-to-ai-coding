@@ -13,6 +13,25 @@
 
 上下文工程不是孤立的技术实现。它与约束系统共同构成 Agent 行为可控的双引擎——上下文工程确保 Agent"看得到"需要的信息，约束系统确保 Agent"不做"不该做的事。验证护栏则在输出阶段验证结果正确性。学完本节，读者应能根据任务特征配置上下文管理参数，理解压缩后信息保真度与性能的权衡关系，并掌握跨会话上下文保持的基本方法。
 
+### 操作系统类比：Context = 工作记忆
+
+理解上下文工程最直观的方式是将其类比为操作系统的**内存管理**：
+
+| 操作系统概念 | OpenCode 对应 | 说明 |
+|-------------|---------------|------|
+| RAM / 工作记忆 | Context Window | Agent 的有限工作空间 |
+| Swap / 页面文件压缩 | Compaction | 空间不足时压缩不活跃内容腾出空间 |
+| CPU 缓存层级（L1/L2/L3） | Caching | 按层级缓存内容，命中越快成本越低 |
+| 内存分配（heap/stack/reserved） | Token Budget | 为不同用途预分配有限空间 |
+| 内存碎片整理 | 上下文压缩 | 消除冗余内容，提高空间利用率 |
+| 虚拟内存 | 跨 Session 缓存 | 将持久化内容映射到上下文空间 |
+
+这个类比帮助理解几个关键设计：
+
+1. **空间有限性**：RAM 有限，Agent 的 Context Window 也有限——必须精打细算
+2. **层级缓存**：CPU 缓存有 L1/L2/L3 层级，Context 缓存也有 Session 级和跨 Session 级
+3. **压缩换空间**：操作系统用 Swap 换内存空间，Context 用 Compaction 换 Token 空间
+
 ## 为什么需要上下文工程
 
 ### Token 空间有限，信息无限
@@ -117,6 +136,7 @@ sequenceDiagram
 除了自动压缩，OpenCode 还支持细粒度的微压缩配置：
 
 ```json
+// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {
   "compaction": {
     "strategy": "selective",
@@ -213,6 +233,7 @@ graph LR
 跨 Session 缓存需要显式配置，适用于长期项目：
 
 ```json
+// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {
   "caching": {
     "crossSession": {

@@ -4,6 +4,24 @@
 
 工作流是 Harness Engineering 的"生产线"。如果说 Agent 是执行者、Skill 是技能包，那么工作流就是将它们串联成高效生产流程的方法论。本章从 Command 系统入手，讲解如何将日常操作固化为可复用的命令，如何通过 Profile 切换适应不同工作状态，以及如何借助 AGENTS.md 实现项目知识的持久化。最后，我们对比 Ultrawork 与 Prometheus 两种高级工作流模式，帮助读者在不同场景下做出合理选择。
 
+### 操作系统类比：Workflow = Shell Pipeline
+
+理解工作流最直观的方式是将其类比为操作系统的 **Shell 流水线**：
+
+| 操作系统概念 | OpenCode 对应 | 说明 |
+|-------------|---------------|------|
+| Shell Pipeline | Workflow | 将多个命令串联成自动化流程 |
+| Shell Alias / PATH 命令 | Command | 将复杂操作封装为简短命令 |
+| 环境变量 / Profile.d 配置 | Profile | 按场景切换运行时环境配置 |
+| Cron Job | 定时工作流 | 按计划自动执行预定义流程 |
+| Shell 脚本 | AGENTS.md | 项目级别的执行指令和规范集合 |
+
+这个类比帮助理解几个关键设计：
+
+1. **可组合性**：就像 Shell Pipeline 用 `|` 串联命令，Workflow 将多个 Skill 和 Command 串联成完整流程
+2. **可复用性**：Shell Alias 将复杂命令简化为别名，Command 系统同样将操作序列封装为 `/command`
+3. **场景切换**：Profile.d 配置按场景加载不同环境变量，Profile 按工作场景切换 Agent 行为
+
 ## Command 系统
 
 Command（命令）是 OpenCode 中最直观的工作流入口。它将复杂的操作序列封装为简单的 `/command` 形式，让用户无需记忆繁琐的步骤，只需一个关键词即可触发预设行为。
@@ -961,6 +979,7 @@ graph TB
 ### 安全配置示例
 
 ```json
+// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {
   "security": {
     "command": {

@@ -966,6 +966,113 @@ cat opencode.json | grep -A 20 "agents"
 | 7 | 覆盖检查 | `grep overrides opencode.json` |
 | 8 | Agent 类型检查 | `grep default_agent opencode.json` |
 
+## 模板测试验证指南
+
+创建或修改 Skill 后，需要验证它能否被正确加载和使用。本节提供系统化的验证方法，覆盖加载、触发、功能和回归四个维度。
+
+```mermaid
+graph TB
+    Start[创建或修改 Skill] --> V1[加载验证]
+    V1 --> |通过| V2[触发测试]
+    V1 --> |失败| Fix1[修复 frontmatter]
+    Fix1 --> V1
+
+    V2 --> |通过| V3[功能测试]
+    V2 --> |失败| Fix2[优化 description]
+    Fix2 --> V2
+
+    V3 --> |通过| V4[回归测试]
+    V3 --> |失败| Fix3[调整正文指令]
+    Fix3 --> V3
+
+    V4 --> |通过| Done[部署上线]
+    V4 --> |失败| Fix4[修复破坏的功能]
+    Fix4 --> V3
+
+    style Start fill:#4A90D9,stroke:#333,color:#fff
+    style Done fill:#2ECC71,stroke:#333,color:#fff
+```
+
+### 加载验证
+
+确认 Skill 文件能被 OpenCode 正常识别：
+
+```bash
+# 检查文件结构
+ls -la .opencode/skills/my-skill/
+cat .opencode/skills/my-skill/SKILL.md
+
+# 验证 frontmatter 可解析
+head -20 .opencode/skills/my-skill/SKILL.md
+```
+
+**加载验证清单**：
+
+| 检查项 | 验证方法 | 通过标准 |
+|--------|----------|----------|
+| 目录存在 | `ls .opencode/skills/<name>/` | 目录存在且名称与 `name` 字段一致 |
+| SKILL.md 存在 | `ls SKILL.md` | 文件存在，大小写正确 |
+| YAML 语法 | `head -20 SKILL.md \| yq .` | 无语法错误 |
+| name 字段 | `grep "name:" SKILL.md` | 小写连字符，与目录名一致 |
+| description 字段 | `grep "description:" SKILL.md` | 非空，1024 字符以内 |
+| allowed-tools | `grep "allowed-tools:" SKILL.md` | 按最小权限原则配置 |
+
+### 触发测试
+
+通过实际请求验证 Skill 能否被正确触发。这是所有测试中最重要的一环——如果触发不对，后面的测试都没有意义。
+
+| 测试类型 | 操作 | 示例 |
+|----------|------|------|
+| 正向测试 | 输入匹配的请求，确认 Skill 被加载 | `"请审查这段代码"` → 触发 code-reviewer |
+| 负向测试 | 输入不匹配的请求，确认 Skill 未被误触发 | `"帮我写组件"` → 不触发 code-reviewer |
+| 边界测试 | 输入模糊请求，观察触发行为 | `"检查这个文件"` → 取决于 description 设计 |
+
+### 功能测试
+
+验证 Skill 正文指令能被正确执行。为每个核心功能编写测试用例：
+
+```markdown
+### 测试用例格式
+
+| 项目 | 内容 |
+|------|------|
+| 测试 ID | TC-001 |
+| 测试名称 | code-reviewer 正确性审查 |
+| 前置条件 | 提供一个包含明显 bug 的代码文件 |
+| 测试步骤 | 1. 触发 code-reviewer<br/>2. 请求审查代码 |
+| 预期结果 | 输出审查报告，包含正确性问题和改进建议 |
+| 实际结果 |  |
+```
+
+**测试用例设计要点**：
+
+- 每个核心指令至少一个正向用例
+- 每个约束条件至少一个负向用例
+- 边界条件单独测试
+- 记录实际结果与预期结果的差异
+
+### 回归测试
+
+修改 Skill 后，重新运行所有测试用例，确保没有破坏已有功能：
+
+```bash
+# 检查修改历史
+git log --oneline -5 .opencode/skills/my-skill/SKILL.md
+
+# 对比修改前后行为变化
+# 建议将测试请求和输出保存为文档，修改后重新执行对比
+```
+
+### 常见测试问题
+
+| 问题 | 可能原因 | 解决方法 |
+|------|----------|----------|
+| Skill 未被加载 | frontmatter 格式错误 | 检查 YAML 语法，确保 name 与目录名一致 |
+| Skill 被误触发 | description 过于宽泛 | 增加排除边界，明确"不适用"场景 |
+| 指令未被执行 | 正文结构不清晰 | 使用步骤化流程，明确输入输出 |
+| 输出不符合预期 | 约束条件不明确 | 增加输出规范和示例 |
+| 加载后行为异常 | 与其他 Skill 冲突 | 检查 target_agent 和 category 设置 |
+
 ## Team Mode 中的 Skill 集成
 
 Team Mode 是 OpenCode 的多 Agent 协作模式。在 Team Mode 中，Skill 的作用域和集成策略变得尤为重要。

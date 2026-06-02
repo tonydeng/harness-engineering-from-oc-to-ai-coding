@@ -740,6 +740,138 @@ security-auditor/
     └── owasp-top10.md
 ```
 
+## Skill 与 Agent 的关联方式
+
+Skill 通过三种方式与 Agent 关联：`target_agent` 精确绑定、`category` 分类路由和全局生效。理解这三种方式的区别，有助于你设计出更精准的 Skill 路由策略。
+
+```mermaid
+graph TB
+    subgraph Association[三种关联方式]
+        direction TB
+        subgraph Global[全局方式]
+            G0[无 target_agent<br/>无 category] --> G1[所有 Agent 可见]
+            G1 --> G2[适用：通用型 Skill<br/>如 deep-research]
+        end
+
+        subgraph TargetAgent[绑定方式]
+            T0[target_agent: security-audit] --> T1[仅限指定 Agent 可见]
+            T1 --> T2[适用：专业型 Skill<br/>如 security-scanner]
+        end
+
+        subgraph Category[分类方式]
+            C0[category: code-review] --> C1[按分类路由到<br/>匹配的 Agent]
+            C1 --> C2[适用：按功能归类<br/>如所有审查 Skill]
+        end
+    end
+
+    style Global fill:#95A5A6,stroke:#333,color:#fff
+    style TargetAgent fill:#4A90D9,stroke:#333,color:#fff
+    style Category fill:#50C878,stroke:#333,color:#fff
+```
+
+### target_agent：精确绑定
+
+`target_agent` 将 Skill 绑定到指定 Agent，只有该 Agent 可以加载和使用这个 Skill。这是 Team Mode 中实现 Skill 隔离的主要手段。
+
+```yaml
+---
+name: security-scanner
+description: 安全漏洞扫描专家
+target_agent: security-audit  # 只有 security-audit Agent 可见
+allowed-tools:
+  - Read
+  - Grep
+  - Bash
+---
+```
+
+**使用场景**：
+
+| 场景 | 说明 | 示例 |
+|------|------|------|
+| 高风险 Skill | 限制高危权限的传播范围 | 安全审计 Skill 只给安全 Agent |
+| 专业 Skill | 专业能力只给对应的专业 Agent | 架构设计 Skill 只给 plan Agent |
+| 团队隔离 | 不同角色的 Skill 互不可见 | 运维 Skill 对开发 Agent 隐藏 |
+
+### category：分类路由
+
+`category` 通过分类标签将 Skill 路由到匹配的 Agent。与 `target_agent` 的精确绑定不同，`category` 更灵活——Agent 可以声明自己处理哪些类别的 Skill。
+
+```yaml
+---
+name: code-reviewer
+description: 代码审查专家
+category: code-review  # 按功能分类
+allowed-tools:
+  - Read
+  - Glob
+  - Grep
+---
+```
+
+在 `opencode.json` 中为 Agent 配置分类：
+
+```jsonc
+{
+  "agents": {
+    "senior-dev": {
+      "categories": ["code-review", "architecture"]
+    },
+    "security-agent": {
+      "categories": ["security-audit", "vulnerability-scan"]
+    }
+  }
+}
+```
+
+当 Agent 声明了 `code-review` 分类时，才会加载 `category: code-review` 的 Skill。这种方式比 `target_agent` 更灵活——一个 Skill 可以被多个 Agent 共享。
+
+### global：全局生效
+
+不设置 `target_agent` 和 `category` 的 Skill 即为全局 Skill，对所有 Agent 可见。这是最简单的关联方式，适合通用型 Skill。
+
+```yaml
+---
+name: deep-research
+description: 调查研究专家，适合各类 Agent 使用
+# 无 target_agent，无 category，全局可见
+allowed-tools:
+  - WebSearch
+  - WebFetch
+  - Read
+---
+```
+
+### 三种方式对比
+
+| 方式 | 配置字段 | 可见范围 | 适用场景 | 优点 | 缺点 |
+|------|----------|----------|----------|------|------|
+| 全局 | 无 | 所有 Agent | 通用 Skill（研究、写作） | 配置简单，无需额外设置 | 无法隔离，可能误触发 |
+| category | `category` | 声明了该分类的 Agent | 按功能分类的 Skill | 灵活，Agent 可选挂载 | 需要 Agent 端配合配置 |
+| target_agent | `target_agent` | 指定 Agent | 专业 Skill（安全审计） | 精确控制，安全隔离 | 绑定死板，不够灵活 |
+
+**选择建议**：个人开发者使用全局方式即可。团队使用 Team Mode 时，对核心能力 Skill 用 `category` 分类，对安全敏感 Skill 用 `target_agent` 精确绑定。
+
+## 配置选项速查表
+
+下表汇总了 SKILL.md 中所有 frontmatter 字段，方便快速查阅：
+
+| 字段 | 类型 | 必需 | 说明 | 示例值 |
+|------|------|------|------|--------|
+| `name` | string | ✅ | Skill 唯一标识，小写连字符 | `deep-research` |
+| `description` | string | ✅ | 语义匹配的描述文本 | `用于需要网络研究的任何问题` |
+| `allowed-tools` | string[] | ❌ | 可调用的工具白名单 | `[Read, Write, Glob]` |
+| `target_agent` | string | ❌ | 绑定到指定 Agent | `security-audit` |
+| `category` | string | ❌ | 按功能分类路由 | `code-review` |
+| `version` | string | ❌ | 语义化版本号 | `"1.0.0"` |
+| `author` | string | ❌ | 作者信息 | `opencode-community` |
+| `license` | string | ❌ | 许可证类型 | `MIT` |
+| `metadata.tags` | string[] | ❌ | 搜索和分类标签 | `[frontend, react]` |
+| `metadata.min_opencode_version` | string | ❌ | 最低 OpenCode 版本 | `"2.0.0"` |
+| `metadata.compatibility` | object | ❌ | 兼容性声明 | `{node_version: ">=18.0.0"}` |
+
+字段选取遵循 **名描权目版，作许标兼** 的口诀：name、description、allowed-tools、target_agent/category、version、author、license、metadata.tags、metadata.compatibility。其中 `name` 和 `description` 是唯二的必填字段，其他字段按需选用。
+
 ## 小结
 
 创建一个高质量的 Skill 需要关注以下要点：

@@ -15,6 +15,7 @@
 | [Harness Engineering 理论框架](harness-engineering-theory.md) | 系统化阐述 Harness Engineering 的理论模型：三层抽象、流水线思维、反馈闭环 |
 | [AI 编程工具生态对比](ecosystem-comparison.md) | 对比 Copilot、Cursor、Claude Code、OpenCode 等主流工具的核心能力与适用场景 |
 | [国产 AI 编程生态适配](chinese-ecosystem.md) | 讨论国产大模型（DeepSeek、Qwen 等）与 OpenCode 的集成方案和注意事项 |
+| [AI 编程失败案例](failure-cases.md) | 通过真实场景的失败案例，揭示没有约束系统、上下文注入攻击、权限配置错误等常见陷阱 |
 
 ---
 

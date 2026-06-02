@@ -6,7 +6,7 @@
 
 **章节核心主题**：从"知道用什么"到"知道怎么串联"——工作流设计的工程方法论。
 
-> **章节规模**：5 篇文章（3 现有 + 2 新增），2 篇修改
+> **章节规模**：6 篇文章（2 现有 + 4 新增），2 篇修改
 
 ## 文章
 
@@ -290,7 +290,11 @@ flowchart TB
 - 增补 Ralph Loop /ulw-loop 机制详解
 - 补充 loop 的控制参数和停止条件
 
-**Article 4.2（多 Agent 协作）**：
+**Article 4.2（Prometheus 规划模式）**：
+- 新增独立文章，从原 Article 4.6 的 Prometheus 部分提取扩展
+- 补充 Atlas 执行指挥官详解、/start-work 命令集成
+
+**Article 4.3（多 Agent 协作，原 Article 4.2）**：
 - 增补 Hyperplan 5批评者对抗式规划机制
 - 增补 security-research 安全审计模式
 
@@ -459,20 +463,20 @@ flowchart TB
 
 | 角色 | 职责 | 负责文章 |
 |------|------|---------|
-| **前端架构师**（FRONTEND） | 前端场景工作流示例（UI 组件生成→审查→回归测试）、Agent 派生场景化 | Article 4.4, Article 4.2(补充) |
-| **后端架构师**（BACKEND） | 微服务 Agent 协作策略、多服务上下文编排、单体 vs 微服务差异对比 | Article 4.2(补充), Article 4.5 |
-| **架构顾问**（SYSA） | 4 种协作模式架构特征对比（延迟/吞吐/一致性/容错）、Teams 架构设计原则 | Article 4.2(架构), Article 4.5 |
-| **安全架构师**（SECURITY） | 7-Agent Pipeline 权限矩阵、workflow 安全门禁模式、security-research 设计说明 | Article 4.2(安全), Article 4.3 |
-| **测试工程师**（QA） | 质量门禁集成说明、工作流安全门禁验证、各配置示例版本标注 | Article 4.2(质量门禁), 全文配置 |
-| **渗透测试员**（REDTEAM） | Agent 派生安全边界分析、Team Mode 数据隔离审查 | Article 4.4, Article 4.5 |
+| **前端架构师**（FRONTEND） | 前端场景工作流示例（UI 组件生成→审查→回归测试）、Agent 派生场景化 | Article 4.5, Article 4.3(补充) |
+| **后端架构师**（BACKEND） | 微服务 Agent 协作策略、多服务上下文编排、单体 vs 微服务差异对比 | Article 4.3(补充), Article 4.6 |
+| **架构顾问**（SYSA） | 4 种协作模式架构特征对比（延迟/吞吐/一致性/容错）、Teams 架构设计原则 | Article 4.3(架构), Article 4.6 |
+| **安全架构师**（SECURITY） | 7-Agent Pipeline 权限矩阵、workflow 安全门禁模式、security-research 设计说明 | Article 4.3(安全), Article 4.4 |
+| **测试工程师**（QA） | 质量门禁集成说明、工作流安全门禁验证、各配置示例版本标注 | Article 4.3(质量门禁), 全文配置 |
+| **渗透测试员**（REDTEAM） | Agent 派生安全边界分析、Team Mode 数据隔离审查 | Article 4.5, Article 4.6 |
 
 ### 流程规范（Superpowers 工作流映射）
 
 | 阶段 | 本阶段活动 | 交付物 | 负责人 |
 |------|-----------|--------|--------|
-| **头脑风暴** | 确定 5 种工作流模式的读者理解难点、收集前端/后端场景需求、识别安全增强点 | 场景需求清单、安全增强点 | 前端架构师 + 安全架构师 |
-| **计划** | 排序写作依赖（4.1→4.2→4.3→4.4→4.5）、分配工作流示例编写、确定 Pipeline 配置范围 | 写作计划、示例工作流清单 | 敏捷教练 |
-| **实施** | 5 篇文章写作，每篇包含工作流流程图+配置示例+场景说明，重点 ensure Pipeline 配置完整可运行 | 5 篇文章初稿 | 各角色按分工 |
+| **头脑风暴** | 确定 6 种工作流模式的读者理解难点、收集前端/后端场景需求、识别安全增强点 | 场景需求清单、安全增强点 | 前端架构师 + 安全架构师 |
+| **计划** | 排序写作依赖（4.1→4.2→4.3→4.4→4.5→4.6）、分配工作流示例编写、确定 Pipeline 配置范围 | 写作计划、示例工作流清单 | 敏捷教练 |
+| **实施** | 6 篇文章写作，每篇包含工作流流程图+配置示例+场景说明，重点 ensure Pipeline 配置完整可运行 | 6 篇文章初稿 | 各角色按分工 |
 | **评审** | 工作流配置正确性审查（Pipeline 串联逻辑）、安全权限矩阵审查、前端场景真实性审查 | 评审报告、配置审查记录 | 架构顾问 + 安全架构师 |
 | **验证** | 所有 workflow 配置在测试环境可模拟运行、Mermaid 工作流图渲染正确、跨章节引用准确 | 验证报告 | 测试工程师 |
 | **交付** | 合并、更新 _sidebar.md、新增工作流示例到 `examples/` | 合入确认 | 敏捷教练 |
@@ -480,7 +484,7 @@ flowchart TB
 ### 评审要求
 
 **检查点 1：工作流配置可串联性**
-- Article 4.2 的 7-Agent Pipeline 配置必须可完整串联（Planner → Debater → Implementor → Reviewer → Tester → Linter → Commit）
+- Article 4.3 的 7-Agent Pipeline 配置必须可完整串联（Planner → Debater → Implementor → Reviewer → Tester → Linter → Commit）
 - WORKFLOW_STATE.md 模板与实际 Pipeline 阶段匹配
 - 温度策略（0.0-0.3）配置合理
 
@@ -490,8 +494,8 @@ flowchart TB
 - Team Mode 的嵌套限制和 `delegate-task` 权限限制已说明
 
 **检查点 3：场景覆盖度**
-- Article 4.2 包含至少 1 个前端场景的 Agent 编排示例
-- Article 4.5 包含多服务上下文的 Agent 编排策略
+- Article 4.3 包含至少 1 个前端场景的 Agent 编排示例
+- Article 4.6 包含多服务上下文的 Agent 编排策略
 - 4 种协作模式的架构特征对比表包含延迟/吞吐/一致性/容错性 4 个维度
 
 ### 质量验收要求
@@ -500,11 +504,11 @@ flowchart TB
 |---------|--------|---------|
 | 🔴 硬性 | 每篇文章有效行数 | ≥ 200 行（Article 4.2 ≥ 250 行） |
 | 🔴 硬性 | Pipeline 配置完整性 | 7-Agent 全链路配置无缺失 |
-| 🔴 硬性 | Mermaid 工作流图渲染 | 语法正确率 100%（5+ 张图） |
+| 🔴 硬性 | Mermaid 工作流图渲染 | 语法正确率 100%（6+ 张图） |
 | 🟡 质量 | 权限矩阵覆盖率 | 7-Agent 每角色标注权限等级 |
 | 🟡 质量 | 前端场景覆盖 | ≥ 1 个前端工作流示例 |
 | 🟡 质量 | 配置示例版本标注 | 所有示例标注最低 OpenCode/OMO 版本 |
-| 📊 量化 | 工作流流程图 | ≥ 5 张（含 Pipeline+协作+Team+派生+消息传递） |
+| 📊 量化 | 工作流流程图 | ≥ 6 张（含 Prometheus+Ultrawork+Pipeline+协作+Team+派生+消息传递） |
 | 📊 量化 | 协作模式对比维度 | ≥ 4 个架构维度 |
 
 ### 特殊内容技能映射
@@ -513,119 +517,25 @@ flowchart TB
 |---------|---------|---------|------|
 | Ultrawork 工作流示意图 | `bpmn` | Article 4.1 | 探索→实现→验证循环 |
 | Ralph Loop 决策流程图 | `uml` | Article 4.1 | 自引用循环决策 |
-| 4 种协作模式对比图 | `infographic` | Article 4.2 | 串行/并行/主从/竞争 |
-| 7-Agent Pipeline 流程图 | `bpmn` / `uml` | Article 4.2 | 顺序 Pipeline |
-| WORKFLOW_STATE.md 状态流转图 | `uml` (状态机) | Article 4.2 | 状态转换 |
-| Team Mode 架构图 | `architecture` | Article 4.3 | 多 Agent 并行架构 |
-| Hyperplan 5 Agent 对抗式流程图 | `bpmn` | Article 4.3 | 对抗式规划 |
-| 三种派生模式对比图 | `uml` / `graphviz` | Article 4.4 | 子Agent/委派/协调者 |
-| Teams 架构通信图 | `architecture` / `network` | Article 4.5 | 消息传递架构 |
-| 消息传递时序图 | `uml` (序列图) | Article 4.5 | Agent 间消息序列 |
+| Prometheus 执行流程图 | `uml` | Article 4.2 | 访谈→规划→执行循环 |
+| Atlas 执行指挥官流程图 | `uml` | Article 4.2 | Atlas 协调 + /start-work 流程 |
+| 4 种协作模式对比图 | `infographic` | Article 4.3 | 串行/并行/主从/竞争 |
+| 7-Agent Pipeline 流程图 | `bpmn` / `uml` | Article 4.3 | 顺序 Pipeline |
+| WORKFLOW_STATE.md 状态流转图 | `uml` (状态机) | Article 4.3 | 状态转换 |
+| Team Mode 架构图 | `architecture` | Article 4.4 | 多 Agent 并行架构 |
+| Hyperplan 5 Agent 对抗式流程图 | `bpmn` | Article 4.4 | 对抗式规划 |
+| 三种派生模式对比图 | `uml` / `graphviz` | Article 4.5 | 子Agent/委派/协调者 |
+| Teams 架构通信图 | `architecture` / `network` | Article 4.6 | 消息传递架构 |
+| 消息传递时序图 | `uml` (序列图) | Article 4.6 | Agent 间消息序列 |
 
 ---
 
-### Article 4.6: Agent 编排工作流
-- **阅读时间**：20 min
-- **学习目标**：
-  - 理解 Ultrawork 模式的使用
-  - 掌握 Prometheus 规划模式
-  - 了解 Team Mode 并行多 Agent
-- **前置知识**：Article 4.1（Ultrawork 基础）+ Article 4.3（Team Mode 基础）
-- **源材料映射**：OpenCode 官方文档 + OMO 配置示例
+### 章节结构变更记录
 
-#### 大纲
-1. Ultrawork 模式
-   - 输入 `ulw` 自动完成
-   - 适用场景：复杂任务、懒惰模式
-   - 与传统 Prompt 的对比
-2. Prometheus 规划模式
-   - @plan 命令触发
-   - 访谈式需求收集
-   - /start-work 执行规划
-   - Atlas 执行指挥角色
-3. Team Mode
-   - 并行多 Agent 协作
-   - 共享邮箱和任务列表
-   - tmux 布局管理
-   - 内置团队技能（Hyperplan、security-research）
-
-#### 核心概念
-- **Ultrawork**：一键自动完成复杂任务，Agent 自主探索→实现→验证循环
-- **Prometheus**：访谈式规划，通过问答收集需求并生成执行计划
-- **Atlas**：执行指挥，负责协调和监控计划执行
-- **Team Mode**：并行多 Agent 协作，支持消息传递和任务分配
-
-#### 编排模式对比
-
-| 模式 | 触发方式 | 适用场景 | Agent 数量 | 人工介入 |
-|------|---------|---------|-----------|---------|
-| **Ultrawork** | `ulw` | 复杂任务、快速原型 | 1 | 低 |
-| **Prometheus** | `@plan` | 需求不明确、需要规划 | 1+ | 中（访谈阶段） |
-| **Team Mode** | team_create | 并行任务、安全审计 | 多 | 可配置 |
-
-#### Ultrawork 工作流程
-
-```mermaid
-flowchart TB
-    A[输入 ulw] --> B[Agent 自主探索]
-    B --> C[研究模式分析]
-    C --> D[实现功能]
-    D --> E[LSP 验证]
-    E --> F{完成?}
-    F -->|否| B
-    F -->|是| G[输出结果]
-```
-
-#### Prometheus 规划流程
-
-```mermaid
-flowchart TB
-    A["@plan 命令"] --> B[Prometheus 启动]
-    B --> C[访谈式需求收集]
-    C --> D{需求明确?}
-    D -->|否| C
-    D -->|是| E[生成执行计划]
-    E --> F["/start-work 执行"]
-    F --> G[Atlas 协调执行]
-    G --> H[任务完成]
-```
-
-#### Team Mode 架构
-
-```mermaid
-flowchart TB
-    subgraph Team[Team Mode 多 Agent]
-        A[Primary Agent]
-        B[Agent 1]
-        C[Agent 2]
-        D[Agent 3]
-    end
-
-    E[共享邮箱] <--> A
-    F[任务列表] <--> A
-    A --> B
-    A --> C
-    A --> D
-
-    B --> G[结果汇总]
-    C --> G
-    D --> G
-```
-
-#### 代码/配置示例
-- Ultrawork 启用配置
-- Prometheus 访谈示例
-- Team Mode 创建团队配置
-- tmux 布局配置
-
-#### 关联章节
-- ← Article 4.1（Ultrawork 详解）
-- ← Article 4.3（Team Mode 详解）
-- → Ch7（案例研究中的编排实践）
-
-#### 验证标准
-- [ ] 文章 ≥ 200 行有效内容
-- [ ] 包含 Ultrawork 模式说明
-- [ ] 包含 Prometheus 规划模式说明
-- [ ] 包含 Team Mode 说明
-- [ ] 包含三种编排模式的对比表
+**2026-06-03**：重构 Ch4 文章结构，Prometheus 规划模式从 Article 4.6（原"Agent 编排工作流"综述）提取为独立 Article 4.2。当前 Ch4 文章数为 6 篇：
+- Article 4.1: Ultrawork 模式
+- Article 4.2: Prometheus 规划模式（新增独立文章）
+- Article 4.3: 多 Agent 协作（原 Article 4.2，编号顺移）
+- Article 4.4: 自定义工作流（原 Article 4.3，编号顺移）
+- Article 4.5: Agent 派生模式（原 Article 4.4，编号顺移）
+- Article 4.6: Teams 多进程协作（原 Article 4.5，编号顺移）
