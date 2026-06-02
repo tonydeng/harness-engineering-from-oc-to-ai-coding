@@ -7,7 +7,7 @@
 ## 任务清单
 
 - [x] 初始化项目目录结构
-- [x] 配置 docsify（index.html + sidebar）
+- [x] 配置 mdBook
 - [x] 配置 opencode + oh-my-openagent
 - [ ] 创建 GitHub 仓库
 - [ ] 配置 GitHub Pages（Actions 部署）

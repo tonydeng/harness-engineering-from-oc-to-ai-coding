@@ -32,7 +32,9 @@ function calculateTotal(items) {
 - 角色扮演（Role-playing）
 - 提示链（Prompt Chaining）
 
-**代表工具**：GitHub Copilot, Tabnine, CodeWhisperer
+**国际代表工具**：GitHub Copilot（$2B+ ARR, 2000万用户）, Google Gemini Code Assist, OpenAI Codex（历史意义）
+
+**国内代表工具**：CodeGeeX（智谱AI，开源可私有化）, 文心快码（百度，IDC 8项满分）, 通义灵码（阿里，Gartner挑战者）
 
 **用户角色**：操作员—— 需要逐行审查生成代码
 
@@ -68,7 +70,9 @@ function calculateTotal(items) {
 - 多文件编辑
 - 项目级理解
 
-**代表工具**：Cursor, Sourcegraph Cody, Codeium
+**国际代表工具**：Cursor（$293亿估值，$2B+ ARR）, Windsurf（Cascade Agent）, Google Project IDX, OpenAI ChatGPT Code Interpreter
+
+**国内代表工具**：Trae/MarsCode（字节，25%市场份额）, CodeBuddy（腾讯，92%复杂任务完成率）, CodeArts Snap（华为，鸿蒙生态）
 
 **用户角色**：协作者—— 描述需求，审查结果
 
@@ -119,7 +123,9 @@ timeline
 2. **可审计性**（Auditable）：操作日志、决策追溯、变更审计
 3. **可改进性**（Improveable）：效果度量、反馈闭环、A/B 测试
 
-**代表工具**：OpenCode + OMO, Claude Code, Windsurf, Cursor Agent Mode
+**国际代表工具**：Claude Code（Anthropic，72-79% SWE-bench）, OpenCode + OMO, Google Jules（异步自主Agent）, OpenAI Codex CLI, GitHub Copilot Workspace
+
+**国内代表工具**：Trae SOLO模式（字节）, CodeBuddy Craft智能体（腾讯）
 
 **用户角色**：观察者/审批者—— 设定目标，验收结果
 
@@ -401,13 +407,42 @@ flowchart LR
 
 基于以上定义，我们可以提炼出 Harness Engineer 的五大核心能力框架：
 
-| 能力维度 | 能力要求 | 入门水平 | 差距 |
-|---------|---------|---------|-----|
+```mermaid
+mindmap
+  root((Harness Engineer<br/>核心能力))
+    需求澄清
+      模糊需求→任务规格
+      业务语言→AI指令
+      验收标准定义
+    工作流设计
+      任务分解
+      步骤编排
+      质量门禁设置
+    Agent 编排
+      角色分工
+      协作模式设计
+      执行监控
+    质量审查
+      自动化检查
+      代码审查
+      安全审计
+    知识沉淀
+      Skill 封装
+      Workflow 模板化
+      经验文档化
+```
+
+**能力差距分析**：入门开发者成长为 Harness Engineer 需要补足的能力差距
+
+| 能力维度 | Harness Engineer 要求 | 入门开发者水平 | 成长差距 |
+|---------|---------------------|---------------|---------|
 | 需求澄清 | 85 | 35 | +50 |
 | 工作流设计 | 90 | 30 | +60 |
 | Agent 编排 | 88 | 25 | +63 |
 | 质量审查 | 82 | 40 | +42 |
 | 知识沉淀 | 78 | 20 | +58 |
+
+> 注：分数为能力评估分数（满分100），成长差距表示入门开发者需要提升的空间。
 
 #### 1. 需求澄清能力
 

@@ -44,7 +44,7 @@
 - [ ] 所有时序图（sequenceDiagram）统一参与者命名规范（中文标签/英文ID 的映射规则）
 - [ ] 图表中的中文文本设置合适的字体大小，避免在小屏设备上文字重叠
 - [ ] 30+ 张图表均附带 Alt 文本描述（Markdown 图片语法 `![描述文字](url)`），便于屏幕阅读器和搜索索引
-- [ ] 复杂图表（>10 个节点）提供"点击放大"或"在新标签打开"的能力（Docsify 需配置 zoom-image 插件）
+- [ ] 复杂图表（>10 个节点）提供"点击放大"或"在新标签打开"的能力（mdBook 需配置图片缩放功能）
 - [ ] 同一语义元素在不同图表中使用相同颜色（例如 Agent 类节点全书记为同色，Skill 类节点为另一种同色）
 
 **优先级：** P1 | **工作量：** M | **影响角色：** 全部读者
@@ -63,7 +63,7 @@
 - [ ] 使用行内注释 `// <-- 重点行` 或行号范围标注（`` ```json {4-6} ``）标识关键配置行
 - [ ] 50+ 个代码示例使用正确的 Prism 语言标识符（bash/json/yaml/markdown/diff）
 - [ ] 需要读者修改的部分使用占位符 `<your-api-key>` 并用斜体或高亮标记
-- [ ] 长代码块（>20 行）提供"复制"按钮（Docsify 需配置 copy-code 插件）
+- [ ] 长代码块（>20 行）提供"复制"按钮（mdBook 需配置代码复制按钮）
 - [ ] diff 格式的代码使用 ````diff` 标注，以红绿对比色展示增删内容
 - [ ] 每条代码块前有 1-2 句文字说明"这段代码的用途"
 
@@ -95,19 +95,19 @@
 
 ## 3. 视觉呈现与阅读体验改进建议
 
-### 3.1 急需：Docsify 配置增强
+### 3.1 急需：mdBook 配置增强
 
 | 当前问题 | 严重程度 | 建议修复 |
 |---------|---------|---------|
-| Mermaid 插件未配置 | 🔴 阻塞 | 添加 `<script src="//cdn.jsdelivr.net/npm/docsify-mermaid@latest/dist/docsify-mermaid.min.js"></script>`；否则 30+ 图表全部无法渲染 |
-| 无自定义 CSS | 🟡 重要 | 添加 `assets/style.css`，在 index.html 中引入；覆盖 vue.css 主题以优化中文字体 |
-| 无代码拷贝按钮 | 🟡 重要 | 配置 docsify-copy-code 插件 |
-| 无图片缩放能力 | 🟢 建议 | 配置 docsify-zoom-image 插件（Mermaid 截图后需要） |
-| 无分页导航 | 🔵 提示 | 确认 `pagination: true` 已生效；否则需添加 docsify-pagination 插件 |
+| Mermaid 插件未配置 | 🔴 阻塞 | 在 `book.toml` 中配置 `[preprocessor.mermaid]`；否则 30+ 图表全部无法渲染 |
+| 无自定义 CSS | 🟡 重要 | 添加 `theme/index.hbs` 和 `theme/css/custom.css`；覆盖默认主题以优化中文字体 |
+| 无代码拷贝按钮 | 🟡 重要 | mdBook 默认提供代码复制按钮 |
+| 无图片缩放能力 | 🟢 建议 | 配置 mdBook 图片缩放功能（Mermaid 截图后需要） |
+| 无分页导航 | 🔵 提示 | mdBook 默认提供分页导航 |
 
 ### 3.2 Mermaid 图表设计规范（建议）
 
-针对 30+ 张图表的一致性和可读性，建议在 `assets/style.css` 中定义以下 Mermaid 主题变量：
+针对 30+ 张图表的一致性和可读性，建议在 `theme/css/custom.css` 中定义以下 Mermaid 主题变量：
 
 ```
 颜色体系：
@@ -181,7 +181,7 @@
 
 - **跨章节引用**：建议定义统一格式 `→ [§2.1 Agent 编排](02-core-concepts/agent-orchestration.md)`；全文 6 个核心概念会反复跨章节引用，统一的引用格式降低查找成本
 - **术语首次出现**：每个术语首次出现时高亮 + 链接到附录术语表；例如 `**Agent**（→ 见术语表）`
-- **文章顶部 YAML frontmatter**：建议扩展字段包含 `tags:`（标签数组），便于 Docsify search 插件索引
+- **文章顶部 YAML frontmatter**：建议扩展字段包含 `tags:`（标签数组），便于 mdBook search 插件索引
 
 ---
 
@@ -192,10 +192,10 @@
 添加以下条目：
 
 ```
-- **Docsify 插件依赖**：docsify-mermaid、docsify-copy-code、docsify-zoom-image、docsify-pagination
-- **自定义样式**：`assets/style.css`（覆盖默认主题，优化中文字体、Mermaid 配色、代码块样式）
+- **mdBook 插件依赖**：mdbook-mermaid（预处理器）
+- **自定义样式**：`theme/css/custom.css`（覆盖默认主题，优化中文字体、Mermaid 配色、代码块样式）
 - **无障碍标准**：WCAG 2.1 Level AA（色彩对比度 ≥ 4.5:1，所有图片/图表含 Alt 文本）
-- **暗色模式**：docsify-dark-mode 插件或自定义 CSS prefers-color-scheme 媒体查询
+- **暗色模式**：mdBook 内置主题切换或自定义 CSS prefers-color-scheme 媒体查询
 ```
 
 ### 4.2 §4.2 内容格式规范 补充
@@ -261,7 +261,7 @@
 
 | 改进项 | 影响范围 | 建议优先级 | 关联章节 |
 |--------|---------|-----------|---------|
-| Mermaid 插件安装 | docsify 配置 | P0（阻塞） | PRD §4.1 |
+| Mermaid 插件安装 | mdBook 配置 | P0（阻塞） | PRD §4.1 |
 | Mermaid 颜色主题定义 | 全书记图风格统一 | P1 | PRD §4.2.4（新增） |
 | 代码块标注规范 | 全书记码示例 | P1 | PRD §4.2.3（新增） |
 | 自定义 CSS 样式 | 整体视觉体验 | P1 | PRD §4.1（补充） |
@@ -276,4 +276,4 @@
 
 当前 PRD 和 User Stories 在内容规划上已相当完整，但 **呈现层几乎是一片空白**。对于一个 30+ 图、22+ 篇长文的技术书籍，没有 Mermaid 渲染插件、没有统一图记颜色方案、没有代码标注规范、没有移动端验证标准，这些问题会直接影响所有角色的实际阅读体验。
 
-最紧急的修复是 **在 index.html 中添加 docsify-mermaid 插件**（否则所有图表在 GitHub Pages 上都是空白），其次是 **编写自定义 CSS 优化中文字体渲染和 Mermaid 配色**。建议将上述补充内容整合到 PRD §4 和 §7 中，确保在进入内容编写阶段前，呈现层的技术基座已经就位。
+最紧急的修复是 **在 book.toml 中配置 mdbook-mermaid 预处理器**（否则所有图表在 GitHub Pages 上都是空白），其次是 **编写自定义 CSS 优化中文字体渲染和 Mermaid 配色**。建议将上述补充内容整合到 PRD §4 和 §7 中，确保在进入内容编写阶段前，呈现层的技术基座已经就位。

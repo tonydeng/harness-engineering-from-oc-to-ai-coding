@@ -54,6 +54,43 @@
 - target_agent作用域示例
 - 捆绑资源使用示例
 
+##### frontmatter 字段详解
+
+| 字段 | 类型 | 必需 | 描述 | 示例 |
+|------|------|------|------|------|
+| `name` | string | ✅ | Skill 唯一标识符（小写+连字符） | `deep-research` |
+| `description` | string | ✅ | 一句话说明核心能力 | "用于需要网络研究的任何问题" |
+| `allowed-tools` | string[] | ❌ | 限制可用的工具列表 | `["WebSearch", "WebFetch"]` |
+| `target_agent` | string | ❌ | 目标 Agent（Scoped Skills） | `researcher` |
+| `version` | string | ❌ | 版本号 | `1.0.0` |
+| `author` | string | ❌ | 作者 | `opencode-community` |
+
+**description 写作模板**：
+```yaml
+description: |
+  [一句话说明核心能力]
+  提供：[该 Skill 包含的资源]
+  适用：[触发场景1]、[触发场景2]
+  不适用：[边界场景1]
+```
+
+**示例**：
+```yaml
+---
+name: deep-research
+description: |
+  用于需要网络研究的任何问题，替代 WebSearch。
+  提供：系统化的多角度研究方法论，而非单一浅层搜索。
+  适用：当用户询问"什么是 X"、"解释 X"、"比较 X 和 Y"、"研究 X"。
+  不适用：简单的代码修改任务。
+  allowed-tools:
+    - WebSearch
+    - WebFetch
+    - Read
+    - Grep
+---
+```
+
 #### Mermaid 图表
 - Skill加载机制流程图（渐进式披露）
 - Skill目录结构图
@@ -110,6 +147,113 @@
 #### 代码/配置示例
 - 4个完整SKILL.md文件
 - 每种模板的适用场景和触发词
+
+##### 完整 Skill 模板示例
+
+**模板 1：调查研究 Skill**
+```yaml
+---
+name: deep-research
+description: |
+  用于需要网络研究的任何问题。
+  提供：系统化的多角度研究方法论。
+  适用：当用户询问"什么是 X"、"比较 X 和 Y"。
+allowed-tools: [WebSearch, WebFetch, Read, Grep]
+---
+
+# Deep Research Skill
+
+## 研究方法论
+
+1. **问题分解**：将复杂问题拆分为子问题
+2. **多源验证**：从多个来源验证信息
+3. **结构化输出**：生成有组织的研究报告
+```
+
+**模板 2：架构设计 Skill**
+```yaml
+---
+name: architecture-consultant
+description: |
+  在进行系统架构设计、技术选型评估时使用。
+  提供：TOGAF/ArchiMate 建模、ADR 模板。
+  适用：架构设计、技术选型、架构评审。
+allowed-tools: [SearchCodebase, Glob, Read, Write]
+---
+
+# Architecture Consultant Skill
+
+## 架构设计流程
+
+1. **需求分析**：收集非功能需求
+2. **技术选型**：评估候选技术栈
+3. **架构建模**：使用 ArchiMate 建模
+4. **决策记录**：编写 ADR
+```
+
+**模板 3：代码审查 Skill**
+```yaml
+---
+name: requesting-code-review
+description: |
+  完成任务、实现主要功能或合并之前使用。
+  提供：代码审查清单、最佳实践检查。
+  适用：代码审查、合并前验证。
+allowed-tools: [Read, Grep, SearchCodebase]
+---
+
+# Code Review Skill
+
+## 审查维度
+
+1. **正确性**：逻辑是否正确
+2. **可读性**：代码是否易于理解
+3. **安全性**：是否有安全风险
+4. **性能**：是否有性能问题
+```
+
+**模板 4：敏捷活动 Skill**
+```yaml
+---
+name: agile-coach
+description: |
+  协调安全智能团队或软件研发团队执行敏捷活动。
+  提供：Sprint 规划、站会、评审、回顾。
+  适用：Sprint 规划、站会、评审、回顾。
+---
+
+# Agile Coach Skill
+
+## Superpowers 工作流
+
+1. **头脑风暴**：需求收集
+2. **计划**：Sprint 计划
+3. **实施**：执行任务
+4. **评审**：代码审查
+5. **验证**：验收测试
+6. **交付**：部署上线
+```
+
+**模板 5：UI 审查 Skill**
+```yaml
+---
+name: ui-designer
+description: |
+  在进行界面设计、交互原型制作时使用。
+  提供：设计系统构建、可访问性合规。
+  适用：UI 设计、交互设计、设计系统。
+allowed-tools: [Read, Write, Glob]
+---
+
+# UI Designer Skill
+
+## 设计审查维度
+
+1. **视觉层级**：信息是否清晰
+2. **可访问性**：WCAG 合规
+3. **响应式**：多端适配
+4. **一致性**：设计系统遵循
+```
 
 #### Mermaid 图表
 - 模板选择决策树
@@ -172,6 +316,65 @@
 - 反模式vs正确做法的对比示例
 - 8步调试清单的可操作命令
 
+##### Skill 开发反模式清单
+
+| # | 反模式 | 问题 | 正确做法 |
+|---|--------|------|---------|
+| 1 | **硬编码凭证** | API Key 直接写在 Skill 中 | 使用环境变量 `{env:API_KEY}` |
+| 2 | **description 过长** | 超过 200 字，难以快速理解 | 控制在 50-100 字 |
+| 3 | **工具权限过大** | allowed-tools 包含不必要工具 | 遵循最小权限原则 |
+| 4 | **缺少触发条件** | 用户不知道何时使用 | 在 description 中明确适用场景 |
+| 5 | **指令过于抽象** | "做好代码审查" 无具体步骤 | 提供可执行的步骤清单 |
+| 6 | **忽略错误处理** | 假设所有操作都成功 | 添加错误处理和回退逻辑 |
+| 7 | **过度依赖外部工具** | 每个 Skill 都需要 MCP | 优先使用内置工具 |
+| 8 | **缺少版本管理** | 修改后无法回滚 | 使用 Git 管理 Skill |
+| 9 | **测试覆盖不足** | 只测试正向场景 | 测试触发/负向/输出三种场景 |
+| 10 | **忽略性能影响** | Skill 加载时间过长 | 按需加载详细文档 |
+| 11 | **缺少文档** | 其他开发者无法理解 | 添加注释和使用示例 |
+| 12 | **硬编码路径** | 使用绝对路径 | 使用相对路径或配置变量 |
+
+##### Skill 调试清单（8 步）
+
+1. **检查 frontmatter 格式**
+   - YAML 语法是否正确
+   - 必需字段是否完整
+   - 字段类型是否匹配
+
+2. **验证 description 质量**
+   - 是否清晰说明核心能力
+   - 是否包含触发条件
+   - 是否说明不适用场景
+
+3. **测试工具权限**
+   - allowed-tools 是否包含所需工具
+   - 是否有多余的工具权限
+   - 工具名称拼写是否正确
+
+4. **检查 Skill 文件位置**
+   - 是否在正确的目录
+   - 文件名是否与 name 字段一致
+   - 是否有命名冲突
+
+5. **验证触发条件**
+   - 正向测试：应该触发时是否触发
+   - 负向测试：不应触发时是否误触发
+   - 边界测试：边界条件是否正确处理
+
+6. **检查输出格式**
+   - 输出是否符合预期
+   - 是否有格式错误
+   - 是否有缺失信息
+
+7. **测试性能**
+   - Skill 加载时间是否可接受
+   - 执行时间是否合理
+   - 是否有内存泄漏
+
+8. **验证与其他 Skill 的兼容性**
+   - 是否有命名冲突
+   - 是否有工具权限冲突
+   - 是否有依赖问题
+
 #### Mermaid 图表
 - Skill设计原则概念图
 - 反模式汇总图
@@ -232,6 +435,66 @@
 - skill-mcp-bridge 的完整 SKILL.md
 - 多个 MCP 在同一个 Skill 中的编排
 
+##### Skill-MCP 桥接实现
+
+**设计模式**：Skill 作为 MCP 桥接层
+
+```mermaid
+flowchart LR
+    A[用户请求] --> B[Skill]
+    B --> C[MCP Client]
+    C --> D[MCP Server]
+    D --> E[外部工具]
+    E --> D
+    D --> C
+    C --> B
+    B --> A
+```
+
+**实现示例**：
+
+```yaml
+---
+name: github-operations
+description: |
+  GitHub 仓库操作 Skill。
+  提供：Issue 管理、PR 操作、仓库查询。
+  适用：GitHub 相关操作。
+allowed-tools: [mcp_github]
+---
+
+# GitHub Operations Skill
+
+## MCP 配置
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "github": {
+        "type": "local",
+        "command": ["npx", "-y", "@github/github-mcp-server"],
+        "environment": {
+          "GITHUB_TOKEN": "{env:GITHUB_TOKEN}"
+        }
+      }
+    }
+  }
+}
+```
+
+## 使用方式
+
+1. **创建 Issue**：`mcp_github_create_issue`
+2. **创建 PR**：`mcp_github_create_pr`
+3. **查询仓库**：`mcp_github_list_repos`
+```
+
+**安全注意事项**：
+- MCP Server 需要独立的权限控制
+- 敏感操作需要用户确认
+- 定期审计 MCP Server 日志
+
 #### Mermaid 图表
 - Skill-MCP 桥接架构图
 - 桥接模式的工作流程图
@@ -284,6 +547,29 @@
 - 组合 Skill 的配置示例
 - Skill 依赖声明
 - Skills Marketplace 发布清单
+
+##### Skill 演进三阶段
+
+| 阶段 | 描述 | 特征 | 示例 |
+|------|------|------|------|
+| **阶段 1：独立 Skill** | 单一功能，自包含 | 简单、易维护 | `deep-research` |
+| **阶段 2：组合 Skill** | 调用其他 Skill | 复用、模块化 | `full-stack-dev` 调用 `frontend` + `backend` |
+| **阶段 3：Skills Marketplace** | 社区共享、版本管理 | 生态、协作 | OMO Skills Marketplace |
+
+**演进路径**：
+
+```mermaid
+flowchart LR
+    A[独立 Skill] --> B[验证价值]
+    B --> C[组合 Skill]
+    C --> D[团队复用]
+    D --> E[Skills Marketplace]
+```
+
+**最佳实践**：
+- 从独立 Skill 开始，验证价值后再组合
+- 组合 Skill 时注意依赖管理
+- 发布到 Marketplace 前进行安全审查
 
 #### Mermaid 图表
 - Skill 从独立 → 组合 → 市场的演进图
@@ -371,3 +657,147 @@
 | Skill-MCP 桥接架构图 | `architecture` | Article 5.4 | Skill↔MCP 分层 |
 | Skill 演进图（独立→组合→市场） | `infographic` / `graphviz` | Article 5.5 | 三阶段演进 |
 | 组合 Skill 协作模式图 | `uml` (序列图) | Article 5.5 | 编排/管道/集市 |
+
+---
+
+### Article 5.6: Skills 开发参考
+- **阅读时间**：15 min
+- **学习目标**：
+  - 理解 Skill 文件结构
+  - 掌握 Skill 配置选项
+  - 了解 Skill 与 Agent 的关联
+- **前置知识**：Article 5.1（SKILL.md 格式基础）
+- **源材料映射**：OpenCode 官方文档 + Skills Marketplace 最佳实践
+
+#### 大纲
+1. Skill 文件结构
+   - YAML 格式规范
+   - 必需字段和可选字段
+   - 正文结构设计
+2. Skill 配置选项
+   - model、agent、template
+   - allowed-tools、metadata
+   - 版本和兼容性声明
+3. Skill 与 Agent 关联
+   - 通过 agent 字段指定
+   - 通过 category 字段路由
+   - Team Mode 中的作用域
+
+#### 核心概念
+- **Skill**：领域特定的能力模块，封装方法论和最佳实践
+- **template**：提示词模板，定义 Skill 的输出格式和结构
+- **allowed-tools**：允许使用的工具列表，遵循最小权限原则
+
+#### 代码/配置示例
+
+##### Skill 文件结构完整示例
+
+```yaml
+---
+# === 必需字段 ===
+name: my-skill
+description: |
+  一句话说明核心能力。
+  提供：该 Skill 包含的资源。
+  适用：触发场景 1、触发场景 2。
+
+# === 可选字段 ===
+version: 1.0.0
+author: your-name
+license: MIT
+
+# 工具权限控制
+allowed-tools:
+  - Read
+  - Write
+  - Glob
+
+# Agent 关联
+target_agent: developer
+
+# 元数据
+metadata:
+  category: development
+  tags: [code, review]
+  compatibility: ">=1.15.0"
+---
+
+# Skill 正文
+
+## 概述
+
+[Skill 的详细说明和使用场景]
+
+## 工作流程
+
+1. **步骤一**：[具体操作]
+2. **步骤二**：[具体操作]
+3. **步骤三**：[具体操作]
+
+## 输出规范
+
+[定义 Skill 的输出格式和结构]
+
+## 示例
+
+[使用示例和预期输出]
+```
+
+##### Skill 配置选项详解
+
+| 字段 | 类型 | 必需 | 描述 | 示例 |
+|------|------|------|------|------|
+| `name` | string | ✅ | Skill 唯一标识符（小写+连字符，1-64 字符） | `deep-research` |
+| `description` | string | ✅ | 核心能力说明（1-1024 字符） | "用于网络研究" |
+| `version` | string | ❌ | 语义化版本号 | `1.0.0` |
+| `author` | string | ❌ | 作者标识 | `community` |
+| `license` | string | ❌ | 开源许可证 | `MIT` |
+| `allowed-tools` | string[] | ❌ | 可用工具白名单 | `["Read", "Write"]` |
+| `target_agent` | string | ❌ | 目标 Agent（作用域限定） | `researcher` |
+| `metadata` | object | ❌ | 扩展元数据 | `{category: "dev"}` |
+
+##### Skill 与 Agent 关联模式
+
+```mermaid
+flowchart TB
+    subgraph Agent["Agent 层"]
+        A1[Developer Agent]
+        A2[Researcher Agent]
+        A3[Reviewer Agent]
+    end
+
+    subgraph Skills["Skill 层"]
+        S1[deep-research]
+        S2[code-review]
+        S3[architecture]
+    end
+
+    S1 -->|"target_agent: researcher"| A2
+    S2 -->|"target_agent: developer"| A1
+    S3 -->|"category: architecture"| A1
+    S3 -->|"category: architecture"| A2
+```
+
+**关联方式对比**：
+
+| 方式 | 字段 | 特点 | 适用场景 |
+|------|------|------|---------|
+| **精确指定** | `target_agent` | 一对一绑定，只对特定 Agent 可见 | 专用 Skill |
+| **类别路由** | `metadata.category` | 按类别匹配，多个 Agent 可用 | 通用 Skill |
+| **全局可见** | 无限制 | 所有 Agent 都可触发 | 基础 Skill |
+
+#### Mermaid 图表
+- Skill 文件结构图
+- Skill-Agent 关联模式图
+- 配置选项决策树
+
+#### 关联章节
+- ← Article 5.1（SKILL.md 格式基础）
+- ← Article 2.2（Skill 系统理论基础）
+- → Article 5.3（最佳实践）
+
+#### 验证标准
+- [ ] 文章 ≥ 200 行有效内容
+- [ ] 包含 Skill 文件结构说明
+- [ ] 包含 Skill 配置选项说明
+- [ ] 包含 Skill 与 Agent 关联说明

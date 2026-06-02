@@ -148,14 +148,14 @@
 - [ ] `src/index.html` 加载所有插件（mermaid、pagination、copy-code、prism多语言支持）
 - [ ] Ch0 读者决策页位于 `src/00-guide/README.md`
 - [ ] 计划文档已同步（`docs/` 包含重构计划、规格、交叉引用）
-- [ ] `npx docsify serve ./src` 启动无错误
+- [ ] `mdbook serve` 启动无错误
 - [ ] 所有侧边栏链接可访问（导航无404）
 
 ### 门禁 1：结构完整（Phase 1 结束）
 - [ ] Ch0 + 7 章，所有 P0 文章已存在（无 TODO 占位符）
 - [ ] 每篇文章 ≥ 200 行有效内容
 - [ ] Ch6 至少 7 篇 P0 文章完成初稿
-- [ ] `npx docsify serve ./src` 启动无错误
+- [ ] `mdbook serve` 启动无错误
 
 ### 门禁 2：内容完整（Phase 2 结束）
 - [ ] 全部 46 篇文章/页面已存在
@@ -166,7 +166,7 @@
 - [ ] 内部链接有效率达 100%
 
 ### 门禁 3：本地预览（Phase 3 结束）
-- [ ] `npx docsify serve ./src` — 无渲染错误
+- [ ] `mdbook serve` — 无渲染错误
 - [ ] 所有 Mermaid 图表正确渲染
 - [ ] 所有内部链接可访问（无404）
 - [ ] 代码块包含语言标注

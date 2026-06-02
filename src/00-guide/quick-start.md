@@ -40,17 +40,20 @@ git version 2.x.x (或更高)
 npm install -g @opencode-ai/opencode
 
 # 或使用官方脚本（推荐）
-curl -fsSL https://opencode.ai/install.sh | sh
+curl -fsSL https://opencode.ai/install | bash
 ```
 
 ### Windows
 
 ```powershell
 # 使用 npm 全局安装
-npm install -g @opencode-ai/opencode
+npm install -g opencode-ai
 
-# 或使用 PowerShell 脚本
-irm https://opencode.ai/install.ps1 | iex
+# 或使用 Scoop（推荐）
+scoop install opencode
+
+# 或使用 Chocolatey
+choco install opencode
 ```
 
 ### 验证安装

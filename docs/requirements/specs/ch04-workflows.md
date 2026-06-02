@@ -82,6 +82,19 @@
    - 并行模式（Fan-out）：A同时触发B1/B2/B3，汇总结果
    - 主从模式（Master-Slave）：Master分配任务给Slave，Slave独立执行
    - 竞争模式（Adversarial）：多个Agent从不同角度分析，取共识
+
+#### 4 种协作模式架构特征对比
+
+| 特征 | Prompt Chaining | Routing | Parallelization | Orchestrator-Workers |
+|------|----------------|---------|-----------------|---------------------|
+| **延迟** | 高（串行累加） | 低（单次路由） | 低（并行执行） | 中（编排开销） |
+| **吞吐** | 低 | 中 | 高 | 高 |
+| **一致性** | 高（固定流程） | 中（路由决策） | 低（需合并） | 高（编排协调） |
+| **容错性** | 低（单点故障） | 中（可降级） | 高（部分失败可继续） | 高（重试机制） |
+| **适用场景** | 固定子任务顺序 | 不同类别需不同处理 | 独立子任务并行 | 动态分解任务 |
+| **OpenCode 实现** | Skill/Command | Agent + Task 权限 | 多 Task 调用 | Primary Agent 编排 |
+| **成本** | 低 | 低 | 中（并行调用） | 高（多次调用） |
+
 2. 使用task()调用子Agent
    - task()的参数：category, load_skills, prompt, description
    - 子Agent的权限隔离
@@ -91,10 +104,89 @@
    - WORKFLOW_STATE.md的文件交接模式
    - 权限隔离设计（Reviewer/Tester字面无法改代码）
    - 温度策略（Planner 0.1, Debater 0.3, Implementor 0.1...）
+
+#### 7-Agent 权限矩阵
+
+| Agent | edit | bash | read | 模型 | 职责 |
+|-------|------|------|------|------|------|
+| Planner | deny | deny | allow | claude-opus-4 | 任务规划 |
+| Debater | deny | deny | allow | claude-sonnet-4 | 方案辩论 |
+| Implementor | allow | ask | allow | claude-sonnet-4 | 代码实现 |
+| Reviewer | deny | deny | allow | claude-opus-4 | 代码审查 |
+| Tester | deny | allow | allow | claude-haiku-3.5 | 测试执行 |
+| Linter | deny | allow | allow | claude-haiku-3.5 | 代码检查 |
+| Committer | ask | deny | allow | claude-sonnet-4 | 提交代码 |
+
+**权限设计原则**：
+- Planner/Debater/Reviewer 只读，防止意外修改
+- Implementor 有写权限，但 Bash 需要 ask
+- Tester/Linter 可执行 Bash（测试/检查命令）
+- Committer 需要 ask 确认后才能提交
+
 4. 实战：启动7-Agent Pipeline
    - 完整启动命令
    - 观察每个阶段的输出
    - 调试和重试策略
+
+#### 前端场景 Agent 编排示例
+
+**AI 辅助组件生成 → UI 审查 → 响应式调整 → 视觉回归测试**
+
+```mermaid
+flowchart TB
+    A[需求描述] --> B[UI Designer Agent]
+    B --> C[组件代码生成]
+    C --> D[UI 审查 Agent]
+    D --> E{审查通过?}
+    E -->|否| F[反馈修改建议]
+    F --> B
+    E -->|是| G[响应式调整 Agent]
+    G --> H[多端适配]
+    H --> I[视觉回归测试 Agent]
+    I --> J{测试通过?}
+    J -->|否| K[定位差异]
+    K --> G
+    J -->|是| L[交付]
+```
+
+**Agent 配置示例**：
+
+| Agent | 模型 | 权限 | 职责 |
+|-------|------|------|------|
+| UI Designer | claude-sonnet-4 | edit: allow | 组件代码生成 |
+| UI Reviewer | claude-opus-4 | edit: deny | 视觉审查、反馈 |
+| Responsive Adapter | claude-sonnet-4 | edit: allow | 响应式调整 |
+| Visual Tester | claude-haiku-3.5 | edit: deny, bash: allow | 视觉回归测试 |
+
+#### 质量门禁集成
+
+**Quality Gate 配置**：
+
+```json
+{
+  "qualityGates": {
+    "preCommit": [
+      { "type": "lint", "command": "npm run lint" },
+      { "type": "test", "command": "npm test" },
+      { "type": "typeCheck", "command": "npm run typecheck" }
+    ],
+    "prePush": [
+      { "type": "test", "command": "npm run test:coverage", "threshold": 80 },
+      { "type": "security", "command": "npm audit" }
+    ]
+  }
+}
+```
+
+**触发条件**：
+- `preCommit`：每次文件保存时触发
+- `prePush`：git push 前触发
+- `manual`：手动触发
+
+**失败处理**：
+- 阻止操作并显示错误
+- 提供修复建议
+- 可配置跳过（需确认）
 
 #### 核心概念
 - **角色分离的意义**：每个Agent做一件事——Planner规划不写代码、Implementor实现不审查、Reviewer审查不改代码。这降低了单个Agent的复杂度，提高了输出质量。
@@ -234,6 +326,32 @@
    - 派生 Agent 的权限隔离
    - 错误传播和处理
 
+#### Agent 派生安全边界
+
+**三种派生模式的安全边界**：
+
+| 派生模式 | 上下文继承 | 权限继承 | 安全风险 | 缓解措施 |
+|---------|-----------|---------|---------|---------|
+| **子 Agent** | 完整继承 | 完整继承 | 高（权限过大） | 限制 allowed-tools |
+| **委派 Agent** | 部分继承 | 独立定义 | 中（上下文泄露） | 敏感信息过滤 |
+| **协调者 Agent** | 不继承 | 独立定义 | 低（隔离良好） | 无需额外措施 |
+
+**安全配置示例**：
+
+```json
+{
+  "agents": {
+    "child-agent": {
+      "mode": "subagent",
+      "allowedTools": ["read", "search"],
+      "permissions": [
+        { "permission": "edit", "pattern": "*", "action": "deny" }
+      ]
+    }
+  }
+}
+```
+
 #### 核心概念
 - **派生是扩展而非替代**：派生 Agent 是父 Agent 的能力延伸，不是替代关系
 - **派生模式的递归风险**：Agent 可以派生 Agent，派生 Agent 又可以派生——需要深度限制
@@ -286,6 +404,23 @@
    - 适用场景对比
    - 性能 vs 隔离性权衡
    - 混合模式设计
+
+#### Team Mode 数据隔离审查
+
+**数据隔离级别**：
+
+| 隔离级别 | 描述 | 适用场景 | 配置示例 |
+|---------|------|---------|---------|
+| **完全隔离** | 每个 Agent 独立工作目录 | 安全审计、红蓝对抗 | `workdir: "./agent-{id}"` |
+| **共享读取** | 共享代码库，独立输出 | 代码审查、测试 | `readonly: ["./src"]` |
+| **完全共享** | 所有 Agent 共享工作目录 | 协作开发、结对编程 | `workdir: "./"` |
+
+**安全检查清单**：
+- [ ] 敏感文件不在共享目录中
+- [ ] Agent 输出目录有权限控制
+- [ ] 日志不包含敏感信息
+- [ ] 临时文件定期清理
+
 5. 大规模 Teams 的工程实践
    - 分层 Team 架构
    - Team 监控和日志
@@ -386,3 +521,111 @@
 | 三种派生模式对比图 | `uml` / `graphviz` | Article 4.4 | 子Agent/委派/协调者 |
 | Teams 架构通信图 | `architecture` / `network` | Article 4.5 | 消息传递架构 |
 | 消息传递时序图 | `uml` (序列图) | Article 4.5 | Agent 间消息序列 |
+
+---
+
+### Article 4.6: Agent 编排工作流
+- **阅读时间**：20 min
+- **学习目标**：
+  - 理解 Ultrawork 模式的使用
+  - 掌握 Prometheus 规划模式
+  - 了解 Team Mode 并行多 Agent
+- **前置知识**：Article 4.1（Ultrawork 基础）+ Article 4.3（Team Mode 基础）
+- **源材料映射**：OpenCode 官方文档 + OMO 配置示例
+
+#### 大纲
+1. Ultrawork 模式
+   - 输入 `ulw` 自动完成
+   - 适用场景：复杂任务、懒惰模式
+   - 与传统 Prompt 的对比
+2. Prometheus 规划模式
+   - @plan 命令触发
+   - 访谈式需求收集
+   - /start-work 执行规划
+   - Atlas 执行指挥角色
+3. Team Mode
+   - 并行多 Agent 协作
+   - 共享邮箱和任务列表
+   - tmux 布局管理
+   - 内置团队技能（Hyperplan、security-research）
+
+#### 核心概念
+- **Ultrawork**：一键自动完成复杂任务，Agent 自主探索→实现→验证循环
+- **Prometheus**：访谈式规划，通过问答收集需求并生成执行计划
+- **Atlas**：执行指挥，负责协调和监控计划执行
+- **Team Mode**：并行多 Agent 协作，支持消息传递和任务分配
+
+#### 编排模式对比
+
+| 模式 | 触发方式 | 适用场景 | Agent 数量 | 人工介入 |
+|------|---------|---------|-----------|---------|
+| **Ultrawork** | `ulw` | 复杂任务、快速原型 | 1 | 低 |
+| **Prometheus** | `@plan` | 需求不明确、需要规划 | 1+ | 中（访谈阶段） |
+| **Team Mode** | team_create | 并行任务、安全审计 | 多 | 可配置 |
+
+#### Ultrawork 工作流程
+
+```mermaid
+flowchart TB
+    A[输入 ulw] --> B[Agent 自主探索]
+    B --> C[研究模式分析]
+    C --> D[实现功能]
+    D --> E[LSP 验证]
+    E --> F{完成?}
+    F -->|否| B
+    F -->|是| G[输出结果]
+```
+
+#### Prometheus 规划流程
+
+```mermaid
+flowchart TB
+    A["@plan 命令"] --> B[Prometheus 启动]
+    B --> C[访谈式需求收集]
+    C --> D{需求明确?}
+    D -->|否| C
+    D -->|是| E[生成执行计划]
+    E --> F["/start-work 执行"]
+    F --> G[Atlas 协调执行]
+    G --> H[任务完成]
+```
+
+#### Team Mode 架构
+
+```mermaid
+flowchart TB
+    subgraph Team[Team Mode 多 Agent]
+        A[Primary Agent]
+        B[Agent 1]
+        C[Agent 2]
+        D[Agent 3]
+    end
+
+    E[共享邮箱] <--> A
+    F[任务列表] <--> A
+    A --> B
+    A --> C
+    A --> D
+
+    B --> G[结果汇总]
+    C --> G
+    D --> G
+```
+
+#### 代码/配置示例
+- Ultrawork 启用配置
+- Prometheus 访谈示例
+- Team Mode 创建团队配置
+- tmux 布局配置
+
+#### 关联章节
+- ← Article 4.1（Ultrawork 详解）
+- ← Article 4.3（Team Mode 详解）
+- → Ch7（案例研究中的编排实践）
+
+#### 验证标准
+- [ ] 文章 ≥ 200 行有效内容
+- [ ] 包含 Ultrawork 模式说明
+- [ ] 包含 Prometheus 规划模式说明
+- [ ] 包含 Team Mode 说明
+- [ ] 包含三种编排模式的对比表

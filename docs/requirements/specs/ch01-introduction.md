@@ -36,7 +36,7 @@
      - 安全关注点：敏感数据过滤、访问控制
      - 突破：从"单次交互"到"持久会话"；从"文件级"到"项目级"理解；从"被动补全"到"主动编辑"
      - 局限：仍需人工干预调试；缺乏独立执行环境；工作流无法固化复用
-   - 阶段 3：驾驭工程（Harness Engineering，2025- 探索期）
+   - 阶段 3：驾驭工程（Harness Engineering，2025-2026 探索期）
      - 核心能力：多 Agent 编排、工作流固化与复用、质量门禁与审计日志、知识沉淀与持续改进
      - 国际代表工具：Claude Code（Anthropic，72-79% SWE-bench）, OpenCode + OMO, Google Jules（异步自主Agent）, OpenAI Codex CLI, GitHub Copilot Workspace
      - 国内代表工具：Trae SOLO模式（字节）, CodeBuddy Craft智能体（腾讯）
@@ -251,6 +251,35 @@
 - ← Article 1.3（理论框架指导对比维度）
 - ↑ 承接 Article 1.2（从 OpenCode 到全景对比）
 
+#### 工具生态对比
+
+**来源**：awesome-opencode 项目
+
+**AI 编程三阶段演进代表工具**：
+
+| 阶段 | 时间范围 | 国际代表工具 | 国内代表工具 |
+|------|---------|-------------|-------------|
+| **阶段 1：提示词工程** | 2021-2023 | GitHub Copilot ($2B+ ARR), Google Gemini Code Assist, OpenAI Codex | CodeGeeX (智谱AI, 开源可私有化), 文心快码 (百度, IDC 8项满分), 通义灵码 (阿里, Gartner挑战者) |
+| **阶段 2：上下文工程** | 2023-2025 | Cursor ($293亿估值), Windsurf (Cascade Agent), Google Project IDX, ChatGPT Code Interpreter | Trae/MarsCode (字节, 25%市场份额), CodeBuddy (腾讯, 92%复杂任务完成率), CodeArts Snap (华为, 鸿蒙生态) |
+| **阶段 3：驾驭工程** | 2025-2026 探索期 | Claude Code (72-79% SWE-bench), OpenCode + OMO, Google Jules, OpenAI Codex CLI, GitHub Copilot Workspace | Trae SOLO模式 (字节), CodeBuddy Craft智能体 (腾讯) |
+
+**6 大 AI 编码工具对比**：
+
+| 工具 | 核心优势 | 适用场景 | 国产替代 |
+|------|---------|---------|---------|
+| **OpenCode** | 开源、可扩展、多模型支持 | 个人开发者、团队协作 | 原生支持国产模型 |
+| **Cursor** | IDE 集成、代码补全 | 快速编码 | 通义灵码、CodeGeeX |
+| **Windsurf** | AI 原生 IDE | 全栈开发 | - |
+| **Cline** | VSCode 插件 | VSCode 用户 | - |
+| **Aider** | 命令行工具 | 终端用户 | - |
+| **Trae** | 字节跳动出品 | 国内用户 | 原生 |
+
+**选型决策树**：
+1. 需要开源？→ OpenCode / Aider
+2. 需要 IDE 集成？→ Cursor / Windsurf / Cline
+3. 需要国产模型？→ OpenCode / 通义灵码 / CodeGeeX
+4. 需要多 Agent？→ OpenCode + OMO
+
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
 - [ ] 对比表覆盖至少 6 款工具的 8 个维度
@@ -295,6 +324,34 @@
 #### 关联章节
 - ← Article 1.4（国产是生态的一部分）
 - → Ch3 Article 3.4（国产模型配置的实操）
+
+#### 国产 AI 生态
+
+**来源**：awesome-opencode 项目
+
+**国产模型 Provider**：
+
+| Provider | 模型 | 特点 | OpenCode 配置 |
+|---------|------|------|--------------|
+| **DeepSeek** | deepseek-chat | 性价比之王 | `deepseek` |
+| **Kimi** | moonshot-v1 | 长上下文 | `moonshot` |
+| **Qwen** | qwen-turbo | 生态完整 | `qwen` |
+| **智谱 AI** | glm-4 | 国产大模型 | `zhipu` |
+| **百度文心** | ernie-4 | 企业级 | `ernie` |
+
+**国产工具生态**：
+
+| 工具 | 功能 | 仓库 |
+|------|------|------|
+| **Qwen Code OAI Proxy** | 通义千问 OpenAI 兼容代理 | `aptdnfapt/qwen-code-oai-proxy` |
+| **Gemini CLI to API** | Gemini CLI 转 OpenAI 端点 | `gzzhongqi/geminicli2api` |
+| **GolemBot** | 统一 AI 助手框架（支持飞书） | - |
+| **opencode-mystatus** | 配额检查（支持智谱 AI） | - |
+
+**国产模型混合架构**：
+- DeepSeek（低成本）+ GPT-4（高质量）混合使用
+- 国产模型处理常规任务，国际模型处理复杂任务
+- 成本优化可达 50%-80%
 
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容

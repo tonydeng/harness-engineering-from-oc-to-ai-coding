@@ -1,0 +1,117 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": {
+      "model": "anthropic/claude-opus-4-7",
+      "ultrawork": { "model": "anthropic/claude-opus-4-7", "variant": "max" },
+      "description": "复杂任务执行器，处理需要深度推理和多步骤规划的任务"
+    },
+    "hephaestus": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "代码工匠，专注于代码生成、重构和调试"
+    },
+    "prometheus": {
+      "model": "openai/gpt-5.5",
+      "variant": "high",
+      "description": "创意探索者，用于架构设计和创新方案"
+    },
+    "atlas": {
+      "model": "google/gemini-3.1-pro",
+      "variant": "high",
+      "description": "知识承载者，处理大规模代码库分析和文档生成"
+    },
+    "oracle": {
+      "model": "openai/gpt-5.5",
+      "variant": "high",
+      "description": "决策顾问，提供技术选型和最佳实践建议"
+    },
+    "librarian": {
+      "model": "google/gemini-3-flash",
+      "description": "知识管理者，快速检索和整理信息"
+    },
+    "explore": {
+      "model": "github-copilot/grok-code-fast-1",
+      "description": "快速探索者，用于代码搜索和轻量级分析"
+    }
+  },
+  "categories": {
+    "quick": {
+      "model": "opencode/gpt-5-nano",
+      "description": "快速响应任务，如简单问答、格式化"
+    },
+    "unspecified-low": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "未指定复杂度的低优先级任务"
+    },
+    "unspecified-high": {
+      "model": "anthropic/claude-opus-4-7",
+      "variant": "max",
+      "description": "未指定复杂度的高优先级任务"
+    },
+    "writing": {
+      "model": "kimi-for-coding/k2p5",
+      "description": "文档写作、注释生成、README 编写"
+    },
+    "visual-engineering": {
+      "model": "google/gemini-3.1-pro",
+      "variant": "high",
+      "description": "UI/UX 设计、图表生成、可视化任务"
+    },
+    "refactoring": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "代码重构、优化、清理"
+    },
+    "testing": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "description": "测试用例生成、测试覆盖率分析"
+    },
+    "debugging": {
+      "model": "anthropic/claude-opus-4-7",
+      "variant": "max",
+      "description": "复杂 bug 调试、性能问题排查"
+    }
+  },
+  "background_task": {
+    "max_concurrent": 4,
+    "timeout_seconds": 300,
+    "retry_count": 3,
+    "retry_delay_seconds": 5
+  },
+  "runtime_fallback": {
+    "enabled": true,
+    "fallback_chain": [
+      "anthropic/claude-opus-4-7",
+      "anthropic/claude-sonnet-4-6",
+      "openai/gpt-5.5",
+      "google/gemini-3.1-pro"
+    ],
+    "on_rate_limit": "wait_and_retry",
+    "on_context_overflow": "truncate_and_retry"
+  },
+  "skills": {
+    "auto_discover": true,
+    "search_paths": [
+      "~/.opencode/skills",
+      "./.opencode/skills",
+      "./skills"
+    ],
+    "default_agent": "hephaestus",
+    "default_category": "unspecified-low"
+  },
+  "experimental": {
+    "aggressive_truncation": true,
+    "task_system": true,
+    "parallel_execution": true,
+    "streaming_mode": "incremental"
+  },
+  "tmux": {
+    "enabled": false,
+    "session_prefix": "opencode-"
+  },
+  "logging": {
+    "level": "info",
+    "file": "~/.opencode/logs/opencode.log",
+    "max_size_mb": 100,
+    "backup_count": 5
+  }
+}

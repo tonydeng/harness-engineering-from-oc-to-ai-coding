@@ -63,6 +63,45 @@
 
 全书统一 **`OpenCode`**（大写 C）。
 
+## 关键链接
+
+### OpenCode 官方资源
+
+| 资源 | 链接 |
+|------|------|
+| **官方网站** | https://opencode.ai/ |
+| **官方文档** | https://opencode.ai/docs |
+| **GitHub 仓库** | https://github.com/anomalyco/opencode |
+| **安装脚本** | https://opencode.ai/install |
+| **认证页面** | https://opencode.ai/auth |
+| **Zen 服务** | https://opencode.ai/zen |
+| **GitHub Releases** | https://github.com/anomalyco/opencode/releases |
+
+### 安装命令
+
+```bash
+# macOS/Linux 官方脚本
+curl -fsSL https://opencode.ai/install | bash
+
+# Homebrew (macOS/Linux)
+brew install anomalyco/tap/opencode
+
+# npm (跨平台)
+npm install -g opencode-ai
+
+# Arch Linux
+sudo pacman -S opencode
+
+# Windows (Scoop)
+scoop install opencode
+
+# Windows (Chocolatey)
+choco install opencode
+
+# Docker
+docker run -it --rm ghcr.io/anomalyco/opencode
+```
+
 ## 章节结构（基于 `SUMMARY.md` 条目顺序）
 
 | 章 | 文章数 | 完成状态 |

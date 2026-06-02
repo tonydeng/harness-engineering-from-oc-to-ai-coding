@@ -283,7 +283,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 - [ ] 所有 46 篇文章/页面完成编写（非 TODO 状态，含 19 现有 + 27 新增）
 - [ ] 每篇文章有效正文 ≥ 200 行（第7章文章 ≥ 300 行；排除 frontmatter 和纯空行；代码块计入正文行数）
 - [ ] 内部链接有效率达 100%（CI 中 `markdown-link-check` 验证）
-- [ ] 本地预览 `npx docsify serve ./src` 无报错日志
+- [ ] 本地预览 `mdbook serve` 无报错日志
 - [ ] OpenCode/OMO 版本号在全书中保持一致（与第 3.5 节声明一致）
 
 #### 7.1.2 🟡 质量门禁（通过率 ≥ 80% 方可发布）
@@ -432,7 +432,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径）
 | BACKEND | US-BE-03 微服务协同 | Ch7.1 微服务案例, Ch7.5 ★混合架构 | ✅ 覆盖 |
 | FRONTEND | US-FE-01 前端Agent编排 | Ch4.4 ★Agent派生, Ch7.2 遗留系统 | ⚠️ 规格已覆盖 |
 | FRONTEND | US-FE-02 组件↔Skill类比 | Ch5.5 ★插件化, Ch2.2 Skill系统 | 🟡 需写作强化 |
-| FRONTEND | US-FE-03 Docsify架构 | AGENTS.md, Ch3.1 快速上手(docsify) | ✅ 覆盖 |
+| FRONTEND | US-FE-03 mdBook架构 | AGENTS.md, Ch3.1 快速上手(mdbook) | ✅ 覆盖 |
 | UX | US-UX-01 Mermaid规范 | AGENTS.md §写作规范, 全书图表 | ✅ 覆盖 |
 | UX | US-UX-02 代码块规范 | AGENTS.md §写作规范, PRD §4.2 | ✅ 覆盖 |
 | UX | US-UX-03 移动端/无障碍 | PRD §4.1.2/4.1.3 | ✅ 覆盖 |
