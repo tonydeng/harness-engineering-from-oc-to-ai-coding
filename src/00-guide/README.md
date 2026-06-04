@@ -1,6 +1,6 @@
 # 读者导航 — 本书适合你吗？
 
-> 本书不是"从零学编程"教程，而是帮助你从"用 AI 聊天写代码"升级到"用 AI 工程流水线做开发"的实践指南。30 秒内判断这本书是否适合你。
+> 本书不是"从零学编程"教程，而是帮你从"跟 AI 聊天写代码"到"用工程体系做开发"的实践指南。花 30 秒判断这本书是否适合你。
 
 ---
 
@@ -124,7 +124,7 @@ quadrantChart
 
 | 章节 | 入门 | 效率 | 技术负责人 | Skill 作者 | 工程经理 | 需求分析师 | 架构师 | 后端 | 前端 | UX | QA | 安全工程师 | 红队 |
 |------|:----:|:----:|:----------:|:----------:|:--------:|:----------:|:------:|:----:|:----:|:--:|:--:|:----------:|:----:|
-| **读者导航** | ● | ○ | ● | ○ | ○ | ● | ○ | ○ | ○ | ● | ● | ○ | ○ |
+| **读者导航** | ○ | ○ | ● | ○ | ○ | ● | ○ | ○ | ○ | ● | ● | ○ | ○ |
 | **简介** | ● | ◐ | ● | ◐ | ● | ● | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
 | **核心概念** | ● | ● | ● | ● | ◐ | ◐ | ● | ◐ | ◐ | ◐ | ● | ◐ | ◐ |
 | **环境搭建** | ● | ● | ● | ● | - | - | ◐ | ● | ◐ | - | ● | ● | ◐ |
@@ -198,19 +198,19 @@ graph TB
 
 | 角色 | P0 章节 | P1 章节 | 预计用时 |
 |------|---------|---------|----------|
-| **入门** | 读者导航, 简介, 核心概念, 环境搭建, 工作流实战 | Skill 开发, 案例研究 | 4-5 小时 |
-| **效率** | 核心概念, 环境搭建, 工作流实战, 高级话题, 案例研究 | 简介, Skill 开发 | 5-6 小时 |
-| **技术负责人** | 读者导航, 简介, 核心概念, 环境搭建, 工作流实战, 高级话题, 案例研究 | Skill 开发 | 6-7 小时 |
-| **Skill 作者** | 核心概念, 环境搭建, Skill 开发, 高级话题, 案例研究 | 简介, 工作流实战 | 5-6 小时 |
-| **工程经理** | 简介, 案例研究 | 核心概念, 高级话题 | 3-4 小时 |
-| **需求分析师** | 读者导航, 简介, 案例研究 | 核心概念 | 4-5 小时 |
-| **架构师** | 简介, 核心概念, 工作流实战, 高级话题, 案例研究 | 环境搭建, Skill 开发 | 7-8 小时 |
-| **后端** | 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | 简介, 核心概念 | 5-6 小时 |
-| **前端** | 工作流实战, Skill 开发 | 简介, 核心概念, 环境搭建, 案例研究 | 4-5 小时 |
-| **UX** | 读者导航, 案例研究 | 简介, 核心概念 | 3-4 小时 |
-| **QA** | 读者导航, 简介, 核心概念, 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | - | 6-7 小时 |
-| **安全工程师** | 环境搭建, 工作流实战, Skill 开发, 高级话题, 案例研究 | 简介, 核心概念 | 5-6 小时 |
-| **红队** | 工作流实战, Skill 开发, 高级话题, 案例研究 | 简介, 核心概念 | 5-6 小时 |
+| **入门** | [读者导航](./), [简介](../01-introduction/), [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [工作流实战](../04-workflows/) | [Skill 开发](../05-skills/), [案例研究](../07-case-studies/) | 4-5 小时 |
+| **效率** | [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [工作流实战](../04-workflows/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [Skill 开发](../05-skills/) | 5-6 小时 |
+| **技术负责人** | [读者导航](./), [简介](../01-introduction/), [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [工作流实战](../04-workflows/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [Skill 开发](../05-skills/) | 6-7 小时 |
+| **Skill 作者** | [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [Skill 开发](../05-skills/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [工作流实战](../04-workflows/) | 5-6 小时 |
+| **工程经理** | [简介](../01-introduction/), [案例研究](../07-case-studies/) | [核心概念](../02-core-concepts/), [高级话题](../06-advanced/) | 3-4 小时 |
+| **需求分析师** | [读者导航](./), [简介](../01-introduction/), [案例研究](../07-case-studies/) | [核心概念](../02-core-concepts/) | 4-5 小时 |
+| **架构师** | [简介](../01-introduction/), [核心概念](../02-core-concepts/), [工作流实战](../04-workflows/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [环境搭建](../03-setup/), [Skill 开发](../05-skills/) | 7-8 小时 |
+| **后端** | [环境搭建](../03-setup/), [工作流实战](../04-workflows/), [Skill 开发](../05-skills/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [核心概念](../02-core-concepts/) | 5-6 小时 |
+| **前端** | [工作流实战](../04-workflows/), [Skill 开发](../05-skills/) | [简介](../01-introduction/), [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [案例研究](../07-case-studies/) | 4-5 小时 |
+| **UX** | [读者导航](./), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [核心概念](../02-core-concepts/) | 3-4 小时 |
+| **QA** | [读者导航](./), [简介](../01-introduction/), [核心概念](../02-core-concepts/), [环境搭建](../03-setup/), [工作流实战](../04-workflows/), [Skill 开发](../05-skills/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | - | 6-7 小时 |
+| **安全工程师** | [环境搭建](../03-setup/), [工作流实战](../04-workflows/), [Skill 开发](../05-skills/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [核心概念](../02-core-concepts/) | 5-6 小时 |
+| **红队** | [工作流实战](../04-workflows/), [Skill 开发](../05-skills/), [高级话题](../06-advanced/), [案例研究](../07-case-studies/) | [简介](../01-introduction/), [核心概念](../02-core-concepts/) | 5-6 小时 |
 
 ---
 
@@ -253,9 +253,9 @@ graph TB
 | 不涵盖的内容 | 为什么跳过 | 替代资源 |
 |-------------|-----------|---------|
 | **编程基础语法** | 假设读者已有开发经验 | 各语言官方教程、《代码大全》 |
-| **OpenCode Rust 内部实现** | 聚焦用户层面配置和实践 | [OpenCode 源码](https://github.com/opencode-ai/opencode) |
+| **OpenCode Rust 内部实现** | 聚焦用户层面配置和实践 | [OpenCode 源码](https://github.com/anomalyco/opencode) |
 | **具体云平台完整教程** | 聚焦 AI 编程工作流本身 | AWS/Azure/GCP/阿里云官方文档 |
-| **大模型训练或微调** | 本书是工程实践，不是 ML 教程 | Hugging Face 课程、各模型官方文档 |
+| **大模型训练或微调** | 本书是工程实践，不是 **ML（机器学习）**教程 | Hugging Face 课程、各模型官方文档 |
 | **特定框架深度教程** | 示例涉及但不深入讲解 | React/Vue/Spring 等框架官方文档 |
 | **企业级 DevOps 完整方案** | 聚焦 AI 编程环节 | 《持续交付》《DevOps 手册》 |
 
@@ -319,17 +319,17 @@ graph TB
 
 | 组件 | 版本 | 说明 |
 |------|------|------|
-| **OpenCode** | v1.15.x | 核心 AI 编程引擎 |
-| **oh-my-openagent** | v4.5.x | Agent 编排套件 |
-| **mdBook** | v0.4.x | 书籍渲染引擎 |
-| **Mermaid** | v10+ | 图表和架构图 |
-| **Node.js** | >=18 | 本地预览环境 |
+| **[OpenCode](https://github.com/anomalyco/opencode)** | v1.15.x | 核心 AI 编程引擎 |
+| **[oh-my-openagent](https://github.com/samanhappy/oh-my-openagent)** | v4.5.x | Agent 编排套件 |
+| **[mdBook](https://github.com/rust-lang/mdBook)** | v0.4.x | 书籍渲染引擎 |
+| **[Mermaid](https://github.com/mermaid-js/mermaid)** | v10+ | 图表和架构图 |
+| **[Node.js](https://nodejs.org/)** | >=18 | 本地预览环境 |
 
-### 版本兼容性说明
+### OpenCode核心生态演进
 
 ```mermaid
 timeline
-    title 版本演进时间线
+    title OpenCode核心生态演进时间线
     2024-Q1 : OpenCode v1.0 发布
     2024-Q3 : OpenCode v1.10 MCP 支持
     2024-Q4 : oh-my-openagent v4.0 发布
@@ -337,16 +337,6 @@ timeline
            : 本书基于此版本编写
     2025-Q2 : oh-my-openagent v4.5 发布
 ```
-
-### 版本差异处理
-
-| 场景 | 处理方式 |
-|------|----------|
-| 代码示例与最新版本不一致 | 在代码块中标注版本号，GitHub CHANGELOG 记录差异 |
-| 配置项变更 | 在相关章节添加版本兼容性说明 |
-| 新功能发布 | 在 GitHub Issues 中发布补充说明 |
-
-> 所有代码示例和配置均标注了对应版本。后续版本差异会在 [GitHub](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding) 的 CHANGELOG 中记录。
 
 ---
 
@@ -388,16 +378,23 @@ flowchart LR
 | **技术负责人** | 跳转到 [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) |
 | **Skill 作者** | 跳转到 [Skill 系统](../02-core-concepts/skills-system.md) |
 | **工程经理** | 跳转到 [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) |
+| **后端** | 跳转到 [MCP 服务器](../06-advanced/mcp-servers.md) |
+| **前端** | 跳转到 [工作流模式](../02-core-concepts/workflow-patterns.md) |
+| **安全工程师** | 跳转到 [安全总览](../06-advanced/security-overview.md) |
+| **红队** | 跳转到 [安全审计流水线](../07-case-studies/case-security-audit.md) |
 | **其他角色** | 查看完整 [多角色阅读路径](reading-paths.md) |
 
 ---
 
 ## 章节导航
 
+> ⚠️ **写作状态提示**：本书目前有 **42 篇文章已完成**，**8 篇正在写作中**（主要分布在高级话题和案例研究章节）。阅读路径和各章节链接均已标注完整规划，标注"写作中"的文章表示内容尚未完成。
+
 本章包含以下内容：
 
 - **[多角色阅读路径](reading-paths.md)** — 针对 13 种读者角色提供定制化的章节跳转建议，以及对应的阅读时间估算
 - **[如何使用本书](how-to-read.md)** — 两种阅读模式（逐章精读 vs 按需跳跃）的对比说明，以及最大化学习收益的实操建议
+- **[5 分钟快速体验](quick-start.md)** — 从安装到第一次 AI 编程任务，一站式快速上手
 
 ---
 

@@ -1,0 +1,29 @@
+/* theme/vega.css */
+/* Vega-Lite 图表容器样式 */
+.vega-wrapper {
+  margin: 1.5rem auto;
+  max-width: 100%;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.vega-chart-container {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Canvas 自适应 */
+.vega-chart-container canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* 响应式：小屏幕时限制最大宽度 */
+@media (max-width: 768px) {
+  .vega-wrapper {
+    margin: 1rem -0.5rem;
+  }
+  .vega-chart-container {
+    width: 100%;
+  }
+}

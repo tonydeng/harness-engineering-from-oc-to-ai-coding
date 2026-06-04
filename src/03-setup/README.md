@@ -10,7 +10,7 @@
 
 | 文章 | 说明 |
 |------|------|
-| [快速上手](quickstart.md) | 5 分钟内完成 OpenCode 安装和第一个 AI 编程任务 |
+| [快速上手](quickstart.md) | 10 分钟内完成 OpenCode 安装和第一个 AI 编程任务 |
 | [OpenCode 配置详解](opencode-config.md) | opencode.json 的完整参考：Agent 定义、Skill 注册、Workflow 绑定 |
 | [oh-my-openagent 集成](oh-my-openagent-setup.md) | oh-my-openagent 的安装配置与 OpenCode 的协同工作模式 |
 | [国产模型供应商配置](chinese-providers.md) | 国内大模型 API 接入（DeepSeek/Qwen/GLM 等）与网络代理设置 |

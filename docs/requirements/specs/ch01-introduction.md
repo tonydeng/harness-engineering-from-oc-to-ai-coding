@@ -2,11 +2,11 @@
 
 ## 概述
 
-本书第1章为全书定调：定义"Harness Engineer"（驾驭式工程师）这一概念，阐述为什么AI编程正在经历从"聊天对话"到"工程流水线"的范式转变，以及OpenCode在这场转变中的独特定位。本章帮助读者快速判断：这本书/OpenCode是否值得投入时间。
+本书第1章为全书定调：先说清楚什么是"Harness Engineer"（驾驭式工程师），再解释为什么AI编程正在从"跟 AI 聊天写代码"转向"用工程体系做开发"，以及OpenCode在这股浪潮里的位置。读完本章你就能快速判断：这本书和OpenCode值不值得你花时间。
 
-**章节核心主题**：从"对话式AI编程"到"工程化AI流水线"——Harness Engineering的定义、价值与工具选择。
+**章节核心主题**：从"跟 AI 聊天写代码"到"用工程体系做开发"——讲明白 Harness Engineering 是什么、为什么重要、用什么工具来实现。
 
-> **章节规模**：5 篇文章（2 现有 + 3 新增），2 篇修改
+> **章节规模**：6 篇文章（3 现有 + 3 新增），2 篇修改
 
 ## 文章
 
@@ -36,7 +36,7 @@
      - 安全关注点：敏感数据过滤、访问控制
      - 突破：从"单次交互"到"持久会话"；从"文件级"到"项目级"理解；从"被动补全"到"主动编辑"
      - 局限：仍需人工干预调试；缺乏独立执行环境；工作流无法固化复用
-   - 阶段 3：驾驭工程（Harness Engineering，2025- 探索期）
+   - 阶段 3：驾驭工程（Harness Engineering，2025-2026 探索期）
      - 核心能力：多 Agent 编排、工作流固化与复用、质量门禁与审计日志、知识沉淀与持续改进
      - 国际代表工具：Claude Code（Anthropic，72-79% SWE-bench）, OpenCode + OMO, Google Jules（异步自主Agent）, OpenAI Codex CLI, GitHub Copilot Workspace
      - 国内代表工具：Trae SOLO模式（字节）, CodeBuddy Craft智能体（腾讯）
@@ -62,7 +62,7 @@
 - **阶段 1（提示词工程）**：通过精心设计的输入指令，最大限度地激发模型的正确能力
 - **阶段 2（上下文工程）**：设计和构建 AI 系统的信息架构，决定哪些信息进入上下文窗口以及如何组织
 - **阶段 3（驾驭工程）**：设计、构建和维护编排 AI Agent 的基础设施，使其在生产环境中可靠运行
-- **Harness Engineer vs Prompt Engineer**：Prompt Engineer关注"怎么写好的提示词"；Harness Engineer关注"怎么设计好的工程流水线"
+- **Harness Engineer vs Prompt Engineer**：Prompt Engineer关心"怎么写好提示词"；Harness Engineer关心"怎么设计一套可靠的工程体系"
 - **3个可**原则：可复现/可审计/可改进——全书所有实践都围绕这三个原则展开
 - **安全治理演进**：从 Prompt Injection 防护 → 敏感数据过滤/访问控制 → 安全审计/沙箱隔离/合规检查
 
@@ -71,17 +71,15 @@
 
 #### Mermaid 图表
 - AI编程三阶段演进时间线图（2021-2026，标注探索期）
-- Harness Engineer能力雷达图（5维度）
 - 三阶段对比矩阵图（时间范围、核心能力、代表工具、用户角色、安全关注点）
 
 #### 关联章节
 - → Ch2 Core Concepts（为六概念奠定理解基础）
-- → Ch4 Workflows（工程流水线的具体实现）
+- → Ch4 Workflows（工作流的实际应用）
 
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
 - [ ] 包含三阶段演进对比表（时间范围、核心能力、代表工具、用户角色、安全关注点）
-- [ ] 包含Harness Engineer能力雷达图
 - [ ] 每个阶段有明确的时间节点
 - [ ] 每个阶段有代表性的工具示例
 - [ ] 每个阶段有核心特征描述
@@ -178,8 +176,8 @@
 
 #### 大纲
 1. Harness Engineering 定义深化
-   - 从"驾驭 AI 写代码"到"设计 AI 工程流水线"
-   - Hatness 的 4 个核心支柱：编排、安全、可观测、成本
+    - 从"驾驭 AI 写代码"到"设计 AI 工程体系"
+    - Harness 的 4 个核心支柱：编排、安全、可观测、成本
 2. Martin Fowler 5 大分类法
    - 每个分类的定义和典型工具
    - 分类法的工程实践意义
@@ -251,6 +249,35 @@
 - ← Article 1.3（理论框架指导对比维度）
 - ↑ 承接 Article 1.2（从 OpenCode 到全景对比）
 
+#### 工具生态对比
+
+**来源**：awesome-opencode 项目
+
+**AI 编程三阶段演进代表工具**：
+
+| 阶段 | 时间范围 | 国际代表工具 | 国内代表工具 |
+|------|---------|-------------|-------------|
+| **阶段 1：提示词工程** | 2021-2023 | GitHub Copilot ($2B+ ARR), Google Gemini Code Assist, OpenAI Codex | CodeGeeX (智谱AI, 开源可私有化), 文心快码 (百度, IDC 8项满分), 通义灵码 (阿里, Gartner挑战者) |
+| **阶段 2：上下文工程** | 2023-2025 | Cursor ($293亿估值), Windsurf (Cascade Agent), Google Project IDX, ChatGPT Code Interpreter | Trae/MarsCode (字节, 25%市场份额), CodeBuddy (腾讯, 92%复杂任务完成率), CodeArts Snap (华为, 鸿蒙生态) |
+| **阶段 3：驾驭工程** | 2025-2026 探索期 | Claude Code (72-79% SWE-bench), OpenCode + OMO, Google Jules, OpenAI Codex CLI, GitHub Copilot Workspace | Trae SOLO模式 (字节), CodeBuddy Craft智能体 (腾讯) |
+
+**6 大 AI 编码工具对比**：
+
+| 工具 | 核心优势 | 适用场景 | 国产替代 |
+|------|---------|---------|---------|
+| **OpenCode** | 开源、可扩展、多模型支持 | 个人开发者、团队协作 | 原生支持国产模型 |
+| **Cursor** | IDE 集成、代码补全 | 快速编码 | 通义灵码、CodeGeeX |
+| **Windsurf** | AI 原生 IDE | 全栈开发 | - |
+| **Cline** | VSCode 插件 | VSCode 用户 | - |
+| **Aider** | 命令行工具 | 终端用户 | - |
+| **Trae** | 字节跳动出品 | 国内用户 | 原生 |
+
+**选型决策树**：
+1. 需要开源？→ OpenCode / Aider
+2. 需要 IDE 集成？→ Cursor / Windsurf / Cline
+3. 需要国产模型？→ OpenCode / 通义灵码 / CodeGeeX
+4. 需要多 Agent？→ OpenCode + OMO
+
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
 - [ ] 对比表覆盖至少 6 款工具的 8 个维度
@@ -296,10 +323,87 @@
 - ← Article 1.4（国产是生态的一部分）
 - → Ch3 Article 3.4（国产模型配置的实操）
 
+#### 国产 AI 生态
+
+**来源**：awesome-opencode 项目
+
+**国产模型 Provider**：
+
+| Provider | 模型 | 特点 | OpenCode 配置 |
+|---------|------|------|--------------|
+| **DeepSeek** | deepseek-chat | 性价比之王 | `deepseek` |
+| **Kimi** | moonshot-v1 | 长上下文 | `moonshot` |
+| **Qwen** | qwen-turbo | 生态完整 | `qwen` |
+| **智谱 AI** | glm-4 | 国产大模型 | `zhipu` |
+| **百度文心** | ernie-4 | 企业级 | `ernie` |
+
+**国产工具生态**：
+
+| 工具 | 功能 | 仓库 |
+|------|------|------|
+| **Qwen Code OAI Proxy** | 通义千问 OpenAI 兼容代理 | `aptdnfapt/qwen-code-oai-proxy` |
+| **Gemini CLI to API** | Gemini CLI 转 OpenAI 端点 | `gzzhongqi/geminicli2api` |
+| **GolemBot** | 统一 AI 助手框架（支持飞书） | - |
+| **opencode-mystatus** | 配额检查（支持智谱 AI） | - |
+
+**国产模型混合架构**：
+- DeepSeek（低成本）+ GPT-4（高质量）混合使用
+- 国产模型处理常规任务，国际模型处理复杂任务
+- 成本优化可达 50%-80%
+
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
 - [ ] 覆盖至少 4 款国产工具
 - [ ] 包含国产模型与 OpenCode 结合方案
+
+---
+
+### Article 1.6: AI 编程失败案例
+- **阅读时间**：15 min
+- **学习目标**：
+  - 理解缺少约束系统、上下文注入攻击、权限配置错误等常见陷阱
+  - 从真实失败案例中汲取经验，避免在自身项目中重蹈覆辙
+  - 理解 Harness Engineering 核心支柱（约束系统、审计、验证护栏）如何防范这些风险
+- **前置知识**：Article 1.1（Harness Engineer 基础概念）
+- **源材料映射**：全书实践经验总结
+
+#### 大纲
+1. 案例一：没有约束系统会发生什么
+   - 场景：AI Agent 失控修改了生产数据库
+   - 根因分析：缺少 Bash 白名单、缺少文件路径约束
+   - Harness Engineering 的解决方案：约束系统、权限分层
+2. 案例二：上下文注入攻击实例
+   - 场景：恶意代码通过 README 注入 Agent 上下文
+   - 根因分析：缺少注入防护、过分信任外部输入
+   - Harness Engineering 的解决方案：CLAUDE.md 用户指令覆盖层、沙箱隔离
+3. 案例三：权限配置错误案例
+   - 场景：Skill 权限过大导致敏感信息泄露
+   - 根因分析：最小权限原则未被遵守、缺乏审计
+   - Harness Engineering 的解决方案：权限模型、审计日志
+4. 经验总结
+   - 从失败到工程化的逆向思考
+   - 预防性设计 vs 事后补救
+
+#### 核心概念
+- **预防性设计**：在问题发生之前通过工程化手段预防，而非在问题发生后补救
+- **逆向思考**：从"什么情况下会失败"反向推导应该做什么
+- **约束即自由**：合理的约束能防止灾难性错误，让 Agent 在安全范围内发挥最大效能
+
+#### 代码/配置示例
+- Bash 白名单配置示例
+- CLAUDE.md 用户指令覆盖层示例
+- Skill 最小权限配置示例
+
+#### 关联章节
+- ← Article 1.1（Harness Engineer 的核心能力）
+- → Ch2（约束系统、验证护栏的概念基础）
+- → Ch6（安全总览、沙箱 Hook 系统）
+
+#### 验证标准
+- [ ] 文章 ≥ 200 行有效内容（当前 427 行 ✅）
+- [ ] 包含至少 3 个真实场景改编的失败案例
+- [ ] 每个案例包含根因分析和 Harness Engineering 解决方案
+- [ ] 包含经验总结章节
 
 ---
 
@@ -320,9 +424,9 @@
 
 | 阶段 | 本阶段活动 | 交付物 | 负责人 |
 |------|-----------|--------|--------|
-| **头脑风暴** | 收集 Ch1 五篇文章的读者需求、确定价值主张、识别安全/架构视角缺口 | 需求清单、视角缺口报告 | 需求分析师 |
+| **头脑风暴** | 收集 Ch1 六篇文章的读者需求、确定价值主张、识别安全/架构视角缺口 | 需求清单、视角缺口报告 | 需求分析师 |
 | **计划** | 将用户故事拆分为技术写作任务、分配团队角色、确定写作顺序 | 写作任务分配表、Sprint 计划 | 敏捷教练 |
-| **实施** | 按 Article 1.1 → 1.2 → 1.3 → 1.4 → 1.5 顺序写作，每篇文章包含概念+示例+Mermaid | 5 篇文章初稿 | 各角色按分工执行 |
+| **实施** | 按 Article 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 顺序写作，每篇文章包含概念+示例+Mermaid | 6 篇文章初稿 | 各角色按分工执行 |
 | **评审** | 架构评审（Article 1.3/1.4）、安全复审（Article 1.1/1.2）、跨文章一致性检查 | 评审报告、修改清单 | 架构顾问 + 安全架构师 |
 | **验证** | 验证标准检查、Mermaid 渲染验证、跨章节引用正确性、200 行门槛 | 验证报告 | 测试工程师 |
 | **交付** | 合并到 main、更新 _sidebar.md（如需）、通知团队 | 合入确认、变更日志 | 敏捷教练 |
@@ -361,7 +465,6 @@
 | 特殊内容 | 所需技能 | 适用文章 | 说明 |
 |---------|---------|---------|------|
 | AI 编程三阶段演进时间线图 | `mindmap` / `infographic` | Article 1.1 | Mermaid timeline 语法 |
-| Harness Engineer 能力雷达图 | `vega` / `chart-visualization` | Article 1.1 | 5 维度蛛网图 |
 | 工具对比矩阵图 | `infographic` / `chart-visualization` | Article 1.4 | 高维数据可视化 |
 | 选型决策树 | `mindmap` / `uml` | Article 1.4 | Mermaid decision tree |
 | 5 大分类法树形图 | `mindmap` | Article 1.3 | 层级分类树 |

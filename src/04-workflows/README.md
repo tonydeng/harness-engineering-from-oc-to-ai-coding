@@ -1,6 +1,8 @@
 # 第4章：工作流实战 — 让 Agent 为你高效运转
 
 > 本章从概念走向实战，学习和掌握 OpenCode 提供的多种工作流模式，让 AI Agent 真正成为你的高效协作伙伴。
+>
+> 本章部分工作流模式（Team Mode、自定义工作流）需要 OMO v4.0+，具体依赖见各篇文章开头标注。
 
 ## 章节概述
 
@@ -11,6 +13,7 @@
 | 文章 | 说明 |
 |------|------|
 | [Ultrawork 模式](ultrawork-mode.md) | 高效的分配-执行-验证循环，OpenCode 的旗舰工作流 |
+| [Prometheus 规划模式](prometheus-mode.md) | 访谈式需求收集与 Atlas 执行指挥工作流 |
 | [多 Agent 协作](multi-agent-collab.md) | 任务拆分、依赖管理、结果合并与冲突解决策略 |
 | [自定义工作流](custom-workflows.md) | 使用 Workflow DSL 定义自定义流程、门禁和回滚逻辑 |
 | [Agent 派生模式](agent-derivation.md) | 从父 Agent 动态生成子 Agent 处理子任务的设计模式 |

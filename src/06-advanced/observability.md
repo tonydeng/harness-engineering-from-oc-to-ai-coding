@@ -20,8 +20,70 @@
 
 5. **基于可观测性的优化** — 从日志发现性能瓶颈（哪些步骤耗时最长），从指标优化成本（Token 消耗在哪里最高），从追踪定位错误（错误发生时的完整上下文和根因分析）。
 
+## 监控集成
+
+### Prometheus 指标导出
+
+OpenCode 支持通过 Telemetry 配置导出 Prometheus 格式的指标：
+
+```json
+{
+  "telemetry": {
+    "metrics": {
+      "enabled": true,
+      "port": 9090,
+      "path": "/metrics"
+    }
+  }
+}
+```
+
+**关键指标**：
+- `opencode_sessions_total`：会话总数
+- `opencode_tokens_used_total`：Token 使用总量
+- `opencode_request_duration_seconds`：请求延迟
+- `opencode_errors_total`：错误总数
+
+### Grafana 仪表板
+
+推荐监控面板配置：
+- Token 消耗趋势图
+- 模型响应延迟热力图
+- 错误率告警规则
+- 成本分析仪表板
+
+### 日志聚合
+
+**ELK Stack 配置**：
+
+```json
+{
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "output": "/var/log/opencode/opencode.log",
+    "rotation": {
+      "max_size": "100M",
+      "max_age": 30,
+      "max_backups": 10
+    }
+  }
+}
+```
+
+**Loki 配置**：
+
+```yaml
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    labels:
+      app: opencode
+      environment: production
+```
+
 ## 关联章节
 
 - ← [沙箱与 Hook 系统](sandbox-hooks.md)（Hook 点是可观测性的基础）
 - ← [性能调优与成本管理](performance-tuning.md)（基于可观测性做性能调优）
+- ← [安全总览](security-overview.md)（Secret Store 与企业安全集成）
 - → [案例研究](../07-case-studies/)（案例中的监控配置）

@@ -4,9 +4,9 @@
 
 本章是所有读者必须动手操作的一章。从零开始搭建OpenCode开发环境，覆盖安装、配置、Provider设置、安全初始化全流程。本章还深入解析opencode.json配置文件的完整结构，以及如何集成oh-my-openagent搭建完整的多Agent工作环境。目标是让读者在读完本章后拥有一个可正常工作的OpenCode开发环境。
 
-**章节核心主题**：从"能用"到"好用"——搭建可工程化的AI编程环境。
+**章节核心主题**：从"能让它跑起来"到"让它顺手好用"——搭建一个真正能投入工程使用的 AI 编程环境。
 
-> **章节规模**：5 篇文章（3 现有 + 2 新增），2 篇修改
+> **章节规模**：6 篇文章（3 现有 + 3 新增），2 篇修改
 
 ## 文章
 
@@ -41,6 +41,24 @@
    - 理解edit/bash权限控制
    - 建议新用户先设`edit: "ask"`, `bash: "ask"`
    - 配置.opencodeignore排除敏感目录
+
+#### 安全配置示例
+
+**推荐新用户的安全配置**：
+
+```json
+{
+  "permissions": [
+    { "permission": "edit", "pattern": "*", "action": "ask" },
+    { "permission": "bash", "pattern": "*", "action": "ask" }
+  ]
+}
+```
+
+**解释**：
+- `edit: "ask"` - 所有文件编辑操作都需要用户确认
+- `bash: "ask"` - 所有 Bash 命令执行都需要用户确认
+- 这是 Harness Engineering 的第一条原则：可控
 
 #### 核心概念
 - **AGENTS.md是项目的"出生证明"**：第一次/init建立项目知识库，告诉Agent项目是什么、用什么技术、怎么运行。
@@ -102,13 +120,42 @@
    - Permission Rule引擎：allow/deny/ask + glob匹配 + 优先级
    - 敏感文件保护（默认deny .env, node_modules）
    - Bash白名单配置
+
+#### STRIDE 威胁建模
+
+| 威胁类型 | 描述 | OpenCode 防护措施 | 配置示例 |
+|---------|------|------------------|---------|
+| **S**poofing（欺骗） | 冒充合法用户或系统 | API Key 验证、环境变量注入 | `{ "env": ["API_KEY"] }` |
+| **T**ampering（篡改） | 修改数据或代码 | 权限规则、文件保护 | `{ "permission": "edit", "pattern": ".env", "action": "deny" }` |
+| **R**epudiation（否认） | 否认操作行为 | 审计日志、Hook 事件 | 配置 `onFileEdit` Hook 记录 |
+| **I**nformation Disclosure（信息泄露） | 敏感数据暴露 | .opencodeignore、Secret 管理 | `.opencodeignore` 排除敏感文件 |
+| **D**enial of Service（拒绝服务） | 资源耗尽攻击 | Token 预算、速率限制 | `{ "limit": { "output": 32768 } }` |
+| **E**levation of Privilege（特权提升） | 获取未授权权限 | 沙箱隔离、权限分层 | Bash 白名单 + Seatbelt/Bubblewrap |
+
 5. 成本管控
    - Token预算与会话级上限
    - 模型降级链（Category-based Auto-downgrade）
    - 上下文压缩（Compaction）
 
+#### 企业集成架构
+
+**CI/CD 集成**：
+- GitHub Actions / GitLab CI 集成模式
+- 自动化测试流水线配置
+- 代码审查自动化
+
+**Secret Store 集成**：
+- HashiCorp Vault 集成
+- AWS Secrets Manager / Azure Key Vault
+- 环境变量注入最佳实践
+
+**监控集成**：
+- Prometheus + Grafana 监控面板
+- 日志聚合（ELK / Loki）
+- 告警规则配置
+
 #### 核心概念
-- **配置即代码（Configuration as Code）**：opencode.json不仅是配置文件，更是一个声明式的工程流水线定义文件。团队可以把它纳入版本控制，实现配置可审计、可复现。
+- **配置即代码（Configuration as Code）**：opencode.json不只是配置文件，它还是一个声明式的工程规范文件。团队可以把它纳入版本控制，让配置可审计、可复现。
 - **4层覆盖的设计哲学**：全局（个人偏好）→ 项目（团队标准）→ 环境变量（部署环境）→ CLI（临时覆盖），每层有不同职责。
 - **权限规则的代价**：规则越细越安全，但越容易出错（漏写规则导致意外deny或allow）。需要平衡。
 
@@ -284,6 +331,73 @@
    - $extends 继承机制实现 Base → Dev → CI → Production
    - 环境变量注入区分环境
    - CLI flag 临时覆盖
+
+#### $extends 继承链示例
+
+**Base Profile（公共配置）**：
+```json
+{
+  "profiles": {
+    "base": {
+      "permissions": [
+        { "permission": "edit", "pattern": "*", "action": "ask" }
+      ],
+      "defaults": {
+        "model": "claude-sonnet-4"
+      }
+    }
+  }
+}
+```
+
+**Dev Profile（继承 Base）**：
+```json
+{
+  "profiles": {
+    "dev": {
+      "$extends": "base",
+      "permissions": [
+        { "permission": "bash", "pattern": "npm *", "action": "allow" }
+      ],
+      "defaults": {
+        "model": "claude-haiku-3.5"
+      }
+    }
+  }
+}
+```
+
+**CI Profile（继承 Dev）**：
+```json
+{
+  "profiles": {
+    "ci": {
+      "$extends": "dev",
+      "permissions": [
+        { "permission": "edit", "pattern": "*", "action": "allow" }
+      ]
+    }
+  }
+}
+```
+
+**Production Profile（继承 Base，最严格）**：
+```json
+{
+  "profiles": {
+    "production": {
+      "$extends": "base",
+      "permissions": [
+        { "permission": "bash", "pattern": "*", "action": "deny" }
+      ],
+      "defaults": {
+        "model": "claude-opus-4"
+      }
+    }
+  }
+}
+```
+
 3. 三套环境模板
    - 本地开发（高权限、低成本模型）
    - CI/CD（低权限、快速模型）
@@ -292,6 +406,32 @@
    - Git 管理的 opencode.json
    - Secret Store 集成
    - 多环境测试策略
+
+#### Secret 管理最佳实践
+
+**方案一：环境变量（推荐入门）**
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+export OPENAI_API_KEY="sk-..."
+```
+
+**方案二：.env 文件（推荐本地开发）**
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+OPENAI_API_KEY=sk-...
+```
+
+**方案三：Secret Store（推荐企业）**
+- HashiCorp Vault
+- AWS Secrets Manager
+- Azure Key Vault
+- 1Password Connect
+
+**安全检查清单**：
+- [ ] API Key 不提交到 Git
+- [ ] .env 文件已添加到 .gitignore
+- [ ] 生产环境使用 Secret Store
+- [ ] 定期轮换 API Key
 
 #### 核心概念
 - **Profile 继承的设计模式**：Base Profile 定义公共配置，各环境 Profile 通过 $extends 继承+覆盖
@@ -339,7 +479,7 @@
 | **计划** | 排序写作依赖（3.1→3.2→3.3→3.4→3.5）、确定安全配置示例范围、分配多环境模板 | 写作计划、安全配置清单 | 敏捷教练 |
 | **实施** | 5 篇文章写作，重点 ensure 所有配置示例可运行，安装命令可执行 | 5 篇文章初稿 | 各角色按分工 |
 | **评审** | 配置示例可运行性验证（重点）、安全配置完整性审查、Profile 继承链测试 | 评审报告、配置测试记录 | 测试工程师 + 安全架构师 |
-| **验证** | `npx docsify serve` 无报错、所有配置命令在测试环境可执行、Mermaid 渲染 | 验证报告 | 测试工程师 |
+| **验证** | `mdbook serve` 无报错、所有配置命令在测试环境可执行、Mermaid 渲染 | 验证报告 | 测试工程师 |
 | **交付** | 合并、更新示例配置文件到 `examples/` 目录、确认与 OpenCode v1.15.x 兼容 | 合入确认、示例更新 | 敏捷教练 |
 
 ### 评审要求
@@ -388,3 +528,50 @@
 | 国产模型 vs 国际模型成本对比图 | `chart-visualization` | Article 3.4 | 柱状图/对比图 |
 | Profile 继承关系图 | `uml` / `graphviz` | Article 3.5 | $extends 继承链 |
 | 多环境部署架构图 | `architecture` | Article 3.5 | Dev/CI/Production 三环境拓扑 |
+
+---
+
+### Article 3.6: oh-my-openagent 安装配置
+- **阅读时间**：15 min
+- **学习目标**：
+  - 理解 oh-my-openagent 的安装方式
+  - 掌握配置文件位置和结构
+  - 完成 Provider 认证配置
+- **前置知识**：Article 3.1（OpenCode 基础安装）
+
+#### 大纲
+1. 安装方式
+   - bunx oh-my-opencode install
+   - 交互式安装向导
+2. 配置文件位置
+   - 项目级：.opencode/oh-my-openagent.json
+   - 用户级：~/.config/opencode/oh-my-openagent.json
+3. Provider 认证
+   - OpenCode Zen
+   - Anthropic API Key
+   - OpenAI API Key
+   - GitHub Copilot
+
+#### 核心概念
+- **安装向导的交互式设计**：oh-my-openagent 通过交互式问答自动生成适配项目的配置文件
+- **配置分层的工程价值**：项目级配置覆盖用户级配置，团队共享配置与个人偏好分离
+
+#### 代码/配置示例
+- 安装命令执行流程
+- 交互式安装向导问答示例
+- 完整的 oh-my-openagent.json 配置示例
+
+#### Mermaid 图表
+- 安装流程图（交互式向导分支）
+- 配置文件优先级图
+
+#### 关联章节
+- ← Article 3.1（OpenCode 基础安装）
+- ← Article 3.3（oh-my-openagent 集成概念）
+- → Article 3.4（国产模型 Provider 配置）
+
+#### 验证标准
+- [ ] 文章 ≥ 200 行有效内容
+- [ ] 包含完整的安装步骤
+- [ ] 包含至少 2 种 Provider 认证配置
+- [ ] 所有命令可执行

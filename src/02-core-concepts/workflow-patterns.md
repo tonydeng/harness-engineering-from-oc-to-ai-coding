@@ -2,7 +2,38 @@
 
 > 将 Agent 与 Skill 组合为可重复的执行流程——从命令快捷方式到高级编排模式的完整工作流体系。
 
-工作流是 Harness Engineering 的"生产线"。如果说 Agent 是执行者、Skill 是技能包，那么工作流就是将它们串联成高效生产流程的方法论。本章从 Command 系统入手，讲解如何将日常操作固化为可复用的命令，如何通过 Profile 切换适应不同工作状态，以及如何借助 AGENTS.md 实现项目知识的持久化。最后，我们对比 Ultrawork 与 Prometheus 两种高级工作流模式，帮助读者在不同场景下做出合理选择。
+工作流把 Agent 和 Skill 串联成可重复的执行流程。Agent 是执行者，Skill 是技能包，工作流就是把这些要素组合起来完成实际任务的操作指南。本章从 Command 系统入手，讲解如何将日常操作固化为可复用的命令，如何通过 Profile 切换适应不同工作状态，以及如何借助 AGENTS.md 实现项目知识的持久化。最后，我们对比 Ultrawork 与 Prometheus 两种高级工作流模式，帮助读者在不同场景下做出合理选择。
+
+### 最小示例
+
+用一个最简单的自定义命令来理解工作流：
+
+```markdown
+# 保存为 .opencode/commands/hello.md
+你好世界
+
+请用中文回复"你好，世界！"，并加上当前时间。
+```
+
+保存后，在 OpenCode 中输入 `/你好世界`，Agent 就会自动执行这条命令。工作流的本质就是**把固定步骤封装为可复用的命令**——就像写 Shell 脚本一样简单。
+
+### 操作系统类比：Workflow = Shell Pipeline
+
+理解工作流最直观的方式是将其类比为操作系统的 **Shell 流水线**：
+
+| 操作系统概念 | OpenCode 对应 | 说明 |
+|-------------|---------------|------|
+| Shell Pipeline | Workflow | 将多个命令串联成自动化流程 |
+| Shell Alias / PATH 命令 | Command | 将复杂操作封装为简短命令 |
+| 环境变量 / Profile.d 配置 | Profile | 按场景切换运行时环境配置 |
+| Cron Job | 定时工作流 | 按计划自动执行预定义流程 |
+| Shell 脚本 | AGENTS.md | 项目级别的执行指令和规范集合 |
+
+这个类比帮助理解几个关键设计：
+
+1. **可组合性**：就像 Shell Pipeline 用 `|` 串联命令，Workflow 将多个 Skill 和 Command 串联成完整流程
+2. **可复用性**：Shell Alias 将复杂命令简化为别名，Command 系统同样将操作序列封装为 `/command`
+3. **场景切换**：Profile.d 配置按场景加载不同环境变量，Profile 按工作场景切换 Agent 行为
 
 ## Command 系统
 
@@ -303,6 +334,8 @@ model: claude-opus-4
 ```
 
 `debug-verbose` 继承了 `debug` 的所有配置，并覆盖了日志级别。
+
+> 注：`$extends` 为推荐的配置文件继承模式，具体实现需以 OpenCode 当前版本文档为准。
 
 ### 命令行选择 Profile
 
@@ -714,7 +747,7 @@ sequenceDiagram
 
 ## 马书工作流模式映射
 
-《马书》（《OpenCode Model Context Protocol 完全指南》）提出了 6 种工作流模式，与 OpenCode 的工作流形成对应关系：
+《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》（简称《马书》）提出了 6 种工作流模式，与 OpenCode 的工作流形成对应关系：
 
 ### 六种工作流模式
 
@@ -961,6 +994,7 @@ graph TB
 ### 安全配置示例
 
 ```json
+// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {
   "security": {
     "command": {
