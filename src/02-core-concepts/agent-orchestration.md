@@ -9,9 +9,9 @@
 
 ## 文章概述
 
-Agent 是 OpenCode 生态中一切任务执行的起点。本章节系统梳理 OpenCode 内置的 7 种 Agent 类型（Build、General、Explore、Scout 为核心运行类型，Plan 为规划模式，compaction、title 为内部辅助类型），讲解 Primary Agent 与 Subagent 的分层设计如何实现权限隔离，以及 Hidden Agent 在后台完成的上下文压缩与会话管理等自动化任务。读者将理解 Plan 模式作为"先思考后执行"工程原则的具体体现，并掌握 @ 子 Agent 调用的语法与权限模型。
+Agent 是 OpenCode 中一切任务执行的起点。了解 Agent 类型和它们如何协作，是使用 OpenCode 的第一步。OpenCode 内置 7 种 Agent 类型——Build、General、Explore、Scout 是核心运行类型，Plan 是规划模式，compaction、title 是内部辅助类型。Primary Agent 和 Subagent 的分层设计实现了权限隔离，Hidden Agent 在后台自动完成上下文压缩和会话管理。Plan 模式是"先思考后执行"工程原则的具体体现，`@` 子 Agent 调用语法让你能灵活指派任务。
 
-在 OMO 扩展部分，我们介绍 Sisyphus、Prometheus、Atlas、Hephaestus、Oracle 等专业 Agent 的职责分工，以及类别路由系统如何按任务复杂度自动分派到最优模型。本节还涵盖 Prompt 注入风险分析与 Agent 选择决策树，帮助读者根据任务特征选择合适的 Agent 组合。学完本节，读者应能独立规划多 Agent 协作方案，并理解分层设计对工程安全的意义。
+在 OMO 扩展中，Sisyphus、Prometheus、Atlas、Hephaestus、Oracle 等专业 Agent 各有分工，类别路由系统按任务复杂度自动分派到最优模型。本节还会分析 Prompt 注入风险，并提供 Agent 选择决策树，帮你根据任务特征选合适的 Agent 组合。学完本节，你应能独立规划多 Agent 协作方案，并理解分层设计对工程安全的意义。
 
 ### 最小示例
 
@@ -665,7 +665,7 @@ flowchart TB
 
 **类别路由配置示例**：
 
-```jsonc
+```json
 // oh-my-openagent.jsonc
 // Requires OpenCode >= v1.15.x, OMO >= v4.5.x
 {

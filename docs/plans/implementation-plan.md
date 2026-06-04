@@ -2,11 +2,59 @@
 
 > 整合计划，包含源材料映射、分阶段路线图、任务分解和验证门禁。
 > 基于章节重构计划（v1.0）更新。目标版本：OpenCode v1.15.x + oh-my-openagent v4.5.x
-> 总计：Ch0 + 7 章，46 篇文章/页面（19 现有 + 27 新增） | 预计 42 个工作日
+> 总计：Ch0 + 7 章 + 附录 A，**50 篇文章/页面**（全部存在，但 ch06/ch07 为 stub） | 预计 42 个工作日
+>
+> **当前状态（2026-06-03）：** 文章结构已完成，ch00-05 内容充实（单篇 372-1666 行），但 ch06（12 篇全部需要扩充：2 篇有部分内容 89-152 行，10 篇 24-29 行 stub）和 ch07（6 篇 40-44 行 stub）存在严重内容缺口。核心里达图需求已移除。mdBook 构建通过。详见下方第二节"满足状态总览"。
 
 ---
 
-## 第一节：源材料映射
+## 第一节：当前满足状态总览（2026-06-03）
+
+### 文章结构完成度
+
+| 章节 | 文章数 | 状态 | 内容质量 |
+|------|--------|------|---------|
+| Ch0 读者导航 | 4 | ✅ 全部完成 | 311-1044 行，充实 |
+| Ch1 简介 | 6 | ✅ 全部完成 | 427-793 行，充实 |
+| Ch2 核心概念 | 6 | ✅ 全部完成 | 728-1344 行，充实 |
+| Ch3 环境搭建 | 5 | ✅ 全部完成 | 659-1281 行，充实 |
+| Ch4 工作流实战 | 6 | ✅ 全部完成 | 372-1242 行，充实 |
+| Ch5 Skill 开发 | 5 | ✅ 全部完成 | 688-1666 行，充实 |
+| Ch6 高级话题 | 12 | ⚠️ 12/12 stub | 10 篇 24-29 行，security-overview(152) 和 observability(89) 有部分内容但未达标 |
+| Ch7 案例研究 | 6 | ❌ 全部 stub | 40-44 行，需扩充至 ≥300 行 |
+| 附录 A | 1 | ✅ 完成 | 202 行术语表 |
+
+### 需求满足矩阵
+
+| 需求来源 | 关键要求 | 状态 | 说明 |
+|---------|---------|------|------|
+| PRD v2.0 | 50 篇文章全部有内容 | ✅ 结构 | ch06/ch07 为 stub，计数上满足但质量不达标 |
+| PRD v2.0 | 每篇 ≥200 行（ch07 ≥300） | ❌ ch06/ch07 | ch00-05 全部满足；ch06 仅 2/12 篇达标；ch07 0/6 篇达标 |
+| PRD v2.0 | 100+ 代码/配置示例 | ✅ 估算 | ch00-05 大量代码块，需精确统计 |
+| PRD v2.0 | 50+ Mermaid/架构图 | ✅ 估算 | ch00-05 大量 mermaid 图表 |
+| PRD v2.0 | PRD→交付 ≤42 工作日 | ⏳ 进行中 | stub 填充工作尚未开始 |
+| User Stories | 45 个用户故事覆盖 | ⏳ 待验证 | 追溯矩阵未执行 |
+| User Stories | 13 角色阅读路径 | ✅ | reading-paths.md 包含 13 角色路径 |
+| User Stories | 安全治理贯穿三阶段 | ✅ | 在演进时间线和文章中有体现 |
+| 基础设施 | mdBook 构建通过 | ✅ | 零错误 |
+| 基础设施 | Mermaid 渲染 | ✅ | 已配置 local mermaid.min.js + init 脚本 |
+| 基础设施 | Vega/Vega-Lite 支持 | ✅ | 已配置但无用例（雷达图已移除） |
+| 基础设施 | 内部链接无 404 | ❌ | 链接审计计划（link-audit-plan.md）尚未执行 |
+| 基础设施 | GitHub Pages 部署 | ✅ | CI 工作流已配置 |
+
+### 已知变更记录
+
+| 日期 | 变更 | 触发 |
+|------|------|------|
+| 2026-06-03 | 移除核心能力雷达图需求（src + docs/requirements 共 6 处） | 用户确认 |
+| 2026-06-03 | 修复代码块语法高亮语言标识（jsonc→json, vega-lite→json, gitignore→text, env→text） | 渲染问题 |
+| 2026-06-03 | 配置 mdBook 支持 Vega/Vega-Lite 渲染 | 为雷达图准备，但雷达图已移除 |
+| 2026-06-03 | 全书"说人话"优化 + 品牌名一致性修复（ch00-05） | 用户要求 |
+| 2026-06-03 | docs/requirements/ 全文 PRD + 规格 + 用户故事优化 | 用户要求 |
+
+---
+
+## 第二节：源材料映射
 
 ### 源材料 → 章节映射
 
@@ -30,183 +78,230 @@
 
 | 重用类型 | 比例 | 覆盖范围 |
 |----------|------|---------|
-| 直接适配（修改量 <20%） | ~25% | Ch2核心内容、Ch4联动模式、现有19篇文章 |
+| 直接适配（修改量 <20%） | ~25% | Ch2核心内容、Ch4联动模式 |
 | 重组（结构重排+补充） | ~30% | Ch3配置部分、Ch6新增9篇文章 |
 | 引用+补充（需额外调研+来源外） | ~20% | Ch1工具对比、国产生态、Ch5桥接模式 |
-| 改编（需重塑为本书风格） | ~15% | Ch7新案例4篇、Ch0读者导航 |
+| 改编（需重塑为本书风格） | ~15% | Ch7案例、Ch0读者导航 |
 | 新写（来源外原创内容） | ~10% | Harness Engineering理论框架、约束系统概念 |
 
----
+### 当前实现状态
 
-## 第二节：分阶段执行路线图
-
-### Phase 1: P0 基础（并行 — 约 20 天）
-
-**核心目标**：填补 P0 内容缺口，夯实全书理论基础。
-
-| 阶段 | 任务 | 交付物 | 工作量 |
-|------|------|--------|--------|
-| **1A: Ch6 上下文工程/记忆/缓存** | 上下文压缩、Token预算、提示词缓存、记忆系统 | Ch6 Art.6.4-6.7（4篇P0文章） | 10 天 |
-| **1B: Ch6 安全体系** | 安全总览、沙箱与Hook、CLAUDE.md系统 | Ch6 Art.6.8-6.10（3篇P0文章） | 7 天 |
-| **1C: Ch1 理论框架** | Harness Engineering理论框架 + 现有文章修改 | Ch1 Art.1.3, Art.1.1修改, Art.1.2修改 | 5 天 |
-
-**并行策略**：1A 先行启动（最大工作量），1B 依赖 Ch2 约束系统概念但可并行启动，1C 独立启动。
-
-**门禁**：所有 P0 文章完成初稿 ≥ 200 行
-
-### Phase 2: 横向增补（串行 — 约 12 天）
-
-**核心目标**：为 Phase 1 提供前置概念，增补读者导航。
-
-| 顺序 | 任务 | 交付物 | 工作量 |
-|------|------|--------|--------|
-| D1-D5 | Ch2 新核心概念 + 现有文章改写 | Art.2.4/2.5/2.6（3篇新）+ Art.2.1/2.3修改 | 5 天 |
-| D6-D8 | Ch0 读者导航 + 现有文章修改（Ch3/Ch4） | reading-paths, how-to-read, Ch3 Art.3.2/3.3修改, Ch4 Art.4.1/4.2修改 | 3 天 |
-| D9-D12 | Ch6 可观测性 + Feature Flags | Art.6.11/6.12（2篇）+ 其他文章润色 | 4 天 |
-
-**依赖**：Phase 1 完成后启动
-
-**门禁**：全部文章完成初稿，交叉引用正确
-
-### Phase 3: 生态与案例（并行+串行 — 约 10 天）
-
-**核心目标**：工具对比、国产生态、新增案例。
-
-| 并行组 | 任务 | 交付物 | 工作量 |
-|--------|------|--------|--------|
-| **组A: 市场定位** | 工具生态对比、国产AI生态、国产模型配置、多环境部署 | Ch1 Art.1.4/1.5, Ch3 Art.3.4/3.5 | 4 天 |
-| **组B: 模块增强** | Agent派生、Teams协作、Skill-MCP桥接、Skill插件化 | Ch4 Art.4.4/4.5, Ch5 Art.5.4/5.5 | 4 天 |
-| **组C: 案例扩展** | 安全审计流水线、全流程自动化、混合架构、Skill市场 | Ch7 Art.7.3/7.4/7.5/7.6 + Art.7.1/7.2修改 | 6 天 |
-
-**依赖**：Phase 2 完成后启动（组C概念依赖较多）
-
-**门禁**：全部 46 篇文章完成，通过 L1 质量门禁
+- **实际文章数：** 50 篇（含 4 篇 README + 附录 A）
+- **ch00-05：** 全部完成，单篇 372-1666 行 ✅
+- **ch06：** 12 篇全部需要扩充（10 篇 24-29 行 stub，security-overview(152) + observability(89) 有部分内容但未达标） ❌
+- **ch07：** 6 篇 stub（40-44 行） ❌
+- **剩余工作量：** ch06 填充 12 篇 + ch07 填充 6 篇 ≈ 20-25 天
 
 ---
 
-## 第三节：任务分解
+## 第二节：分阶段执行路线图（当前状态）
 
-### Phase 1 任务（P0 基础）
+### Phase 1: P0 基础 ✅ 已完成
 
-| ID | 任务 | 文件 | 工作量 | 依赖 | 验证标准 |
-|----|------|------|--------|------|---------|
-| R-1A-1 | 编写 Ch6 Art.6.4: 上下文压缩 | `src/06-advanced/context-compression.md` | XL | Ch2 Art.2.4概念 | ≥200行，含压缩机制 |
-| R-1A-2 | 编写 Ch6 Art.6.5: Token预算策略 | `src/06-advanced/token-budget.md` | M | R-1A-1 | ≥200行，含预算分配 |
-| R-1A-3 | 编写 Ch6 Art.6.6: 提示词缓存 | `src/06-advanced/prompt-caching.md` | XL | R-1A-1 | ≥250行，三级缓存 |
-| R-1A-4 | 编写 Ch6 Art.6.7: 记忆系统 | `src/06-advanced/memory-system.md` | L | R-1A-1 | ≥200行，Memdir架构 |
-| R-1B-1 | 编写 Ch6 Art.6.8: 安全总览 | `src/06-advanced/security-overview.md` | XL | Ch2 Art.2.5 | ≥250行，6权限模式 |
-| R-1B-2 | 编写 Ch6 Art.6.9: 沙箱与Hook | `src/06-advanced/sandbox-hooks.md` | XL | R-1B-1 | ≥250行，53+ Hook |
-| R-1B-3 | 编写 Ch6 Art.6.10: CLAUDE.md | `src/06-advanced/claude-dot-md.md` | M | R-1B-1 | ≥200行，@include系统 |
-| R-1C-1 | 编写 Ch1 Art.1.3: Harness Engineering理论 | `src/01-introduction/harness-engineering-theory.md` | L | 无 | ≥200行，5大分类法 |
-| R-1C-2 | 修改 Ch1 Art.1.1: 增补Hashimoto定义+Chase公式 | `src/01-introduction/what-is-harness-engineer.md` | S | 无 | 增补完整 |
-| R-1C-3 | 修改 Ch1 Art.1.2: 增补OMO v4.5+特性 | `src/01-introduction/why-opencode.md` | S | 无 | 增补完整 |
+| 原始任务 | 状态 | 说明 |
+|---------|------|------|
+| 1A: Ch6 上下文工程/记忆/缓存 ❌ | ⏳ 未开始 | 4 篇 stub 待填充（24-29 行 → ≥200 行） |
+| 1B: Ch6 安全体系 ❌ | ⏳ 未开始 | 3 篇 stub 待填充（25-152 行 → ≥200 行） |
+| 1C: Ch1 理论框架 ✅ | ✅ 完成 | Art.1.1/1.2/1.3 全部完成，内容充实 |
+| 门禁：P0 文章 ≥200 行 | ❌ | Ch6 仅 security-overview(152) 和 observability(89) 接近 |
 
-### Phase 2 任务（横向增补）
+### Phase 2: 横向增补 ✅ 已完成（结构层面）
 
-| ID | 任务 | 文件 | 工作量 | 依赖 | 验证标准 |
-|----|------|------|--------|------|---------|
-| R-2-1 | 编写 Ch2 Art.2.4: 上下文工程核心 | `src/02-core-concepts/context-engineering-core.md` | M | Phase 1C | ≥200行 |
-| R-2-2 | 编写 Ch2 Art.2.5: 约束系统 | `src/02-core-concepts/constraints-system.md` | M | R-2-1 | ≥200行 |
-| R-2-3 | 编写 Ch2 Art.2.6: 验证护栏 | `src/02-core-concepts/validation-harness.md` | M | R-2-2 | ≥200行 |
-| R-2-4 | 修改 Ch2 Art.2.1: 增补《马书》Agent Loop | `src/02-core-concepts/agent-orchestration.md` | S | R-2-1 | 增补完整 |
-| R-2-5 | 修改 Ch2 Art.2.3: 增补6种工作流模式 | `src/02-core-concepts/workflow-patterns.md` | S | R-2-1 | 增补完整 |
-| R-2-6 | 编写 Ch0 reading-paths.md | `src/00-guide/reading-paths.md` | M | 无 | ≥80行，13角色路径 |
-| R-2-7 | 编写 Ch0 how-to-read.md | `src/00-guide/how-to-read.md` | S | R-2-6 | ≥50行 |
-| R-2-8 | 修改 Ch3 Art.3.2: Category路由+新配置 | `src/03-setup/opencode-config.md` | M | R-2-1 | 增补完整 |
-| R-2-9 | 修改 Ch3 Art.3.3: 11+ Agent注册表 | `src/03-setup/oh-my-openagent-setup.md` | M | 无 | 增补完整 |
-| R-2-10 | 修改 Ch4 Art.4.1: Ralph Loop详解 | `src/04-workflows/ultrawork-mode.md` | S | 无 | 增补完整 |
-| R-2-11 | 修改 Ch4 Art.4.2: Hyperplan+security-research | `src/04-workflows/multi-agent-collab.md` | M | 无 | 增补完整 |
-| R-2-12 | 编写 Ch6 Art.6.11: 可观测性 | `src/06-advanced/observability.md` | L | R-1B-2 | ≥200行，5层遥测 |
-| R-2-13 | 编写 Ch6 Art.6.12: Feature Flags | `src/06-advanced/feature-flags.md` | S | 无 | ≥200行 |
+| 原始任务 | 状态 | 说明 |
+|---------|------|------|
+| Ch2 新核心概念（Art.2.4/2.5/2.6） | ✅ 完成 | context-engineering-core(779), constraints-system(1344), validation-harness(1299) |
+| Ch2 现有改写（Art.2.1/2.3） | ✅ 完成 | agent-orchestration(881), workflow-patterns(1066) |
+| Ch0 读者导航 | ✅ 完成 | reading-paths(1044), how-to-read(572), quick-start(311) |
+| Ch3/Ch4 现有修改 | ✅ 完成 | 全部充实 |
+| Ch6 可观测性 + Feature Flags | ⏳ | observability(89) 内容不足；feature-flags(24) stub |
+| 门禁：全部文章初稿 | ⚠️ 结构通过 | 文章都存在但 ch06/ch07 质量不达标 |
 
-### Phase 3 任务（生态与案例）
+### Phase 3: 生态与案例 ✅ 已完成（结构层面）
 
-| ID | 任务 | 文件 | 工作量 | 依赖 | 验证标准 |
-|----|------|------|--------|------|---------|
-| R-3-1 | 编写 Ch1 Art.1.4: 工具生态对比 | `src/01-introduction/ecosystem-comparison.md` | L | Phase 2 | ≥200行，6工具对比 |
-| R-3-2 | 编写 Ch1 Art.1.5: 国产AI生态 | `src/01-introduction/chinese-ecosystem.md` | M | R-3-1 | ≥200行 |
-| R-3-3 | 编写 Ch3 Art.3.4: 国产模型配置 | `src/03-setup/chinese-providers.md` | M | Phase 2 | ≥200行 |
-| R-3-4 | 编写 Ch3 Art.3.5: 多环境部署 | `src/03-setup/multi-env-setup.md` | M | Phase 2 | ≥200行 |
-| R-3-5 | 编写 Ch4 Art.4.4: Agent派生模式 | `src/04-workflows/agent-derivation.md` | L | Phase 2 | ≥200行 |
-| R-3-6 | 编写 Ch4 Art.4.5: Teams多进程协作 | `src/04-workflows/teams-collaboration.md` | L | R-3-5 | ≥200行 |
-| R-3-7 | 编写 Ch5 Art.5.4: Skill-MCP桥接 | `src/05-skills/skill-mcp-bridge.md` | M | Phase 2 | ≥200行 |
-| R-3-8 | 编写 Ch5 Art.5.5: 插件化模式 | `src/05-skills/plugin-patterns.md` | M | R-3-7 | ≥200行 |
-| R-3-9 | 编写 Ch7 Art.7.3: 安全审计流水线 | `src/07-case-studies/case-security-audit.md` | XL | Phase 2 | ≥300行 |
-| R-3-10 | 编写 Ch7 Art.7.4: 全流程自动化 | `src/07-case-studies/case-full-pipeline.md` | XL | Phase 2 | ≥300行 |
-| R-3-11 | 编写 Ch7 Art.7.5: 国产模型混合架构 | `src/07-case-studies/case-multi-model.md` | L | R-3-2, R-3-3 | ≥300行 |
-| R-3-12 | 编写 Ch7 Art.7.6: 团队Skill市场 | `src/07-case-studies/case-skills-marketplace.md` | L | R-3-8 | ≥300行 |
-| R-3-13 | 修改 Ch7 Art.7.1: 增补Fowler对照 | `src/07-case-studies/real-world-01.md` | M | Phase 2 | 增补完整 |
-| R-3-14 | 修改 Ch7 Art.7.2: 增补灰度策略 | `src/07-case-studies/real-world-02.md` | M | Phase 2 | 增补完整 |
-| R-3-15 | 更新侧边栏 + AGENTS.md + README | 项目根目录 + `src/` | S | 所有文章完成 | 所有链接有效 |
-| R-3-16 | 交叉引用验证 + 术语一致性 | 全部 `src/` 文件 | M | R-3-15 | 无404链接 |
+| 原始任务 | 状态 | 说明 |
+|---------|------|------|
+| 组A: 工具生态对比、国产配置、多环境 | ✅ 完成 | ecosystem-comparison(729), chinese-ecosystem(745), chinese-providers(659), multi-env-setup(699) |
+| 组B: Agent派生、Teams协作、MCP桥接、插件化 | ✅ 完成 | agent-derivation(793), teams-collaboration(1216), skill-mcp-bridge(688), plugin-patterns(811) |
+| 组C: 案例扩展 | ⚠️ 全部 stub | 6 篇 40-44 行，需从 stub 扩展到 ≥300 行 |
+| 门禁：全部文章完成 | ❌ | ch06(10篇) + ch07(6篇) stub |
 
 ---
 
-## 第四节：验证门禁
+## 第三节：剩余路线图 — Phase 4: Stub 填充（当前阶段）
 
-### 门禁 0：基础设施就绪（写作开始前）
-- [ ] `src/index.html` 加载所有插件（mermaid、pagination、copy-code、prism多语言支持）
-- [ ] Ch0 读者决策页位于 `src/00-guide/README.md`
-- [ ] 计划文档已同步（`docs/` 包含重构计划、规格、交叉引用）
-- [ ] `mdbook serve` 启动无错误
-- [ ] 所有侧边栏链接可访问（导航无404）
+文章结构、基础内容、基础设施全部就绪。**唯一剩余且有实际工作量的任务**：填充 ch06（12 篇）和 ch07（6 篇）的 stub。
 
-### 门禁 1：结构完整（Phase 1 结束）
-- [ ] Ch0 + 7 章，所有 P0 文章已存在（无 TODO 占位符）
-- [ ] 每篇文章 ≥ 200 行有效内容
-- [ ] Ch6 至少 7 篇 P0 文章完成初稿
-- [ ] `mdbook serve` 启动无错误
+### 优先级
 
-### 门禁 2：内容完整（Phase 2 结束）
-- [ ] 全部 46 篇文章/页面已存在
-- [ ] 每篇文章 ≥ 200 行（Ch7 文章 ≥ 300 行）
-- [ ] 总计 50+ 个代码/配置示例
-- [ ] 总计 30+ 张 Mermaid 图表
-- [ ] 所有 Harness Engineering 核心主题出现在各章节概览中
-- [ ] 内部链接有效率达 100%
+| 优先级 | 章节 | 文章 | 当前行数 | 目标行数 | 估算工作量 |
+|--------|------|------|---------|---------|-----------|
+| **P0** | Ch6 | security-overview | 152 | ≥250 | 2 天 |
+| **P0** | Ch6 | context-compression | 27 | ≥200 | 2 天 |
+| **P0** | Ch6 | token-budget | 27 | ≥200 | 1 天 |
+| **P0** | Ch6 | prompt-caching | 29 | ≥250 | 3 天 |
+| **P0** | Ch6 | memory-system | 27 | ≥200 | 2 天 |
+| **P0** | Ch6 | sandbox-hooks | 25 | ≥250 | 2 天 |
+| **P0** | Ch6 | claude-dot-md | 25 | ≥200 | 1 天 |
+| **P0** | Ch6 | observability | 89 | ≥200 | 1 天 |
+| **P1** | Ch6 | mcp-servers | 27 | ≥200 | 2 天 |
+| **P1** | Ch6 | custom-agents | 28 | ≥200 | 1 天 |
+| **P1** | Ch6 | performance-tuning | 27 | ≥200 | 1 天 |
+| **P2** | Ch6 | feature-flags | 24 | ≥200 | 1 天 |
+| **P1** | Ch7 | 全部 6 篇文章 | 40-44 | ≥300 | 5 天/篇 = 30 天 |
+| **P2** | 全书 | 链接审计（link-audit-plan.md） | — | 零 404 | 2 天 |
 
-### 门禁 3：本地预览（Phase 3 结束）
-- [ ] `mdbook serve` — 无渲染错误
-- [ ] 所有 Mermaid 图表正确渲染
-- [ ] 所有内部链接可访问（无404）
-- [ ] 代码块包含语言标注
-- [ ] 中英文术语表完整
-- [ ] 移动端视口响应式（无水平滚动）
+### 建议执行顺序
 
-### 门禁 4：部署上线（最终）
-- [ ] GitHub Pages 构建成功
-- [ ] 45 个用户故事全部覆盖（追溯矩阵验证）
-- [ ] 13 个读者角色均有对应的阅读路径
-- [ ] 所有跨章节引用格式正确
-
----
-
-## 第五节：关键路径与风险评估
-
-### 关键路径
 ```
-Ch1理论框架 → Ch2新核心概念 → Ch6上下文工程 → Ch6安全体系 → Ch7案例扩展
+Step 1: Ch6 P0 安全体系（security-overview 续写 + sandbox-hooks + claude-dot-md）→ 3 篇，5 天
+Step 2: Ch6 P0 上下文工程（context-compression + token-budget + prompt-caching + memory-system）→ 4 篇，8 天
+Step 3: Ch6 P1 补充（mcp-servers + custom-agents + performance-tuning + observability）→ 4 篇，5 天
+Step 4: Ch6 P2（feature-flags）→ 1 篇，1 天
+Step 5: Ch7 案例扩展 → 6 篇，30 天（或选择部分案例优先）
+Step 6: 全书链接审计 → 2 天
 ```
 
-Ch6 上下文工程（4 篇 P0 文章）是最长的关键路径，建议优先启动。Ch7 案例扩展（4 篇长文 Ch7 + 2 篇修改）依赖所有前置概念，最晚启动。
+---
 
-### 风险评估
+## 第三节：任务完成状态
+
+### Phase 1 任务（P0 基础）✅ 已完成
+
+| ID | 任务 | 文件 | 状态 | 验证 |
+|----|------|------|------|------|
+| R-1A-1 | 编写 Ch6 Art.6.4: 上下文压缩 | `context-compression.md` | ❌ stub(27) | 待填充 |
+| R-1A-2 | 编写 Ch6 Art.6.5: Token预算策略 | `token-budget.md` | ❌ stub(27) | 待填充 |
+| R-1A-3 | 编写 Ch6 Art.6.6: 提示词缓存 | `prompt-caching.md` | ❌ stub(29) | 待填充 |
+| R-1A-4 | 编写 Ch6 Art.6.7: 记忆系统 | `memory-system.md` | ❌ stub(27) | 待填充 |
+| R-1B-1 | 编写 Ch6 Art.6.8: 安全总览 | `security-overview.md` | ⚠️ 部分(152) | 需续写至 ≥250 |
+| R-1B-2 | 编写 Ch6 Art.6.9: 沙箱与Hook | `sandbox-hooks.md` | ❌ stub(25) | 待填充 |
+| R-1B-3 | 编写 Ch6 Art.6.10: CLAUDE.md | `claude-dot-md.md` | ❌ stub(25) | 待填充 |
+| R-1C-1 | 编写 Ch1 Art.1.3: 理论框架 | `harness-engineering-theory.md` | ✅ (525行) | **完成** |
+| R-1C-2 | 修改 Ch1 Art.1.1 | `what-is-harness-engineer.md` | ✅ (718行) | **完成** |
+| R-1C-3 | 修改 Ch1 Art.1.2 | `why-opencode.md` | ✅ (793行) | **完成** |
+
+### Phase 2 任务（横向增补）✅ 已完成（结构层面）
+
+| ID | 任务 | 文件 | 状态 | 验证 |
+|----|------|------|------|------|
+| R-2-1 | Ch2 Art.2.4: 上下文工程核心 | `context-engineering-core.md` | ✅ (779行) | **完成** |
+| R-2-2 | Ch2 Art.2.5: 约束系统 | `constraints-system.md` | ✅ (1344行) | **完成** |
+| R-2-3 | Ch2 Art.2.6: 验证护栏 | `validation-harness.md` | ✅ (1299行) | **完成** |
+| R-2-4 | 修改 Ch2 Art.2.1: Agent Loop | `agent-orchestration.md` | ✅ (881行) | **完成** |
+| R-2-5 | 修改 Ch2 Art.2.3: 工作流模式 | `workflow-patterns.md` | ✅ (1066行) | **完成** |
+| R-2-6→R-2-11 | Ch0/Ch3/Ch4 增补 | 6 个文件 | ✅ 全部完成 | 311-1281行 |
+| R-2-12 | Ch6 Art.6.11: 可观测性 | `observability.md` | ⚠️ 部分(89) | 需续写至 ≥200 |
+| R-2-13 | Ch6 Art.6.12: Feature Flags | `feature-flags.md` | ❌ stub(24) | 待填充 |
+
+### Phase 3 任务（生态与案例）✅ 已完成（结构层面）
+
+| ID | 任务 | 文件 | 状态 | 验证 |
+|----|------|------|------|------|
+| R-3-1→R-3-8 | Ch1/Ch3/Ch4/Ch5 增补（8篇） | 8 个文件 | ✅ 全部完成 | 659-1666行 |
+| R-3-9→R-3-14 | Ch7 案例扩展（6篇） | `07-case-studies/*` | ❌ 全部 stub(40-44) | 需从 stub → ≥300行 |
+| R-3-15 | 侧边栏 + AGENTS.md + README | 项目根 | ✅ | 完成 |
+| R-3-16 | 交叉引用验证 | 全部 `src/` | ❌ 未执行 | 链接审计计划待执行 |
+
+### Phase 4 任务（Stub 填充 — 当前阶段）
+
+| ID | 优先级 | 任务 | 文件 | 当前 | 目标 | 工作量 |
+|----|--------|------|------|------|------|--------|
+| **安全体系** | | | | | | |
+| S-1 | P0 | 续写 Ch6 安全总览 | `security-overview.md` | 152 | ≥250 | 2 天 |
+| S-2 | P0 | 编写 Ch6 沙箱与Hook | `sandbox-hooks.md` | 25 | ≥250 | 2 天 |
+| S-3 | P0 | 编写 Ch6 CLAUDE.md | `claude-dot-md.md` | 25 | ≥200 | 1 天 |
+| **上下文工程** | | | | | | |
+| S-4 | P0 | 编写 Ch6 上下文压缩 | `context-compression.md` | 27 | ≥200 | 2 天 |
+| S-5 | P0 | 编写 Ch6 Token预算 | `token-budget.md` | 27 | ≥200 | 1 天 |
+| S-6 | P0 | 编写 Ch6 提示词缓存 | `prompt-caching.md` | 29 | ≥250 | 3 天 |
+| S-7 | P0 | 编写 Ch6 记忆系统 | `memory-system.md` | 27 | ≥200 | 2 天 |
+| **补充** | | | | | | |
+| S-8 | P1 | 编写 Ch6 可观测性 | `observability.md` | 89 | ≥200 | 1 天 |
+| S-9 | P1 | 编写 Ch6 MCP服务器 | `mcp-servers.md` | 27 | ≥200 | 2 天 |
+| S-10 | P1 | 编写 Ch6 自定义Agent | `custom-agents.md` | 28 | ≥200 | 1 天 |
+| S-11 | P1 | 编写 Ch6 性能调优 | `performance-tuning.md` | 27 | ≥200 | 1 天 |
+| S-12 | P2 | 编写 Ch6 Feature Flags | `feature-flags.md` | 24 | ≥200 | 1 天 |
+| **案例** | | | | | | |
+| S-13 | P1 | 编写 Ch7 全流程自动化 | `case-full-pipeline.md` | 41 | ≥300 | 5 天 |
+| S-14 | P1 | 编写 Ch7 安全审计 | `case-security-audit.md` | 41 | ≥300 | 5 天 |
+| S-15 | P1 | 编写 Ch7 混合架构 | `case-multi-model.md` | 43 | ≥300 | 5 天 |
+| S-16 | P2 | 编写 Ch7 Skill市场 | `case-skills-marketplace.md` | 40 | ≥300 | 5 天 |
+| S-17 | P1 | 修改 Ch7 Art.7.1 | `real-world-01.md` | 44 | ≥300 | 3 天 |
+| S-18 | P1 | 修改 Ch7 Art.7.2 | `real-world-02.md` | 43 | ≥300 | 3 天 |
+| **全书** | | | | | | |
+| S-19 | P2 | 全书链接审计 | 全部 `src/` | — | 零 404 | 2 天 |
+
+---
+
+## 第四节：验证门禁（当前状态）
+
+### 门禁 0：基础设施就绪 ✅
+- [x] mdBook 配置完成（Mermaid + Vega + 自定义样式）
+- [x] Ch0 读者导航页位于 `src/00-guide/README.md`
+- [x] 计划文档已同步（`docs/` 包含重构计划、规格、交叉引用）
+- [x] `mdbook build` 构建通过，零错误
+- [x] GitHub Pages CI 工作流已配置（`.github/workflows/deploy-mdbook.yml`）
+
+### 门禁 1：结构完整 ✅
+- [x] Ch0 + 7 章 + 附录 A，50 篇文章全部存在
+- [x] ch00-05 每篇 ≥200 行（最低 311，最高 1666）
+- [x] `mdbook build` 构建通过，零错误
+- [ ] ch06 ≥200 行 — **❌ 10/12 stub**
+- [ ] ch07 ≥300 行 — **❌ 6/6 stub**
+
+### 门禁 2：内容完整 ⚠️ 部分通过
+- [x] 全部 50 篇文章/页面已存在
+- [x] ch00-05 每篇 ≥200 行 ✅
+- [ ] 每篇文章 ≥200 行（Ch7 ≥300）— **❌ ch06 12 篇 + ch07 6 篇**
+- [ ] 内部链接有效率达 100% — **❌ 未审计**
+
+### 门禁 3：本地预览 ✅ 已满足
+- [x] `mdbook build` — 零渲染错误
+- [x] Mermaid 图表正确渲染（已配置 local mermaid.min.js）
+- [x] 代码块语言标注已修复（无 jsonc/env/gitignore/vega-lite）
+- [x] 中英文术语表完整（glossary.md, 202行）
+- [x] 自定义 CSS 响应式支持
+
+### 门禁 4：部署上线 ⚠️ 部分满足
+- [x] GitHub Pages 构建工作流已配置
+- [ ] 用户故事追溯矩阵验证 — **❌ 未执行**
+- [x] 13 个读者角色均有阅读路径（reading-paths.md）✅
+- [ ] 所有跨章节引用格式正确 — **❌ 未审计**
+
+---
+
+## 第五节：关键路径与风险评估（当前状态）
+
+### 关键路径（当前）
+```
+Ch6 stub 填充 → Ch7 stub 填充 → 全书链接审计
+```
+
+### 当前风险评估
 
 | 风险 | 可能性 | 影响 | 缓解措施 |
 |------|--------|------|---------|
-| **Phase 1 Ch6 工作量过大**（4+3篇共7篇P0，含多篇XL） | 高 | 高 | 将Ch6拆分为1A/1B并行子阶段；优先保证P0前4篇质量 |
+| **Ch6 stub 填充工作量过大**（12 篇，含多篇需大量技术细节） | 高 | 高 | 按 P0→P1→P2 优先级分批填充；利用外部资料（《马书》12章+p + HE实践）提高效率 |
+| **Ch7 案例 stub 填充耗时**（6 篇需从 40 行扩展到 300+ 行） | 高 | 高 | 优先完成 2-3 个关键案例，其余渐进式扩展 |
 | **3个外部资料库版本偏差**（HE实践/《马书》/cc-to-ai） | 中 | 高 | 标注版本依赖的关键段落；预留验证时间 |
-| **42天工期超期风险** | 中 | 中 | Phase间各预留2天缓冲；压缩Phase 3非核心任务 |
-| **新增文章与现有19篇文章风格不一致** | 中 | 中 | 每个Phase结束进行风格一致性审查 |
-| **新核心概念（Ch2 §2.4-2.6）与现有概念重叠** | 低 | 中 | Ch2新概念设计为"现有概念的深化和系统化"，非替代 |
-| **13个角色45个故事覆盖不全** | 中 | 高 | Phase 3结束后用追溯矩阵逐一验证 |
+| **42天工期超期风险** | 高 | 中 | 已超出原计划，重点在剩余 stub 填充的总工作量 |
+| **新增内容与现有章节风格不一致** | 中 | 中 | 参照 ch00-05 已确立的风格（说人话、读者视角） |
+| **链接审计发现大量 404** | 中 | 中 | 预留专门修复时间 |
+| **用户故事覆盖不全** | 中 | 高 | 追溯矩阵尚未执行，风险未消除 |
 
-### 缓冲策略
-- **Phase 1 → 2**：预留 2 天缓冲（知识消化期）
-- **Phase 2 → 3**：预留 2 天缓冲（内容审查期）
-- **Phase 3 后**：预留 5 天用于终审、部署、社区反馈
+### 总量评估
+
+| 类别 | 已完成 | 待完成 | 预计工时 |
+|------|--------|--------|---------|
+| ch00-05 文章（32 篇 + 5 README） | ✅ 全部 ≥372 行 | 0 | 0 天 |
+| ch06 文章（12 篇 + README） | ❌ 12 篇全部 stub | 12 篇 stub 填充 | ~19 天 |
+| ch07 文章（6 篇 + README） | ❌ 全部 stub | 6 篇 stub 填充 | ~26 天 |
+| 全书链接审计 | ❌ 未执行 | 1 项 | ~2 天 |
+| **剩余总计** | | **16 篇 stub + 1 项审计** | **~47 天** |
 
 ---
 
-> **版本**：v2.0 | **最后更新**：2026-05-31 | **基于**：章节重构计划 v1.0
-> **总文章数**：46（19 现有 + 27 新增）| **总任务数**：39 | **预计**：42 个工作日
+> **版本**：v2.2 | **最后更新**：2026-06-03 | **基于**：章节重构计划 v1.0
+> **总文章数**：50（结构全部完成，ch06 12/12 stub + ch07 6/6 stub 待填充）
+> **已完成**：ch00-05 共 32 篇文章 + 附录术语表（全部充实，372-1666 行）
+> **待完成**：ch06 12 篇 + ch07 6 篇 + 链接审计 | **预计剩余**：~47 个工作日

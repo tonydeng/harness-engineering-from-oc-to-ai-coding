@@ -1,14 +1,14 @@
 # 什么是 Harness Engineer
 
-> 从"用 AI 写代码的人"到"驾驭 AI Agent 完成工程交付的人"——定义 AI 编程第三时代的核心角色。
+> 从"跟 AI 聊天写代码"到"用工程体系做开发"——定义 AI 编程第三时代的核心角色。
 
 ## 文章概述
 
-AI 编程工具在短短五年内经历了三次浪潮：从 2021 年的代码补全（GitHub Copilot），到 2024 年的对话编程（Cursor、Claude Code），再到 2026 年的工程流水线（OpenCode）。每一次浪潮都重新定义了开发者与 AI 的关系。**Harness Engineer（驾驭工程师）** 就是第三时代的核心角色——不是简单地用 AI 写代码，而是设计和管理 AI 工程流水线的人。
+AI 编程工具在短短五年内经历了三次浪潮：从 2021 年的代码补全（GitHub Copilot），到 2024 年的对话编程（Cursor、Claude Code），再到 2026 年的工程化 AI 编程（OpenCode）。每一次浪潮都重新定义了开发者与 AI 的关系。**Harness Engineer（驾驭工程师）** 就是第三时代的核心角色——不是简单地用 AI 写代码，而是设计和管理 AI 工程体系的人。
 
 为什么"对话"不够？单纯依赖聊天式交互带来了四个根本性问题：Token 成本失控（长对话上下文膨胀）、跨 Session 上下文丢失（失忆问题）、生成结果质量不可控（缺乏审查机制）、以及优质工作流无法复用（重复劳动）。更危险的是，当 Agent 获得执行终端命令的权限后，一次误操作可能导致数据泄露、系统崩溃甚至安全入侵——这是"安全失控"痛点，也是推动工程化范式转变的关键驱动力。
 
-本文将从 AI 编程的演进脉络出发，定义 Harness Engineer 的概念与核心能力，并阐述 Harness Engineering 的三大核心原则——**可复现（Reproducible）**、**可审计（Auditable）**、**可改进（Improveable）**。这三大原则贯穿全书，是衡量一切 AI 工程实践的标准。
+本文从 AI 编程的发展历程讲起，定义 Harness Engineer 的概念与核心能力，并阐述 Harness Engineering 的三大核心原则——**可复现（Reproducible）**、**可审计（Auditable）**、**可改进（Improveable）**。这三大原则贯穿全书，是衡量一切 AI 工程实践的标准。
 
 ## AI 编程的三次浪潮
 
@@ -49,7 +49,7 @@ function calculateTotal(items) {
 
 **定义**：设计和构建 AI 系统的信息架构，决定哪些信息进入上下文窗口以及如何组织。
 
-2024 年，Cursor 和 Claude Code 的出现改变了游戏规则。开发者不再只是"接受或拒绝补全"，而是可以通过自然语言与 AI 进行多轮对话，让 AI 理解需求、解释代码、甚至重构整个模块。
+2024 年，Cursor 和 Claude Code 的出现彻底改变了开发者的工作方式。开发者不再只是"接受或拒绝补全"，而是可以通过自然语言与 AI 进行多轮对话，让 AI 理解需求、解释代码、甚至重构整个模块。
 
 这一阶段的核心特征是**单 Agent 聊天交互**：AI 变成了"对话伙伴"，可以回答问题、生成代码、解释原理。但本质上，它仍然是一个"超级聊天机器人"——每次对话都是独立的，缺乏持久记忆和工程化能力。
 
@@ -92,7 +92,7 @@ function calculateTotal(items) {
 
 **定义**：设计、构建和维护编排 AI Agent 的基础设施，使其在生产环境中可靠运行。
 
-2026 年，OpenCode 引领的 Agent 编排范式标志着 AI 编程进入第三时代。核心特征从"对话"升级为**工程流水线**：多个专业 Agent 协同工作，每个 Agent 负责特定任务（规划、执行、审查），通过 Skill 系统封装领域知识，通过 Workflow 编排复杂流程。
+2026 年，OpenCode 引领的 Agent 编排范式标志着 AI 编程进入第三时代。核心特征从"对话"升级为**工程体系**：多个专业 Agent 协同工作，每个 Agent 负责特定任务（规划、执行、审查），通过 Skill 系统封装领域知识，通过 Workflow 编排复杂流程。
 
 ```mermaid
 timeline
@@ -204,7 +204,7 @@ async function fetchUserData(userId) {
 // 4. 无类型安全
 ```
 
-在对话模式下，这些问题需要开发者主动发现并要求修复。而在工程流水线模式下，审查 Agent 会自动检查并生成改进建议。
+在对话模式下，这些问题需要开发者主动发现并要求修复。而在工程化模式下，审查 Agent 会自动检查并生成改进建议。
 
 ### 瓶颈四：重复劳动
 
@@ -264,7 +264,7 @@ flowchart LR
 | **配置篡改** | AI 修改了关键配置文件 | 服务中断、安全策略失效 |
 | **凭证泄露** | AI 将密钥写入日志或临时文件 | 凭证暴露、账号被盗 |
 
-在对话模式下，这些风险完全依赖开发者的即时审查——但人总会疲劳、会遗漏。工程流水线模式通过**权限控制**、**审计日志**、**沙箱隔离**等机制，将安全防护系统化。
+在对话模式下，这些风险完全依赖开发者的即时审查——但人总会疲劳、会遗漏。工程化模式通过**权限控制**、**审计日志**、**沙箱隔离**等机制，将安全防护系统化。
 
 ```mermaid
 flowchart TB
@@ -296,7 +296,7 @@ flowchart TB
 
 ### 从 Prompt Engineer 到 Harness Engineer
 
-在定义 Harness Engineer 之前，需要先厘清它与 Prompt Engineer 的区别。
+要理解 Harness Engineer，先看看它和 Prompt Engineer 有什么区别。
 
 **Prompt Engineer** 关注的是"怎么写好的提示词"——这是战术层面的技巧。例如：
 
@@ -307,7 +307,7 @@ flowchart TB
 要求：1) 使用 TypeScript 2) 支持排序 3) 支持自定义列渲染..."
 ```
 
-**Harness Engineer** 关注的是"怎么设计好的工程流水线"——这是战略层面的能力。例如：
+**Harness Engineer** 关注的是"怎么设计好的 AI 工程体系"——这是战略层面的能力。例如：
 
 ```yaml
 # Harness Engineer 的典型工作
@@ -359,7 +359,7 @@ workflow:
 
 $$\text{Agent} = \text{Model} + \text{Harness}$$
 
-这个公式揭示了一个深刻洞见：**Agent 不等于 Model**。
+这个公式揭示了一个关键点：**Agent 不等于 Model**。
 
 - **Model（模型）**：大语言模型本身，如 GPT-4、Claude、Gemini。它提供推理能力，但本身不具备执行能力。
 - **Harness（驾驭框架）**：围绕模型的工程化框架，包括工具调用、权限控制、上下文管理、错误处理、审计日志等。
@@ -392,14 +392,14 @@ flowchart LR
 
 **为什么这个公式重要？**
 
-它解释了为什么"同样的模型"在不同工具上表现迥异：
+它解释了为什么"同样的模型"在不同工具上表现差别很大：
 
 | 工具 | Model | Harness | Agent 能力 |
 |------|-------|---------|-----------|
 | ChatGPT | GPT-4 | 基础对话 | 只能聊天 |
 | GitHub Copilot | GPT-4 | 编辑器集成 | 代码补全 |
 | Cursor | Claude/GPT-4 | IDE + 对话 | 对话编程 |
-| OpenCode | 多模型可选 | Agent 编排 + Skill + Workflow | 工程流水线 |
+| OpenCode | 多模型可选 | Agent 编排 + Skill + Workflow | 工程化 Agent 工作流 |
 
 同样的底层模型，不同的 Harness，产生截然不同的 Agent 能力。Harness Engineer 的核心工作，就是设计和管理这个 Harness 层。
 
@@ -443,41 +443,6 @@ mindmap
 | 知识沉淀 | 78 | 20 | +58 |
 
 > 注：分数为能力评估分数（满分100），成长差距表示入门开发者需要提升的空间。
-
-### 核心能力雷达图
-
-以下图表从两个视角展示 Harness Engineer 五大核心能力的相对水平。Mermaid 柱状图直观对比能力分数，Vega-Lite 雷达图以极坐标形式呈现能力分布形态：
-
-```mermaid
----
-config:
-  theme: base
----
-xychart-beta
-  title "Harness Engineer 核心能力评估"
-  x-axis ["需求分析", "工作流设计", "Agent编排", "质量审查", "知识沉淀"]
-  y-axis "分数" 0 --> 100
-  bar [85, 90, 88, 82, 78]
-```
-
-```vega-lite
-{
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Harness Engineer 五大核心能力雷达图",
-  "data": {"values": [
-    {"能力": "需求分析", "分数": 85},
-    {"能力": "工作流设计", "分数": 90},
-    {"能力": "Agent编排", "分数": 88},
-    {"能力": "质量审查", "分数": 82},
-    {"能力": "知识沉淀", "分数": 78}
-  ]},
-  "mark": {"type": "line", "stroke": "#4A90D9", "strokeWidth": 2, "point": {"size": 80}},
-  "encoding": {
-    "theta": {"field": "能力", "type": "nominal", "scale": {"range": [0, 360]}, "sort": null},
-    "radius": {"field": "分数", "type": "quantitative", "scale": {"domain": [0, 100]}}
-  }
-}
-```
 
 #### 1. 需求澄清能力
 
@@ -726,7 +691,7 @@ metrics:
 
 Harness Engineer 是 AI 编程第三时代的核心角色。他们不是简单地"用 AI 写代码"，而是：
 
-1. **设计** AI 工程流水线（Workflow）
+1. **设计** AI 工程体系（Workflow）
 2. **编排** 多个专业 Agent（Agent Orchestration）
 3. **建立** 质量门禁和审查机制（Quality Gates）
 4. **沉淀** 可复用的领域知识（Skill System）
@@ -749,5 +714,5 @@ Harness Engineering 的三大原则——可复现、可审计、可改进——
 - → [为什么选择 OpenCode](why-opencode.md)（理解概念后，自然延伸至工具选择）
 - → [Harness Engineering 理论框架](harness-engineering-theory.md)（从概念到理论的深化）
 - → [核心概念](../02-core-concepts/)（为理解 Agent、Skill、Workflow 等概念奠定基础）
-- → [工作流实战](../04-workflows/)（工程流水线的具体实现与最佳实践）
+- → [工作流实战](../04-workflows/)（工程化工作流的具体实现与最佳实践）
 - ← 承接 [读者导航](../00-guide/)（建立对全书结构的基本认知后，从这里正式开始）

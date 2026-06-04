@@ -4,7 +4,7 @@
 
 ## 文章概述
 
-Prometheus 规划模式（`@plan`）是 oh-my-openagent 提供的"先计划后执行"工作流。当需求模糊、需要审计轨迹或涉及多方利益时，Prometheus 模式通过访谈式需求收集与结构化计划，帮你从模糊到清晰，再由 Atlas 指挥官精准执行。
+Prometheus 规划模式（`@plan`）是 oh-my-openagent 提供的"先计划后执行"工作流。当需求不明确、需要每一步都有操作记录、或涉及多方利益时，Prometheus 模式通过访谈式需求收集与结构化计划，帮你从模糊到清晰，再由 Atlas 指挥官精准执行。
 
 本文深入讲解 Prometheus 模式的工作原理、Atlas 执行指挥官的角色、`/start-work` 命令的集成方式，并通过三路对比帮助你在 Ultrawork、Prometheus 和传统 Prompt 之间做出合理选择。
 

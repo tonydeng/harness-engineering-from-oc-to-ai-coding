@@ -6,7 +6,7 @@
 
 ## 文章概述
 
-快速上手之后，你的 OpenCode 已经能跑了。但"能跑"和"好用"之间隔着一个配置文件的深度理解。opencode.json 不仅是参数列表，更是一个声明式的工程流水线定义文件。它的分层设计（全局→项目→环境变量→CLI flag）允许团队将配置纳入版本控制，实现配置可审计、可复现。
+快速上手之后，你的 OpenCode 已经能跑了。但"能跑"和"好用"之间隔着一个配置文件的深度理解。opencode.json 不仅是参数列表，更是一个声明式的工程规范文件。它的分层设计（全局→项目→环境变量→CLI flag）允许团队将配置纳入版本控制，实现配置可审计、可复现。
 
 这篇文章逐一拆解配置文件的每个关键段：agents 定义、skills 注册、mcpServers 集成、权限规则引擎、类别路由系统。类别路由（Category Routing）决定了 Agent 如何根据任务类型自动分派到合适的模型，是整个工作流引擎的调度核心。读完本文，你将能够手写或评审一份工程级的 opencode.json 配置。
 
@@ -70,7 +70,7 @@ macOS 还支持通过 MDM（如 Jamf、Kandji）部署 `.mobileconfig` 配置文
 
 OpenCode 支持 **JSON** 和 **JSONC**（带注释的 JSON）两种格式：
 
-```jsonc
+```json
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "anthropic/claude-sonnet-4-5",
@@ -1167,7 +1167,7 @@ OpenCode 的 `compaction` 配置可以在上下文接近限制时自动压缩历
 
 以下是一个真实项目的精简配置，展示了各模块的典型组合：
 
-```jsonc
+```json
 {
   "$schema": "https://opencode.ai/config.json",
   // === 模型配置 ===

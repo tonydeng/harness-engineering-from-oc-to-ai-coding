@@ -421,7 +421,7 @@ OpenCode 的权限系统采用三级策略模型：
 
 权限可以在不同层级配置：
 
-```jsonc
+```json
 // opencode.json
 {
   "permissions": {
@@ -589,7 +589,7 @@ allowed-tools:
 
 OMO 配置可以覆盖 SKILL.md 中的默认值：
 
-```jsonc:opencode.json
+```json:opencode.json
 {
   "skills": {
     "frontend-architect": {

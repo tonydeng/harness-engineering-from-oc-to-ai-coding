@@ -86,7 +86,10 @@ window.addEventListener("scroll", onScroll);
 
 // Update pagetoc when the page changes
 var observer = new MutationObserver(updatePagetoc);
-observer.observe(document.getElementById("content"), { childList: true });
+var content = document.getElementById("content");
+if (content) {
+    observer.observe(content, { childList: true });
+}
 
 // Initialize pagetoc
 updatePagetoc();

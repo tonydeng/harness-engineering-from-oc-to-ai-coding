@@ -34,16 +34,64 @@
   display: none; /* 隐藏 Chrome 滚动条 */
 }
 
-/* simple-lightbox 放大弹窗样式优化 */
+/* simple-lightbox 放大弹窗样式优化（针对 Mermaid SVG 图表） */
 .sl-wrapper .sl-image {
   background: #fff; /* 弹窗背景白色，提升对比度 */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  /* SVG 尺寸自适应：居中显示，保留宽高比 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.sl-wrapper .sl-image img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+  object-fit: contain;
+  /* 放大入场动画 */
+  animation: mermaid-zoom-in 0.25s ease-out;
+}
+@keyframes mermaid-zoom-in {
+  from { transform: scale(0.7); opacity: 0.4; }
+  to   { transform: scale(1);   opacity: 1;   }
+}
+
+/* 关闭按钮（覆盖默认全白，适应深色主题背景遮罩） */
 .sl-wrapper .sl-close {
-  color: #333; /* 关闭按钮颜色 */
-  font-size: 24px;
-  top: 15px;
-  right: 20px;
+  color: #fff;
+  font-size: 32px;
+  top: 20px;
+  right: 25px;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+  z-index: 1007;
+}
+.sl-wrapper .sl-close:hover,
+.sl-wrapper .sl-close:focus {
+  opacity: 1;
+}
+
+/* 导航箭头（适配深色遮罩） */
+.sl-wrapper .sl-navigation button {
+  color: #fff;
+  opacity: 0.7;
+  font-size: 3rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.sl-wrapper .sl-navigation button:hover {
+  opacity: 1;
+}
+
+/* 移动端适配：小屏幕时减少弹窗内边距 */
+@media (max-width: 768px) {
+  .sl-wrapper .sl-image {
+    padding: 10px;
+  }
+  .sl-wrapper .sl-image img {
+    max-width: 95vw !important;
+    max-height: 85vh !important;
+  }
 }

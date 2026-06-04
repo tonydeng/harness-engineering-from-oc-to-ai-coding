@@ -2,9 +2,9 @@
 
 ## 概述
 
-本书第1章为全书定调：定义"Harness Engineer"（驾驭式工程师）这一概念，阐述为什么AI编程正在经历从"聊天对话"到"工程流水线"的范式转变，以及OpenCode在这场转变中的独特定位。本章帮助读者快速判断：这本书/OpenCode是否值得投入时间。
+本书第1章为全书定调：先说清楚什么是"Harness Engineer"（驾驭式工程师），再解释为什么AI编程正在从"跟 AI 聊天写代码"转向"用工程体系做开发"，以及OpenCode在这股浪潮里的位置。读完本章你就能快速判断：这本书和OpenCode值不值得你花时间。
 
-**章节核心主题**：从"对话式AI编程"到"工程化AI流水线"——Harness Engineering的定义、价值与工具选择。
+**章节核心主题**：从"跟 AI 聊天写代码"到"用工程体系做开发"——讲明白 Harness Engineering 是什么、为什么重要、用什么工具来实现。
 
 > **章节规模**：6 篇文章（3 现有 + 3 新增），2 篇修改
 
@@ -62,7 +62,7 @@
 - **阶段 1（提示词工程）**：通过精心设计的输入指令，最大限度地激发模型的正确能力
 - **阶段 2（上下文工程）**：设计和构建 AI 系统的信息架构，决定哪些信息进入上下文窗口以及如何组织
 - **阶段 3（驾驭工程）**：设计、构建和维护编排 AI Agent 的基础设施，使其在生产环境中可靠运行
-- **Harness Engineer vs Prompt Engineer**：Prompt Engineer关注"怎么写好的提示词"；Harness Engineer关注"怎么设计好的工程流水线"
+- **Harness Engineer vs Prompt Engineer**：Prompt Engineer关心"怎么写好提示词"；Harness Engineer关心"怎么设计一套可靠的工程体系"
 - **3个可**原则：可复现/可审计/可改进——全书所有实践都围绕这三个原则展开
 - **安全治理演进**：从 Prompt Injection 防护 → 敏感数据过滤/访问控制 → 安全审计/沙箱隔离/合规检查
 
@@ -71,17 +71,15 @@
 
 #### Mermaid 图表
 - AI编程三阶段演进时间线图（2021-2026，标注探索期）
-- Harness Engineer能力雷达图（5维度）
 - 三阶段对比矩阵图（时间范围、核心能力、代表工具、用户角色、安全关注点）
 
 #### 关联章节
 - → Ch2 Core Concepts（为六概念奠定理解基础）
-- → Ch4 Workflows（工程流水线的具体实现）
+- → Ch4 Workflows（工作流的实际应用）
 
 #### 验证标准
 - [ ] 文章 ≥ 200 行有效内容
 - [ ] 包含三阶段演进对比表（时间范围、核心能力、代表工具、用户角色、安全关注点）
-- [ ] 包含Harness Engineer能力雷达图
 - [ ] 每个阶段有明确的时间节点
 - [ ] 每个阶段有代表性的工具示例
 - [ ] 每个阶段有核心特征描述
@@ -178,8 +176,8 @@
 
 #### 大纲
 1. Harness Engineering 定义深化
-   - 从"驾驭 AI 写代码"到"设计 AI 工程流水线"
-   - Hatness 的 4 个核心支柱：编排、安全、可观测、成本
+    - 从"驾驭 AI 写代码"到"设计 AI 工程体系"
+    - Harness 的 4 个核心支柱：编排、安全、可观测、成本
 2. Martin Fowler 5 大分类法
    - 每个分类的定义和典型工具
    - 分类法的工程实践意义
@@ -467,7 +465,6 @@
 | 特殊内容 | 所需技能 | 适用文章 | 说明 |
 |---------|---------|---------|------|
 | AI 编程三阶段演进时间线图 | `mindmap` / `infographic` | Article 1.1 | Mermaid timeline 语法 |
-| Harness Engineer 能力雷达图 | `vega` / `chart-visualization` | Article 1.1 | 5 维度蛛网图 |
 | 工具对比矩阵图 | `infographic` / `chart-visualization` | Article 1.4 | 高维数据可视化 |
 | 选型决策树 | `mindmap` / `uml` | Article 1.4 | Mermaid decision tree |
 | 5 大分类法树形图 | `mindmap` | Article 1.3 | 层级分类树 |

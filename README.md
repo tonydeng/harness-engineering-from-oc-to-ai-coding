@@ -1,6 +1,6 @@
 # Harness Engineering — From OpenCode to AI Coding
 
-将 AI 编程从"聊天对话"升级为"工程流水线"的最佳实践指南。
+从"跟 AI 聊天写代码"到"用工程体系做开发"的最佳实践指南。
 
 ## 这是什么？
 

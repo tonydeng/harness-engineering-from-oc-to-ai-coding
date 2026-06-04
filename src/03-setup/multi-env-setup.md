@@ -549,7 +549,7 @@ export CUSTOM_PROVIDER_API_KEY="..."
 
 使用 `.env` 文件管理本地开发的 Secret：
 
-```env
+```text
 # .env - 不要提交到 Git！
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
@@ -559,7 +559,7 @@ OPENCODE_PROFILE=dev
 
 **务必将 `.env` 添加到 `.gitignore`**：
 
-```gitignore
+```text
 # .gitignore
 .env
 .env.local

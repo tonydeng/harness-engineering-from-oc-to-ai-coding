@@ -10,7 +10,7 @@
 
 ## Skill 设计 6 条核心原则
 
-作为架构顾问，我们将 Skill 设计原则提炼为六个维度。这些原则不是孤立的，而是相互支撑形成一个完整的设计框架。
+好的 Skill 设计可以归纳为六个维度。这些原则不是孤立的，而是相互支撑形成一个完整的设计框架。
 
 ```mermaid
 graph TB
@@ -1123,7 +1123,7 @@ graph TB
 
 **配置示例**：
 
-```jsonc
+```json
 // opencode.json
 {
   "agents": {
@@ -1188,7 +1188,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 不同环境使用不同的工具权限：
 
-```jsonc
+```json
 // 开发环境
 {
   "skills": {
@@ -1213,7 +1213,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 团队统一覆盖某些 Skill 的行为：
 
-```jsonc
+```json
 {
   "skills": {
     "code-reviewer": {
@@ -1230,7 +1230,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 发现问题 Skill 时临时禁用：
 
-```jsonc
+```json
 {
   "skills": {
     "problematic-skill": {
