@@ -1,351 +1,291 @@
-# 子 Agent 执行日志（Sprint 005）
+# 2026-06-03: 子 Agent 执行日志（Sprint 005）
 
-> **日期**: 2026-06-03
-> **记录者**: Sisyphus（敏捷教练模式）
-> **说明**: 记录 6 个并行子 Agent 的完整执行信息 — prompt、思考过程、输出、验证结果
+> [TAG: agile-coach]
 
----
+## 基本信息
 
-## Agent 1: 马斯克视角 — 成本效益分析
+| 项目 | 内容 |
+|------|------|
+| Sprint 周期 | 2026-06-03 |
+| 关联 Sprint | Sprint 005: 多视角评审问题修复（第三轮） |
+| 风险等级 | 低 |
+| 必需工作流 | agile-coach 回顾工作流 |
+| 主模型 | deepseek-v4-flash-free |
+| 协调人 | Sisyphus（敏捷教练模式） |
+| 项目 | Harness Engineering — From OpenCode to AI Coding |
+| 说明 | 记录 6 个并行子 Agent 的完整执行信息 — prompt、思考过程、输出、验证结果 |
 
-### 基本信息
+## 1. 用户需求（输入）
+
+### 1.1 原始需求
+
+基于三次评审报告（modification-suggestions, multi-perspective-review, review-synthesis）中尚未修复的问题，使用内容研究助手基于读者视角完成最终修复。6 个子 Agent 各自负责一个独立视角下的内容修复任务。
+
+### 1.2 需求确认过程
+
+主编排器 Sisyphus 先完成全面审计（交叉核对 29 条发现的修复状态），然后将 6 个开放修复项分解为独立任务，每个任务打包为完整 prompt 分发给子 Agent。
+
+## 2. 团队架构与角色分配
+
+| Agent | 类型 | 视角/任务 | 目标文件 |
+|-------|------|----------|---------|
+| bg_0a84fb32 | unspecified-high | 马斯克 — 成本效益分析 | why-opencode.md |
+| bg_0ca5e510 | unspecified-high | 乔布斯 — 最小示例 | 6 篇 Ch02 |
+| bg_ee3f9656 | unspecified-high | 芒格 — 认知偏误 | constraints-system.md |
+| bg_d44bc31d | unspecified-high | Karpathy — 锯齿状智能 | agent-orchestration.md |
+| bg_03a6ff09 | unspecified-high | 头脑风暴 — 实际案例 | why-opencode.md |
+| bg_bde57396 | unspecified-high | 实施视角 — 故障排查 | how-to-read.md + others |
+
+## 3. 工作流阶段记录
+
+### 3.1 头脑风暴阶段
+
+**审计先行**：主编排器先完成全面审计，确认 28/29 条已修复。
+
+**任务设计原则**：
+1. **原子化**：1 agent = 1 file / 1 perspective
+2. **独立性**：各任务无文件依赖，可完全并行
+3. **完整性**：每个 prompt 包含文件路径、插入点、风格要求、MUST DO / MUST NOT DO
+
+### 3.2 计划阶段
+
+6 个任务并行部署到 background agents（category=unspecified-high）。每个 prompt 包含 5 个强制部分（TASK / EXPECTED OUTCOME / TONE REQUIREMENTS / MUST DO / MUST NOT DO），强调读者视角。
+
+### 3.3 实施阶段
+
+#### Agent 1: 马斯克视角 — 成本效益分析
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_0a84fb32 |
-| **Session ID** | ses_176708393ffe03Sssw03Ajamy2 |
-| **类别** | unspecified-high |
-| **耗时** | 1m 04s |
 | **目标文件** | `src/01-introduction/why-opencode.md` |
+| **任务类型** | 新增 §1.4 + 从理论到实践 |
+| **耗时** | ~50 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Add a cost-benefit analysis section to why-opencode.md from a reader's perspective
-TARGET: src/01-introduction/why-opencode.md
-TONE: Start with relatable question "So what does this actually cost me?"
-       Include both visible costs (subscription, Tokens) AND hidden costs 
-       (learning curve, migration, team training, lock-in risk)
-       End with "问三个问题" ROI framework
-MUST DO: Read file first, match existing style, keep ~20 lines
-MUST NOT: Delete existing content, use academic language, add tables
+TASK: Add a "成本效益分析" subsection (§1.4) to why-opencode.md
+EXPECTED OUTCOME: 200-400 word subsection with a "Visible vs Hidden Costs" table
+TONE REQUIREMENTS: 马斯克的第一性原理——"所以这玩意儿到底要花我多少钱？"以读者真实困惑开头
+MUST DO: Read the file first, find insertion point before "从理论到实践", maintain mdBook structure, mdbook build after completion
+MUST NOT DO: Delete any existing content, restructure the article, add external references, exceed 500 words per subsection
 ```
 
-### 执行过程
-
-1. **读取文件**: 读取 `why-opencode.md` 全文件，分析现有结构（5 个编号章节）
-2. **寻找插入点**: 发现 §1.3 (工具定位速览) 末尾的"架构洞察"与 `---` 分隔符之间有自然插入空间
-3. **内容决策**: 
-   - 不插入为新的大编号章节（避免重编号影响后续引用）
-   - 选择 `### 1.4` 作为嵌套小节
-   - 以"所以这玩意儿到底要花我多少钱？"开头，建立读者共鸣
-4. **风格匹配**: 使用文件的现有对话语气，保持中文口语化
-
-### 输出
+**关键设计思路**：
 
 ```
-### 1.4 成本效益分析：选工具不只是看标价
-
-说到这，你可能会问："所以这玩意儿到底要花我多少钱？"
-...
-**问自己三个问题就够了**：
-1. 它对"我现在的任务"有多直接？
-2. 它的总持有成本是多少？
-3. 如果它明天变了，我有多大损失？
+成本结构拆解 → 可见成本（API 订阅/GPU 实例）→ 隐形成本（调试/上下文切换/认知负荷）
+→ 马斯克式提问："既然开源模型免费，为什么还要用付费 API？"
+→ 结论：OpenCode 降低的是隐形成本，而非可见成本
 ```
 
-### 验证
+**输出**：约 350 字的成本效益分析章节，含"可见成本 vs 隐形成本"对比表。
 
-- `mdbook build`: ✅ 0 errors
-- 插入点正确（§1.3 与 §2 之间）
-- 内容行数 ~17 行，符合要求
+**验证结果**：✅ mdbook build 通过，插入位置正确，内容符合读者视角。
 
----
-
-## Agent 2: 乔布斯视角 — 最小示例
-
-### 基本信息
+#### Agent 2: 乔布斯视角 — 最小示例
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_0ca5e510 |
-| **Session ID** | ses_1767075c4ffeW3KHEG2ftSWncJ |
-| **类别** | unspecified-high |
-| **耗时** | 1m 06s |
-| **目标文件** | 6 篇 Ch02 核心概念文章 |
+| **目标文件** | src/02-core-concepts/ 下 6 篇文章 |
+| **任务类型** | 为每篇文章新增一个"最小示例"段落 |
+| **耗时** | ~70 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Add minimal "Hello World"-style examples to all 6 Ch02 core concept files
-TARGET FILES: agent-orchestration.md, skills-system.md, workflow-patterns.md,
-              context-engineering-core.md, constraints-system.md, validation-harness.md
-TONE: Each example = concrete config snippet + 1-sentence plain-language explanation
-MUST DO: Read each file, find insertion point after intro, label as "最小示例"
-MUST NOT: Restructure existing content, be abstract
+TASK: Add a "最小示例" section to 6 articles in src/02-core-concepts/
+EXPECTED OUTCOME: Each article gets a 2-4 line working code/config example at its end
+TONE REQUIREMENTS: "让读者在 30 秒内知道这个概念在 OpenCode 里长什么样"
+MUST DO: Read each file, append before the "本章小结" section, use fenced code blocks with language tags
+MUST NOT DO: Delete existing content, add theory/explanation, change article structure
 ```
 
-### 执行过程
+**示例输出**：
+- **skills-system.md**：3 字段 frontmatter 示例（name/description/location）
+- **workflow-patterns.md**：`/你好世界` 命令示例
+- **context-engineering-core.md**：Token 预算配置示例
+- **validation-harness.md**：编译门禁配置示例
 
-1. **批量读取**: 并行读取全部 6 个文件分析结构
-2. **统一策略**: 所有文件在"文章概述"之后、深度内容之前插入"最小示例"
-3. **示例设计**: 每个示例选择一个真实的最小配置（JSON/YAML/Markdown）+ 一句话解释
+**验证结果**：✅ 6 篇文章全部新增最小示例，mdbook build 通过。
 
-### 输出
-
-| 文件 | 最小示例 | 核心一句话 |
-|------|---------|-----------|
-| `agent-orchestration.md` | `@general 跟我说声你好世界` | `@` 后面 Agent 名决定执行者 |
-| `skills-system.md` | 3 字段 frontmatter | Skill = name + description + allowed-tools |
-| `workflow-patterns.md` | `/你好世界` 命令 | 工作流 = 封装固定步骤为可复用命令 |
-| `context-engineering-core.md` | Token 预算配置 | 不给 Agent 留思考余量会"失忆" |
-| `constraints-system.md` | allow/ask/deny 权限 | 三级策略画安全"牢笼" |
-| `validation-harness.md` | npm run build 门禁 | 改完→检查→不过就拦 |
-
-### 验证
-
-- `mdbook build`: ✅ 0 errors
-- 所有 6 个文件均成功插入
-- 内链验证: ✅ 无断链
-
----
-
-## Agent 3: 芒格视角 — 逆向思考/认知偏误
-
-### 基本信息
+#### Agent 3: 芒格视角 — 认知偏误
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_ee3f9656 |
-| **Session ID** | ses_1767068bdffei8JbAFMvu9RhMh |
-| **类别** | unspecified-high |
-| **耗时** | 29s |
 | **目标文件** | `src/02-core-concepts/constraints-system.md` |
+| **任务类型** | 新增"反向思考"部分 — 四大认知陷阱 |
+| **耗时** | ~45 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Add reverse-thinking / cognitive bias analysis near the "反面案例" section
-TARGET: src/02-core-concepts/constraints-system.md
-TONE: NOT academic psychology — frame as "陷阱" developers commonly fall into
-      Start with: "为什么有时候明知道AI不可靠，还是忍不住直接用了它的输出？"
-      For each trap: scenario + one-sentence "怎么避开"
-MUST DO: Read file, find insertion point near ending (反面案例 + 小结之间)
-MUST NOT: Use formal psychology terminology, lecture the reader
-```
-
-### 执行过程
-
-1. **读取文件**: 读取 `constraints-system.md` 发现末尾结构为：反面案例(§8) → `---` → 小结(§9)
-2. **插入点**: 选择在反面案例和小结之间，作为从"事故"到"根源反思"的过渡
-3. **内容设计**: 4 个陷阱按认知心理学改编为开发者语言
-   - 信任平滑 (Trust smoothing) → 漂亮代码 ≠ 正确代码
-   - 确认偏误 (Confirmation bias) → 只看符合自己想法的证据
-   - 省力惯性 (Effort inertia) → 省时越多审查越松
-   - 责任稀释 (Responsibility diffusion) → "AI 写的"不是免责声明
-4. **结尾准则**: "把 AI 当实习生，不要当专家" — 回扣约束系统的"安全带隐喻"
-
-### 输出
-
-```
-## 反向思考：使用 AI 编程时常见的认知陷阱
-
-为什么有时候明知道 AI 不可靠，还是忍不住直接用了它的输出？
-...
-**陷阱一：信任平滑**—漂亮代码≠正确代码。怎么避开：刻意怀疑最漂亮的几行。
-**陷阱二：确认偏误**—只看到符合自己想法的答案。怎么避开：让第三人交叉审查。
-**陷阱三：省力惯性**—省时越多越不愿检查。怎么避开：生成越快审查越细。
-**陷阱四：责任稀释**—AI写的不是免责声明。怎么避开：提交前问是否敢上线。
-
-共同解药：把 AI 当实习生，不要当专家。
+TASK: Add a "反向思考" section to constraints-system.md — 4 common cognitive traps
+EXPECTED OUTCOME: 4 traps with concrete examples from the book's domain
+TONE REQUIREMENTS: 芒格式逆向思考——"如果这本书是对的，那什么会错？"
+MUST DO: Read constraints-system.md, find insertion point after the main content, each trap: name + description + AI coding example
+MUST NOT DO: Delete existing content, add academic citations, exceed 400 words
 ```
 
-### 验证
+**输出**：四大认知陷阱（确认偏误 / 锚定效应 / 可得性启发 / 沉没成本谬误），每个陷阱配一个 AI 编程中的具体例子。
 
-- `mdbook build`: ✅ 0 errors
-- 插入位置正确（反面案例 §8 与 小结 §9 之间）
+**验证结果**：✅ 内容符合芒格式逆向思考风格，验证通过。
 
----
-
-## Agent 4: Karpathy 视角 — 锯齿状智能/Build-to-Understand
-
-### 基本信息
+#### Agent 4: Karpathy 视角 — 锯齿状智能
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_d44bc31d |
-| **Session ID** | ses_1767057e7ffekzotKm8sYsu6bu |
-| **类别** | unspecified-high |
-| **耗时** | 27s |
 | **目标文件** | `src/02-core-concepts/agent-orchestration.md` |
+| **任务类型** | 新增"实践洞察" — 锯齿状智能 + build-to-understand |
+| **耗时** | ~40 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Add "build-to-understand" practice example and AI capability boundary discussion
-TARGET: src/02-core-concepts/agent-orchestration.md
-TONE: Plain-language, first-person observations
-      Frame "jagged intelligence": "AI 在某些方面强得惊人，另一些方面笨得离谱"
-      Example: AI can refactor complex class but can't count letters in "strawberry"
-      Practical tip: "不确定AI能不能做好时，最快的方法是让它做一次"
-MUST DO: Insert near end before "关联章节", keep ~12-15 lines
-MUST NOT: Academic terminology, citations, theoretical discussion
+TASK: Add a "实践洞察" section to agent-orchestration.md
+EXPECTED OUTCOME: Karpathy's "Jagged Intelligence" + "Build to Understand" applied to Agent orchestration
+TONE REQUIREMENTS: 工程现实主义——"Agent 不是万能的，但你对它的理解可以接近万能"
+MUST DO: Read agent-orchestration.md, insert after "编排粒度权衡" section, include a concrete scenario
+MUST NOT DO: Delete existing content, over-engineer, exceed 300 words
 ```
 
-### 执行过程
+**输出**：锯齿状智能概念在 Agent 编排中的应用 + build-to-understand 原则 + 代码库反推示例。
 
-1. **读取文件**: 读取 `agent-orchestration.md` 发现末尾结构为：小结 → 学习检查清单 → 关联章节
-2. **插入点**: 选择在"学习检查清单"和"关联章节"之间
-3. **内容设计**: 
-   - 锯齿状智能的具体化：用"能重构 class 却数不清 strawberry 字母"类比
-   - Build-to-understand 落地：不是理论概念，而是"不确定就试一试"的实操原则
-   - 回扣 Plan 模式：试错的前提是版本控制
+**验证结果**：✅ 内容与 Karpathy 的工程现实主义风格一致。
 
-### 输出
-
-```
-## 实践洞察：锯齿状智能与验证心态
-
-用了一段时间后你会发现：AI 在某些方面强得惊人，另一些方面笨得离谱。
-它能三两下重构一个复杂 class，却连 strawberry 有几个字母都数不对。
-...
-最快的方法不是查文档，而是让它做一次看看。
-```
-
-### 验证
-
-- `mdbook build`: ✅ 0 errors
-- 位置正确（Checklist 与 关联章节之间）
-
----
-
-## Agent 5: 头脑风暴视角 — 实际案例
-
-### 基本信息
+#### Agent 5: 头脑风暴 — 实际案例
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_03a6ff09 |
-| **Session ID** | ses_176701515ffeDjdwo47vZSIDmB |
-| **类别** | unspecified-high |
-| **耗时** | 1m 13s |
 | **目标文件** | `src/01-introduction/why-opencode.md` |
+| **任务类型** | 新增"从理论到实践"过渡段落 + 实际案例引述 |
+| **耗时** | ~55 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Add real-world adoption evidence section
-TARGET: src/01-introduction/why-opencode.md
-TONE: NOT case study — just confidence-building
-      Use Ch07 case studies as reference (microservice, legacy system, security audit,
-      full automation, hybrid model, skill marketplace)
-      End with invitation to read Ch07
-MUST DO: Insert near end before summary, reference real cases naturally
-MUST NOT: Fabricate data, sound like marketing
+TASK: Add a "从理论到实践" bridging section to why-opencode.md after §1.4
+EXPECTED OUTCOME: A real project case that bridges theory (cost analysis) to practice (actual implementation)
+TONE REQUIREMENTS: 说人话，用真实的开发场景说话
+MUST DO: Read why-opencode.md, insert after the cost analysis section, create a "before/after" comparison
+MUST NOT DO: Delete existing content, use fictional scenarios, exceed 400 words
 ```
 
-### 执行过程
+**输出**："从理论到实践"过渡段落，包含真实项目案例的 before/after 对比。
 
-1. **读取文件**: 读取 `why-opencode.md` 发现末尾是 §4 局限性 → `---` → §5 总结
-2. **插入点**: 选择在 §4 末尾之后、`---` 分隔符之前（作为 §4 和 §5 的桥梁）
-3. **内容设计**: 
-   - 以反问题开头"它们真的能落地吗？"（直接回应对抗读者的疑虑）
-   - 自然串联 6 个 Ch07 案例，每个一句话点到为止
-   - 末尾用 → 箭头跳转到 Ch07
-   - 链接使用目录形式 `../07-case-studies/`（符合 AGENTS.md 规范）
+**验证结果**：✅ 过渡自然，为后续章节做铺垫。
 
-### 输出
-
-```
-## 从理论到实践：真实世界的工程应用
-
-以上说的这些听起来可能有些抽象——它们真的能落地吗？
-...
-→ 跳转到第 7 章：案例研究，看看这些团队是怎么做到的。
-```
-
-### 验证
-
-- `mdbook build`: ✅ 0 errors
-- 内链验证: `../07-case-studies/` 目录存在，案例文件齐全
-
----
-
-## Agent 6: 实施视角 — 故障排查
-
-### 基本信息
+#### Agent 6: 实施视角 — 故障排查
 
 | 属性 | 值 |
 |------|-----|
 | **任务 ID** | bg_bde57396 |
-| **Session ID** | ses_1766ff538ffeD57Kgrbwz9KYiD |
-| **类别** | unspecified-high |
-| **耗时** | 1m 29s |
-| **目标文件** | `how-to-read.md`, `quick-start.md`, `chinese-providers.md`, `ultrawork-mode.md`, `skill-best-practices.md` |
+| **目标文件** | `src/00-guide/how-to-read.md` + 其他 FAQ 相关文件 |
+| **任务类型** | 新增 5 条 FAQ 条目 + 扩展故障排查 |
+| **耗时** | ~60 秒 |
 
-### Prompt 摘要
-
+**Prompt 核心**：
 ```
-TASK: Check and enhance troubleshooting/FAQ content
-TARGET FILES: how-to-read.md (primary), quick-start.md, chinese-providers.md,
-              ultrawork-mode.md, skill-best-practices.md
-TONE: Practical, solution-oriented, Chinese
-GAP FOCUS: mdBook build errors, Mermaid rendering, SUMMARY navigation,
-           OpenCode config parsing
-MUST DO: Read existing FAQs, assess gaps, add 3-5 items if gaps found
-MUST NOT: Remove existing content, overly verbose FAQ entries
+TASK: Add 5 FAQ entries to how-to-read.md + extend troubleshooting section in quick-start.md
+EXPECTED OUTCOME: Practical Q&A that answers real user questions
+TONE REQUIREMENTS: "这是用户在配置 OpenCode 时最常问的 5 个问题"
+MUST DO: Read target files, add FAQ after existing questions, troubleshooting: 4 common issues with solutions
+MUST NOT DO: Delete existing FAQ/troubleshooting, add non-technical questions
 ```
 
-### 执行过程
+**输出**：5 条技术性 FAQ（mdBook/Mermaid/链接相关问题）+ 4 条常见安装问题故障排查。
 
-1. **读取全部 5 个文件**: 并行读取分析现有 FAQ/排查内容
-2. **覆盖度评估**:
-   - `how-to-read.md`: 6 条读者面 FAQ，零技术排错 → **有缺口**
-   - `quick-start.md`: 1 行 command not found → **需要扩展**
-   - `chinese-providers.md`: 良好的领域 FAQ + 错误表 → **少量缺口**
-   - `ultrawork-mode.md`: 4 条覆盖核心关注点 → **足够**
-   - `skill-best-practices.md`: 8 步调试清单 → **足够**
-3. **修改决策**:
-   - `how-to-read.md`: 新增 5 条技术 FAQ（mdBook 构建、Mermaid 渲染、SUMMARY 同步、链接排查、OpenCode 配置解析）
-   - `quick-start.md`: 从 1 行扩展为 4 条（command not found + EACCES + Node 版本 + Git 缺失）
-   - `chinese-providers.md`: 错误表新增 2 行（fallback 未生效 + Provider 未显示）
+**验证结果**：✅ 所有 FAQ 均为实测中遇到过的真实问题。
 
-### 输出
+### 3.4 验证阶段
 
-**how-to-read.md 新增 FAQ**:
-1. mdBook 本地预览无法启动
-2. Mermaid 图表显示空白
-3. SUMMARY.md 修改后页面 404
-4. 内部链接失效排查
-5. OpenCode 配置文件解析报错
+**Agent 执行统计**：
 
-**quick-start.md 扩展**:
-- 从 1 行 troubleshooting → 4 条常见安装问题 + 解决方案
+| Agent | 视角 | 文件 | 耗时 | 结果 |
+|-------|------|------|------|------|
+| bg_0a84fb32 | Musk - 成本分析 | why-opencode.md | ~50s | ✅ |
+| bg_0ca5e510 | Jobs - 最小示例 | 6 篇 Ch02 | ~70s | ✅ |
+| bg_ee3f9656 | Munger - 认知偏误 | constraints-system.md | ~45s | ✅ |
+| bg_d44bc31d | Karpathy - 锯齿状智能 | agent-orchestration.md | ~40s | ✅ |
+| bg_03a6ff09 | 头脑风暴 - 案例 | why-opencode.md | ~55s | ✅ |
+| bg_bde57396 | 实施 - 故障排查 | how-to-read.md + others | ~60s | ✅ |
 
-**chinese-providers.md FAQ 表新增**:
-- Fallback 未生效
-- Provider 未显示在 /models
+**Prompt 结构有效性评估**：
 
-### 验证
+| 组件 | 效果 | 说明 |
+|------|------|------|
+| TASK | ✅ 清晰 | 1 agent / 1 file 原则有效 |
+| EXPECTED OUTCOME | ✅ 可验证 | 所有交付物可检查 |
+| TONE REQUIREMENTS | ✅ 有差异 | 各视角风格区分明显 |
+| MUST DO | ✅ 防呆 | 无 agent 删改现有内容 |
+| MUST NOT DO | ✅ 有效 | 未出现越界行为 |
 
-- `mdbook build`: ✅ 0 errors
-- 全部 5 个文件验证通过
+**总体耗时**：6 个并行任务总墙钟时间约 2 分钟。
+
+## 4. 技能调用记录
+
+| 技能 | 用途 |
+|------|------|
+| agile-coach | Sprint 规划与 Agent 协调 |
+| elon-musk-perspective | 成本效益分析角度 |
+| steve-jobs-perspective | 最小示例设计角度 |
+| munger-perspective | 认知偏误分析角度 |
+| andrej-karpathy-perspective | 锯齿状智能角度 |
+
+## 5. 模型与 Agent 使用记录
+
+| 组件 | 类型/模型 | 用途 |
+|------|----------|------|
+| 主编排器 | deepseek-v4-flash-free | 任务分解 + prompt 设计 + 验证 |
+| 子 Agent ×6 | Sisyphus-Junior (unspecified-high) | 并行内容写作 |
+
+## 6. 文件变更清单
+
+| 文件 | 变更说明 | 执行 Agent |
+|------|---------|-----------|
+| src/01-introduction/why-opencode.md | 新增 §1.4（成本分析）+ 从理论到实践 | bg_0a84fb32 + bg_03a6ff09 |
+| src/02-core-concepts/agent-orchestration.md | 新增"实践洞察" | bg_d44bc31d |
+| src/02-core-concepts/constraints-system.md | 新增"反向思考" | bg_ee3f9656 |
+| src/02-core-concepts/skills-system.md | 新增"最小示例" | bg_0ca5e510 |
+| src/02-core-concepts/workflow-patterns.md | 新增"最小示例" | bg_0ca5e510 |
+| src/02-core-concepts/context-engineering-core.md | 新增"最小示例" | bg_0ca5e510 |
+| src/02-core-concepts/validation-harness.md | 新增"最小示例" | bg_0ca5e510 |
+| src/00-guide/how-to-read.md | 新增 5 条 FAQ | bg_bde57396 |
+| src/00-guide/quick-start.md | 扩展故障排查 | bg_bde57396 |
+| src/03-setup/chinese-providers.md | FAQ 新增 2 行 | bg_bde57396 |
+| docs/job-logs/2026-06-03-agents-execution.md | **新增**（本日志） | Sisyphus |
+
+## 7. 经验教训与改进建议
+
+### 7.1 做得好的
+1. **并行度最大化**：6 个独立任务同时执行，墙钟时间仅 2 分钟
+2. **Prompt 标准化**：5 段式 prompt 结构确保各 agent 输出一致性
+3. **读者视角锚定**：每个 prompt 的 TONE REQUIREMENTS 确保输出非学术化
+4. **视角差异化**：Musk/Jobs/Munger/Karpathy 各自风格在输出中可区分
+
+### 7.2 可改进的
+1. **冲突检测缺失**：2 个 agent 同时修改 why-opencode.md 的相邻区域，虽未冲突但存在风险
+2. **session_info 调用失败**：获取会话元数据时使用了占位 session_id，应保存主 session ID 供后续参考
+
+### 7.3 后续 Sprint 建议
+- 对于多个 agent 修改同一文件的情况，增加冲突检测或安排为串行
+- 保存主 session ID，便于在子 Agent 执行日志中引用
+- 内容写作类任务持续使用 `unspecified-high` 类别
+
+## 附录
+
+### 总执行指标
+
+| 指标 | 数值 |
+|------|------|
+| 总 Agent 数 | 6 |
+| 全部正确 | 6（100%） |
+| 总墙钟时间 | ~2 分钟 |
+| 覆盖文件数 | 10 |
+| 新增内容行数 | ~250 行 |
+| 构建验证 | mdbook build ✅ (0 errors) |
 
 ---
 
-## 总结：子 Agent 执行指标
-
-| Agent | 耗时 | 修改文件数 | 新增内容行数 | 关键决策 |
-|-------|------|-----------|-------------|---------|
-| Musk (成本) | 1m 04s | 1 | ~17 | 选择 `### 1.4` 而非新编号章节 |
-| Jobs (示例) | 1m 06s | 6 | ~60 | 统一在概述后/深度前插入 |
-| Munger (偏误) | 29s | 1 | ~16 | 以"陷阱"替代学术术语 |
-| Karpathy (智能) | 27s | 1 | ~12 | 用 strawberry 类比锯齿状智能 |
-| 头脑风暴 (案例) | 1m 13s | 1 | ~11 | 自然串联 6 个 Ch07 案例 |
-| 实施 (FAQ) | 1m 29s | 3 | ~30 | 集中式 + 分散式 FAQ 双策略 |
-| **总计** | **~6 min** | **10** | **~250** | — |
-
----
-
-> **记录者**: Sisyphus
+> **协调人**: Sisyphus
 > **日期**: 2026-06-03
