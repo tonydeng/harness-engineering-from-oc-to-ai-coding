@@ -145,7 +145,7 @@
 | `memory-system.md` | 跨会话记忆：Memdir架构、Auto-Dream、Compaction | 《马书》第24章 | **P0** |
 | `security-overview.md` | 安全总览：权限模型(6模式)、YOLO分类器、提示注入防御 | 《马书》第16-17b章 | **P0** |
 | `sandbox-hooks.md` | 沙箱系统(Seatbelt/Bubblewrap) + Hook点(53+事件) | 《马书》第18-18b章，OMO Hook | **P0** |
-| `claude-dot-md.md` | CLAUDE.md 用户指令覆盖层 + @include 指令系统 | 《马书》第19章 | **P0** |
+| `agents-dot-md.md` | AGENTS.md 项目指令系统 + CLAUDE.md 兼容 | 《马书》第19章 | **P0** |
 | `observability.md` | 可观测性：logEvent、5层遥测架构、生产级监控 | 《马书》第29章，OMO 54+事件 | **P0** |
 | `feature-flags.md` | OMO 89个Feature Flag 路线图、产品演进方向 | 《马书》第23章 | P2 |
 

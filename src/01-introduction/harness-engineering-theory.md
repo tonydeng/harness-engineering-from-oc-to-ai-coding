@@ -4,7 +4,7 @@
 
 ## 文章概述
 
-上一篇文章 [什么是 Harness Engineer](what-is-harness-engineer.md) 讲了"谁是驾驭工程师"，这篇文章回答两个问题：**Harness Engineering 是什么？为什么现在需要它？**——这里讲的是理论基础，后面各章都是这套理论在具体场景中的实践展开。
+上一篇文章 [什么是 Harness Engineer](what-is-harness-engineer.md) 讲了"谁是驾驭工程师"，这篇文章回答两个问题：**Harness Engineering 是什么？为什么现在需要它？**——这里讲的是理论基础，后面各章都是这套理论在具体场景中的实践展开。读完本文，你将能够掌握 Harness Engineering 的四大支柱理论，并理解 Martin Fowler 的 5 大分类法如何为全书提供统一的思维框架。
 
 Harness Engineering 的理论核心包含四个支柱，每个支柱解决一个工程问题：**编排（Orchestration）**——多 Agent 如何分工协作、**安全（Security）**——Agent 权限控制与审计、**可观测（Observability）**——运行过程可追踪可理解、**成本（Cost）**——Token 和 API 调用的精细化管理。这四个支柱缺一不可，合起来回答一个核心问题：**怎么让 AI 编程可靠、可控、可持续？**
 

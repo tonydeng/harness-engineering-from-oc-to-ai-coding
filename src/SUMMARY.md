@@ -48,7 +48,7 @@
   - [记忆系统设计](06-advanced/memory-system.md)
   - [安全总览](06-advanced/security-overview.md)
   - [沙箱与 Hook 系统](06-advanced/sandbox-hooks.md)
-  - [CLAUDE.md 约定系统](06-advanced/claude-dot-md.md)
+  - [AGENTS.md 约定系统](06-advanced/agents-dot-md.md)
   - [可观测性](06-advanced/observability.md)
   - [Feature Flags 路线图](06-advanced/feature-flags.md)
 - [案例研究](07-case-studies/README.md)

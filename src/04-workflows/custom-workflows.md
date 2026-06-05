@@ -6,6 +6,8 @@
 
 当内置工作流不能满足你的需求时，oh-my-openagent 的 Team Mode（v4.0+）提供了完整的自定义能力。你可以创建自己的多 Agent 团队，定义它们的角色、通信方式和任务分配策略。本文是 Team Mode 的完整指南。
 
+读完本文，你将能够使用 Team Mode 和 `team_*` 工具构建自定义多 Agent 工作流，理解 Hyperplan 对抗式规划的设计哲学，以及掌握设计自定义工作流的四个关键步骤。
+
 我们从 Team Mode 的架构概览开始，介绍可用的 Agent 类型（sisyphus / atlas / sisyphus-junior / hephaestus）和启用配置。然后逐一讲解 12 个 `team_*` 工具——从团队创建、成员管理到任务调度和通信的全套 API。接着深入两个内置 Team Skills：Hyperplan（5 个"敌对"评审者交叉批评的对抗式规划）和 security-research（5 人安全团队并行审计），理解它们的设计哲学。最后，你将学会设计自定义工作流的四个步骤（拆解→映射→配置→验证），并看到常见工作流模板和完整的实战示例。
 
 ---

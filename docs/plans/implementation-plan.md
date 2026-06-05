@@ -141,7 +141,7 @@
 | **P0** | Ch6 | prompt-caching | 29 | ≥250 | 3 天 |
 | **P0** | Ch6 | memory-system | 27 | ≥200 | 2 天 |
 | **P0** | Ch6 | sandbox-hooks | 25 | ≥250 | 2 天 |
-| **P0** | Ch6 | claude-dot-md | 25 | ≥200 | 1 天 |
+| **P0** | Ch6 | agents-dot-md | 25 | ≥200 | 1 天 |
 | **P0** | Ch6 | observability | 89 | ≥200 | 1 天 |
 | **P1** | Ch6 | mcp-servers | 27 | ≥200 | 2 天 |
 | **P1** | Ch6 | custom-agents | 28 | ≥200 | 1 天 |
@@ -153,7 +153,7 @@
 ### 建议执行顺序
 
 ```
-Step 1: Ch6 P0 安全体系（security-overview 续写 + sandbox-hooks + claude-dot-md）→ 3 篇，5 天
+Step 1: Ch6 P0 安全体系（security-overview 续写 + sandbox-hooks + agents-dot-md）→ 3 篇，5 天
 Step 2: Ch6 P0 上下文工程（context-compression + token-budget + prompt-caching + memory-system）→ 4 篇，8 天
 Step 3: Ch6 P1 补充（mcp-servers + custom-agents + performance-tuning + observability）→ 4 篇，5 天
 Step 4: Ch6 P2（feature-flags）→ 1 篇，1 天
@@ -175,7 +175,7 @@ Step 6: 全书链接审计 → 2 天
 | R-1A-4 | 编写 Ch6 Art.6.7: 记忆系统 | `memory-system.md` | ❌ stub(27) | 待填充 |
 | R-1B-1 | 编写 Ch6 Art.6.8: 安全总览 | `security-overview.md` | ⚠️ 部分(152) | 需续写至 ≥250 |
 | R-1B-2 | 编写 Ch6 Art.6.9: 沙箱与Hook | `sandbox-hooks.md` | ❌ stub(25) | 待填充 |
-| R-1B-3 | 编写 Ch6 Art.6.10: CLAUDE.md | `claude-dot-md.md` | ❌ stub(25) | 待填充 |
+| R-1B-3 | 编写 Ch6 Art.6.10: AGENTS.md | `agents-dot-md.md` | ❌ stub(25) | 待填充 |
 | R-1C-1 | 编写 Ch1 Art.1.3: 理论框架 | `harness-engineering-theory.md` | ✅ (525行) | **完成** |
 | R-1C-2 | 修改 Ch1 Art.1.1 | `what-is-harness-engineer.md` | ✅ (718行) | **完成** |
 | R-1C-3 | 修改 Ch1 Art.1.2 | `why-opencode.md` | ✅ (793行) | **完成** |
@@ -209,7 +209,7 @@ Step 6: 全书链接审计 → 2 天
 | **安全体系** | | | | | | |
 | S-1 | P0 | 续写 Ch6 安全总览 | `security-overview.md` | 152 | ≥250 | 2 天 |
 | S-2 | P0 | 编写 Ch6 沙箱与Hook | `sandbox-hooks.md` | 25 | ≥250 | 2 天 |
-| S-3 | P0 | 编写 Ch6 CLAUDE.md | `claude-dot-md.md` | 25 | ≥200 | 1 天 |
+| S-3 | P0 | 编写 Ch6 AGENTS.md | `agents-dot-md.md` | 25 | ≥200 | 1 天 |
 | **上下文工程** | | | | | | |
 | S-4 | P0 | 编写 Ch6 上下文压缩 | `context-compression.md` | 27 | ≥200 | 2 天 |
 | S-5 | P0 | 编写 Ch6 Token预算 | `token-budget.md` | 27 | ≥200 | 1 天 |

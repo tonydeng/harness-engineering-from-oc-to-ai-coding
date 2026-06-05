@@ -13,6 +13,8 @@ Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每
 
 Skill 的发现路径（项目级→用户级→内置）和加载机制是整个 Skill 系统的工作流核心。我们深入分析语义匹配的设计权衡——降低认知负荷的同时可能带来不精确触发——以及渐进式披露策略如何实现按需加载。在 OMO 扩展部分，我们介绍 Skills Marketplace（社区共享与版本管理）、Scoped Skills（target_agent 限定可见性）和 Skill Overrides 机制。学完本节，读者应能独立创建 Skill 文件，并为团队搭建可共享的 Skill 体系。
 
+读完本文，你将能够编写符合规范的 SKILL.md 文件，掌握 Skill 的语义匹配与渐进式加载机制，以及利用 Scoped Skills 和 Overrides 实现精细的权限控制。
+
 ### 最小示例
 
 用一个最简单的 SKILL.md 来理解 Skill：

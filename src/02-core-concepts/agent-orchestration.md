@@ -13,6 +13,8 @@ Agent 是 OpenCode 中一切任务执行的起点。了解 Agent 类型和它们
 
 在 OMO 扩展中，Sisyphus、Prometheus、Atlas、Hephaestus、Oracle 等专业 Agent 各有分工，类别路由系统按任务复杂度自动分派到最优模型。本节还会分析 Prompt 注入风险，并提供 Agent 选择决策树，帮你根据任务特征选合适的 Agent 组合。学完本节，你应能独立规划多 Agent 协作方案，并理解分层设计对工程安全的意义。
 
+读完本文，你将能够识别 OpenCode 的 7 种 Agent 类型并合理选择，掌握 Primary Agent 与 Subagent 的分层协作模式，以及根据任务特征规划多 Agent 组合方案。
+
 ### 最小示例
 
 用一个最简单的例子来理解 Agent 编排：

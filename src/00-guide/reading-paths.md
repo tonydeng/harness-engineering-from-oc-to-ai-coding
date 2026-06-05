@@ -4,7 +4,7 @@
 
 ## 文章概述
 
-一本涵盖 8 章 50 篇文章的技术书，从头读到尾并不是最高效的选择。本书设计了 13 种读者角色分类，每种角色对应不同的阅读路径。你可以根据自己的技术背景、职业角色和学习目标，跳过不相关的章节，直达最有价值的内容。
+一本涵盖 8 章 50 篇文章的技术书，从头读到尾并不是最高效的选择。本书设计了 13 种读者角色分类，每种角色对应不同的阅读路径。你可以根据自己的技术背景、职业角色和学习目标，跳过不相关的章节，直达最有价值的内容。读完本文，你将能够根据自己的技术背景和职业角色，找到最适合的阅读路径。
 
 阅读路径不是简单的章节列表。每条路径都标注了预计阅读时间、建议的阅读顺序，以及哪些小节可以跳过。对于团队负责人和评估者，路径中还包含了对环境搭建和案例研究的定向指引。无论你是第一次接触 **Agent（智能体）** 编排的新手，还是已有 OpenCode 使用经验的老手，都能找到适合自己的路线。
 
@@ -290,7 +290,7 @@ graph TB
     subgraph Ch6C["安全与沙箱"]
         G6_8["安全总览"]
         G6_9["沙箱与 Hook 系统"]
-        G6_10["CLAUDE.md 约定系统"]
+        G6_10["AGENTS.md 约定系统"]
     end
 
     subgraph Ch6D["运维与演进"]
@@ -418,7 +418,7 @@ graph TB
 |--------|------|----------|
 | **P0（必备）** | 核心概念、必读章节 | [读者导航](./), [多角色阅读路径](reading-paths.md), [5 分钟快速体验](quick-start.md), [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md), [Agent 编排](../02-core-concepts/agent-orchestration.md), [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [快速上手](../03-setup/quickstart.md), [OpenCode 配置详解](../03-setup/opencode-config.md), [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [Prometheus 规划模式](../04-workflows/prometheus-mode.md), [多 Agent 协作](../04-workflows/multi-agent-collab.md), [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [安全总览](../06-advanced/security-overview.md), [从零搭建微服务](../07-case-studies/real-world-01.md) |
 | **P1（重要）** | 进阶内容、推荐阅读 | [如何使用本书](how-to-read.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [MCP 服务器](../06-advanced/mcp-servers.md), [性能调优](../06-advanced/performance-tuning.md), [上下文压缩技术](../06-advanced/context-compression.md), [Token 预算策略](../06-advanced/token-budget.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [可观测性](../06-advanced/observability.md), [遗留系统现代化](../07-case-studies/real-world-02.md), [安全审计流水线](../07-case-studies/case-security-audit.md), [全流程自动化](../07-case-studies/case-full-pipeline.md), [国产模型混合架构](../07-case-studies/case-multi-model.md), [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) |
-| **P2（锦上添花）** | 高级话题、按需阅读 | [AI 编程失败案例](../01-introduction/failure-cases.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [多环境部署方案](../03-setup/multi-env-setup.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md), [Skill 插件化模式](../05-skills/plugin-patterns.md), [自定义 Agent](../06-advanced/custom-agents.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md) |
+| **P2（锦上添花）** | 高级话题、按需阅读 | [AI 编程失败案例](../01-introduction/failure-cases.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [多环境部署方案](../03-setup/multi-env-setup.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md), [Skill 插件化模式](../05-skills/plugin-patterns.md), [自定义 Agent](../06-advanced/custom-agents.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md) |
 
 ---
 
@@ -671,7 +671,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md)（环境搭建细节，可快速浏览）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md)（工作流细节，了解即可）
 - [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，了解即可）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 深入架构和安全分析
@@ -707,7 +707,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以 MCP 服务端集成为核心
@@ -828,7 +828,7 @@ graph TB
 | 6 | [MCP 服务器](../06-advanced/mcp-servers.md) | 精读 | 40-50 分钟 | ✅ 已完成 |
 | 7 | [安全总览](../06-advanced/security-overview.md) | 精读 | 50-60 分钟 | ✅ 已完成 |
 | 8 | [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 精读 | 45-55 分钟 | ✅ 已完成 |
-| 9 | [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md) | 精读 | 30-40 分钟 | ⚠️ 写作中 |
+| 9 | [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md) | 精读 | 30-40 分钟 | ⚠️ 写作中 |
 | 10 | [可观测性](../06-advanced/observability.md) | 精读 | 30-40 分钟 | ✅ 已完成 |
 | 11 | [安全审计流水线](../07-case-studies/case-security-audit.md) | 精读 | 40-50 分钟 | ⚠️ 写作中 |
 
@@ -874,7 +874,7 @@ graph TB
 - [环境搭建细节](../03-setup/quickstart.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [CLAUDE.md 约定系统](../06-advanced/claude-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以攻击面评估为核心
