@@ -2,6 +2,8 @@
 
 本术语表收录全书核心术语,按拼音字母排序,方便读者快速查阅。
 
+> **⏱ 时间有限？先读这些：** Agent → AGENTS.md → Build Agent → Command → Feature Flag → Skill → Ultrawork → Workflow
+
 ## A
 
 ### Agent(智能体)

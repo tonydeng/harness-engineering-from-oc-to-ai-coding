@@ -12,7 +12,7 @@
 
 | 文章 | 说明 |
 |------|------|
-| [Ultrawork 模式](ultrawork-mode.md) | 高效的分配-执行-验证循环，OpenCode 的旗舰工作流 |
+| [Ultrawork 模式](ultrawork-mode.md) | 高效的分配-执行-验证循环，oh-my-openagent 的旗舰工作流 |
 | [Prometheus 规划模式](prometheus-mode.md) | 访谈式需求收集与 Atlas 执行指挥工作流 |
 | [多 Agent 协作](multi-agent-collab.md) | 任务拆分、依赖管理、结果合并与冲突解决策略 |
 | [自定义工作流](custom-workflows.md) | 使用 Workflow DSL 定义自定义流程、门禁和回滚逻辑 |

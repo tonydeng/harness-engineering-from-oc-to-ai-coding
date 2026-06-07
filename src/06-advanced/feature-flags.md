@@ -1,5 +1,7 @@
 # Feature Flags 路线图
 
+> **OMO 扩展说明**：本文描述的 Feature Flags 系统（89 个 Flags、`opencode flags list` 命令、`feature_flags` 配置字段）是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不包含 Feature Flags 系统。omo 版本 v4.5.x，OpenCode 版本 v1.15.x。
+>
 > OMO 89 个 Feature Flag 不是随机的功能列表，它是产品迭代的仪表盘——告诉你哪些能力已经就绪、哪些正在开发、哪些即将到来。
 > **适合读者**: 技术负责人 · 架构师
 
@@ -8,6 +10,8 @@
 Feature Flag（功能开关 / Feature Toggle）是一种渐进式交付机制。新功能以 Flag 形式隐藏在代码中，按需开启或关闭，而不是等到全部开发完成才一次发布。OMO（oh-my-openagent）拥有 89 个 Feature Flag，覆盖 Agent 能力、安全策略、性能优化、集成生态和用户体验五大领域。理解这些 Flags 的当前状态和演进方向，就是读懂产品的迭代路线图。
 
 本文首先介绍 Feature Flag 机制的工作原理——什么是 Feature Flag，为什么 OMO 需要 89 个 Flags（模块化设计 + 渐进式发布 + A/B 测试），以及 Flag 的完整生命周期。然后按领域分类讲解 Flags 的路线图：Agent 类、安全类、性能类、集成类、体验类。接着介绍如何查看当前 Flags 的状态、如何配置 Flags 的开启和关闭，以及如何参与社区讨论影响 Flags 的优先级。最后通过一个完整的 Flag 启用流程示例，帮助读者理解从发现到启用的实操步骤，并说明 Flag 的版本演进和废弃机制。读完本文，你将能够理解 OMO 的 89 个 Feature Flag 布局、按需启用新功能并参与社区影响产品迭代方向。
+
+> **⏱ 时间有限？先读这些：** Flag 机制 → 路线图概览 → 按领域分类 → 配置方法
 
 ## 内容要点
 
@@ -214,7 +218,7 @@ gantt
 
 ### 当前状态一览
 
-截至 OpenCode v0.12，89 个 Feature Flag 的状态分布：
+截至 OMO v4.5.0，89 个 Feature Flag 的状态分布：
 
 | 状态 | 数量 | 占比 |
 |------|------|------|
@@ -229,10 +233,10 @@ gantt
 
 所有时间线都基于当前规划的版本节奏估算。OpenCode 采用滚动发布模式，大约每 6-8 周一个版本：
 
-- **v0.12**（当前）：31 个 experimental Flags 可用，24 个 stable
-- **v0.13**（预计 Q2 2026）：新增约 8 个 Flags，3 个 experimental 升级为 stable
-- **v0.14**（预计 Q3 2026）：新增约 10 个 Flags，5 个 experimental 升级为 stable
-- **v1.0**（预计 Q4 2026）：规划中 Flags 基本完成，发布第一个长期支持版本
+- **OMO v4.5.x**（当前）：31 个 experimental Flags 可用，24 个 stable
+- **OMO v4.6.x**（预计 Q2 2026）：新增约 8 个 Flags，3 个 experimental 升级为 stable
+- **OMO v4.7.x**（预计 Q3 2026）：新增约 10 个 Flags，5 个 experimental 升级为 stable
+- **OMO v5.0**（预计 Q4 2026）：规划中 Flags 基本完成，首个大版本
 
 ## 如何跟进
 
@@ -255,7 +259,7 @@ opencode flags list
   ✗ agent_documenter       ✗ defense_context_...   ✔ parallel_agent_...
 ```
 
-支持过滤：`opencode flags list --domain security`（按领域）、`--status experimental`（按状态）、`--since v0.11`（按版本）。详细信息用 `opencode flags show --name <flag>` 查看，输出包含 Domain/Status/Introduced/Description/Deprecates/ReplacedBy 和对应的 GitHub Issue 链接。
+支持过滤：`opencode flags list --domain security`（按领域）、`--status experimental`（按状态）、`--since OMO v4.5.x`（按版本）。详细信息用 `opencode flags show --name <flag>` 查看，输出包含 Domain/Status/Introduced/Description/Deprecates/ReplacedBy 和对应的 GitHub Issue 链接。
 
 ### 配置 Flags
 
@@ -287,7 +291,7 @@ OPENCODE_FEATURE_FLAGS='{"agent_parallel_orchestration":true}' opencode run
 
 以启用 `agent_parallel_orchestration` 为例：
 
-1. **确认状态**：`opencode flags show --name agent_parallel_orchestration` → experimental，v0.10+
+1. **确认状态**：`opencode flags show --name agent_parallel_orchestration` → experimental，OMO v4.5.x+
 2. **了解限制**：见 Issue #892——不支持嵌套并行，默认并发数 4，依赖外部服务的工具不适合并行
 3. **本地启用**：在配置中添加 `"agent_parallel_orchestration": true`
 4. **验证效果**：对比开启前后 `opencode run --task ... --duration --measure` 的结果

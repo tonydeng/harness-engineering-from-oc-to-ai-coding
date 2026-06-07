@@ -1,5 +1,7 @@
 # 自定义 Agent 与 Plugin
 
+> **OMO 扩展说明**：本文中的 `definePlugin` API、Pipeline Hook 链式执行模型、OMO 扩展的 53+ Hook 点，以及 `plugin` 配置块的对象格式（`{ "path": "...", "enabled": true }`）是 **oh-my-openagent (OMO)** 对 OpenCode Plugin 系统的扩展。原生 OpenCode 的 Plugin 使用异步函数返回 Hook 对象（非 `definePlugin`），Hook 数量约为 20+（非 53+）。OpenCode 版本 v1.15.x，OMO 版本 v4.5.x。
+>
 > 从 Agent 定义到 Plugin 扩展，掌握 OpenCode 生态中最灵活的定制能力——让 AI 编程工作流完全为你所用。
 > **适合读者**: Skill 作者 · 技术负责人
 

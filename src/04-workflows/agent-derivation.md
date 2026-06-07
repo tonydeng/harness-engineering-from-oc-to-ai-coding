@@ -48,7 +48,7 @@ Agent 派生是扩展单一 Agent 能力边界的关键机制。当一个 Agent 
 
 ## 三种派生模式
 
-> **概念框架说明**：以下三种模式为概念分类，辅助理解 Agent 之间的协作关系。实际实现中均通过 `task()`（OpenCode 核心）或 `delegate_task()`（oh-my-opencode 插件）完成，并非独立的 API 参数取值。具体的 API 调用方式见下一节。
+> **概念框架说明**：以下三种模式为概念分类，辅助理解 Agent 之间的协作关系。实际实现中均通过 `task()`（OpenCode 核心）或 `delegate_task()`（oh-my-openagent 插件）完成，并非独立的 API 参数取值。具体的 API 调用方式见下一节。
 
 ### 子 Agent 模式
 
@@ -273,7 +273,7 @@ flowchart TB
 
 ## task() API 的派生实现
 
-`task()` 是 OpenCode **核心内置函数**，用于创建子 Agent 执行子任务。同一模式下，**oh-my-opencode（OMO）插件** 提供了 `delegate_task()` 扩展，增加了委托编排能力。本节分别说明两种 API 的用法，并在概念层面映射到三种派生模式。
+`task()` 是 OpenCode **核心内置函数**，用于创建子 Agent 执行子任务。同一模式下，**oh-my-openagent（OMO）插件** 提供了 `delegate_task()` 扩展，增加了委托编排能力。本节分别说明两种 API 的用法，并在概念层面映射到三种派生模式。
 
 ### OpenCode 核心 task() 函数
 
@@ -318,7 +318,7 @@ const result = task(
 - **v1.14.46 之后**：`deriveSubagentSessionPermission()` 会将父 Agent 的所有 deny 规则**追加**到子 Agent 中，可能导致子 Agent 权限**比父 Agent 更严格**
 - **建议显式指定权限**：不要在子 Agent 中开启 `tools: { task: true }`，否则可能引发无限递归
 
-### oh-my-opencode delegate_task() 扩展
+### oh-my-openagent delegate_task() 扩展
 
 OMO 的 `delegate_task()` 是对 `task()` 的扩展封装，提供了更高层次的委托编排能力：
 
@@ -344,7 +344,7 @@ delegate_task(
 )
 ```
 
-> `delegate_task()` 是 OMO 插件提供的能力，并非 OpenCode 核心 API。使用前需确认项目中已集成 oh-my-opencode。
+> `delegate_task()` 是 OMO 插件提供的能力，并非 OpenCode 核心 API。使用前需确认项目中已集成 oh-my-openagent。
 
 ### load_skills 传递技能上下文
 

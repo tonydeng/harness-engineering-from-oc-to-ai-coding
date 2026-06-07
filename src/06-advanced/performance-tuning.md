@@ -1,5 +1,7 @@
 # 性能调优与成本管理
 
+> **OMO 扩展说明**：本文中的 `tokenBudget`、`compaction`、`hashline` 配置字段、54+ Event Hooks 体系及类别自动降级 (Category-based Auto-downgrade) 模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不含这些字段。`.opencodeignore` 排除策略、`ripgrep` 本地搜索、Context7 MCP 优化及 Session 日志分析命令是通用实践，可独立于 OMO 使用。OpenCode 版本 v1.15.x，OMO 版本 v4.5.x。
+>
 > 响应慢？Token 消耗大？错误率高？从性能瓶颈识别到成本管控策略，系统性优化 AI 编程工作流。
 > **适合读者**: 效率开发者 · 工程经理
 
@@ -11,6 +13,8 @@
 ## 文章概述
 
 本文从性能瓶颈识别入手，介绍 54+ Event Hooks 可观测性体系如何定位三类性能问题。然后深入成本管控策略：Token 预算、模型降级链、上下文压缩和工具输出保护窗口。接着讲解 Hashline 编辑机制，最后讨论上下文优化技巧。目标是让读者形成"测量-分析-优化-再测量"的持续调优闭环。读完本文，你将能够识别 AI 编程工作流中的性能瓶颈，制定成本管控策略并建立持续调优机制。
+
+> **⏱ 时间有限？先读这些：** 瓶颈识别 → 成本管控 → Hashline 机制 → 上下文优化
 
 ## 一、性能瓶颈识别
 

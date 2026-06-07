@@ -135,7 +135,7 @@ flowchart TB
 
 → 此模式在 oh-my-openagent v4.0+ 中被正式封装为 **Team Mode**，提供 12 个 `team_*` 工具和四种 Agent 类型（Sisyphus、Atlas、Sisyphus-Junior、Hephaestus）来构建多 Agent 协作系统。详见[自定义工作流](custom-workflows.md)。
 
-> 注：第 2 章介绍了 OpenCode 的 5 个核心 Agent（Sisyphus、Prometheus、Atlas、Hephaestus、Oracle）。本章的 Team Mode 聚焦于 Sisyphus、Atlas、Hephaestus、Sisyphus-Junior 四种可参与工作流的 Agent 类型。Oracle 作为只读咨询 Agent 不参与工作流执行，Prometheus 作为规划模式已在前文介绍。
+> 注：第 2 章介绍了 OMO 扩展的 5 个核心 Agent（Sisyphus、Prometheus、Atlas、Hephaestus、Oracle）。本章的 Team Mode 聚焦于 Sisyphus、Atlas、Hephaestus、Sisyphus-Junior 四种可参与工作流的 Agent 类型。Oracle 作为只读咨询 Agent 不参与工作流执行，Prometheus 作为规划模式已在前文介绍。
 
 ```mermaid
 flowchart TB
@@ -265,9 +265,11 @@ flowchart TB
 | **一致性** | 高（固定流程） | 低（需合并） | 高（编排协调） | 高（共识机制） |
 | **容错性** | 低（单点故障） | 高（部分失败可继续） | 高（重试机制） | 中（依赖仲裁） |
 | **适用场景** | 固定子任务顺序 | 独立子任务并行 | 动态分解任务 | 多角度分析决策 |
-| **OpenCode 实现** | Skill/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate |
+| **OpenCode 实现** | Skill/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate* |
 | **成本** | 低 | 中（并行调用） | 高（多次调用） | 高（多轮交互） |
 | **可控性** | 高 | 中 | 高 | 中 |
+
+> \* Hyperplan 是 OMO 内置 Team Skill，非 OpenCode 原生功能。详见[自定义工作流](custom-workflows.md)。
 
 **模式选择决策树**：
 

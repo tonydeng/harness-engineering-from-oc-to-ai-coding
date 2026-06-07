@@ -23,14 +23,15 @@
 
 ```json:opencode.json
 {
-  "tokenBudget": {
-    "total": 200000,
-    "reserved": 0.25
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
   }
 }
 ```
 
-这短短两行配置说的是：Agent 的"工作记忆"最多 200K Token，其中 25% 要预留出来供 Agent 思考。就像你写代码时要给大脑留缓存空间一样——不设预留，Agent 可能在关键时刻"失忆"。
+这三行配置说的是：开启自动压缩（`auto: true`），不裁剪旧工具输出（`prune: false`），预留 10K Token 的缓冲空间避免压缩过程溢出。`reserved` 就像一个安全缓冲区——当上下文接近模型窗口上限时，这段预留空间确保压缩过程中不会因超限而失败。
 
 ### 操作系统类比：Context = 工作记忆
 
@@ -326,16 +327,12 @@ graph TB
 
 ```json:opencode.json
 {
-  "tokenBudget": {
-    "total": 200000,
-    "allocation": {
-      "system": 4000,
-      "user": 50000,
-      "tools": 80000,
-      "reserved": 66000
-    },
-    "enforcement": "strict"
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
   }
+}
 ```
 
 **各区域的作用**：
@@ -345,7 +342,9 @@ graph TB
 | 系统消息 | 2-5% | System Prompt、工具定义 | 固定，通过缓存优化 |
 | 用户输入 | 25-30% | 任务描述、代码上下文 | 按需加载，智能截断 |
 | 工具输出 | 40-50% | MCP 返回、文件内容 | 结果压缩、分页返回 |
-| 预留空间 | 20-30% | Agent 推理、生成响应 | 必须保留，不可侵占 |
+| 预留空间 | 10-20% | Agent 推理、生成响应 | 必须保留，不可侵占 |
+
+> **注意**：OpenCode 不提供精确到类别的预算分配配置，上表是概念性的预算分配原则。实际控制通过 `compaction.reserved` 设置整体预留空间，以及 Provider 层的 `thinking.budgetTokens` 控制推理预算。
 
 ### 预算超限的处理机制
 
@@ -382,21 +381,29 @@ flowchart TD
 
 ```json:opencode.json
 {
-  "tokenBudget": {
-    "overrunHandling": {
-      "compression": {
-        "threshold": 0.8,
-        "priority": 1
-      },
-      "modelDowngrade": {
-        "threshold": 0.9,
-        "fallbackModel": "claude-haiku",
-        "priority": 2
-      },
-      "truncation": {
-        "threshold": 0.95,
-        "strategy": "fifo",
-        "priority": 3
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
+  }
+}
+```
+
+OpenCode 的 Compaction 机制在上下文接近窗口上限时自动触发。当 Token 使用量达到模型上下文限制的约 80% 时，系统会启动一个专门的 `compaction` Agent，对历史消息进行智能摘要压缩，替换掉原始冗长的对话记录。`reserved` 参数确保压缩过程中有足够的缓冲空间不会溢出。此外，还可以通过 Provider 的 `thinking.budgetTokens` 控制推理 Token 预算：
+
+```json:opencode.json
+{
+  "provider": {
+    "anthropic": {
+      "models": {
+        "claude-sonnet-4-20250514": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 16000
+            }
+          }
+        }
       }
     }
   }

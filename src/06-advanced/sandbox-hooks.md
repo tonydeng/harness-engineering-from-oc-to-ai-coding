@@ -1,5 +1,7 @@
 # 沙箱与 Hook 系统
 
+> **OMO 扩展说明**：本文中的 `sandbox` 配置块（`platform.macos`/`platform.linux`）、53+ Hook 点体系、Hook Pipeline 配置（`hooks.pipelines`）、自定义脚本 Hook（`hooks.custom`）以及沙箱逃逸威胁模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 沙箱与 Hook 系统的扩展。原生 OpenCode 的沙箱通过插件（如 `opencode-sandbox` npm 包）实现，而非内置的 `sandbox` 配置键；原生 Hook 点约 20+ 个（如 `session:start`、`tool:before`、`permission:check` 等），不包含 Workflow 级 Hook（`onWorkflowStart` 等）。Permission 模型（allow/ask/deny）是原生 OpenCode 功能。OpenCode 版本 v1.15.x，OMO 版本 v4.5.x。
+>
 > 沙箱是 Agent 执行的"隔离区"，Hook 系统是安全策略的"传感器"。两者协同工作，构建 Agent 行为的可观测、可控制、可拦截能力。
 > **适合读者**: 安全工程师 · 红队
 

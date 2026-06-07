@@ -2,6 +2,8 @@
 
 > 本文为 [可观测性](./observability.md) 的配套参考文件，包含详细的 PromQL 查询、日志聚合配置、Grafana 仪表板配置和 Shell 聚合命令。阅读主文后按需查阅。
 
+> **⏱ 时间有限？先读这些：** Prometheus 指标 → PromQL 查询 → 日志配置 → Grafana 仪表板 → Shell 命令
+
 ## Prometheus 指标与 PromQL 查询
 
 ### 暴露的关键指标

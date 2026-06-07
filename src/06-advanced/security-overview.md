@@ -1,5 +1,7 @@
 # 安全总览
 
+> **OMO 扩展说明**：本文中的 `secrets`、`audit`、`yolo`、`security.prompt_injection` 等配置字段是 **oh-my-openagent (OMO)** 对 OpenCode 安全系统的扩展。原生 OpenCode 的安全配置通过 `permission` 字段控制（allow/ask/deny 三级策略 + glob 模式匹配），不包含独立的审计、Secret Store 或 YOLO 风险分类器模块。Permission 模型的 `allow/ask/deny` 策略和 `opencode.json` 中的 `permission` 配置块是原生 OpenCode 功能。OpenCode 版本 v1.15.x，OMO 版本 v4.5.x。
+>
 > AI 编程工作流的安全不是事后补丁，而是架构设计的固有部分。从权限模型到提示注入防御，系统化构筑安全防线。
 > **适合读者**: 安全工程师 · 红队
 

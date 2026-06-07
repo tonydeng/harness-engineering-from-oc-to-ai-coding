@@ -9,6 +9,8 @@
 
 本文首先阐述 AGENTS.md 作为项目约定系统的核心角色——架构级约束、编码规范、项目结构的统一载体。然后对比 AGENTS.md 与 CLAUDE.md 的职责划分：AGENTS.md 负责"不变的东西"，CLAUDE.md 负责"今天要这么干的东西"。接着介绍指令覆盖策略的四层结构：**OpenCode 全局 AGENTS.md（首要）→ Claude Code 全局 CLAUDE.md（后备）→ 项目根指令文件（AGENTS.md 优先）→ 子目录 @include**。最后深入 `@include` 指令系统——文件包含、指令嵌套、优先级和合并规则，并给出团队级指令管理的最佳实践。读完本文，你将能够正确划分 AGENTS.md 与 CLAUDE.md 的职责、配置多层指令覆盖策略并管理团队级指令。
 
+> **⏱ 时间有限？先读这些：** AGENTS.md vs CLAUDE.md → 四层覆盖策略 → @include 指令 → 最佳实践
+
 ## 内容要点
 
 1. **AGENTS.md 的作用** — 项目级约定系统的核心：定义项目的根本规则、架构决策和编码规范。CLAUDE.md 作为补充载体：代表用户的直接指令。**在 OpenCode 中，AGENTS.md 是首要指令文件，CLAUDE.md 作为兼容后备方案。** 两者的关系：AGENTS.md = 项目的"宪法"（架构规则、编码规范）、CLAUDE.md = 用户的"行政令"（具体怎么做、偏好什么工具）。
