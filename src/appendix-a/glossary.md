@@ -16,11 +16,15 @@
 
 **定义**:OpenCode 的项目指令文件,用于定义项目的架构规范、技术栈、约束条件。它是实现架构护栏的核心载体,让 Agent "认识"项目。
 
+> **人话**: 告诉 Agent 项目怎么做的说明书
+
 **首次出现**:[工作流模式](../02-core-concepts/workflow-patterns.md)
 
 ### Architecture Guardrails(架构护栏)
 
 **定义**:约束 Agent 架构决策的规则体系,不关心"代码写得对不对",而是关心"架构方向对不对"。通过 AGENTS.md 实现。
+
+> **人话**: 管架构方向不管代码细节的规则
 
 **首次出现**:[约束系统解析](../02-core-concepts/constraints-system.md)
 
@@ -30,6 +34,8 @@
 
 **定义**:OpenCode 的默认执行模式,读写执行全能型 Agent,拥有完整的工具访问权限,适用于功能实现、代码重构、Bug 修复等场景。
 
+> **人话**: 权限最大的全能型 Agent，适合写代码干活
+
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
 ## C
@@ -38,17 +44,23 @@
 
 **定义**:OpenCode 中最直观的工作流入口,将复杂的操作序列封装为简单的 `/command` 形式,让用户无需记忆繁琐步骤即可触发预设行为。
 
+> **人话**: 把复杂操作变成一句话
+
 **首次出现**:[工作流模式](../02-core-concepts/workflow-patterns.md)
 
 ### Compaction(上下文压缩)
 
 **定义**:当上下文接近窗口上限时自动触发的压缩机制,通过后台 Agent 分析当前上下文,生成摘要并选择性保留关键信息。
 
+> **人话**: 记不住时就总结一下
+
 **首次出现**:[上下文工程核心](../02-core-concepts/context-engineering-core.md)
 
 ### Context Engineering(上下文工程)
 
 **定义**:管理 AI Agent 有限 Token 空间的方法论,包含三个核心维度:压缩(缩减信息量)、缓存(重用已有信息)、预算(分配有限空间)。
+
+> **人话**: 管好 AI 的有限记忆空间
 
 **首次出现**:[上下文工程核心](../02-core-concepts/context-engineering-core.md)
 
@@ -76,6 +88,8 @@
 
 **定义**:设计和管理 AI 工程流水线的方法论,核心是让 AI 的输出可靠、可复现、有价值。三大原则:可复现(Reproducible)、可审计(Auditable)、可改进(Improveable)。
 
+> **人话**: 让 AI 编程可靠可控的方法论
+
 **首次出现**:[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)
 
 ### Harness Engineer(驾驭工程师)
@@ -102,6 +116,8 @@
 
 **定义**:OpenCode 的配置文件,定义权限策略、工具配置、模型选择、自定义命令等项目级设置。
 
+> **人话**: OpenCode 的总配置文件
+
 **首次出现**:[工作流模式](../02-core-concepts/workflow-patterns.md)
 
 ## P
@@ -110,17 +126,23 @@
 
 **定义**:定义 Agent "能做什么"的约束系统基础层,包含六种权限模式(allow/ask/deny/passive/restricted/inherit)和三级策略。
 
+> **人话**: 管 Agent 能不能做的规则
+
 **首次出现**:[约束系统解析](../02-core-concepts/constraints-system.md)
 
 ### Plan Agent(规划代理)
 
 **定义**:OpenCode 的只读分析模式,专注于需求分析、架构设计、安全审查等需要思考但不应该改动的场景。遵循"先思考后执行"原则。
 
+> **人话**: 只动脑不动手的 Agent，适合分析和设计
+
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
 ### Provider(模型供应商)
 
 **定义**:提供大语言模型推理能力的服务商,如 Anthropic Claude、OpenAI GPT、Google Gemini 等,或本地部署的模型。
+
+> **人话**: 提供 AI 模型的服务商
 
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
@@ -136,11 +158,15 @@
 
 **定义**:用户输入给 AI 模型的自然语言指令。Prompt Engineer 关注"怎么写好的提示词",是战术层面的技巧。
 
+> **人话**: 你对 AI 说的话
+
 **首次出现**:[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)
 
 ### Quality Gates(质量门禁)
 
 **定义**:验证护栏的核心机制,按严重程度分为三级:硬性门禁(编译/语法/类型/安全)、质量门禁(覆盖率/规范/复杂度)、量化门禁(性能/安全评分)。
+
+> **人话**: 代码入库前必须过的关卡
 
 **首次出现**:[验证护栏体系](../02-core-concepts/validation-harness.md)
 
@@ -157,6 +183,8 @@
 ### Subagent(子代理)
 
 **定义**:由 Primary Agent 调用的子任务执行单元,通过 `@agent-name` 语法触发,用于执行特定类型的子任务,如代码探索、通用任务等。
+
+> **人话**: 被主 Agent 调用的帮手
 
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
@@ -197,6 +225,8 @@
 ### Tool(工具)
 
 **定义**:Agent 可以调用的能力集合,包括文件操作(Read/Write/Edit/Delete)、命令执行(Bash)、网络请求(WebSearch/WebFetch)、代码搜索(Grep/Glob)等。
+
+> **人话**: Agent 能用的工具（读文件、跑命令等）
 
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 

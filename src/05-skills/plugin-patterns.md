@@ -8,6 +8,8 @@
 
 本文从 Skill 架构的三个演进阶段（独立 Skill、组合 Skill、Skill 市场）讲起，分析编排模式、管道模式和集市模式三种组合方式，并介绍 Skills Marketplace 的发布和发现机制。读完本文后，读者应该能够从"写 Skill"升级到"设计 Skill 体系"——以组件化的思维构建团队的 Skill 生态。
 
+> **⏱ 时间有限？先读这些：** Skill 架构的演进三阶段 → 组合 Skill 的三种协作模式 → Skills Marketplace 发布与管理 → 插件化设计原则
+
 ## Skill 架构的演进三阶段
 
 ### 阶段一：独立 Skill
@@ -25,14 +27,14 @@
 
 **典型示例**：
 
-```yaml
+```markdown:examples/skills/deep-research/SKILL.md
 ---
 name: deep-research
 description: |
   用于需要网络研究的任何问题。
   提供：系统化的多角度研究方法论。
   适用：当用户询问"什么是 X"、"比较 X 和 Y"。
-allowed-tools: [WebSearch, WebFetch, Read, Grep]
+allowed-tools: [websearch, webfetch, read, grep]
 ---
 
 # Deep Research Skill
@@ -103,7 +105,7 @@ dependencies:
     version: ">=1.0.0"
   - name: qa-engineer
     version: ">=1.0.0"
-allowed-tools: [Read, Write, Glob, Grep, RunCommand]
+allowed-tools: [read, edit, glob, grep, bash]
 ---
 
 # Full Stack Dev Skill
@@ -144,6 +146,8 @@ allowed-tools: [Read, Write, Glob, Grep, RunCommand]
 - 实现代码
 - 测试报告
 ```
+
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
 
 ### 阶段三：Skills Marketplace
 
@@ -235,7 +239,7 @@ sequenceDiagram
 
 **配置示例**：
 
-```yaml
+```markdown:examples/skills/release-workflow/SKILL.md
 ---
 name: release-workflow
 description: |
@@ -303,6 +307,8 @@ dependencies:
 | 版本管理 | 版本号有效 | 阻止继续 |
 ```
 
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
+
 ### 管道模式（Pipeline）
 
 管道模式将多个 Skill 串联成处理链路，每个 Skill 处理一部分工作，输出传递给下一个 Skill。这类似于**后端的数据处理管道**（如 ETL 流程）——数据流经多个处理节点，每个节点完成特定转换。
@@ -333,7 +339,7 @@ flowchart LR
 
 **配置示例**：
 
-```yaml
+```markdown:examples/skills/data-pipeline/SKILL.md
 ---
 name: data-pipeline
 description: |
@@ -417,6 +423,8 @@ error_handling: fail_fast  # 或 continue_on_error
 - 缓存中间结果
 ```
 
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
+
 ### 集市模式（Marketplace）
 
 集市模式不预先定义固定的组合方式，而是根据任务需求动态选择合适的 Skill 组合。这类似于**微服务的服务发现机制**——运行时根据需求发现和调用服务。
@@ -458,7 +466,7 @@ flowchart TB
 
 **动态选择机制**：
 
-```yaml
+```markdown:examples/skills/adaptive-assistant/SKILL.md
 ---
 name: adaptive-assistant
 description: |
@@ -622,7 +630,9 @@ Skills Marketplace 提供多维度的评分和发现机制：
 
 **部署方案**：
 
-```yaml
+> ⚠️ 以下企业私有 Skill 市场方案是前瞻性概念设计，并非 OpenCode 或 OMO 的现有功能。实际搭建此类系统需要完整的后端基础设施（云存储、身份认证、审批工作流等）。
+
+```yaml:examples/skills/enterprise-marketplace.yaml
 # enterprise-marketplace.yaml
 marketplace:
   type: private
@@ -761,7 +771,7 @@ full-stack-dev@2.0.0
 
 **依赖锁定**：
 
-```yaml
+```yaml:examples/skills/skill-lock.yaml
 # skill-lock.yaml
 lock_version: 1
 skills:

@@ -9,6 +9,8 @@
 
 本文首先澄清"记忆 vs 缓存"的概念差异。然后介绍 OpenCode 记忆插件生态——4 款真实可用的插件，涵盖轻量集成、Claude Code 兼容、企业级高召回和认知心理学路线。接着分析 Auto-Dream 机制——记忆插件如何自动生成摘要、评估重要度、淘汰低价值记忆。然后介绍 Compaction 与记忆的配合：Compaction 保留重要决策和上下文，记忆为 Compaction 提供优先级参考。最后讨论记忆系统的安全考虑和选型建议。读完本文，你将能够根据自身需求选择合适的记忆插件，并配置 Agent 的跨 Session 上下文保持。
 
+> **⏱ 时间有限？先读这些：** 记忆与缓存的区别 → 插件选型 → Auto-Dream 机制 → Compaction 配合
+
 ## 内容要点
 
 1. **记忆 vs 缓存** — 记忆是被动的（Agent"记得"什么），缓存是被动的（系统"存了"什么）。记忆系统解决的核心问题：跨 Session 上下文保持。记忆的三个层次：短期记忆（当前 Session）、中期记忆（相关 Session）、长期记忆（项目级知识）。
@@ -108,7 +110,7 @@ graph TB
 
 **安装配置**：
 
-```jsonc
+```jsonc:opencode.jsonc
 // ~/.config/opencode/opencode.json 或项目 .opencode/opencode.json
 {
   "plugin": ["opencode-mem"]
@@ -119,7 +121,7 @@ OpenCode 下次启动时自动从 npm 下载。
 
 **详细配置**（`~/.config/opencode/opencode-mem.jsonc`）：
 
-```jsonc
+```jsonc:opencode-mem.jsonc
 {
   "storagePath": "~/.opencode-mem/data",
   "embeddingModel": "Xenova/nomic-embed-text-v1",
@@ -147,7 +149,7 @@ OpenCode 下次启动时自动从 npm 下载。
 
 **Agent 可调用的记忆操作**：
 
-```typescript
+```typescript:agent-memory-ops.ts
 // 添加记忆
 memory({ mode: "add", content: "项目采用微服务架构，服务间通过 gRPC 通信" });
 // 搜索记忆
@@ -186,7 +188,7 @@ opencode-memory install   # 一次性安装 shell hook
 
 **插件配置**：
 
-```jsonc
+```jsonc:opencode.jsonc
 // ~/.config/opencode/opencode.json
 {
   "plugin": ["opencode-claude-memory"]
@@ -225,7 +227,7 @@ opencode 命令 →
 
 **安装配置**（OpenCode MCP 模式）：
 
-```jsonc
+```jsonc:opencode.jsonc
 // ~/.config/opencode/opencode.json
 {
   "mcp": {
@@ -271,7 +273,7 @@ cp plugin/opencode/agentmemory-capture.ts ~/.config/opencode/plugins/
 
 **配置**：
 
-```jsonc
+```jsonc:opencode.jsonc
 // ~/.config/opencode/opencode.jsonc
 {
   "plugin": ["true-mem"]
@@ -406,7 +408,7 @@ Agent 执行 → Token 接近窗口上限
 
 记忆插件为 Compaction 提供优先级参考——插件的重要度评分直接告诉 Compaction"什么信息不能丢"：
 
-```jsonc
+```jsonc:opencode-mem.jsonc
 // opencode-mem 配置中的 compaction 设置
 {
   "compaction": {
@@ -450,7 +452,7 @@ Memory 是 Agent 的"私人笔记"——但不该记的东西不能记：
 - **作用域隔离**：`opencode-mem` 通过 `scope: "project"` 限制搜索范围
 - **配置隔离**：每个项目可配置独立的记忆参数
 
-```jsonc
+```jsonc:opencode-mem.jsonc
 // opencode-mem 配置中的作用域控制
 {
   "memory": {

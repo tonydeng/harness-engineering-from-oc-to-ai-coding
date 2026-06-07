@@ -9,6 +9,8 @@
 
 本文从安全的整体架构出发，首先展示四层安全模型——权限、分类、隔离、防御。然后详细讲解 6 种权限模式（全局/项目/会话/工具 + 允许/询问/禁止三级策略）和自定义规则的优先级机制。接着深入风险分类器 (Risk Classifier)——它能根据历史数据判断当前操作的风险等级（高/中/低），并支持自定义分类规则。针对最常见的威胁——提示注入，分析攻击类型和防御策略。最后介绍权限审计功能，包括审计日志配置和合规映射（NIST/SOC2/等保）。本文还将使用 STRIDE 方法在 Agent 编排全过程中系统性地分析威胁面。读完本文，你将能够配置四层安全模型、应对提示注入攻击并建立合规审计机制。
 
+> **⏱ 时间有限？先读这些：** 权限模式配置 → 风险分类器 → 提示注入防御 → Secret Store 集成
+
 ## 内容要点
 
 1. **安全架构总览** — 四层安全模型：权限层（能否执行）、分类层（风险多高）、隔离层（在哪执行）、防御层（如何阻断）。Agent 编排全过程的攻击面分析（使用 STRIDE 方法）。
@@ -71,7 +73,7 @@
 
 ### 完整配置示例
 
-```json
+```json:opencode.json
 {
   "permission": {
     "read": "ask",
@@ -142,7 +144,7 @@
 - 用户同意"修改 src/app.ts" → 类似文件操作风险评分降低
 - 用户拒绝"执行 curl" → 类似网络命令评分升高
 
-```json
+```json:opencode.json
 {
   "yolo": {
     "enabled": true,
@@ -162,7 +164,7 @@
 
 ### 自定义分类规则
 
-```json
+```json:opencode.json
 {
   "yolo": {
     "custom_rules": [
@@ -243,7 +245,7 @@ OpenCode 的解码检测引擎会还原编码内容并匹配恶意模式。
 
 ### 防御配置
 
-```json
+```json:opencode.json
 {
   "security": {
     "prompt_injection": {
@@ -265,7 +267,7 @@ OpenCode 的解码检测引擎会还原编码内容并匹配恶意模式。
 
 ### 检测日志示例
 
-```json
+```json:audit-log.json
 {
   "timestamp": "2025-06-04T10:32:15Z",
   "event": "prompt_injection_detected",
@@ -293,7 +295,7 @@ OpenCode 的解码检测引擎会还原编码内容并匹配恶意模式。
 
 ### 审计日志配置
 
-```json
+```json:opencode.json
 {
   "audit": {
     "enabled": true,
@@ -313,7 +315,7 @@ OpenCode 的解码检测引擎会还原编码内容并匹配恶意模式。
 
 ### 审计日志输出格式
 
-```json
+```json:audit-log.json
 {
   "timestamp": "2025-06-04T10:30:00Z",
   "session_id": "sess_abc123",
@@ -375,7 +377,7 @@ OpenCode 的解码检测引擎会还原编码内容并匹配恶意模式。
 
 ### HashiCorp Vault
 
-```json
+```json:opencode.json
 {
   "secrets": {
     "backend": "vault",
@@ -420,7 +422,7 @@ flowchart LR
 
 **详细配置**：
 
-```json
+```json:opencode.json
 {
   "secrets": {
     "backend": "vault",
@@ -444,7 +446,7 @@ flowchart LR
 
 ### AWS Secrets Manager
 
-```json
+```json:opencode.json
 {
   "secrets": {
     "backend": "aws-secrets-manager",
@@ -483,7 +485,7 @@ flowchart LR
 
 ### 轮换策略
 
-```json
+```json:opencode.json
 {
   "secrets": {
     "rotation": {
@@ -508,7 +510,7 @@ flowchart LR
 
 ### 1. 硬编码 Secret 到配置文件
 
-```json
+```json:opencode.json
 {
   "provider": {
     "anthropic": {
@@ -524,7 +526,7 @@ flowchart LR
 
 ### 2. 权限规则过于宽松
 
-```json
+```json:opencode.json
 {
   "permission": {
     "read": "allow",

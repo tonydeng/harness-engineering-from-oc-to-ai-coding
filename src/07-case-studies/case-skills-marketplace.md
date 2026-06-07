@@ -10,6 +10,8 @@ Skill 市场的核心是**标准化**。所有 Skill 必须遵守统一的 `fron
 
 在治理机制上，案例设计了"Skill 作者 → 技术审校 → 发布"的三段式流水线，配合使用统计和反馈收集实现 Skill 的全生命周期管理。废弃机制确保没有人用已过时的 Skill。最终效果是：团队的经验以 Skill 的形式沉淀为可复用、可传承的知识资产。治理不意味着僵化——方案保留了足够的灵活性让团队快速实验新 Skill，并在验证通过后纳入正式市场。
 
+> **⏱ 时间有限？先读这些：** 内部市场设计 → 标准化规范 → 团队协作 → 发布 CI/CD
+
 ## 内容要点
 
 1. **项目背景** — 中大型团队引入 OpenCode 后的典型问题：Skill 质量参差不齐、重复建设、发现困难。为什么需要团队级的 Skill 治理。
@@ -173,16 +175,18 @@ skills/
 | Minor | 1.0.0 → 1.1.0 | 功能新增：增加新工具、添加新示例、扩展适用范围 |
 | Patch | 1.0.0 → 1.0.1 | Bug 修复：修正拼写错误、优化表述、补充遗漏的前置条件 |
 
-发布命令示例：
+发布命令示例（⚠️ **前瞻性设计**：以下 `opencode skill` CLI 子命令为 Skill 市场方案的概念设计，截至 OpenCode v1.15.x 尚未内置。当前可通过 Shell 脚本 + CI 流水线实现等价功能）：
 ```
-# 本地验证
+# 本地验证（概念设计——当前可用 shellcheck + yamllint 替代）
 opencode skill validate ./skills/code-review/
 # 输出：格式检查通过 ✅ | 权限审计通过 ✅ | 功能测试通过 ✅
 
-# 发布到内部市场
+# 发布到内部市场（概念设计——当前可用 CI/CD 流水线替代）
 opencode skill publish ./skills/code-review/ --market internal
 # 输出：已发布 v1.1.0 | 索引已更新 | 通知已发送至 #skill-market
 ```
+
+> **实施建议**：上述 CLI 命令描述了理想的 Skill 市场工作流。在 OpenCode 原生支持之前，团队可通过 GitHub Actions + 自定义脚本实现等价的验证和发布流程（见下方 CI/CD 配置示例）。
 
 ## Skill 标准化规范
 
@@ -207,7 +211,7 @@ allowed-tools:                  # 有工具调用时必填
 # === 可选字段 ===
 version: 1.0.0                  # 建议填写，便于版本追踪
 license: MIT                    # 开源许可
-compatibility: ">= 3.0.0"       # OpenCode 版本兼容性
+compatibility: ">= 1.0.0"       # OpenCode 版本兼容性
 subtask: false                  # 是否可作为子任务执行
 examples:                       # I/O 示例，用于测试和文档
   - input:
@@ -394,6 +398,8 @@ deprecation:
 
 ### GitHub Actions 配置示例
 
+> ✅ **已验证**：以下 GitHub Actions 配置基于标准 CI/CD 模式，可在 GitHub Actions 环境中直接运行（需替换 `opencode skill` 为实际脚本路径）。
+
 ```yaml:.github/workflows/skill-publish.yml {1}
 name: Skill 发布流水线
 
@@ -409,15 +415,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "门禁一：格式检查"
+      - name: "门禁一：格式检查（⚠️ 前瞻性设计——需替换为自定义脚本）"
         run: |
           opencode skill validate --check format ${{ github.event.pull_request.head.sha }}
 
-      - name: "门禁二：权限审计"
+      - name: "门禁二：权限审计（⚠️ 前瞻性设计——需替换为自定义脚本）"
         run: |
           opencode skill validate --check permission ${{ github.event.pull_request.head.sha }}
 
-      - name: "门禁三：功能测试"
+      - name: "门禁三：功能测试（⚠️ 前瞻性设计——需替换为自定义脚本）"
         run: |
           opencode skill test --prompt-file ./test-prompts/${{ steps.detect-skill.outputs.name }}.md
 

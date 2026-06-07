@@ -8,6 +8,10 @@
 
 本文从 6 条核心设计原则出发，剖析 12 种常见反模式及其正确做法，提供可操作的 8 步调试清单，并讨论 Skill 在 Team Mode 中的集成策略——特别是 target_agent 与类别路由的协同工作原理。这些经验不仅适用于个人开发者，对团队层面的 Skill 治理同样有参考价值。
 
+> **⏱ 时间有限？先读这些：** Skill 设计 6 条核心原则 → 12 种反模式及正确做法 → 8 步调试清单 → Team Mode 中的 Skill 集成
+
+> ⚠️ **平台兼容性说明**：本文讨论的 `allowed-tools`、`target_agent`、`category` 字段以及 Team Mode 中的 Skill 集成功能，基于 **oh-my-openagent (OMO)** 扩展。OpenCode 原生 SKILL.md 规范**不识别**这些字段，它们会被静默忽略。在标准 OpenCode 中，工具权限控制通过 `opencode.json` 的 `"permission"` 配置实现，而非 SKILL.md 中的 `allowed-tools`。如果要在 OpenCode 和 oh-my-openagent 之间共享 Skill，请只使用 OpenCode 原生字段（`name`、`description`、`license`、`compatibility`、`metadata`）。
+
 ## Skill 设计 6 条核心原则
 
 好的 Skill 设计可以归纳为六个维度。这些原则不是孤立的，而是相互支撑形成一个完整的设计框架。
@@ -154,6 +158,8 @@ description: |
 **定义**：只给完成任务必需的工具，不多给一个。
 
 **安全架构师视角**：权限边界即攻击面。给 Skill 超过需要的工具，就像给实习生 root 权限——短期方便但长期危险。这是 Harness Engineering "可控"原则的核心体现。
+
+> ⚠️ **重要提醒**：`allowed-tools` 的限制**不是** OpenCode 原生强制执行的安全边界。真正的权限控制发生在 `opencode.json` 的 `"permission"` 配置中。在原生 OpenCode 中，SKILL.md 的 `allowed-tools` 仅作为意图声明，不会被强制执行。
 
 **权限风险评估**：
 
@@ -333,7 +339,7 @@ allowed-tools: [Read, Write, Glob, RunCommand]
 ---
 ```
 
-**判断标准**：如果 Skill 正文超过 200 行，考虑拆分。
+**判断标准**：如果 Skill 正文超过 500 行，考虑拆分。
 
 ### 反模式 2：全能 Skill
 
@@ -352,7 +358,6 @@ allowed-tools:
   - WebFetch
   - Glob
   - Grep
-  - Glob
 ---
 ```
 
@@ -850,12 +855,12 @@ find .opencode/skills -name "SKILL.md"
 
 **搜索路径优先级**：
 
-| 优先级 | 路径 | 用途 |
-|--------|------|------|
-| 1（最高） | `.opencode/skills/` | 项目级 Skill |
-| 2 | `~/.config/opencode/skills/` | 用户级 Skill |
-| 3 | 内置 Skills | 官方 Skill |
-| 4 | Skills Marketplace | 社区 Skill |
+| 优先级 | 路径 | 用途 | 说明 |
+|--------|------|------|------|
+| 1（最高） | `.opencode/skills/` | 项目级 Skill | 建议纳入 Git |
+| 2 | `~/.opencode/skills/` | 用户级全局 Skill | OpenCode 主要用户目录 |
+| 3 | `~/.config/opencode/skills/` | 用户级旧路径 | 兼容旧版配置 |
+| 4 | 内置 Skills | 官方 Skill | 随 OpenCode 版本更新 |
 
 ### 步骤 4：禁用检查
 
@@ -917,6 +922,8 @@ cat opencode.json | grep -A 5 "agent"
 输入："帮我创建一个新组件"
 预期：不触发 code-reviewer Skill
 ```
+
+> ⚠️ 语义匹配具有**非确定性**：同一输入在不同会话或 LLM 版本下可能触发不同 Skill。此外，新创建的 Skill 在第一次触发前对用户"不可见"——用户需要知道正确的描述才能触发。详见 [Skill 系统](../02-core-concepts/skills-system.md) 中的说明。
 
 ### 步骤 7：覆盖检查
 
@@ -1123,7 +1130,7 @@ graph TB
 
 **配置示例**：
 
-```json
+```json:opencode.json
 // opencode.json
 {
   "agents": {
@@ -1188,7 +1195,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 不同环境使用不同的工具权限：
 
-```json
+```json:opencode.json
 // 开发环境
 {
   "skills": {
@@ -1213,7 +1220,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 团队统一覆盖某些 Skill 的行为：
 
-```json
+```json:opencode.json
 {
   "skills": {
     "code-reviewer": {
@@ -1230,7 +1237,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 发现问题 Skill 时临时禁用：
 
-```json
+```json:opencode.json
 {
   "skills": {
     "problematic-skill": {

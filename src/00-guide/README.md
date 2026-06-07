@@ -253,7 +253,7 @@ graph TB
 | 不涵盖的内容 | 为什么跳过 | 替代资源 |
 |-------------|-----------|---------|
 | **编程基础语法** | 假设读者已有开发经验 | 各语言官方教程、《代码大全》 |
-| **OpenCode Rust 内部实现** | 聚焦用户层面配置和实践 | [OpenCode 源码](https://github.com/anomalyco/opencode) |
+| **OpenCode Node.js/TypeScript 实现** | 聚焦用户层面配置和实践 | [OpenCode 源码](https://github.com/anomalyco/opencode) |
 | **具体云平台完整教程** | 聚焦 AI 编程工作流本身 | AWS/Azure/GCP/阿里云官方文档 |
 | **大模型训练或微调** | 本书是工程实践，不是 **ML（机器学习）**教程 | Hugging Face 课程、各模型官方文档 |
 | **特定框架深度教程** | 示例涉及但不深入讲解 | React/Vue/Spring 等框架官方文档 |
@@ -319,23 +319,22 @@ graph TB
 
 | 组件 | 版本 | 说明 |
 |------|------|------|
-| **[OpenCode](https://github.com/anomalyco/opencode)** | v1.15.x | 核心 AI 编程引擎 |
-| **[oh-my-openagent](https://github.com/samanhappy/oh-my-openagent)** | v4.5.x | Agent 编排套件 |
-| **[mdBook](https://github.com/rust-lang/mdBook)** | v0.4.x | 书籍渲染引擎 |
+| **[OpenCode](https://github.com/anomalyco/opencode)** | v1.16.x | 核心 AI 编程引擎（当前为 v1.16.2） |
+| **[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)** | v4.7.x | Agent 编排套件（当前为 v4.7.5） |
+| **[mdBook](https://github.com/rust-lang/mdBook)** | v0.5.x | 书籍渲染引擎（当前为 v0.5.3） |
 | **[Mermaid](https://github.com/mermaid-js/mermaid)** | v10+ | 图表和架构图 |
-| **[Node.js](https://nodejs.org/)** | >=18 | 本地预览环境 |
+| **[Node.js](https://nodejs.org/)** | >=18 | npm 安装方式所需运行时（curl/brew 安装不需要） |
 
 ### OpenCode核心生态演进
 
 ```mermaid
 timeline
-    title OpenCode核心生态演进时间线
-    2024-Q1 : OpenCode v1.0 发布
-    2024-Q3 : OpenCode v1.10 MCP 支持
-    2024-Q4 : oh-my-openagent v4.0 发布
-    2025-Q1 : OpenCode v1.15 稳定版
-           : 本书基于此版本编写
-    2025-Q2 : oh-my-openagent v4.5 发布
+    title OpenCode 核心生态演进时间线
+    2025-Q2 (4 月) : OpenCode 项目创建
+    2025-Q2 (6 月) : OpenCode v0.1.x 早期版本
+    2025-Q4 (10 月) : OpenCode v1.0 TUI Rewrite 完整重写
+    2026-Q1 (1 月) : OpenCode MCP 支持集成
+    2025-Q3 (8 月) : oh-my-openagent 项目创建
 ```
 
 ---
@@ -388,7 +387,7 @@ flowchart LR
 
 ## 章节导航
 
-> ⚠️ **写作状态提示**：本书目前有 **42 篇文章已完成**，**8 篇正在写作中**（主要分布在高级话题和案例研究章节）。阅读路径和各章节链接均已标注完整规划，标注"写作中"的文章表示内容尚未完成。
+> ✅ **写作状态提示**：本书 **50 篇文章全部完成**（100%）。阅读路径和各章节链接均已标注完整规划。
 
 本章包含以下内容：
 

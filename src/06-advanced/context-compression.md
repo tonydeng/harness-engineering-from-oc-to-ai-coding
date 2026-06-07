@@ -137,7 +137,7 @@ flowchart TB
 
 ### 完整配置示例
 
-```json
+```json:opencode.json
 {
   "compaction": {
     "enabled": true,
@@ -170,7 +170,7 @@ flowchart TB
 
 按文件/目录粒度配置，比全局规则更精准：
 
-```json
+```json:opencode.json
 {
   "compaction": {
     "customRules": [
@@ -267,7 +267,7 @@ sequenceDiagram
 
 ### 恢复机制配置
 
-```json
+```json:opencode.json
 {
   "compaction": {
     "recovery": {

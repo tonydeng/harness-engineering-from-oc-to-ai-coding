@@ -25,7 +25,7 @@ Feature Flag（功能开关 / Feature Toggle）是一种渐进式交付机制。
 
 Feature Flag 是一个条件开关，控制特定功能是否在运行时生效。最简单的实现是一个布尔值：
 
-```json
+```json:opencode.json
 {
   "feature_flags": {
     "agent_parallel_orchestration": true,
@@ -261,7 +261,7 @@ opencode flags list
 
 通过 `opencode.json` 配置（全局）或 `.opencode/config.json`（项目级覆盖），也支持环境变量 `OPENCODE_FEATURE_FLAGS` 临时覆盖（优先级最高）。例如：
 
-```json
+```json:opencode.json
 // opencode.json 全局开启
 { "feature_flags": { "agent_parallel_orchestration": true } }
 ```

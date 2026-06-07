@@ -59,7 +59,7 @@ flowchart LR
 
 **措施一：环境隔离与权限控制**
 
-```yaml
+```yaml:examples/opencode-configs/permissions.yaml
 # OpenCode 权限配置示例
 permissions:
   production:
@@ -76,7 +76,7 @@ permissions:
 
 **措施二：危险操作门禁**
 
-```yaml
+```yaml:examples/validation/dangerous-patterns.yaml
 # 危险命令拦截规则
 dangerous_patterns:
   - pattern: "flush|drop|truncate|delete.*from"
@@ -90,7 +90,7 @@ dangerous_patterns:
 
 **措施三：操作审计日志**
 
-```json
+```json:examples/audit-logs/blocked-operation.json
 {
   "timestamp": "2025-03-15T10:23:45Z",
   "session_id": "sess-xyz789",
@@ -167,7 +167,7 @@ AI 工具没有内置敏感信息识别和过滤机制。
 
 **措施一：敏感信息自动检测**
 
-```yaml
+```yaml:examples/validation/sensitive-patterns.yaml
 # 敏感信息检测规则
 sensitive_patterns:
   - name: API Key
@@ -185,7 +185,7 @@ sensitive_patterns:
 
 **措施二：上下文隔离策略**
 
-```yaml
+```yaml:examples/opencode-configs/context-policy.yaml
 # 上下文管理策略
 context_policy:
   user_input:
@@ -237,7 +237,7 @@ fi
 
 团队在配置 AI Agent 的执行权限时，为了"方便调试"，将权限设置为"完全信任"模式：
 
-```yaml
+```yaml:examples/opencode-configs/bad-permissions.yaml
 # 错误配置示例
 agent_permissions:
   mode: trust_all  # 危险！
@@ -277,7 +277,7 @@ AI 直接执行命令，开发者无法提前看到影响范围。
 
 **措施一：最小权限原则**
 
-```yaml
+```yaml:examples/opencode-configs/correct-permissions.yaml
 # 正确配置示例
 agent_permissions:
   mode: explicit_allowlist
@@ -332,7 +332,7 @@ flowchart TB
 
 **措施三：关键目录保护**
 
-```yaml
+```yaml:examples/validation/protected-paths.yaml
 # 关键目录保护规则
 protected_paths:
   - path: ".git/**"
@@ -350,7 +350,7 @@ protected_paths:
 
 **措施四：操作快照与回滚**
 
-```yaml
+```yaml:examples/opencode-configs/snapshot-config.yaml
 # 快照配置
 snapshot:
   enabled: true

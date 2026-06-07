@@ -12,9 +12,9 @@
 |------|------|
 | [Agent 编排](agent-orchestration.md) | Agent 的生命周期、任务分配策略、多 Agent 通信机制 |
 | [Skill 系统](skills-system.md) | Skill 的定义、加载机制、版本管理和权限模型 |
-| [工作流模式](workflow-patterns.md) | 常见工作流模式：顺序执行、并行分派、审核循环、迭代优化 |
+| [工作流模式](workflow-patterns.md) | Command 系统、Profile 切换、AGENTS.md 项目知识库、Ultrawork 与 Prometheus 两种高级工作流模式 |
 | [上下文工程核心](context-engineering-core.md) | 如何构建和管理 Agent 的上下文窗口，确保信息不丢失、不冗余 |
 | [约束系统解析](constraints-system.md) | 约束的层级结构（全局/会话/任务级）、冲突检测与优先级规则 |
-| [验证护栏体系](validation-harness.md) | 输出验证机制、自动修复循环、质量门禁的工程实现 |
+| [验证护栏体系](validation-harness.md) | 权限控制机制、LSP 验证链、第三方工具集成的质量门禁及验证架构设计 |
 
 > [上一页：简介](../01-introduction/) | [下一页：环境搭建 →](../03-setup/)

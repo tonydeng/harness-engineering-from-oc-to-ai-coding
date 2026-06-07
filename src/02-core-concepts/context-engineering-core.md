@@ -15,11 +15,13 @@
 
 读完本文，你将能够合理分配 Token 预算以优化上下文利用，理解 Compaction 压缩与缓存机制的工作原理，以及根据任务复杂度调整上下文管理策略。
 
+> **⏱ 时间有限？先读这些：** 上下文压缩原理 → 上下文缓存策略 → Token 预算管理 → 三层协作的决策流程
+
 ### 最小示例
 
 用一个最简单的配置来理解上下文工程：
 
-```json
+```json:opencode.json
 {
   "tokenBudget": {
     "total": 200000,
@@ -152,8 +154,8 @@ sequenceDiagram
 
 除了自动压缩，OpenCode 还支持细粒度的微压缩配置：
 
-```json
-// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
+```json:opencode.json
+// Requires OpenCode >= v1.16.x, OMO >= v4.7.x
 {
   "compaction": {
     "strategy": "selective",
@@ -249,8 +251,8 @@ graph LR
 
 跨 Session 缓存需要显式配置，适用于长期项目：
 
-```json
-// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
+```json:opencode.json
+// Requires OpenCode >= v1.16.x, OMO >= v4.7.x
 {
   "caching": {
     "crossSession": {
@@ -322,7 +324,7 @@ graph TB
 
 **预算配置示例**：
 
-```json
+```json:opencode.json
 {
   "tokenBudget": {
     "total": 200000,
@@ -334,7 +336,6 @@ graph TB
     },
     "enforcement": "strict"
   }
-}
 ```
 
 **各区域的作用**：
@@ -379,7 +380,7 @@ flowchart TD
 
 **配置超限响应**：
 
-```json
+```json:opencode.json
 {
   "tokenBudget": {
     "overrunHandling": {
@@ -483,7 +484,7 @@ graph TB
 
 ### 基础上下文管理配置
 
-```json
+```json:opencode.json
 {
   "context": {
     "compaction": {
@@ -505,7 +506,7 @@ graph TB
 
 ### 高级上下文管理配置
 
-```json
+```json:opencode.json
 {
   "context": {
     "compaction": {

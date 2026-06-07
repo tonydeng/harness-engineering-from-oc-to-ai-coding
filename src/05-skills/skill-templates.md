@@ -10,6 +10,8 @@
 
 几个设计原则贯穿所有模板：组件化思维（Skill 是 Agent 行为的可复用单元，就像组件是 UI 的可复用单元）、决策记录输出（每个模板都应产出结构化的 ADR）、最小权限（每个模板的 `allowed-tools` 只开放必需的权限）、安全验证（模板不会引入安全风险）。
 
+> **⏱ 时间有限？先读这些：** 模板设计理念 → 模板 1：调查研究 Skill → 模板 2：架构设计 Skill → 模板选择决策树
+
 ## 模板设计理念
 
 ### 模板是设计模式的具象化
@@ -94,16 +96,16 @@ flowchart LR
 
 以下是以调查研究 Skill 为例的完整 SKILL.md 骨架。其余 5 个模板均基于此骨架结构，仅在 frontmatter 字段、工具链、工作流程等维度存在差异，详见差异矩阵表。
 
-```yaml
+```markdown:examples/skills/deep-research/SKILL.md
 ---
 name: deep-research
 description: "用于需要网络研究的任何问题，替代 WebSearch。提供系统化的多角度研究方法论"
 allowed-tools:
-  - WebSearch
-  - WebFetch
-  - Read
-  - Grep
-  - Glob
+  - websearch
+  - webfetch
+  - read
+  - grep
+  - glob
 metadata:
   version: "1.0.0"
   author: opencode-community
@@ -203,7 +205,7 @@ metadata:
 |------|-----------|-----------|-----------|-----------|----------|-----------|
 | **命名模式** | `{动作}-{对象}` | `{角色}-{领域}` | `{动作}-{对象}` | `{角色}-{领域}` | `{角色}-{领域}` | `{角色}-{领域}` |
 | **典型名称** | `deep-research` | `architecture-consultant` | `requesting-code-review` | `agile-coach` | `ui-designer` | `security-auditor` |
-| **allowed-tools** | WebSearch, WebFetch, Read, Grep, Glob | Read, Write, Glob, Grep | Read, Grep, Glob | Read, Write, Glob | Read, Glob, Grep | Read, Grep, Glob, RunCommand |
+| **allowed-tools** | websearch, webfetch, read, grep, glob | read, edit, glob, grep | read, grep, glob | read, edit, glob | read, glob, grep | read, grep, glob, bash |
 | **是否可写** | ❌ 只读 | ✅ 需要 | ❌ 只读 | ✅ 需要 | ❌ 只读 | ❌ 只读 |
 | **是否可执行** | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ RunCommand |
 | **target_agent** | 不设置 | 不设置 | 不设置 | 不设置 | 不设置 | `security-audit` |
@@ -284,15 +286,15 @@ metadata:
 
 ### 完整 SKILL.md 骨架
 
-```yaml
+```markdown:examples/skills/architecture-consultant/SKILL.md
 ---
 name: architecture-consultant
 description: "在需要进行系统架构设计、技术选型评估、架构评审时使用。提供：架构设计、技术选型、微服务拆分、遗留系统重构。适用：系统架构师、技术负责人。"
 allowed-tools:
-  - Read
-  - Write
-  - Glob
-  - Grep
+  - read
+  - edit
+  - glob
+  - grep
 metadata:
   version: "1.0.0"
   author: opencode-community
@@ -448,14 +450,14 @@ metadata:
 
 ### 完整 SKILL.md 骨架
 
-```yaml
+```markdown:examples/skills/requesting-code-review/SKILL.md
 ---
 name: requesting-code-review
 description: "在需要代码审查、PR 审查、质量检查时使用。提供：5 维度代码审查、审查报告生成。适用：PR 审查、代码审查、质量检查、安全审查。"
 allowed-tools:
-  - Read
-  - Grep
-  - Glob
+  - read
+  - grep
+  - glob
 metadata:
   version: "1.0.0"
   author: opencode-community
@@ -576,10 +578,10 @@ metadata:
 
 | 工具 | 用途 | 使用时机 |
 |------|------|----------|
-| `Read` | 读取代码文件 | 详细审查 |
-| `Grep` | 搜索代码模式 | 查找特定问题 |
-| `Glob` | 查找文件 | 定位相关文件 |
-| `RunCommand` | 执行命令 | 编译检查 |
+| `read` | 读取代码文件 | 详细审查 |
+| `grep` | 搜索代码模式 | 查找特定问题 |
+| `glob` | 查找文件 | 定位相关文件 |
+| `bash` | 执行命令 | 编译检查 |
 
 ### 定制指南
 
@@ -631,9 +633,9 @@ description: |
   适用：Sprint 规划、站会、评审、回顾、跨团队协作、安全演练、Superpowers 工作流执行。
   关键词：敏捷、Sprint、迭代、站会、回顾、红队、蓝队、渗透测试、安全架构、需求分析。
 allowed-tools:
-  - Read
-  - Write
-  - Glob
+  - read
+  - edit
+  - glob
 license: MIT
 metadata:
   version: "1.0.0"
@@ -941,9 +943,9 @@ YYYY-MM-DD
 
 | 工具 | 用途 | 使用时机 |
 |------|------|----------|
-| `Read` | 读取会议记录 | 查看历史记录 |
-| `Write` | 写入会议记录 | 记录活动产出 |
-| `Glob` | 查找文件 | 定位相关文档 |
+| `read` | 读取会议记录 | 查看历史记录 |
+| `edit` | 写入会议记录 | 记录活动产出 |
+| `glob` | 查找文件 | 定位相关文档 |
 
 ### 定制指南
 
@@ -995,10 +997,10 @@ description: |
   适用：UI 设计、交互设计、设计系统、可访问性、响应式设计。
   不适用：后端开发、数据库设计。
 allowed-tools:
-  - Read
-  - Write
-  - Glob
-  - Grep
+  - read
+  - edit
+  - glob
+  - grep
 license: MIT
 metadata:
   version: "1.0.0"
@@ -1183,11 +1185,11 @@ metadata:
 
 | 工具 | 用途 | 使用时机 |
 |------|------|----------|
-| `Read` | 读取组件代码 | 审查实现 |
-| `Glob` | 查找组件文件 | 定位审查范围 |
-| `Grep` | 搜索样式模式 | 查找样式问题 |
-| `Glob` | 查找设计文件 | 理解设计系统 |
-| `Write` | 写入报告 | 输出审查结果 |
+| `read` | 读取组件代码 | 审查实现 |
+| `glob` | 查找组件文件 | 定位审查范围 |
+| `grep` | 搜索样式模式 | 查找样式问题 |
+| `glob` | 查找设计文件 | 理解设计系统 |
+| `edit` | 写入报告 | 输出审查结果 |
 
 ### 定制指南
 
@@ -1232,7 +1234,7 @@ design_tokens_check:
 
 ### 完整 SKILL.md
 
-```yaml
+```markdown:examples/skills/security-auditor/SKILL.md
 ---
 name: security-auditor
 description: |
@@ -1242,10 +1244,10 @@ description: |
   不适用：功能开发任务。
   触发词：安全审计、漏洞扫描、渗透测试、安全检查、OWASP、CWE。
 allowed-tools:
-  - Read
-  - Grep
-  - Glob
-  - RunCommand
+  - read
+  - grep
+  - glob
+  - bash
 target_agent: security-audit
 license: MIT
 metadata:
@@ -1457,11 +1459,11 @@ metadata:
 
 | 工具 | 用途 | 使用时机 |
 |------|------|----------|
-| `Read` | 读取代码文件 | 代码审计 |
-| `Grep` | 搜索危险模式 | 漏洞扫描 |
-| `Glob` | 查找配置文件 | 配置审计 |
-| `Grep` | 搜索代码模式 | 全局分析 |
-| `RunCommand` | 执行扫描工具 | 自动化扫描 |
+| `read` | 读取代码文件 | 代码审计 |
+| `grep` | 搜索危险模式 | 漏洞扫描 |
+| `glob` | 查找配置文件 | 配置审计 |
+| `grep` | 搜索代码模式 | 全局分析 |
+| `bash` | 执行扫描工具 | 自动化扫描 |
 
 ### 定制指南
 
