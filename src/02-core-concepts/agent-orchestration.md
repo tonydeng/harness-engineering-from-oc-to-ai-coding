@@ -657,7 +657,6 @@ flowchart TB
 **类别路由配置示例**：
 
 ```json:.opencode/oh-my-openagent.jsonc
-```
 {
   "categories": {
     "planning": {
