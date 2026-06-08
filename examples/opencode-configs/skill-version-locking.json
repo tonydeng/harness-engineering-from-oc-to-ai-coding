@@ -1,0 +1,18 @@
+{
+  "skills": {
+    "pinning": {
+      "code-review": ">= 1.0.0 < 2.0.0",  // 锁定 v1.x，不自动升 v2
+      "security-audit": "2.0.0",           // 精确锁定，仅使用此版本
+      "api-testing": ">= 0.5.0"            // 无上限，自动获取最新
+    },
+    "auto_update": {
+      "patch": "auto",      // PATCH 自动更新，无需审批
+      "minor": "notify",    // MINOR 通知用户确认
+      "major": "manual"     // MAJOR 必须手动选择
+    },
+    "security_patches": {
+      "auto_apply": true,   // 安全修复 PATCH 自动应用
+      "notify": true        // 应用后通知使用者
+    }
+  }
+}

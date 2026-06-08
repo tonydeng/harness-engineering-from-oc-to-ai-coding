@@ -1,0 +1,17 @@
+# enterprise-marketplace.yaml
+marketplace:
+  type: private
+  storage:
+    type: s3
+    bucket: company-skills-marketplace
+  auth:
+    type: oauth2
+    provider: internal-sso
+  policies:
+    max_skill_size: 10MB
+    allowed_licenses:
+      - MIT
+      - Apache-2.0
+      - Proprietary
+    security_scan: required
+    approval_workflow: true

@@ -1,0 +1,8 @@
+{
+  "emergency_mode": {
+    "enabled": false,
+    "override_model": "openai/gpt-4o",
+    "override_reason": "",
+    "auto_reset_minutes": 120
+  }
+}

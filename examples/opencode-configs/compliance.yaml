@@ -1,0 +1,11 @@
+# 金融行业合规配置示例
+providers:
+  - name: internal-llm
+    type: vllm
+    api_base: https://internal-llm.bank.com
+    models:
+      - internal-coder-33b
+    compliance:
+      data_residency: "CN" # 数据不出境
+      audit_log: true # 审计日志
+      encryption: "AES-256" # 加密传输

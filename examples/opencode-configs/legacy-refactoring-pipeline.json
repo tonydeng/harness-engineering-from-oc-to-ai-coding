@@ -1,0 +1,14 @@
+{
+  "workflow": {
+    "name": "legacy-refactoring-pipeline",
+    "mode": "serial-with-parallel-steps",
+    "steps": [
+      { "role": "planner", "task": "分析 Phase 目标，分解子任务" },
+      { "role": "implementor", "task": "执行代码修改", "parallel": 3 },
+      { "role": "tester", "task": "编写单元/集成测试" },
+      { "role": "reviewer", "task": "安全审查 + 代码质量审查" },
+      { "role": "linter", "task": "ESLint + Prettier 检查" },
+      { "role": "committer", "task": "创建 PR + 变更摘要" }
+    ]
+  }
+}

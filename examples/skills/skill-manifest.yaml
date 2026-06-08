@@ -1,0 +1,11 @@
+# skill-manifest.yaml
+name: frontend-architect
+version: "2.1.0"
+description: 前端架构设计专家
+author: opencode-community
+license: MIT
+repository: https://github.com/opencode/skills/frontend-architect
+keywords:
+  - frontend
+  - react
+  - architecture

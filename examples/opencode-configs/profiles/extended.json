@@ -1,0 +1,8 @@
+{
+  "profile": "debug-verbose",
+  "$extends": "debug",
+  "behavior": {
+    "log_level": "trace",
+    "show_token_usage": true
+  }
+}

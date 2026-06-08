@@ -1,0 +1,13 @@
+// Requires OpenCode >= v1.16.x
+{
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": {
+      "npm test": "allow",
+      "npm run build": "allow",
+      "rm -rf": "deny",
+      "sudo *": "deny"
+    }
+  }
+}

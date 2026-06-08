@@ -1,0 +1,13 @@
+# 关键目录保护规则
+protected_paths:
+  - path: ".git/**"
+    protection: read_only
+    message: "Git 目录禁止修改"
+  
+  - path: ".env*"
+    protection: no_access
+    message: "环境配置文件禁止访问"
+  
+  - path: "*.key"
+    protection: no_access
+    message: "密钥文件禁止访问"

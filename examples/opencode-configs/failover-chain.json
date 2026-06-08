@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "deepseek": {
+      "models": {
+        "deepseek-chat": {
+          "fallback": [
+            { "provider": "openai", "model": "gpt-4o-mini" },
+            { "provider": "aliyun", "model": "qwen-max" }
+          ]
+        }
+      }
+    },
+    "openai": {
+      "models": {
+        "gpt-4o": {
+          "fallback": [
+            { "provider": "deepseek", "model": "deepseek-chat" },
+            { "provider": "anthropic", "model": "claude-sonnet-4-20250514" }
+          ]
+        }
+      }
+    }
+  },
+  "failover": {
+    "enabled": true,
+    "max_retries": 3,
+    "retry_delay_ms": 2000,
+    "circuit_breaker": {
+      "failure_threshold": 5,
+      "reset_timeout_ms": 60000
+    }
+  }
+}

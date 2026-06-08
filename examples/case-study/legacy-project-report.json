@@ -1,0 +1,38 @@
+{
+  "project": "legacy-user-platform (v2.8.3)",
+  "scanDate": "2025-06-04T08:30:00Z",
+  "summary": {
+    "totalFiles": 247,
+    "totalLines": 34287,
+    "languages": {
+      "javascript": 186,
+      "html": 22,
+      "css": 7,
+      "json": 12,
+      "other": 20
+    },
+    "dependencies": {
+      "total": 186,
+      "direct": 42,
+      "indirect": 144,
+      "knownCVEs": 47,
+      "critical": 8,
+      "high": 15,
+      "medium": 19,
+      "low": 5
+    },
+    "security": {
+      "hardcodedSecrets": 6,
+      "insecureConfigs": 4,
+      "noTests": true,
+      "noCI": true,
+      "noDockerfile": false
+    },
+    "codeQuality": {
+      "eslintErrors": 234,
+      "unusedExports": 47,
+      "duplicateCode": "~1,200 lines (估算)"
+    }
+  },
+  "scanDetails": { }
+}

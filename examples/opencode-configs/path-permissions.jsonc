@@ -1,0 +1,14 @@
+{
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": "ask"
+  },
+  "permissionOverrides": [
+    { "path": "src/**", "read": "allow", "edit": "ask" },
+    { "path": "test/**", "read": "allow", "edit": "allow" },
+    { "path": ".env", "read": "deny", "edit": "deny" },
+    { "path": "config/secrets/**", "read": "deny", "edit": "deny" },
+    { "path": "node_modules/**", "read": "allow", "edit": "deny" }
+  ]
+}

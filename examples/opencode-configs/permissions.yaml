@@ -1,0 +1,12 @@
+# OpenCode 权限配置示例
+permissions:
+  production:
+    allowed_actions: [read]
+    denied_actions: [write, delete, execute]
+  
+  staging:
+    allowed_actions: [read, write]
+    denied_actions: [delete]
+  
+  development:
+    allowed_actions: [read, write, delete, execute]

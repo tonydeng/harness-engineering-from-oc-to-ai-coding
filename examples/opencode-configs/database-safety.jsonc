@@ -1,0 +1,11 @@
+{
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": {
+      "DROP *": "deny",
+      "TRUNCATE *": "deny",
+      "DELETE FROM *": "ask"
+    }
+  }
+}
