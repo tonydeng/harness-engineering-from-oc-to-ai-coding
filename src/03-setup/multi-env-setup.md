@@ -303,7 +303,7 @@ jobs:
 
 最简单的 Secret 管理方式是使用环境变量。OpenCode 支持通过环境变量注入配置：
 
-```bash
+```bash:terminal
 # Anthropic API Key
 export ANTHROPIC_API_KEY="sk-ant-..."
 
@@ -335,7 +335,7 @@ OpenCode 配置文件中使用 `{env:ENV_VAR}` 插值：
 
 使用 `.env` 文件管理本地开发的 Secret：
 
-```bash
+```bash:terminal
 # .env - 不要提交到 Git！
 ANTHROPIC_API_KEY=sk-ant-...
 OPENAI_API_KEY=sk-...
@@ -344,7 +344,7 @@ LOG_LEVEL=debug
 
 **务必将 `.env` 添加到 `.gitignore`**：
 
-```text
+```text:terminal
 # .gitignore
 .env
 .env.local
@@ -359,14 +359,14 @@ OpenCode 会自动读取配置文件中的环境变量插值。
 
 **HashiCorp Vault**:
 
-```bash
+```bash:terminal
 # 从 Vault 读取 API Key
 export ANTHROPIC_API_KEY=$(vault kv get -field=api_key secret/opencode/anthropic)
 ```
 
 **AWS Secrets Manager**:
 
-```bash
+```bash:terminal
 # 使用 AWS CLI 读取
 export ANTHROPIC_API_KEY=$(aws secretsmanager get-secret-value \
   --secret-id opencode/anthropic-api-key \
@@ -390,7 +390,7 @@ export ANTHROPIC_API_KEY=$(aws secretsmanager get-secret-value \
 
 将 `opencode.json` 纳入版本控制，实现配置即代码：
 
-```
+```text:terminal
 project/
 ├── opencode.json          # 项目级配置（提交到 Git）
 ├── .env.example           # 环境变量模板（提交到 Git）
@@ -409,7 +409,7 @@ project/
 
 使用不同的配置文件管理不同环境：
 
-```
+```text:terminal
 config/
 ├── dev.json              # 开发环境配置
 ├── ci.json               # CI/CD 配置
@@ -418,7 +418,7 @@ config/
 
 通过 `OPENCODE_CONFIG` 环境变量指定配置路径：
 
-```bash
+```bash:terminal
 # 开发环境
 export OPENCODE_CONFIG="./config/dev.json"
 opencode

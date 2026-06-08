@@ -181,7 +181,7 @@ memory({ mode: "list", limit: 10 });
 
 **安装配置**：
 
-```bash
+```bash:terminal
 npm install -g opencode-claude-memory
 opencode-memory install   # 一次性安装 shell hook
 ```
@@ -197,7 +197,7 @@ opencode-memory install   # 一次性安装 shell hook
 
 **工作流程**：
 
-```
+```text:terminal
 opencode 命令 →
   opencode-memory 拦截 →
   启动 OpenCode →
@@ -243,7 +243,7 @@ opencode 命令 →
 
 需要先复制插件文件和启动 server：
 
-```bash
+```bash:terminal
 npx @agentmemory/agentmemory          # 启动 server，默认 :3111
 mkdir -p ~/.config/opencode/plugins
 cp plugin/opencode/agentmemory-capture.ts ~/.config/opencode/plugins/
@@ -282,7 +282,7 @@ cp plugin/opencode/agentmemory-capture.ts ~/.config/opencode/plugins/
 
 通过环境变量控制行为：
 
-```bash
+```bash:terminal
 TRUE_MEM_INJECTION_MODE=0     # 0=SESSION_START（默认，最省 Token），1=ALWAYS
 TRUE_MEM_SUBAGENT_MODE=1      # 0=禁用，1=启用
 TRUE_MEM_MAX_MEMORIES=20      # 每次注入的最大记忆数
@@ -375,7 +375,7 @@ sequenceDiagram
 
 多个 Session 反复出现同一主题时，插件可自动生成跨 Session 洞察：
 
-```
+```text:terminal
 Session A: "用户表查询性能优化" → 创建复合索引
 Session B: "订单查询也需要优化" → 也是复合索引方案
 合并: → "项目中复合索引策略适用于所有高频查询场景"
@@ -396,7 +396,7 @@ Session B: "订单查询也需要优化" → 也是复合索引方案
 
 **协同流程**：
 
-```
+```text:terminal
 Agent 执行 → Token 接近窗口上限
   → Compaction 触发：压缩低优先级对话，保留高优先级决策
   → Session 结束 → 记忆插件生成摘要 → 写入持久化存储

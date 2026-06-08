@@ -26,7 +26,7 @@ AI 编程工具在短短五年内经历了三个阶段的演进：从 2021–202
 
 长对话的上下文会持续累积，每次提问都要携带完整历史。一个 30 分钟的对话可能消耗 50K+ Token，而大多数历史内容与当前任务已无关。
 
-```
+```text:terminal
 Session 开始：5K Token（项目上下文）
 ↓ 第 10 轮对话：25K Token（历史累积）
 ↓ 第 20 轮对话：60K Token（继续膨胀）
@@ -39,7 +39,7 @@ Session 开始：5K Token（项目上下文）
 
 每次启动新 Session，之前的对话历史、项目理解、代码决策全部丢失。开发者被迫重复"教 AI 认识项目"的过程。
 
-```markdown
+```markdown:terminal
 Session 1（上午）：
 > 用户：这个项目使用 React 18 + TypeScript，状态管理用 Zustand...
 > AI：明白了，我会记住这些...
@@ -56,7 +56,7 @@ Session 2（下午）：
 
 对话模式下，AI 生成的代码"生成即信任"——没有自动审查机制，质量完全依赖开发者的即时判断。当代码量增大、逻辑变复杂时，潜在问题容易被忽略。
 
-```javascript
+```javascript:terminal
 // AI 生成的代码，看起来正确
 async function fetchUserData(userId) {
     const response = await fetch(`/api/users/${userId}`);
@@ -106,7 +106,7 @@ flowchart LR
 
 **风险场景示例**：
 
-```bash
+```bash:terminal
 # 用户意图：删除测试目录
 > 用户：删除 test 文件夹
 
@@ -166,7 +166,7 @@ flowchart TB
 
 **Prompt Engineer** 关注的是"怎么写好的提示词"——这是战术层面的技巧。例如：
 
-```markdown
+```markdown:terminal
 # Prompt Engineer 的典型工作
 优化提示词：
 "你是一个专业的 React 开发者，请帮我实现一个带有分页功能的数据表格组件，
@@ -337,7 +337,7 @@ mindmap
 
 将模糊的业务需求转化为 AI 可执行的任务规格。
 
-```markdown
+```markdown:terminal
 # 模糊需求
 "帮我做一个用户登录功能"
 
@@ -429,7 +429,7 @@ quality_gates:
 
 将项目经验转化为可复用的 Skill 和 Workflow。
 
-```markdown
+```markdown:terminal
 # Skill: react-component-tdd
 
 ## 描述
@@ -558,7 +558,7 @@ flowchart LR
 
 **度量指标示例**（以下为示意数据，非实测结果）：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 metrics:
   efficiency:
     - avg_task_duration: 15min

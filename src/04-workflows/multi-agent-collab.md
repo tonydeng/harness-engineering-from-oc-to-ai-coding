@@ -319,7 +319,7 @@ graph TB
 
 `task()` 是 OpenCode 最基础的子 Agent 调用接口：
 
-```javascript
+```javascript:terminal
 // OpenCode task() — 创建子 Agent 执行任务
 const result = task(
   description: "安全审查子任务",
@@ -344,7 +344,7 @@ const result = task(
 
 OMO 的 `delegate_task()` 是对 `task()` 的扩展封装，提供了类别路由、Skill 传递和后台执行能力：
 
-```javascript
+```javascript:terminal
 // OMO delegate_task() — 带类别和 Skill 的子 Agent 调用
 const bgTaskId = delegate_task(
   description: "安全审查子任务",
@@ -391,7 +391,7 @@ const bgTaskId = delegate_task(
 
 子 Agent 执行完成后，返回结构化结果：
 
-```json
+```json:terminal
 {
   "taskId": "task-20260602-001",
   "status": "completed",
@@ -417,7 +417,7 @@ const bgTaskId = delegate_task(
 
 **结果合并策略**：
 
-```javascript
+```javascript:terminal
 function mergeTaskResults(results, strategy) {
   switch (strategy) {
     case 'append':
@@ -653,7 +653,7 @@ WORKFLOW_STATE.md 是 7-Agent Pipeline 的状态持久化文件，实现了 Agen
 
 ### WORKFLOW_STATE.md 完整模板
 
-```markdown
+```markdown:terminal
 # WORKFLOW_STATE.md
 
 > Pipeline 执行状态文件 — 由各 Agent 顺序写入，记录完整执行轨迹。
@@ -755,7 +755,7 @@ export async function login(req: Request, res: Response) {
   req.session.userId = user.id
   res.json({ user: sanitizeUser(user) })
 }
-```
+```text:terminal
 
 ---
 
@@ -817,7 +817,7 @@ export async function login(req: Request, res: Response) {
 [15:20:00] Implementor 完成，输出代码变更
 [15:20:00] Reviewer 开始执行
 [15:30:00] Reviewer 发现 3 个问题，等待修复
-```
+```text:terminal
 ```
 
 ### 状态流转图
@@ -1115,7 +1115,7 @@ flowchart TB
 
 ### 完整启动命令
 
-```bash
+```bash:terminal
 # 方式一：使用自定义命令
 /pipeline --config .opencode/pipelines/7-agent.json
 
@@ -1132,7 +1132,7 @@ flowchart TB
 
 Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
-```
+```text:terminal
 [Pipeline] 启动 7-Agent Development Pipeline
 [Pipeline] 任务：实现用户登录功能
 
@@ -1195,7 +1195,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **单阶段重试**：
 
-```bash
+```bash:terminal
 # 重试失败的阶段
 /pipeline --retry --stage implementor
 
@@ -1205,7 +1205,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **查看详细日志**：
 
-```bash
+```bash:terminal
 # 查看某个 Agent 的详细执行日志
 /pipeline --logs --agent implementor
 
@@ -1215,7 +1215,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **手动干预**：
 
-```bash
+```bash:terminal
 # 跳过某个阶段（需确认）
 /pipeline --skip --stage debater --confirm
 

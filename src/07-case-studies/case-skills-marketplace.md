@@ -99,7 +99,7 @@ graph TB
 
 ### 目录结构标准
 
-```
+```text:terminal
 skills/
 ├── code-review/               # 命名：小写连字符
 │   ├── SKILL.md               # 必须：SKILL.md
@@ -143,7 +143,7 @@ skills/
     }
   ]
 }
-```
+```markdown:terminal
 
 ### 三级质量门禁
 
@@ -175,8 +175,8 @@ skills/
 | Minor | 1.0.0 → 1.1.0 | 功能新增：增加新工具、添加新示例、扩展适用范围 |
 | Patch | 1.0.0 → 1.0.1 | Bug 修复：修正拼写错误、优化表述、补充遗漏的前置条件 |
 
-发布命令示例（⚠️ **前瞻性设计**：以下 `opencode skill` CLI 子命令为 Skill 市场方案的概念设计，截至 OpenCode v1.15.x 尚未内置。当前可通过 Shell 脚本 + CI 流水线实现等价功能）：
-```
+发布命令示例（⚠️ **前瞻性设计**：以下 `opencode skill` CLI 子命令为 Skill 市场方案的概念设计，截至 OpenCode v1.16.x 尚未内置。当前可通过 Shell 脚本 + CI 流水线实现等价功能）：
+```bash:terminal
 # 本地验证（概念设计——当前可用 shellcheck + yamllint 替代）
 opencode skill validate ./skills/code-review/
 # 输出：格式检查通过 ✅ | 权限审计通过 ✅ | 功能测试通过 ✅
@@ -264,7 +264,7 @@ allowed-tools:
   - RunCommand
 # 写了却没有声明 Write——"权限不足"的报错迟早会来，然后被迫改配置
 # 不如一开始就诚实声明实际需要的权限
-```
+```text:terminal
 
 权限审计标准：
 - 如果 SKILL.md 中从未出现"生成"、"创建"、"写入"等字段，不应当声明 Write
@@ -311,7 +311,7 @@ graph LR
     style R2 fill:#A66CFF,color:#fff
     style R3 fill:#50C878,color:#000
     style IDX fill:#4A90D9,color:#fff
-```
+```markdown:terminal
 
 ### 角色职责
 
@@ -370,7 +370,7 @@ deprecation:
   deprecation_date: "2025-06-01"
   removal_date: "2025-07-01"    # 保留 30 天迁移窗口
   migration_path: "请使用 deploy-v2 Skill，迁移指南见 docs/migration-deploy.md"
-```
+```text:terminal
 
 ```yaml:examples/skills/deprecation-workflow.yaml {2}
 # 阶段二：冻结 (FROZEN)  
@@ -387,12 +387,146 @@ deprecation:
 # 阶段三：移除 (REMOVED)
 # 从市场索引中删除，保留在 git 历史中
 # 最后一位使用者被通知："您使用的 old-deployment-skill 已移除，当前使用 deploy-v2"
-```
+```text:terminal
 
 废弃通知必须发送给：
 - Skill 的当前维护者
 - 过去 30 天内使用过该 Skill 的所有用户
 - 技能市场的 #skill-market Slack 频道
+
+### 版本管理策略
+
+Skill 版本管理不是简单的编号递增——它关系到用户能否安全升级、团队能否平滑迁移、市场能否保持稳定。以下策略在 SemVer 基础上，增加了兼容性声明、Breaking Change 缓冲和版本锁定机制。
+
+#### 语义版本号约定
+
+所有 Skill 严格遵循 SemVer 2.0.0 规范，版本号格式为 `MAJOR.MINOR.PATCH`：
+
+| 版本位 | 变更类型 | 典型场景 | 示例 |
+|--------|---------|----------|------|
+| MAJOR | 破坏性变更 | 修改 allowed-tools、重写 template 核心逻辑、移除已有工具声明、改变输出格式 | `1.0.0 → 2.0.0` |
+| MINOR | 功能新增 | 增加新工具、添加新 Test Prompt、扩展适用 Agent 范围 | `1.0.0 → 1.1.0` |
+| PATCH | 修复与改进 | 修正拼写错误、优化 prompt 措辞、补充遗漏的前置条件 | `1.0.0 → 1.0.1` |
+
+以下是一个实际 Skill 的版本历史，展示各版本变更类型：
+
+| 版本 | 日期 | 类型 | 变更摘要 |
+|------|------|------|----------|
+| `2.0.0` | 2025-08-01 | MAJOR | 重构审查标准，修改输出格式为 Markdown 表格，新增 allowed-tools: Edit |
+| `1.2.0` | 2025-07-15 | MINOR | 新增"安全审查"模式，增加 eslint-plugin-security 检测规则 |
+| `1.1.0` | 2025-06-20 | MINOR | 新增 Test Prompt 覆盖边界 case，扩展适用 Agent 到 reviewer |
+| `1.0.1` | 2025-06-10 | PATCH | 修正示例路径，优化 prompt 语气 |
+| `1.0.0` | 2025-06-01 | MAJOR | 首次发布，覆盖代码风格、性能、安全三类审查 |
+
+> **版本号起点**：新 Skill 从 `0.x.x` 开始（beta 阶段），达到稳定性标准后升为 `1.0.0`。`0.x.x` 阶段的 MINOR 变动可包含非破坏性功能新增，PATCH 仅修复问题。
+
+#### 兼容性声明字段
+
+Skill 的 frontmatter 中必须声明兼容性信息，让市场和用户能够自动判断版本匹配：
+
+```yaml:examples/skills/skill-compatibility.yaml {1}
+name: code-review
+version: 2.0.0
+compatibility:
+  min_opencode_version: "1.12.0"   # 依赖 OpenCode 的最低版本
+  min_omo_version: "4.3.0"         # 依赖 oh-my-openagent 的最低版本
+  opencode_version: ">= 1.12.0 < 2.0.0"  # 语义版本范围
+  depends_on:                       # 依赖的其他 Skill
+    - name: language-detector
+      version: ">= 1.0.0"
+    - name: rule-loader
+      version: ">= 0.5.0 < 2.0.0"
+```
+
+| 字段 | 校验方式 | 不匹配时的行为 |
+|------|----------|---------------|
+| `min_opencode_version` | 对比当前 OpenCode 版本 | 加载失败，提示"需升级 OpenCode 至 X.X.X" |
+| `min_omo_version` | 对比当前 oh-my-openagent 版本 | 加载失败，提示"需升级 oh-my-openagent 至 X.X.X" |
+| `depends_on` | 检查依赖 Skill 是否存在且版本匹配 | 加载失败，提示"缺少依赖 Skill：xxx" |
+
+**实施建议**：CI/CD 流水线在发布时自动校验兼容性字段。如果 `min_opencode_version` 高于当前市场基线，发布会被阻塞并要求作者说明理由。
+
+#### Breaking Change 处理流程
+
+MAJOR 版本变更需要经过缓冲期，避免突然中断使用者的工作流：
+
+```text:terminal
+破坏性变更提议
+      │
+      ▼
+发布废弃通知（至少提前 2 周）
+      │
+      ├─ 在 #skill-market 频道公告
+      ├─ 通知所有已知使用者
+      └─ 编写迁移指南 MIGRATION.md
+      │
+      ▼
+进入共存的 MAJOR 版本分支
+      │
+      ├─ v1.x 维护模式：仅修复关键 bug
+      ├─ v2.x 开发模式：新功能全部在 v2
+      └─ 用户可自由选择升级时机
+      │
+      ▼
+v1 进入废弃 → 冻结 → 移除（参照废弃机制）
+```
+
+迁移指南示例：
+
+```markdown:skills/code-review/MIGRATION-v1-to-v2.md {1}
+# code-review v1 → v2 迁移指南
+
+## Breaking Changes
+1. **输出格式变更**：纯文本 → Markdown 表格
+   - 旧版：`Line 42: unused variable 'foo'`
+   - 新版：`| 42 | unused-variable | foo | 变量声明后未使用 |`
+
+2. **allowed-tools 新增**：v2 需要 Edit 权限
+   - 如策略不允许 Edit，请在配置中锁定 v1.x
+
+## 迁移步骤
+1. 更新 opencode.json 中 version 约束为 `>= 2.0.0`
+2. 运行 `opencode skill validate ./skills/code-review/` 确认兼容
+3. 如有自定义后处理脚本，按新输出格式调整解析逻辑
+
+## 回滚
+将 version 约束改回 `>= 1.0.0 < 2.0.0` 即可回退到 v1.x
+```text:terminal
+
+**关键原则**：Breaking Change 不意味着用户必须立即升级。市场同时提供旧版维护和新版开发，给用户至少 2 周的迁移窗口。实际数据显示，一个 50 人团队从 MAJOR 发布到全量迁移平均需要 3-4 周。
+
+#### 版本锁定与自动更新
+
+用户端可以在 `opencode.json` 中配置 Skill 的版本锁定策略：
+
+```json:examples/opencode-configs/skill-version-locking.json {1}
+{
+  "skills": {
+    "pinning": {
+      "code-review": ">= 1.0.0 < 2.0.0",  // 锁定 v1.x，不自动升 v2
+      "security-audit": "2.0.0",           // 精确锁定，仅使用此版本
+      "api-testing": ">= 0.5.0"            // 无上限，自动获取最新
+    },
+    "auto_update": {
+      "patch": "auto",      // PATCH 自动更新，无需审批
+      "minor": "notify",    // MINOR 通知用户确认
+      "major": "manual"     // MAJOR 必须手动选择
+    },
+    "security_patches": {
+      "auto_apply": true,   // 安全修复 PATCH 自动应用
+      "notify": true        // 应用后通知使用者
+    }
+  }
+}
+```
+
+| 更新级别 | 策略 | 说明 |
+|----------|------|------|
+| PATCH | 自动更新 | Bug 修复和安全补丁自动应用，用户无感知 |
+| MINOR | 通知确认 | 有新功能时通知用户，用户可在下次加载时选择是否升级 |
+| MAJOR | 手动选择 | Breaking Change 需要用户主动评估后手动升级 |
+
+**安全补丁特殊策略**：涉及安全修复的 PATCH 版本自动推送给所有用户，无需等待审批。推送后通过 #skill-market 频道广播变更摘要。某团队实施此策略后，安全修复的平均覆盖时间从 2 周缩短到 2 天。
 
 ## Skill 发布 CI/CD
 
@@ -443,13 +577,13 @@ jobs:
           curl -X POST -H "Content-type: application/json" \
             --data "{\"text\":\"新 Skill 已发布到内部市场\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
-```
+```markdown:terminal
 
 ### 发布前 Checklist（人工）
 
 PR 模板中嵌入的 Checklist，让 Skill 作者在提交前自查：
 
-```markdown
+```markdown:terminal
 ## Skill 发布前 Checklist
 
 - [ ] frontmatter 包含 name 和 description

@@ -238,7 +238,7 @@ sequenceDiagram
 
 ### 实用场景
 
-```
+```text:terminal
 用户：记得我们上次分析的那个数据库索引问题吗？直接用那个结论来设计新的查询。
 Agent：好的，引用断点「analysis_db_indexing」，结论是复合索引 (user_id, status)。
 基于这个结论，你新增的查询建议改为：
@@ -287,7 +287,7 @@ Agent：好的，引用断点「analysis_db_indexing」，结论是复合索引 
 
 ### 恢复策略选择逻辑
 
-```
+```text:terminal
 中断发生 → 检测中断时长 → 查配置阈值 →
   <5min  → 完整恢复（L1 + L2 + 断点）
   5-30min → 部分恢复（L2 + 断点,重建 L1）

@@ -214,7 +214,7 @@ flowchart TB
 
 ### 标准格式
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：[角色列表]
@@ -250,7 +250,7 @@ flowchart TB
 
 ### 示例：核心概念的价值声明块
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：AI 编程新手、OpenCode 用户、Skill 开发者、架构师
@@ -313,7 +313,7 @@ flowchart LR
 
 **示例：环境搭建的价值声明块**
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：所有读者（必读章节）
@@ -330,7 +330,7 @@ flowchart LR
 
 **示例：案例研究的价值声明块**
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：有实践需求的开发者、技术负责人、架构师
@@ -398,7 +398,7 @@ flowchart LR
 {
   "model": "claude-3-opus"
 }
-```
+```text:terminal
 ````
 
 ### Q: 需要购买 OpenCode 许可证吗？
@@ -447,7 +447,7 @@ flowchart LR
 
 **A**: 这是 `SUMMARY.md` 未同步导致的。mdBook 的导航完全依赖 `SUMMARY.md`，新增/重命名/删除文件后必须同步更新其中的路径。建议运行验证命令检查所有链接目标是否存在：
 
-```bash
+```bash:terminal
 awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do [ -f "src/$f" ] || echo "BROKEN: src/$f"; done
 ```
 
@@ -455,7 +455,7 @@ awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do [ -f "src/
 
 **A**: 本书内部链接遵循 mdBook 路径规则：同目录用 `[text](file.md)`，跨目录必须带 `../` 前缀（如 `[text](../target-chapter/file.md)`），指向章节首页的链接使用目录形式 `[text](chapter/)` 而非 `[text](chapter/README.md)`。运行以下命令检查所有链接：
 
-```bash
+```bash:terminal
 find src -name '*.md' -exec grep -n '\](' {} + | grep '\.md)'
 ```
 
@@ -479,7 +479,7 @@ find src -name '*.md' -exec grep -n '\](' {} + | grep '\.md)'
 
 **Issue 模板**：
 
-```markdown
+```markdown:terminal
 ## 问题类型
 - [ ] 内容错误
 - [ ] 示例不可运行

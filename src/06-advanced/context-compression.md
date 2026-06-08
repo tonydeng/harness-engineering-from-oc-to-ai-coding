@@ -85,7 +85,7 @@ flowchart TB
 
 ### 优先级金字塔
 
-```
+```text:terminal
 最高优先级（protect — 永不压缩）：
 ├── 用户明确指令（"记住我们用的数据库是 PostgreSQL"）
 ├── 关键决策记录（"选择 ECS 而不是 Fargate，因为成本"）

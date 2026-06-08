@@ -181,7 +181,7 @@ flowchart TB
 
 OpenCode 提供了 `lsp` 工具，当设置 `OPENCODE_EXPERIMENTAL_LSP_TOOL=true` 环境变量时可用：
 
-```bash
+```bash:terminal
 # 启用 LSP 工具
 export OPENCODE_EXPERIMENTAL_LSP_TOOL=true
 
@@ -265,7 +265,7 @@ config:
 
 #### 三级门禁架构（建议）
 
-```
+```text:terminal
 ┌─────────────────────────────────────────┐
 │   硬性门禁（Block）     │
 │   - 编译/语法检查      │

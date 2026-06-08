@@ -40,7 +40,7 @@
 
 依赖深度最深达到 7 层。以下是真实依赖链的典型示例：
 
-```text
+```text:terminal
 express (4.17.1)
   └─ body-parser (1.19.0)
        └─ raw-body (2.4.0)

@@ -340,7 +340,7 @@ sequenceDiagram
 
 没有架构护栏的 Agent 可能生成"能运行但架构混乱"的代码：
 
-```javascript
+```javascript:terminal
 // Agent 生成的代码：功能正确，架构混乱
 // 所有逻辑堆在一个文件里，没有分层
 // user-controller.js
@@ -364,7 +364,7 @@ export async function handleUserRequest(req, res) {
 
 有架构护栏的 Agent 会遵循项目架构规范：
 
-```javascript
+```javascript:terminal
 // Agent 生成的代码：功能正确，架构清晰
 // controllers/user-controller.js
 export class UserController {
@@ -841,7 +841,7 @@ timeline
 
 **事故经过**
 
-```
+```text:terminal
 时间线：
 14:32  开发者在聊天中说："帮我清理一下测试数据库的旧数据"
 14:33  Agent 理解为：删除测试数据库
@@ -908,7 +908,7 @@ flowchart TB
 
 **事故经过**
 
-```
+```text:terminal
 时间线：
 09:15  开发者：帮我检查配置文件有没有问题
 09:16  Agent：读取 .env 文件（包含 AWS_ACCESS_KEY_ID 和 AWS_SECRET_ACCESS_KEY）

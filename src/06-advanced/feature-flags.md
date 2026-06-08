@@ -1,6 +1,6 @@
 # Feature Flags 路线图
 
-> **OMO 扩展说明**：本文描述的 Feature Flags 系统（89 个 Flags、`opencode flags list` 命令、`feature_flags` 配置字段）是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不包含 Feature Flags 系统。omo 版本 v4.5.x，OpenCode 版本 v1.15.x。
+> **OMO 扩展说明**：本文描述的 Feature Flags 系统（89 个 Flags、`opencode flags list` 命令、`feature_flags` 配置字段）是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不包含 Feature Flags 系统。OMO 版本 v4.7.x，OpenCode 版本 v1.16.x。
 >
 > OMO 89 个 Feature Flag 不是随机的功能列表，它是产品迭代的仪表盘——告诉你哪些能力已经就绪、哪些正在开发、哪些即将到来。
 > **适合读者**: 技术负责人 · 架构师
@@ -233,9 +233,9 @@ gantt
 
 所有时间线都基于当前规划的版本节奏估算。OpenCode 采用滚动发布模式，大约每 6-8 周一个版本：
 
-- **OMO v4.5.x**（当前）：31 个 experimental Flags 可用，24 个 stable
-- **OMO v4.6.x**（预计 Q2 2026）：新增约 8 个 Flags，3 个 experimental 升级为 stable
-- **OMO v4.7.x**（预计 Q3 2026）：新增约 10 个 Flags，5 个 experimental 升级为 stable
+- **OMO v4.5.x**（已发布）：31 个 experimental Flags 可用，24 个 stable
+- **OMO v4.6.x**（已发布）：新增约 8 个 Flags，3 个 experimental 升级为 stable
+- **OMO v4.7.x**（当前）：新增约 10 个 Flags，5 个 experimental 升级为 stable
 - **OMO v5.0**（预计 Q4 2026）：规划中 Flags 基本完成，首个大版本
 
 ## 如何跟进
@@ -246,13 +246,13 @@ Feature Flags 的意义不在于"我知道有这个功能"，而在于"我知道
 
 **方式一：命令行**
 
-```bash
+```bash:terminal
 opencode flags list
 ```
 
 输出示例（简化）：
 
-```text
+```text:terminal
   AGENT (28)               SECURITY (18)           PERFORMANCE (16)
   ✔ agent_parallel_...     ✔ perm_least_priv...    ✔ cache_multi_level
   ✔ agent_tester           ✗ perm_approval_...     ✗ compress_token_...
@@ -270,7 +270,7 @@ opencode flags list
 { "feature_flags": { "agent_parallel_orchestration": true } }
 ```
 
-```bash
+```bash:terminal
 # 环境变量临时覆盖
 OPENCODE_FEATURE_FLAGS='{"agent_parallel_orchestration":true}' opencode run
 ```
@@ -279,7 +279,7 @@ OPENCODE_FEATURE_FLAGS='{"agent_parallel_orchestration":true}' opencode run
 
 对比不同 Flag 组合的效果：在配置中定义实验组（control/treatment），观察一周后对比平均响应时间、成功率和 Token 消耗。例如路由策略 A/B 测试——A 组用 `route_shortest_queue`，B 组用 `route_success_rate`。
 
-```json
+```json:opencode.json
 // 完整 experiments 配置示例见 opencode.json experiments 字段
 ```
 

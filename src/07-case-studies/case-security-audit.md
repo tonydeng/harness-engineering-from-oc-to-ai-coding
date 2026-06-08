@@ -24,7 +24,7 @@
 
 审计对象是一个典型的 Web 电商应用，微服务架构：
 
-```json
+```json:terminal
 {
   "target_app": "Harness Commerce Platform",
   "tech_stack": {
@@ -68,7 +68,7 @@
 
 流水线集成三款工具，覆盖常见 Web 漏洞：
 
-```json
+```json:terminal
 {
   "red_team_scan_tools": {
     "zap": {
@@ -94,7 +94,7 @@
 
 扫描命令（可直接在 CI 中运行）：
 
-```bash
+```bash:terminal
 # OWASP ZAP 扫描 API
 docker run -v $(pwd):/zap/wrk ghcr.io/zaproxy/zaproxy:stable \
   zap-api-scan.py -t https://staging.example.com/openapi.json \
@@ -115,7 +115,7 @@ docker run --rm aquasec/trivy:latest \
 
 依赖风险常被忽视。攻击者更可能通过已知 CVE 的 npm 包打进系统，而不是从零挖 0day。流水线在每次构建时自动比对依赖清单与 CVE 数据库：
 
-```json
+```json:terminal
 {
   "dependency_scanning": {
     "upstream": "osv.dev API + NVD feed（每小时同步）",
@@ -133,7 +133,7 @@ docker run --rm aquasec/trivy:latest \
 
 **硬编码密钥扫描**：规则覆盖 AWS key、GitHub token、JWT secret、数据库密码等常见模式：
 
-```json
+```json:terminal
 {
   "secret_detection_rules": {
     "patterns": [
@@ -162,7 +162,7 @@ docker run --rm aquasec/trivy:latest \
 
 红队输出一份结构化的 JSON 报告，包含每个漏洞的完整上下文：
 
-```json
+```json:terminal
 {
   "red_team_report": {
     "report_id": "RED-2024-03-21-001",
@@ -240,7 +240,7 @@ docker run --rm aquasec/trivy:latest \
 
 每个漏洞按类型匹配对应的修复模板：
 
-```json
+```json:terminal
 {
   "blue_team_auto_fix": {
     "vuln_id": "VULN-001",
@@ -259,7 +259,7 @@ docker run --rm aquasec/trivy:latest \
 
 配置类漏洞的修复直接生成 patch：
 
-```json
+```json:terminal
 {
   "blue_team_config_fix": {
     "vuln_id": "VULN-003",
@@ -274,7 +274,7 @@ docker run --rm aquasec/trivy:latest \
 
 蓝队产出一个**可执行的安全基线**——不是一个 PDF 文档，而是一个 JSON 规则集，流水线每次部署前自动检查：
 
-```json
+```json:terminal
 {
   "security_baseline": {
     "http_headers": {
@@ -309,7 +309,7 @@ docker run --rm aquasec/trivy:latest \
 
 修复提交后自动触发复扫：
 
-```json
+```json:terminal
 {
   "secondary_scan": {
     "vuln_id": "VULN-001",
@@ -324,7 +324,7 @@ docker run --rm aquasec/trivy:latest \
 
 ### 3.4 蓝队输出结构
 
-```json
+```json:terminal
 {
   "blue_team_report": {
     "report_id": "BLUE-2024-03-21-001",
@@ -353,7 +353,7 @@ docker run --rm aquasec/trivy:latest \
 
 ### 4.1 系统数据流图
 
-```
+```markdown:terminal
   [用户] ---HTTPS---> [Nginx Ingress] ---> [API Gateway (Express)]
                                                       |
                      +--------------------------------+--------------------------------+
@@ -367,7 +367,7 @@ docker run --rm aquasec/trivy:latest \
 
 ### 4.2 STRIDE 逐类分析
 
-```json
+```json:terminal
 {
   "stride_analysis": {
     "spoofing": {
@@ -476,7 +476,7 @@ docker run --rm aquasec/trivy:latest \
 
 ### 5.1 security-research 团队配置
 
-```json
+```json:terminal
 {
   "teams": {
     "security-research": {
@@ -520,7 +520,7 @@ docker run --rm aquasec/trivy:latest \
 
 流水线六步执行顺序：
 
-```
+```text:terminal
 Step 1: Threat Model Agent
         输入: 系统架构文档
         输出: STRIDE 分析 + 审计用例清单
@@ -553,7 +553,7 @@ Step 6: 闭环判断
 
 ### 5.3 自动 CVSS 评分引擎
 
-```json
+```json:terminal
 {
   "cvss_scoring_engine": {
     "base_metrics": {
@@ -580,7 +580,7 @@ Step 6: 闭环判断
 
 ### 5.4 CI/CD 集成（GitHub Actions）
 
-```json
+```json:terminal
 {
   "ci_integration": {
     "triggers": [
@@ -640,7 +640,7 @@ jobs:
 
 ### 6.1 扫描速度
 
-```json
+```json:terminal
 {
   "scan_speed": {
     "automated": "平均 8.3 分钟完成全量扫描",
@@ -653,7 +653,7 @@ jobs:
 
 ### 6.2 漏洞检出率
 
-```json
+```json:terminal
 {
   "detection_rate": {
     "period": "2024-01-01 至 2024-03-31",
@@ -669,7 +669,7 @@ jobs:
 
 ### 6.3 修复成功率
 
-```json
+```json:terminal
 {
   "fix_success_rate": {
     "auto_fix_attempted": 123,

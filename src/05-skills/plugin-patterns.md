@@ -91,7 +91,7 @@ flowchart TB
 
 **组合示例**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-dev
 description: |
@@ -379,7 +379,7 @@ pipeline:
 
 每个阶段的输入输出格式：
 
-```json
+```json:terminal
 {
   "stage": "collect",
   "input": {
@@ -393,7 +393,7 @@ pipeline:
     "schema": ["id", "name", "email", "created_at"]
   }
 }
-```
+```markdown:terminal
 
 ### 数据流转
 
@@ -412,9 +412,9 @@ pipeline:
 1. **快速失败（Fail Fast）**：任何阶段失败，立即终止管道
 2. **容错继续（Continue on Error）**：记录错误，继续执行后续阶段
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 error_handling: fail_fast  # 或 continue_on_error
-```
+```markdown:terminal
 
 ## 性能优化
 
@@ -591,7 +591,7 @@ Skills Marketplace 使用语义化版本（SemVer）管理 Skill 版本：
 
 **依赖版本约束**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 dependencies:
   - name: frontend-architect
     version: ">=1.0.0 <2.0.0"  # 允许 1.x 的任何版本
@@ -669,7 +669,7 @@ Skill 作为可插拔组件，必须定义清晰的接口契约：
 
 **输入契约**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 input_schema:
   type: object
   properties:
@@ -693,7 +693,7 @@ input_schema:
 
 **输出契约**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 output_schema:
   type: object
   properties:
@@ -730,7 +730,7 @@ output_schema:
 
 **兼容性声明**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-dev
 version: "2.0.0"
@@ -751,7 +751,7 @@ Skill 的依赖管理需要解决以下问题：
 
 **依赖解析**：
 
-```
+```text:terminal
 full-stack-dev@2.0.0
 ├── frontend-architect@2.1.0
 │   └── ui-designer@1.0.0

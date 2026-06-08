@@ -90,7 +90,7 @@ flowchart TB
 
 在 Skill 中引用 MCP Tool，核心机制是 `allowed-tools` 字段。MCP Tool 的命名遵循 `mcp_{server}_{tool}` 格式：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: deep-research
 description: |
@@ -154,7 +154,7 @@ flowchart LR
 
 Skill-MCP 桥接的权限设计遵循**最小权限原则**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: security-audit
 description: 安全漏洞扫描和审计
@@ -183,7 +183,7 @@ allowed-tools:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: deep-research
 description: |
@@ -261,7 +261,7 @@ allowed-tools:
 
 **执行流程**：
 
-```
+```text:terminal
 用户: "帮我研究 React Server Components 和 Next.js App Router 的关系"
 
 Agent:
@@ -277,7 +277,7 @@ Agent:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: git-code-review
 description: |
@@ -333,7 +333,7 @@ allowed-tools:
 
 审查报告格式：
 
-```markdown
+```markdown:terminal
 ## 审查摘要
 [一句话总结变更的主要目的和风险]
 
@@ -358,7 +358,7 @@ allowed-tools:
 
 ## 建议
 [下一步行动]
-```
+```text:terminal
 ```
 
 **MCP 配置**：
@@ -391,7 +391,7 @@ allowed-tools:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: safe-data-query
 description: |
@@ -442,11 +442,11 @@ allowed-tools:
 2. 构建安全的参数化查询
 3. 使用 mcp_postgres_query 执行查询
 4. 格式化输出结果
-```
+```markdown:terminal
 
 ## 输出格式
 
-```markdown
+```markdown:terminal
 ## 查询结果
 
 **执行时间**：Xms
@@ -457,10 +457,10 @@ allowed-tools:
 | ... | ... | ... |
 
 ## 查询语句
-```sql
+```sql:terminal
 [实际执行的 SQL]
 ```
-```
+```text:terminal
 ```
 
 ## Skill-embedded MCP 配置
@@ -469,7 +469,7 @@ allowed-tools:
 
 Skill 可以在 SKILL.md 中声明其依赖的 MCP Server，实现"即插即用"的体验：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: github-operations
 description: |
@@ -513,9 +513,9 @@ mcp:
 ## 使用前提
 
 确保已设置环境变量：
-```bash
+```bash:terminal
 export GITHUB_TOKEN="your-token-here"
-```
+```text:terminal
 ```
 
 ### MCP 配置合并规则
@@ -548,7 +548,7 @@ export GITHUB_TOKEN="your-token-here"
 
 复杂 Skill 可能依赖多个 MCP Server：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-audit
 description: 全栈代码审计，包含安全扫描和依赖检查
@@ -578,7 +578,7 @@ mcp:
 
 **1. 明确声明 MCP 依赖**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # ✅ 好的做法：明确声明需要的 MCP Tool
 allowed-tools:
   - mcp_github_create_issue
@@ -591,7 +591,7 @@ allowed-tools:
 
 **2. 提供降级策略**
 
-```markdown
+```markdown:terminal
 ## 执行策略
 
 1. 优先使用 MCP Tool（如果可用）
@@ -601,7 +601,7 @@ allowed-tools:
 
 **3. 环境变量管理**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # ✅ 使用环境变量占位符
 environment:
   API_KEY: "{env:MY_API_KEY}"

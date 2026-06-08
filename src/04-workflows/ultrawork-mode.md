@@ -81,7 +81,7 @@ flowchart TB
 
 **传统 Prompt 示例**：
 
-```
+```text:terminal
 请帮我实现用户登录功能：
 1. 先阅读 src/auth/ 目录下的现有认证代码
 2. 参考 AuthService 的实现风格
@@ -93,7 +93,7 @@ flowchart TB
 
 **Ultrawork 示例**：
 
-```
+```text:terminal
 ulw 实现用户登录功能
 ```
 
@@ -107,7 +107,7 @@ Agent 会自动完成上述所有步骤，无需你逐条指定。
 
 在任意对话中输入 `ulw` 或 `ultrawork`，即可将当前会话切换到 Ultrawork 模式：
 
-```bash
+```bash:terminal
 # 简写形式
 ulw 为订单模块添加批量导出功能
 
@@ -142,7 +142,7 @@ ultrawork 重构用户服务，提取公共逻辑
 
 使用 `/ulw-loop` 命令（OMO v1.15+）启动带自我迭代的 Ultrawork：
 
-```bash
+```bash:terminal
 # 基础用法
 /ulw-loop 实现用户登录功能
 
@@ -340,7 +340,7 @@ Ralph Loop 不依赖 `stop_condition` 或完成度百分比。它的停止机制
 
 **步骤 1：启动 Ultrawork**
 
-```bash
+```bash:terminal
 ulw 为用户添加头像上传功能，支持 JPG/PNG 格式，最大 2MB
 ```
 
@@ -348,7 +348,7 @@ ulw 为用户添加头像上传功能，支持 JPG/PNG 格式，最大 2MB
 
 Agent 会自动执行以下操作：
 
-```
+```text:terminal
 [探索阶段]
 → 扫描项目结构，识别技术栈
 → 查找现有文件上传相关代码
@@ -388,7 +388,7 @@ Agent 会自动执行以下操作：
 
 Agent 会输出完整的变更摘要：
 
-```
+```text:terminal
 任务完成！已实现用户头像上传功能：
 
 新增文件：
@@ -409,13 +409,13 @@ Agent 会输出完整的变更摘要：
 
 如果需要确保测试覆盖率达到目标：
 
-```bash
+```bash:terminal
 /ulw-loop --max-iterations=15 --completion-promise="coverage>80" 为用户添加头像上传功能
 ```
 
 Agent 会持续迭代直到测试覆盖率达标：
 
-```
+```text:terminal
 [迭代 1] 实现基础功能，覆盖率 45%
 [迭代 2] 添加边界条件测试，覆盖率 62%
 [迭代 3] 添加错误处理测试，覆盖率 78%
@@ -433,13 +433,13 @@ Agent 会持续迭代直到测试覆盖率达标：
 
 **好的目标描述**：
 
-```
+```text:terminal
 ulw 实现用户头像上传功能，支持 JPG/PNG，最大 2MB，存储到 S3
 ```
 
 **不好的目标描述**：
 
-```
+```text:terminal
 ulw 加个头像功能
 ```
 
@@ -447,7 +447,7 @@ ulw 加个头像功能
 
 在项目的 AGENTS.md 中记录关键信息，帮助 Ultrawork 更好地理解项目：
 
-```markdown
+```markdown:AGENTS.md
 ## 技术栈
 
 - 前端：React 18 + TypeScript
@@ -498,7 +498,7 @@ Ultrawork 完成后，建议：
 
 A: Ultrawork 遵循 AGENTS.md 中的约束规则。你可以在 AGENTS.md 中明确禁止修改某些文件：
 
-```markdown
+```markdown:AGENTS.md
 ## 约束规则
 
 - 禁止修改 config/ 目录下的配置文件
@@ -570,7 +570,7 @@ Prometheus 模式（`@plan`）采用访谈式需求收集的工作方式。与 U
 
 **选择指南**：
 
-```
+```text:terminal
 需求明确 + 需要精确控制 → 传统 Prompt
 需求模糊 + 需要审计轨迹 → Prometheus 模式
 需求模糊 + 追求效率 → Ultrawork 模式

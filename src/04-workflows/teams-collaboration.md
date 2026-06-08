@@ -150,7 +150,7 @@ Team Mode 的底层通信基于 per-message JSON 文件，存储在 `~/.omo/runt
 
 **消息投递流程**：
 
-```
+```text:terminal
 发送方调用 team_send_message → 写入接收方 inbox/{uuid}.json
   → 后台自动执行 Live Delivery：重命名为 .delivering-{uuid}.json
     → promptAsync 注入 <peer_message> 到接收方会话
@@ -202,7 +202,7 @@ sequenceDiagram
 
 **team_send_message 参数详解**：
 
-```json
+```json:terminal
 {
   "team_send_message": {
     "to": "vuln-scanner",
@@ -222,7 +222,7 @@ sequenceDiagram
 
 Team Lead 向 Worker 分配子任务的消息类型：
 
-```json
+```json:terminal
 {
   "type": "task_assignment",
   "payload": {
@@ -252,7 +252,7 @@ Team Lead 向 Worker 分配子任务的消息类型：
 
 Worker 向 Team Lead 汇报执行状态：
 
-```json
+```json:terminal
 {
   "type": "status_sync",
   "payload": {
@@ -281,7 +281,7 @@ Worker 向 Team Lead 汇报执行状态：
 
 Worker 提交执行结果给 Team Lead：
 
-```json
+```json:terminal
 {
   "type": "result_aggregation",
   "payload": {
@@ -1178,7 +1178,7 @@ Team 的内部通信使用 inbox 消息传递，对外输出使用文件（WORKF
 
 **WORKFLOW_STATE.md 模板**：
 
-```markdown
+```markdown:terminal
 # WORKFLOW_STATE
 
 ## 元数据

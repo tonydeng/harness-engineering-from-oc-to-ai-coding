@@ -645,7 +645,7 @@ describe('UserService', () => {
 
 最终交付的项目结构如下：
 
-```
+```text:terminal
 user-service/
 ├── src/
 │   ├── index.ts                 # Express 应用入口

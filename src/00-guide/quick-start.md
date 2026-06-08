@@ -18,14 +18,14 @@
 | **Python** | >= 3.10 | `python --version` | 可选，部分 Skill 需要 |
 | **Git** | >= 2.x | `git --version` | 版本控制基础 |
 
-```bash
+```bash:terminal
 # 一键验证所有前置条件
 node --version && python --version && git --version
 ```
 
 **预期输出**：
 
-```
+```text:terminal
 v18.x.x (或更高)
 Python 3.10.x (或更高)
 git version 2.x.x (或更高)
@@ -39,7 +39,7 @@ git version 2.x.x (或更高)
 
 ### macOS / Linux
 
-```bash
+```bash:terminal
 # 使用 Homebrew（推荐，macOS）
 brew install anomalyco/tap/opencode
 
@@ -52,7 +52,7 @@ curl -fsSL https://opencode.ai/install | bash
 
 ### Windows
 
-```powershell
+```powershell:terminal
 # 使用 npm 全局安装
 npm install -g opencode-ai
 
@@ -65,13 +65,13 @@ choco install opencode
 
 ### 验证安装
 
-```bash
+```bash:terminal
 opencode --version
 ```
 
 **预期输出**：
 
-```
+```text:terminal
 OpenCode v1.16.0
 ```
 
@@ -87,7 +87,7 @@ OpenCode v1.16.0
 
 ### 创建测试项目
 
-```bash
+```bash:terminal
 # 创建一个测试目录
 mkdir opencode-demo && cd opencode-demo
 
@@ -97,7 +97,7 @@ git init
 
 ### 启动 OpenCode
 
-```bash
+```bash:terminal
 # 启动 OpenCode TUI 界面
 opencode
 
@@ -145,7 +145,7 @@ OpenCode 支持多种 AI 模型 Provider，通过编辑 `~/.config/opencode/open
 
 在 TUI 界面中：
 
-```
+```text:terminal
 1. 输入任务描述
    帮我创建一个简单的 Python HTTP 服务器，监听 8080 端口，返回 "Hello OpenCode"
 
@@ -159,7 +159,7 @@ OpenCode 支持多种 AI 模型 Provider，通过编辑 `~/.config/opencode/open
 
 **预期输出**：
 
-```
+```text:terminal
 ✓ Created server.py
 ✓ Server ready to run: python server.py
 
@@ -168,7 +168,7 @@ Test command: curl http://localhost:8080
 
 ### 验证结果
 
-```bash
+```bash:terminal
 # 在另一个终端窗口中测试
 python server.py &
 
@@ -178,7 +178,7 @@ curl http://localhost:8080
 
 **预期输出**：
 
-```
+```text:terminal
 Hello OpenCode
 ```
 
@@ -196,13 +196,13 @@ OpenCode 的核心特性：
 
 **预期输出**：
 
-```
+```text:terminal
 File restored to previous state.
 ```
 
 ### 测试 /diff 查看变更
 
-```bash
+```bash:terminal
 # 重新执行任务
 /build
 
@@ -212,7 +212,7 @@ File restored to previous state.
 
 **预期输出**：
 
-```diff
+```diff:terminal
 --- /dev/null
 +++ b/server.py
 @@ -0,0 +1,10 @@
@@ -258,7 +258,7 @@ OpenCode 默认会询问敏感操作权限。首次使用建议：
 
 ### 排除敏感目录
 
-```bash
+```bash:terminal
 # 创建 .opencodeignore
 cat > .opencodeignore << 'EOF'
 .env

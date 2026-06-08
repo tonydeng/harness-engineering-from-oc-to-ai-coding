@@ -50,6 +50,7 @@
   - [沙箱与 Hook 系统](06-advanced/sandbox-hooks.md)
   - [AGENTS.md 约定系统](06-advanced/agents-dot-md.md)
   - [可观测性](06-advanced/observability.md)
+    - [可观测性参考](06-advanced/observability-reference.md)
   - [Feature Flags 路线图](06-advanced/feature-flags.md)
 - [案例研究](07-case-studies/README.md)
   - [案例一：从零搭建微服务](07-case-studies/real-world-01.md)

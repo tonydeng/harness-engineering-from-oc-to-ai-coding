@@ -8,7 +8,7 @@
 
 ### 暴露的关键指标
 
-```bash
+```bash:terminal
 # HELP opencode_sessions_total Total number of sessions
 # TYPE opencode_sessions_total counter
 opencode_sessions_total{status="success"} 1247
@@ -44,7 +44,7 @@ opencode_tool_call_duration_seconds_bucket{tool="read_file",le="+Inf"} 1002
 
 ### 常用 PromQL 查询
 
-```promql
+```promql:terminal
 # Token 消耗速率（每分钟）
 rate(opencode_tokens_used_total[1m])
 
@@ -60,7 +60,7 @@ histogram_quantile(0.95, sum(rate(opencode_request_duration_seconds_bucket[5m]))
 
 ### 趋势预测查询
 
-```promql
+```promql:terminal
 # 预测未来 1 小时的 Token 消耗
 predict_linear(rate(opencode_tokens_used_total[1h])[1h], 3600)
 
@@ -70,7 +70,7 @@ rate(opencode_errors_total[1h]) / rate(opencode_errors_total[1h] offset 24h)
 
 ### 成本分析查询
 
-```promql
+```promql:terminal
 # 按 Agent 分组的 Token 消耗占比
 sum by (agentId) (rate(opencode_tokens_used_total[7d])) / ignoring(agentId) sum(rate(opencode_tokens_used_total[7d])) * 100
 
@@ -313,7 +313,7 @@ flowchart TB
 
 ### 按时间范围和类型统计
 
-```bash
+```bash:terminal
 # 统计过去一小时的错误事件
 cat /var/log/opencode/opencode.log | \
   jq 'select(.level == "error" and .timestamp > "2026-06-04T09:00:00Z")' | \
@@ -327,7 +327,7 @@ cat /var/log/opencode/opencode.log | \
 
 ### 性能瓶颈分析
 
-```bash
+```bash:terminal
 # 找到平均耗时最高的工具
 cat /var/log/opencode/opencode.log | \
   jq 'select(.type == "tool_result")' | \

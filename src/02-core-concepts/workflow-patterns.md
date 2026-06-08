@@ -12,7 +12,7 @@
 
 用一个最简单的自定义命令来理解工作流：
 
-```markdown
+```markdown:.opencode/commands/hello.md
 # 保存为 .opencode/commands/hello.md
 你好世界
 
@@ -137,7 +137,7 @@ OpenCode 支持两种自定义命令的方式：**Markdown 文件（推荐）** 
 
 **$ARGUMENTS 示例**：
 
-```markdown
+```markdown:.opencode/commands/search.md
 # search
 
 在代码库中搜索 $ARGUMENTS，返回匹配的文件和行号。
@@ -148,7 +148,7 @@ OpenCode 支持两种自定义命令的方式：**Markdown 文件（推荐）** 
 
 **!shell 示例**：
 
-```markdown
+```markdown:.opencode/commands/branch-status.md
 # branch-status
 
 当前分支：!git branch --show-current
@@ -160,7 +160,7 @@ OpenCode 支持两种自定义命令的方式：**Markdown 文件（推荐）** 
 
 **@file 示例**：
 
-```markdown
+```markdown:.opencode/commands/implement-api.md
 # implement-api
 
 根据以下 API 规范实现接口：
@@ -176,7 +176,7 @@ OpenCode 支持两种自定义命令的方式：**Markdown 文件（推荐）** 
 
 **指定 Agent**：通过 frontmatter 指定执行命令的 Agent 类型：
 
-```markdown
+```markdown:.opencode/commands/analyze-architecture.md
 ---
 agent: plan
 ---
@@ -188,7 +188,7 @@ agent: plan
 
 **指定模型**：为特定命令指定使用的模型：
 
-```markdown
+```markdown:.opencode/commands/complex-refactor.md
 ---
 model: claude-opus-4
 ---
@@ -200,7 +200,7 @@ model: claude-opus-4
 
 **子命令**：支持 `command:subcommand` 形式的命令层级：
 
-```
+```bash:terminal
 /review:security    # 安全审查
 /review:performance # 性能审查
 /review:style       # 代码风格审查
@@ -210,7 +210,7 @@ model: claude-opus-4
 
 将 `.opencode/commands/` 目录提交到 Git，团队成员克隆仓库后即可使用所有自定义命令。建议的目录结构：
 
-```
+```text:terminal
 .opencode/
 ├── commands/
 │   ├── review/
@@ -344,7 +344,7 @@ model: claude-opus-4
 
 ### 命令行选择 Profile
 
-```bash
+```bash:terminal
 # 注意：--profile 和 /profile 命令是 oh-my-openagent 插件功能，非 OpenCode 核心特性
 # OpenCode 原生通过 Tab 键切换 Plan/Build 模式
 
@@ -419,7 +419,7 @@ graph TB
 
 ### AGENTS.md 完整模板
 
-```markdown
+```markdown:AGENTS.md
 # 项目名称 — AGENTS.md
 
 ## 项目概述
@@ -469,7 +469,7 @@ project/
 
 作为后端架构师，我建议在标准模板基础上增加后端专用部分：
 
-```markdown
+```markdown:AGENTS.md
 ## API 规范
 
 ### 路径约定
@@ -563,6 +563,7 @@ X-Request-ID: {uuid}
 ### 安全要求
 
 Command 系统涉及 Shell 执行和文件引用，安全配置至关重要。完整的安全配置示例（参数校验、Shell 白名单、路径限制）和检查清单 → [安全总览](../06-advanced/security-overview.md)。
+```
 
 ---
 
