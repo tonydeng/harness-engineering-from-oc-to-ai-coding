@@ -140,6 +140,14 @@
 
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
+### Plugin(插件)
+
+**定义**:OpenCode 中代码层面的扩展点,通过 Hook 系统拦截和修改 Agent 的行为。Plugin 运行在 Agent 进程内,可以添加自定义工具、拦截文件操作、修改 LLM 请求等。核心 API 为 `definePlugin`。
+
+> **人话**: 改 Agent 行为逻辑的代码扩展
+
+**首次出现**:[自定义 Agent 与 Plugin](../06-advanced/custom-agents.md)
+
 ### Provider(模型供应商)
 
 **定义**:提供大语言模型推理能力的服务商,如 Anthropic Claude、OpenAI GPT、Google Gemini 等,或本地部署的模型。
@@ -313,6 +321,7 @@
 | opencode.json | opencode.json | [工作流模式](../02-core-concepts/workflow-patterns.md) |
 | 权限模型 | Permission Model | [约束系统解析](../02-core-concepts/constraints-system.md) |
 | Plan Agent | Plan Agent | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
+| Plugin | Plugin | [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) |
 | Provider | Provider | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
 | 提示词 | Prompt | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
 | 质量门禁 | Quality Gates | [验证护栏体系](../02-core-concepts/validation-harness.md) |

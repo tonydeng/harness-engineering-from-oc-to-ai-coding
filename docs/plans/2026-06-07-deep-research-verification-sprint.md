@@ -1,6 +1,7 @@
-# Deep-Research 外部验证 Sprint
+# Deep-Research 外部验证 Sprint ✅ 已完成
 
 > **给代理工作者：** 使用 subagent-driven-development 模式执行此计划。
+> **完成日期**：2026-06-07
 
 **目标：** 对所有 8 章 50 篇文章进行 deep-research 外部验证 — 交叉比对 OpenCode GitHub、官方文档、竞品官网，验证所有版本号、配置键、定价和功能声明的准确性。
 
