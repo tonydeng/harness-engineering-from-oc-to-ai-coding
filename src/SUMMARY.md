@@ -62,7 +62,7 @@
 - [附录 A（术语&参考）](appendix-a/README.md)
   - [术语表](appendix-a/glossary.md)
   - [参考资料](appendix-a/references.md)
-- [附录 B（OpenCode & Claude Code内置能力参考）](appendix-b/README.md)
+- [附录 B（OpenCode & Claude Code内置能力与生态）](appendix-b/README.md)
   - [OpenCode 内置能力](appendix-b/opencode/capabilities.md)
     - [OpenCode 内置命令](appendix-b/opencode/commands.md)
     - [OpenCode Plugin 系统](appendix-b/opencode/plugins.md)

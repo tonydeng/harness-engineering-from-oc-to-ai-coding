@@ -1,6 +1,6 @@
 # 附录 B
 
-本附录收录 OpenCode 和 Claude Code 的内置能力参考。
+本附录收录 OpenCode 和 Claude Code 的内置能力与生态参考。
 
 ## 内容导航
 
