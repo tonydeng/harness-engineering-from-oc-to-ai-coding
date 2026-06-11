@@ -38,7 +38,9 @@ Claude Code 的命令以 `/` 开头，在对话中直接输入。
 
 ### 命令使用示例
 
-```
+ 
+
+```bash:terminal
 /init                          # 首次进入项目时初始化
 /compact                       # 上下文过长时压缩
 /cost                          # 查看消耗了多少 Token
@@ -115,7 +117,7 @@ Claude Code 支持多级 CLAUDE.md：
 
 Claude Code 使用 `.claude/` 目录管理项目配置：
 
-```
+```text:terminal
 .claude/
   settings.json    # 项目设置
   commands/        # 自定义命令
@@ -127,7 +129,7 @@ Claude Code 对工具调用有细粒度的权限控制。每次调用 Bash、Wri
 
 权限配置示例：
 
-```json
+```json:examples/claudecode/permissions.json
 {
   "permissions": {
     "allow": [
@@ -157,5 +159,5 @@ Claude Code 对工具调用有细粒度的权限控制。每次调用 Bash、Wri
 | 会话管理 | 压缩、导出、分享、撤销 | 压缩、清除 |
 | 开源状态 | 开源 | 闭源 |
 
-→ [OpenCode 内置能力](opencode-capabilities.md) 有 OpenCode 各项能力的详细说明。
+→ [OpenCode 内置能力](../opencode/capabilities.md) 有 OpenCode 各项能力的详细说明。
 → [核心概念](../02-core-concepts/) 章节对两者的设计哲学有更深入的对比。

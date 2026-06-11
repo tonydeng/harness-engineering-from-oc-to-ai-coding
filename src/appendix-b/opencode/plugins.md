@@ -1,4 +1,4 @@
-# Opencode Plugin 系统参考
+# OpenCode Plugin 系统参考
 
 > **OMO 扩展说明**：本参考手册中部分 API（如 `definePlugin`）、Hook 链式执行模型、OMO 扩展的 53+ Hook 点以及 `plugin` 配置块的对象格式（`{ "path": "...", "enabled": true }`）是 **oh-my-openagent (OMO)** 对 OpenCode Plugin 系统的扩展。原生 OpenCode 的 Plugin 使用异步函数返回 Hook 对象（非 `definePlugin`），Hook 数量约为 20+（非 53+）。OpenCode 版本 v1.16.x，OMO 版本 v4.7.x。
 >
@@ -22,7 +22,7 @@
 | **hooks** | 注册的 Hook 点及其处理函数 |
 | **tools** | 可选的自定义 Tool（工具）定义 |
 
-→ [Plugin 开发基础](../06-advanced/custom-agents.md#plugin-开发基础)
+→ [Plugin 开发基础](../../06-advanced/custom-agents.md#plugin-开发基础)
 
 ### Plugin vs Skill vs MCP
 
@@ -39,9 +39,9 @@
 
 > **人话**：Plugin 是改 Agent 行为的代码，Skill 是教 Agent 做事的说明书，MCP 是给 Agent 接外部工具的接口。
 
-→ [Skill 系统](../02-core-concepts/skills-system.md)
-→ [MCP 服务器](../06-advanced/mcp-servers.md)
-→ [Skill 插件化模式](../05-skills/plugin-patterns.md)
+→ [Skill 系统](../../02-core-concepts/skills-system.md)
+→ [MCP 服务器](../../06-advanced/mcp-servers.md)
+→ [Skill 插件化模式](../../05-skills/plugin-patterns.md)
 
 ### 什么时候该用 Plugin
 
@@ -58,8 +58,8 @@
 - 只是想接一个外部 API → 用 MCP
 - 只是想改 Agent 的角色设定 → 用自定义 Agent 配置
 
-→ [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md)
-→ [约束系统解析](../02-core-concepts/constraints-system.md)
+→ [自定义 Agent 与 Plugin](../../06-advanced/custom-agents.md)
+→ [约束系统解析](../../02-core-concepts/constraints-system.md)
 
 ---
 
@@ -158,7 +158,7 @@ Plugin Tool > MCP Tool > Built-in Tool
 2. 先确认是否真的需要改行为，还是加一个新工具就够了
 3. 覆盖内置工具后，原有行为可能被完全替换，做好兼容
 
-→ [自定义 Agent 与 Plugin · 工具优先级机制](../06-advanced/custom-agents.md#工具优先级机制)
+→ [自定义 Agent 与 Plugin · 工具优先级机制](../../06-advanced/custom-agents.md#工具优先级机制)
 
 ---
 
@@ -211,7 +211,7 @@ flowchart LR
     style H3 fill:#50C878,color:#fff
 ```
 
-→ [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md)
+→ [沙箱与 Hook 系统](../../06-advanced/sandbox-hooks.md)
 
 ### Core Hook Points（20+ 内置 Hook 点）
 
@@ -430,7 +430,7 @@ priority 数值大 → 后执行（在 Pipeline 末端）
 
 安全相关的 Plugin 应设为高优先级（数值大），确保其检查结果不会被后续 Plugin 覆盖。例如 Env Guard 应设为 `priority: 100`，普通日志 Plugin 设为 `priority: 50`。
 
-→ [Pipeline 模式详解](../06-advanced/custom-agents.md#pipeline-模式详解)
+→ [Pipeline 模式详解](../../06-advanced/custom-agents.md#pipeline-模式详解)
 
 ### package.json 中的 Plugin 元信息
 
@@ -646,8 +646,8 @@ Plugin 只应注册它真正需要的 Hook 点。Env Guard 只需要 `file:befor
 | 7 | 错误处理是否安全？ | 异常不应泄露敏感信息 |
 | 8 | 是否有权限提升路径？ | 从信息 Hook 到控制 Hook 的串联攻击 |
 
-→ [沙箱与 Hook 系统 · Hook 点威胁分析](../06-advanced/sandbox-hooks.md)
-→ [安全总览](../06-advanced/security-overview.md)
+→ [沙箱与 Hook 系统 · Hook 点威胁分析](../../06-advanced/sandbox-hooks.md)
+→ [安全总览](../../06-advanced/security-overview.md)
 
 ---
 
@@ -694,7 +694,7 @@ export default definePlugin({
 
 防止敏感信息泄露的安全守卫。使用 `file:beforeRead`、`file:afterRead`、`file:beforeWrite`、`tool:before`、`permission:check` 五个 Hook 点，通过正则检测 AWS Key、Private Key、GitHub Token 等敏感信息，提供 mask / reject / audit 三种处理策略。
 
-完整实现见 → [自定义 Agent 与 Plugin · Env Guard Plugin](../06-advanced/custom-agents.md#完整示例env-guard-plugin)
+完整实现见 → [自定义 Agent 与 Plugin · Env Guard Plugin](../../06-advanced/custom-agents.md#完整示例env-guard-plugin)
 
 ### 自定义 Tool Plugin
 
@@ -773,10 +773,10 @@ export default definePlugin({
 
 | 章节 | 内容 |
 |------|------|
-| → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) | Plugin 开发完整教程、Env Guard 示例 |
-| → [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md) | 沙箱隔离、Hook 点威胁分析 |
-| → [安全总览](../06-advanced/security-overview.md) | AI 编程安全威胁模型 |
-| → [Skill 系统](../02-core-concepts/skills-system.md) | Plugin 与 Skill 的对比 |
-| → [MCP 服务器](../06-advanced/mcp-servers.md) | 外部工具接入方式 |
-| → [Skill 插件化模式](../05-skills/plugin-patterns.md) | Skill 的插件化扩展 |
-| → [OpenCode 配置详解](../03-setup/opencode-config.md) | opencode.json 完整配置 |
+| → [自定义 Agent 与 Plugin](../../06-advanced/custom-agents.md) | Plugin 开发完整教程、Env Guard 示例 |
+| → [沙箱与 Hook 系统](../../06-advanced/sandbox-hooks.md) | 沙箱隔离、Hook 点威胁分析 |
+| → [安全总览](../../06-advanced/security-overview.md) | AI 编程安全威胁模型 |
+| → [Skill 系统](../../02-core-concepts/skills-system.md) | Plugin 与 Skill 的对比 |
+| → [MCP 服务器](../../06-advanced/mcp-servers.md) | 外部工具接入方式 |
+| → [Skill 插件化模式](../../05-skills/plugin-patterns.md) | Skill 的插件化扩展 |
+| → [OpenCode 配置详解](../../03-setup/opencode-config.md) | opencode.json 完整配置 |

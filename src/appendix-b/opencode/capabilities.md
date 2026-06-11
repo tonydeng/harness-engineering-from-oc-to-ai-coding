@@ -58,7 +58,9 @@ OpenCode 的命令以 `/` 开头，在输入框中直接输入即可执行。
 
 ### 命令使用示例
 
-```
+ 
+
+```bash:terminal
 /init                          # 首次进入项目时运行，生成 AGENTS.md
 /compact                       # 上下文过长时压缩
 /undo                          # AI 改错了文件，立刻撤销
@@ -116,7 +118,7 @@ OpenCode 提供 20+ 个 Hook Points，覆盖工具调用的完整生命周期：
 
 Plugin 配置文件放在 `.opencode/plugins/` 目录下，格式如下：
 
-```json
+```json:examples/opencode/plugin-config.json
 {
   "name": "my-plugin",
   "version": "1.0.0",

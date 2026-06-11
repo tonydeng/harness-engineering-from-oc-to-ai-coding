@@ -4,8 +4,8 @@
 
 OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由 OpenCode 本体提供，覆盖项目初始化、会话管理、模型配置等基础操作；**OMO 扩展命令**（oh-my-openagent Extended Commands）由 oh-my-openagent 插件提供，增加了自动化循环、智能重构、代码质量治理等高级能力。此外，OpenCode 支持通过 Markdown 文件或 JSON 配置创建自定义命令（Custom Commands）。
 
-→ [工作流模式](../02-core-concepts/workflow-patterns.md) 详细讲解 Command 系统的设计原理。
-→ [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md) 介绍 OMO 的安装与配置。
+→ [工作流模式](../../02-core-concepts/workflow-patterns.md) 详细讲解 Command 系统的设计原理。
+→ [oh-my-openagent 集成](../../03-setup/oh-my-openagent-setup.md) 介绍 OMO 的安装与配置。
 
 ---
 
@@ -20,7 +20,7 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 
 **`/init`** 是 OpenCode 工程化的起点。执行后，它会扫描项目目录结构、识别技术栈、生成包含项目概述的 AGENTS.md 文件，让 Agent "认识"你的项目。
 
-→ [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md) 讲解生成的文件结构和如何手动扩展。
+→ [AGENTS.md 约定系统](../../06-advanced/agents-dot-md.md) 讲解生成的文件结构和如何手动扩展。
 
 ### 会话管理
 
@@ -36,8 +36,8 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 
 **上下文压缩**（Compaction）是长会话的必备技能。当对话轮次增多、上下文接近 Token 窗口上限时，`/compact` 会触发后台 Agent 分析当前对话，生成摘要并保留关键信息，释放 Token 空间。
 
-→ [上下文压缩技术](../06-advanced/context-compression.md) 深入讲解压缩机制和触发策略。
-→ [Token 预算策略](../06-advanced/token-budget.md) 讲解如何合理分配有限的 Token 空间。
+→ [上下文压缩技术](../../06-advanced/context-compression.md) 深入讲解压缩机制和触发策略。
+→ [Token 预算策略](../../06-advanced/token-budget.md) 讲解如何合理分配有限的 Token 空间。
 
 ### 模型与配置
 
@@ -51,8 +51,8 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 | `/thinking` | 切换推理过程的显示状态 | 查看 Agent 的思考链路 |
 | `/exit` | 退出 OpenCode | 结束工作 |
 
-→ [国产模型供应商配置](../03-setup/chinese-providers.md) 介绍如何通过 `/connect` 接入国内模型。
-→ [OpenCode 配置详解](../03-setup/opencode-config.md) 讲解所有配置项的含义。
+→ [国产模型供应商配置](../../03-setup/chinese-providers.md) 介绍如何通过 `/connect` 接入国内模型。
+→ [OpenCode 配置详解](../../03-setup/opencode-config.md) 讲解所有配置项的含义。
 
 ---
 
@@ -60,7 +60,7 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 
 oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩展命令。安装 OMO 后，这些命令自动可用。
 
-→ [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md) 介绍安装方法。
+→ [oh-my-openagent 集成](../../03-setup/oh-my-openagent-setup.md) 介绍安装方法。
 
 ### 自动化循环
 
@@ -72,8 +72,8 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 **Ralph Loop** 和 **Ultrawork Loop** 都是持续执行机制，区别在于 Ralph Loop 偏向自引用（Agent 自我评估进度），Ultrawork Loop 偏向任务驱动（按预设计划推进）。
 
-→ [Ultrawork 模式](../04-workflows/ultrawork-mode.md) 讲解 Ultrawork 的设计哲学和使用策略。
-→ [Prometheus 规划模式](../04-workflows/prometheus-mode.md) 介绍配合 `/start-work` 使用的规划模式。
+→ [Ultrawork 模式](../../04-workflows/ultrawork-mode.md) 讲解 Ultrawork 的设计哲学和使用策略。
+→ [Prometheus 规划模式](../../04-workflows/prometheus-mode.md) 介绍配合 `/start-work` 使用的规划模式。
 
 ### 代码质量
 
@@ -86,7 +86,7 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 **`/remove-ai-slops`** 专注于清理 AI 编程工具生成的常见代码异味（Slop），包括：过度注释、不必要的封装、冗余的错误处理、不一致的命名风格等。它先锁定回归测试，再分批清理，最后验证质量门禁。
 
-→ [验证护栏体系](../02-core-concepts/validation-harness.md) 讲解重构和清理背后的质量保障机制。
+→ [验证护栏体系](../../02-core-concepts/validation-harness.md) 讲解重构和清理背后的质量保障机制。
 
 ### 任务执行
 
@@ -95,12 +95,12 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 | `/start-work` | 从 Prometheus 计划开始执行工作 | 已完成规划，准备进入执行阶段 |
 | `/hyperplan` | 启动对抗性多 Agent 规划，5 个 Agent 交叉评审 | 重要决策前，需要多视角评估方案 |
 
-**`/start-work`** 配合 [Prometheus 规划模式](../04-workflows/prometheus-mode.md) 使用。先通过 Prometheus 生成详细的实现计划，再用 `/start-work` 启动执行。
+**`/start-work`** 配合 [Prometheus 规划模式](../../04-workflows/prometheus-mode.md) 使用。先通过 Prometheus 生成详细的实现计划，再用 `/start-work` 启动执行。
 
 **`/hyperplan`** 是一种对抗性规划机制。5 个不同视角的 Agent 同时评审同一个方案，互相挑刺，最终综合出经过多轮攻防的高质量计划。
 
-→ [多 Agent 协作](../04-workflows/multi-agent-collab.md) 讲解多 Agent 通信和协调机制。
-→ [Agent 派生模式](../04-workflows/agent-derivation.md) 介绍 Agent 如何根据任务动态生成子 Agent。
+→ [多 Agent 协作](../../04-workflows/multi-agent-collab.md) 讲解多 Agent 通信和协调机制。
+→ [Agent 派生模式](../../04-workflows/agent-derivation.md) 介绍 Agent 如何根据任务动态生成子 Agent。
 
 ### 会话续接
 
@@ -111,7 +111,7 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 **`/handoff`** 生成一份结构化的上下文摘要，包含已完成的工作、待处理的任务、关键决策记录等。新会话中导入这份摘要即可无缝续接。
 
-→ [上下文工程核心](../02-core-concepts/context-engineering-core.md) 讲解上下文管理的设计哲学。
+→ [上下文工程核心](../../02-core-concepts/context-engineering-core.md) 讲解上下文管理的设计哲学。
 
 ---
 
@@ -119,7 +119,7 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 OpenCode 支持用户创建自己的命令。两种方式各有优势，Markdown 文件方式更适合团队协作，JSON 配置方式更适合精细控制。
 
-→ [工作流模式 · Command 系统](../02-core-concepts/workflow-patterns.md) 讲解完整的 Command 设计原理。
+→ [工作流模式 · Command 系统](../../02-core-concepts/workflow-patterns.md) 讲解完整的 Command 设计原理。
 
 ### 创建方式
 
