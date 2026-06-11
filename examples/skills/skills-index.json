@@ -1,0 +1,24 @@
+{
+  "market_name": "AcmeCorp Internal Skill Market",
+  "last_updated": "2025-06-01",
+  "skills": [
+    {
+      "name": "code-review",
+      "version": "1.1.0",
+      "status": "active",
+      "maintainer": "platform-team",
+      "quality_score": 92,
+      "usage_count": 347,
+      "satisfaction": 4.2
+    },
+    {
+      "name": "security-audit",
+      "version": "0.9.0",
+      "status": "beta",
+      "maintainer": "sec-team",
+      "quality_score": 85,
+      "usage_count": 128,
+      "satisfaction": 4.5
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+---
+# === 必填字段 ===
+name: skill-name                # 1-64 字符，小写连字符
+description: "一句话说明"         # 1-1024 字符，用于语义匹配
+template: |                     # Skill 的核心指令内容
+  你的角色是...
+  请按以下步骤操作...
+
+# === 条件必填（根据场景）===
+model: provider/model-name      # 指定模型，不填则使用默认路由
+agent: agent-role               # 指定 Agent 角色
+allowed-tools:                  # 有工具调用时必填
+  - Read
+  - Glob
+
+# === 可选字段 ===
+version: 1.0.0                  # 建议填写，便于版本追踪
+license: MIT                    # 开源许可
+compatibility: ">= 1.0.0"       # OpenCode 版本兼容性
+subtask: false                  # 是否可作为子任务执行
+examples:                       # I/O 示例，用于测试和文档
+  - input:
+      question: "示例问题"
+    output:
+      answer: "示例输出"
+metadata:
+  author: "作者名"
+  created_at: "2025-06-01"
+  tags:
+    - tag1
+    - tag2
+---

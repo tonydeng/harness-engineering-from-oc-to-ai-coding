@@ -1,0 +1,21 @@
+# 本地 vLLM 部署配置示例
+# 启动命令: vllm serve deepseek-ai/deepseek-v3 --port 8000
+
+opencode:
+  providers:
+    local-vllm:
+      name: "Local vLLM"
+      base_url: "http://localhost:8000/v1"
+      api_key: "dummy"  # 本地部署无需真实 API Key
+      models:
+        deepseek-v3:
+          name: "DeepSeek-V3 (Local)"
+          context_window: 64000
+          max_output: 4096
+
+  # 排除敏感目录
+  ignore_patterns:
+    - "**/secrets/**"
+    - "**/.env*"
+    - "**/credentials/**"
+    - "**/private-keys/**"

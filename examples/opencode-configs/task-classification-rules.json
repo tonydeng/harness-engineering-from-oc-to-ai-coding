@@ -1,0 +1,28 @@
+{
+  "task_classification": {
+    "rules": [
+      {
+        "pattern": "^(write|update|generate)\\s+(doc|readme|comment)",
+        "complexity": "L1",
+        "priority": "low"
+      },
+      {
+        "pattern": "(security|vulnerability|audit|threat)",
+        "complexity": "L5",
+        "priority": "high"
+      },
+      {
+        "pattern": "(architect|refactor|cross-module)",
+        "complexity": "L4",
+        "priority": "high"
+      }
+    ],
+    "token_thresholds": {
+      "estimated_output_lt_500": "L1-L2",
+      "estimated_output_gt_2000": "L4-L5"
+    },
+    "context_window": {
+      "files_gt_5": "L4+"
+    }
+  }
+}

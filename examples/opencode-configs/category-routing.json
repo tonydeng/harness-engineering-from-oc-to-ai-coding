@@ -1,0 +1,25 @@
+{
+  "routing": {
+    "categories": {
+      "simple": {
+        "description": "简单任务：代码补全、文档生成、注释添加",
+        "providers": ["deepseek", "qwen"],
+        "models": ["deepseek-chat", "qwen-turbo"],
+        "fallback": "qwen-plus"
+      },
+      "complex": {
+        "description": "复杂任务：架构设计、跨文件重构、安全审计",
+        "providers": ["anthropic", "openai"],
+        "models": ["claude-3-5-sonnet-20241022", "gpt-4o"],
+        "fallback": "deepseek-reasoner"
+      },
+      "chinese": {
+        "description": "中文任务：中文注释、本地化文档、中文需求分析",
+        "providers": ["qwen", "zhipu"],
+        "models": ["qwen-max", "glm-4"],
+        "fallback": "deepseek-chat"
+      }
+    },
+    "default_category": "simple"
+  }
+}

@@ -1,0 +1,9 @@
+# 危险命令拦截规则
+dangerous_patterns:
+  - pattern: "flush|drop|truncate|delete.*from"
+    action: require_confirmation
+    message: "检测到危险操作，请确认目标环境"
+  
+  - pattern: "production|prod|live"
+    action: block
+    message: "禁止在生产环境执行此操作"

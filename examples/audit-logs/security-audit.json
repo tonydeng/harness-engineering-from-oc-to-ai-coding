@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-06-01T14:32:15Z",
+  "session_id": "sess-abc123",
+  "agent": "build",
+  "action": "file_write",
+  "target": "src/auth/login.ts",
+  "reason": "实现登录功能",
+  "changes": {
+    "lines_added": 45,
+    "lines_removed": 3
+  },
+  "approval": {
+    "required": true,
+    "granted_by": "developer@example.com",
+    "granted_at": "2026-06-01T14:32:10Z"
+  }
+}

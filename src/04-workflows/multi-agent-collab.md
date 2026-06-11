@@ -6,9 +6,13 @@
 
 单个 Agent 的能力再强，也有边界。多 Agent 协作的核心思想是"角色分离"：每个 Agent 只做一件事——Planner 规划不写代码，Implementor 实现不审查，Reviewer 审查不改代码。这降低了单个 Agent 的复杂度，显著提高了输出质量。
 
+读完本文，你将能够设计并实现多 Agent 协作工作流，掌握串行、并行、主从、竞争四种模式的应用场景，以及通过 7-Agent Pipeline 显著提升输出质量。
+
 本文系统讲解四种 Agent 协作模式：串行模式（A → B → C 顺序执行）、并行模式（A 同时触发多个子 Agent 并汇总结果）、主从模式（Master 分配任务给 Slave 独立执行）和竞争模式（多个 Agent 从不同角度分析并达成共识）。然后深入 7-Agent Pipeline 的设计和实现——这是当前最成熟的多 Agent 协作方案，包含 Planner、Debater、Implementor、Reviewer、Tester、Linter 和 Committer 七个角色。
 
 你还会学到 `task()` 的子 Agent 调用方法、WORKFLOW_STATE.md 的文件交接模式（比对话历史交接更可审计、可恢复）、各 Agent 的温度策略设计（Planner 0.1、Implementor 0.1、Debater 0.3 等），以及权限隔离方案（Reviewer 和 Tester 在权限层面无法修改代码）。
+
+> **⏱ 时间有限？先读这些：** Agent 协作的四种模式 → 7-Agent Pipeline → 前端场景 Agent 编排示例 → 实战：启动 7-Agent Pipeline
 
 ---
 
@@ -41,7 +45,7 @@ flowchart LR
 
 **典型配置**：
 
-```json
+```json:.opencode/workflows/serial-pipeline.json
 {
   "workflow": {
     "name": "serial-pipeline",
@@ -95,7 +99,7 @@ flowchart TB
 
 **典型配置**：
 
-```json
+```json:.opencode/workflows/parallel-development.json
 {
   "workflow": {
     "name": "parallel-development",
@@ -131,7 +135,7 @@ flowchart TB
 
 → 此模式在 oh-my-openagent v4.0+ 中被正式封装为 **Team Mode**，提供 12 个 `team_*` 工具和四种 Agent 类型（Sisyphus、Atlas、Sisyphus-Junior、Hephaestus）来构建多 Agent 协作系统。详见[自定义工作流](custom-workflows.md)。
 
-> 注：第 2 章介绍了 OpenCode 的 5 个核心 Agent（Sisyphus、Prometheus、Atlas、Hephaestus、Oracle）。本章的 Team Mode 聚焦于 Sisyphus、Atlas、Hephaestus、Sisyphus-Junior 四种可参与工作流的 Agent 类型。Oracle 作为只读咨询 Agent 不参与流水线执行，Prometheus 作为规划模式已在前文介绍。
+> 注：第 2 章介绍了 OMO 扩展的 5 个核心 Agent（Sisyphus、Prometheus、Atlas、Hephaestus、Oracle）。本章的 Team Mode 聚焦于 Sisyphus、Atlas、Hephaestus、Sisyphus-Junior 四种可参与工作流的 Agent 类型。Oracle 作为只读咨询 Agent 不参与工作流执行，Prometheus 作为规划模式已在前文介绍。
 
 ```mermaid
 flowchart TB
@@ -162,7 +166,7 @@ flowchart TB
 
 **典型配置**：
 
-```json
+```json:.opencode/workflows/orchestrator-workers.json
 {
   "workflow": {
     "name": "orchestrator-workers",
@@ -194,7 +198,7 @@ flowchart TB
 
 竞争模式让多个 Agent 从不同角度分析同一问题，通过辩论或对抗达成共识。这是提高决策质量的有效手段。
 
-→ 此模式在自定义工作流中被形式化为 **Hyperplan**，支持 5 个及以上批评者角色（Security、Performance、Maintainability、Edge Case、Devil's Advocate），并可通过 `consensus_threshold` 和 `veto_power` 配置决策机制。详见[自定义工作流](custom-workflows.md)。
+→ 此模式在自定义工作流中被形式化为 **Hyperplan**，详见[自定义工作流](custom-workflows.md)。
 
 ```mermaid
 flowchart TB
@@ -226,7 +230,7 @@ flowchart TB
 
 **典型配置**：
 
-```json
+```json:.opencode/workflows/adversarial-review.json
 {
   "workflow": {
     "name": "adversarial-review",
@@ -261,9 +265,11 @@ flowchart TB
 | **一致性** | 高（固定流程） | 低（需合并） | 高（编排协调） | 高（共识机制） |
 | **容错性** | 低（单点故障） | 高（部分失败可继续） | 高（重试机制） | 中（依赖仲裁） |
 | **适用场景** | 固定子任务顺序 | 独立子任务并行 | 动态分解任务 | 多角度分析决策 |
-| **OpenCode 实现** | Skill/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate |
+| **OpenCode 实现** | Skill/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate* |
 | **成本** | 低 | 中（并行调用） | 高（多次调用） | 高（多轮交互） |
 | **可控性** | 高 | 中 | 高 | 中 |
+
+> \* Hyperplan 是 OMO 内置 Team Skill，非 OpenCode 原生功能。详见[自定义工作流](custom-workflows.md)。
 
 **模式选择决策树**：
 
@@ -301,44 +307,66 @@ graph TB
 | **并行模式** | 20K-100K tokens | 多个子 Agent 同时调用，总量取决于并行数 |
 | **主从模式** | 30K-150K tokens | 协调开销 + 动态分配，适合复杂探索 |
 | **竞争模式** | 50K-200K tokens | 多轮辩论消耗大量上下文 |
-| **7-Agent Pipeline** | 100K-500K tokens | 全流水线建议在关键任务使用 |
+| **7-Agent Pipeline** | 100K-500K tokens | 全工作流建议在关键任务使用 |
 
 ---
 
 ## 使用 task() 调用子 Agent
 
-`task()` 是 OpenCode 提供的子 Agent 调用 API，它允许一个 Agent 创建并管理子 Agent 执行特定任务。
+`task()` 是 OpenCode **核心内置函数**，用于创建子 Agent 执行子任务。同一模式下，**oh-my-openagent（OMO）插件** 提供了 `delegate_task()` 扩展，增加了类别路由、Skill 传递和后台执行能力。本节分别说明两种 API 的参数和使用方式。
 
-### task() 参数体系
+### OpenCode 核心 task() 函数
 
-```json
-{
-  "task": {
-    "category": "subagent",
-    "load_skills": ["security-architect", "penetration-tester"],
-    "prompt": "对当前代码变更进行安全审查，重点关注 SQL 注入和 XSS 漏洞",
-    "description": "安全审查子任务",
-    "context": {
-      "inherit": ["read", "search"],
-      "isolate": ["edit", "bash"]
-    },
-    "timeout": 300000,
-    "onFailure": "report"
-  }
-}
+`task()` 是 OpenCode 最基础的子 Agent 调用接口：
+
+```javascript:terminal
+// OpenCode task() — 创建子 Agent 执行任务
+const result = task(
+  description: "安全审查子任务",
+  prompt: "对当前代码变更进行安全审查，重点关注 SQL 注入和 XSS 漏洞",
+  subagent_type: "explore"
+)
 ```
 
 **参数说明**：
 
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `category` | string | 是 | 子 Agent 类型：`subagent`、`delegate`、`orchestrator` |
-| `load_skills` | string[] | 否 | 子 Agent 加载的 Skill 列表 |
+| `description` | string | 是 | 任务描述，用于日志和调试 |
 | `prompt` | string | 是 | 子 Agent 的任务指令 |
-| `description` | string | 否 | 任务描述，用于日志和调试 |
-| `context` | object | 否 | 上下文继承配置 |
-| `timeout` | number | 否 | 超时时间（毫秒），默认 300000 |
-| `onFailure` | string | 否 | 失败处理策略：`report`、`retry`、`abort` |
+| `subagent_type` | string | 是 | 指定 Agent 类型（如 `explore`、`librarian`、`orchestrator`、`build`、`oracle` 等） |
+| `session_id` | string | 否 | 继承已有会话上下文，用于续接之前的对话 |
+| `command` | string | 否 | 直接指定 Slash 命令替代 Prompt |
+
+> OpenCode 核心 `task()` 没有 `category`、`load_skills`、`run_in_background`、`timeout` 参数。这些是 OMO `delegate_task()` 的扩展功能。
+
+### oh-my-openagent delegate_task() 扩展
+
+OMO 的 `delegate_task()` 是对 `task()` 的扩展封装，提供了类别路由、Skill 传递和后台执行能力：
+
+```javascript:terminal
+// OMO delegate_task() — 带类别和 Skill 的子 Agent 调用
+const bgTaskId = delegate_task(
+  description: "安全审查子任务",
+  prompt: "对当前代码变更进行安全审查，重点关注 SQL 注入和 XSS 漏洞",
+  category: "unspecified-high",
+  load_skills: ["security-architect", "penetration-tester"],
+  run_in_background: true
+)
+```
+
+**参数说明**：
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `description` | string | 是 | 任务描述，用于日志和调试 |
+| `prompt` | string | 是 | 子 Agent 的任务指令 |
+| `category` | string | 否 | 任务分类标签（如 `visual-engineering`、`ultrabrain`、`deep`、`artistry`、`quick`、`unspecified-low`、`unspecified-high`、`writing`），用于调度路由 |
+| `load_skills` | string[] | 否 | 子 Agent 加载的 Skill 列表（无需 Skill 时传 `[]`），不继承父 Agent 已加载的 Skill |
+| `run_in_background` | boolean | 否 | 是否后台异步执行：`false` 为同步等待（默认），`true` 为异步后台 |
+| `session_id` | string | 否 | 继承已有会话上下文，用于续接之前的对话 |
+
+> `delegate_task()` 是 OMO 插件提供的能力，并非 OpenCode 核心 API。使用前需确认项目中已集成 oh-my-openagent。
 
 ### 子 Agent 权限隔离
 
@@ -349,32 +377,21 @@ graph TB
 | 权限类型 | 默认继承 | 可配置 | 安全建议 |
 |---------|---------|--------|---------|
 | `read` | ✓ | 可禁用 | 审计场景可禁用敏感路径 |
-| `search` | ✓ | 可禁用 | 同上 |
 | `edit` | ✗ | 可启用 | 仅实现类 Agent 启用 |
 | `bash` | ✗ | 可启用 | 仅测试/构建类 Agent 启用 |
 | `write` | ✗ | 可启用 | 极少使用，需审批 |
+| `lsp` | ✓ | 可禁用 | 可关闭以节省 Token |
+| `webfetch` | ✓ | 可禁用 | 不需要网络时禁用 |
+| `question` | ✓ | 可禁用 | 审计场景可禁用交互确认 |
+| `glob` | ✓ | 可禁用 | 文件查找权限 |
 
-**安全配置示例**：
-
-```json
-{
-  "parentAgent": "reviewer",
-  "childTask": {
-    "category": "subagent",
-    "load_skills": ["vulnerability-manager"],
-    "context": {
-      "inherit": ["read", "search"],
-      "isolate": ["edit", "bash", "write"]
-    }
-  }
-}
-```
+> **注意**：子 Agent 的权限控制通过父 Agent 的 `permission` 规则和路径级别的访问模式实现，而非通过 `context.inherit/isolate` 参数。如需限制子 Agent 的权限范围，应在父 Agent 的权限配置中声明限制条件。
 
 ### task() 返回值和结果合并
 
 子 Agent 执行完成后，返回结构化结果：
 
-```json
+```json:terminal
 {
   "taskId": "task-20260602-001",
   "status": "completed",
@@ -400,7 +417,7 @@ graph TB
 
 **结果合并策略**：
 
-```javascript
+```javascript:terminal
 function mergeTaskResults(results, strategy) {
   switch (strategy) {
     case 'append':
@@ -421,7 +438,7 @@ function mergeTaskResults(results, strategy) {
 
 ## 7-Agent Pipeline
 
-> **⚠️ 7-Agent Pipeline 的过度工程风险**：7-Agent Pipeline 虽然功能强大，但对简单任务（如单文件修改、小型 bug 修复）而言是过度工程。启动 7 个 Agent 会带来显著的 Token 开销（全流水线约 100K-500K tokens）和延迟。建议仅在以下场景使用：跨多文件的重构、关键业务逻辑变更、或需要严格审计轨迹的生产级变更。对于简单任务，单个 Agent 或 3-Agent（Implementor → Reviewer → Tester）流水线效率更高。
+> **⚠️ 7-Agent Pipeline 的过度工程风险**：7-Agent Pipeline 虽然功能强大，但对简单任务（如单文件修改、小型 bug 修复）而言是过度工程。启动 7 个 Agent 会带来显著的 Token 开销（全工作流约 100K-500K tokens）和延迟。建议仅在以下场景使用：跨多文件的重构、关键业务逻辑变更、或需要严格审计轨迹的生产级变更。对于简单任务，单个 Agent 或 3-Agent（Implementor → Reviewer → Tester）工作流效率更高。
 
 7-Agent Pipeline 是当前最成熟的多 Agent 协作方案，将软件开发流程拆分为七个独立角色，每个角色专注于单一职责。
 
@@ -449,8 +466,8 @@ flowchart TB
     style C fill:#50C878,color:#fff
     style D fill:#FF9F43,color:#fff
     style E fill:#A66CFF,color:#fff
-    style H fill:#66B3FF,color:#fff
-    style J fill:#FFB366,color:#fff
+    style H fill:#A66CFF,color:#fff
+    style J fill:#FF9F43,color:#fff
     style L fill:#666,color:#fff
 ```
 
@@ -474,11 +491,11 @@ flowchart TB
 |-------|------|------|------|---------|------|------|
 | **Planner** | deny | deny | allow | best-capability¹ | 0.1 | 任务规划 |
 | **Debater** | deny | deny | allow | balanced² | 0.3 | 方案辩论 |
-| **Implementor** | allow | ask | allow | balanced² | 0.1 | 代码实现 |
+| **Implementor** | allow | ask | allow | balanced² | 0.15 | 代码实现 |
 | **Reviewer** | deny | deny | allow | best-capability¹ | 0.1 | 代码审查 |
 | **Tester** | deny | allow | allow | fast³ | 0.1 | 测试执行 |
 | **Linter** | deny | allow | allow | fast³ | 0.0 | 代码检查 |
-| **Committer** | ask | deny | allow | balanced² | 0.3 | 提交代码 |
+| **Committer** | ask | ask | allow | balanced² | 0.2 | 提交代码 |
 
 > ¹ best-capability：当前能力最强的模型（例如 Claude Opus 最新版）
 > ² balanced：性能与成本均衡的模型（例如 Claude Sonnet 最新版）
@@ -489,7 +506,7 @@ flowchart TB
 1. **Planner/Debater/Reviewer 只读**：防止规划/审查阶段意外修改代码
 2. **Implementor 有写权限，但 Bash 需要 ask**：实现代码需要编辑，但执行命令需确认
 3. **Tester/Linter 可执行 Bash**：需要运行测试和检查命令
-4. **Committer 需要 ask 确认后才能提交**：提交是关键操作，必须人工确认
+4. **Committer 的 edit 和 bash 均为 ask**：提交和 Git 操作均需人工确认，提交信息是关键审计节点
 
 ### 温度策略设计
 
@@ -498,18 +515,23 @@ flowchart TB
 | 温度范围 | 特性 | 适用场景 | Agent |
 |---------|------|---------|-------|
 | 0.0 | 完全确定性 | 格式检查、规则执行 | Linter |
-| 0.1 | 高确定性 | 规划、实现、审查、测试 | Planner, Implementor, Reviewer, Tester |
-| 0.3 | 适度创造性 | 方案辩论、提交信息生成 | Debater, Committer |
+| 0.1 | 高确定性 | 规划、审查、测试 | Planner, Reviewer, Tester |
+| 0.15 | 较高确定性 | 代码实现 | Implementor |
+| 0.2 | 适度创造性 | 提交信息生成 | Committer |
+| 0.3 | 适度创造性 | 方案辩论 | Debater |
 
 **温度选择原则**：
 
 - **低温度（0.0-0.1）**：需要精确、可重复输出的场景
-- **中等温度（0.3）**：需要一定创造性但不过发散的场景
+- **中低温度（0.15-0.2）**：需要一定创造性但保持确定性的场景
+- **中等温度（0.3）**：需要适度创造性但不发散的场景
 - **高温度（>0.5）**：探索性、头脑风暴场景（本 Pipeline 不使用）
 
 ### 完整 7-Agent Pipeline 配置
 
-```json
+> **⚠️ 概念示例说明**：以下配置为概念性 DSL，展示多 Agent 管道的设计思路（角色职责、权限矩阵、温度策略、流程编排）。OpenCode 的实际代理定义使用 `.opencode/agents/*.md`（YAML frontmatter）或 `opencode.json` 的 agent 配置。这里的 JSON 结构是教学示意，非可直接运行的 OpenCode 配置格式。
+
+```json:.opencode/pipelines/7-agent.json
 {
   "pipeline": {
     "name": "7-agent-development-pipeline",
@@ -539,7 +561,7 @@ flowchart TB
       },
       "implementor": {
         "model": "balanced-model",
-        "temperature": 0.1,
+        "temperature": 0.15,
         "skills": ["backend-architect", "frontend-architect"],
         "permissions": {
           "edit": "allow",
@@ -584,11 +606,11 @@ flowchart TB
       },
       "committer": {
         "model": "balanced-model",
-        "temperature": 0.3,
+        "temperature": 0.2,
         "skills": ["finishing-a-development-branch"],
         "permissions": {
           "edit": "ask",
-          "bash": "deny",
+          "bash": "ask",
           "read": "allow"
         },
         "output": "WORKFLOW_STATE.md#commit"
@@ -604,7 +626,8 @@ flowchart TB
       { "agent": "committer", "onFailure": "manual" }
     ],
     "qualityGates": {
-      "preReview": ["lint"],
+      "preReview": ["lint"],       // 故意冗余：preReview 是快速预检，在 Reviewer 前拦截明显问题；
+                                   // Pipeline 末端的 Linter Agent 是最终门禁，全量检查确保提交质量
       "preCommit": ["test", "typecheck"],
       "prePush": ["security-scan"]
     }
@@ -630,7 +653,7 @@ WORKFLOW_STATE.md 是 7-Agent Pipeline 的状态持久化文件，实现了 Agen
 
 ### WORKFLOW_STATE.md 完整模板
 
-```markdown
+```markdown:terminal
 # WORKFLOW_STATE.md
 
 > Pipeline 执行状态文件 — 由各 Agent 顺序写入，记录完整执行轨迹。
@@ -722,8 +745,7 @@ WORKFLOW_STATE.md 是 7-Agent Pipeline 的状态持久化文件，实现了 Agen
 
 ### 关键代码片段
 
-```typescript
-// src/api/auth.ts
+```typescript:src/api/auth.ts
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body
   const user = await validateUser(email, password)
@@ -733,7 +755,7 @@ export async function login(req: Request, res: Response) {
   req.session.userId = user.id
   res.json({ user: sanitizeUser(user) })
 }
-```
+```text:terminal
 
 ---
 
@@ -795,7 +817,7 @@ export async function login(req: Request, res: Response) {
 [15:20:00] Implementor 完成，输出代码变更
 [15:20:00] Reviewer 开始执行
 [15:30:00] Reviewer 发现 3 个问题，等待修复
-```
+```text:terminal
 ```
 
 ### 状态流转图
@@ -868,7 +890,7 @@ flowchart TB
 
 ### 完整配置示例
 
-```json
+```json:.opencode/workflows/frontend-component-pipeline.json
 {
   "workflow": {
     "name": "frontend-component-pipeline",
@@ -964,7 +986,7 @@ UI Reviewer Agent 在审查时会检查以下项目：
 
 ### Quality Gate 配置
 
-```json
+```json:.opencode/pipelines/quality-gates.json
 {
   "qualityGates": {
     "preReview": [
@@ -1064,7 +1086,7 @@ flowchart TB
 
 安全门禁是 Quality Gate 的增强版，专门用于安全关键场景：
 
-```json
+```json:.opencode/pipelines/security-gates.json
 {
   "securityGates": {
     "sensitiveFiles": {
@@ -1093,7 +1115,7 @@ flowchart TB
 
 ### 完整启动命令
 
-```bash
+```bash:terminal
 # 方式一：使用自定义命令
 /pipeline --config .opencode/pipelines/7-agent.json
 
@@ -1110,7 +1132,7 @@ flowchart TB
 
 Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
-```
+```text:terminal
 [Pipeline] 启动 7-Agent Development Pipeline
 [Pipeline] 任务：实现用户登录功能
 
@@ -1173,7 +1195,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **单阶段重试**：
 
-```bash
+```bash:terminal
 # 重试失败的阶段
 /pipeline --retry --stage implementor
 
@@ -1183,7 +1205,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **查看详细日志**：
 
-```bash
+```bash:terminal
 # 查看某个 Agent 的详细执行日志
 /pipeline --logs --agent implementor
 
@@ -1193,7 +1215,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 **手动干预**：
 
-```bash
+```bash:terminal
 # 跳过某个阶段（需确认）
 /pipeline --skip --stage debater --confirm
 

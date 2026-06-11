@@ -4,24 +4,28 @@
 
 ---
 
+读完本文，你将在 5 分钟内完成 OpenCode 的安装、初始化和首次 AI 编程体验。
+
+> **⏱ 时间有限？先读这些：** 安装 → 初始化配置 → 运行第一个任务 → 验证安装 → 下一步
+
 ## 前置条件
 
 在开始之前，请确保你的环境满足以下要求：
 
 | 工具 | 版本要求 | 验证命令 | 说明 |
 |------|---------|---------|------|
-| **Node.js** | >= 18 | `node --version` | OpenCode 运行环境 |
+| **Node.js** | >= 18 | `node --version` | npm 安装方式所需（curl/brew 安装不需要） |
 | **Python** | >= 3.10 | `python --version` | 可选，部分 Skill 需要 |
 | **Git** | >= 2.x | `git --version` | 版本控制基础 |
 
-```bash
+```bash:terminal
 # 一键验证所有前置条件
 node --version && python --version && git --version
 ```
 
 **预期输出**：
 
-```
+```text:terminal
 v18.x.x (或更高)
 Python 3.10.x (或更高)
 git version 2.x.x (或更高)
@@ -35,17 +39,20 @@ git version 2.x.x (或更高)
 
 ### macOS / Linux
 
-```bash
-# 使用 npm 全局安装
-npm install -g @opencode-ai/opencode
+```bash:terminal
+# 使用 Homebrew（推荐，macOS）
+brew install anomalyco/tap/opencode
 
-# 或使用官方脚本（推荐）
+# 或使用 npm 全局安装
+npm install -g opencode-ai
+
+# 或使用官方脚本
 curl -fsSL https://opencode.ai/install | bash
 ```
 
 ### Windows
 
-```powershell
+```powershell:terminal
 # 使用 npm 全局安装
 npm install -g opencode-ai
 
@@ -58,14 +65,14 @@ choco install opencode
 
 ### 验证安装
 
-```bash
+```bash:terminal
 opencode --version
 ```
 
 **预期输出**：
 
-```
-OpenCode v1.15.x
+```text:terminal
+OpenCode v1.16.0
 ```
 
 > **故障排查**：
@@ -80,7 +87,7 @@ OpenCode v1.15.x
 
 ### 创建测试项目
 
-```bash
+```bash:terminal
 # 创建一个测试目录
 mkdir opencode-demo && cd opencode-demo
 
@@ -88,79 +95,71 @@ mkdir opencode-demo && cd opencode-demo
 git init
 ```
 
-### 运行 /init 命令
+### 启动 OpenCode
 
-```bash
-# 启动 OpenCode（首次启动会引导配置 Provider）
+```bash:terminal
+# 启动 OpenCode TUI 界面
 opencode
 
-# 在 OpenCode 交互界面中执行
-/init
+# 首次启动需要配置 Provider
+# 编辑 ~/.config/opencode/opencode.json 添加 API 配置
 ```
 
-**预期输出**：
+### 第一个任务
 
-```
-✓ Created .opencode/AGENTS.md
-✓ Created .opencode/config.json
-✓ Project initialized successfully
+在 TUI 界面中：
 
-Next steps:
-1. Review .opencode/AGENTS.md for project context
-2. Configure your AI provider (see .opencode/config.json)
-3. Start your first task with /plan or /build
-```
+1. **输入任务描述**：
+   ```
+   帮我创建一个简单的 Python HTTP 服务器，监听 8080 端口，返回 "Hello OpenCode"
+   ```
 
-### 理解初始化产物
+2. **按 Tab 键切换 Plan/Build 模式**：
+   - Plan 模式：让 AI 生成执行计划
+   - Build 模式：直接执行任务
 
-| 文件 | 作用 | 是否必须 |
-|------|------|---------|
-| `.opencode/AGENTS.md` | 项目上下文文件，告诉 AI 项目的技术栈、规范和约束 | ✓ 必须 |
-| `.opencode/config.json` | OpenCode 配置文件，包含 Provider、权限、模型设置 | ✓ 必须 |
-| `.opencodeignore` | 排除敏感目录（类似 `.gitignore`） | 可选 |
-
-> **关键概念**：`.opencode/AGENTS.md` 是项目的"出生证明"，它定义了 AI 在这个项目中应该如何工作。后续章节会深入讲解如何编写高质量的 AGENTS.md。
+3. **使用 @ 引用文件**：
+   - 输入 `@` 按 Tab 可以看到可用文件列表
+   - 可用于引用现有代码文件作为上下文
 
 ---
+
+> **安全检查**：首次使用前，建议先设置敏感操作权限为 `ask` 模式（见下方安全说明），避免 AI 自动执行危险命令。完整安全策略见 → [安全总览](../06-advanced/security-overview.md)。
 
 ## 步骤三：启动第一个 Session
 
 ### 配置 Provider（首次启动）
 
-OpenCode 支持三种 Provider 接入方式：
+OpenCode 支持多种 AI 模型 Provider，通过编辑 `~/.config/opencode/opencode.json` 配置：
 
-| 方式 | 适合场景 | 配置难度 |
-|------|---------|---------|
-| **OpenCode Zen** | 新用户快速体验，无需 API Key | ⭐ 最简单 |
+| Provider | 适合场景 | 配置难度 |
+|----------|----------|----------|
 | **自有 API Key** | 已有 Anthropic/OpenAI/Gemini 账号 | ⭐⭐ 中等 |
-| **GitHub Copilot** | 已订阅 Copilot 的用户 | ⭐⭐ 中等 |
 
-**推荐新用户选择 OpenCode Zen**（首次启动会自动引导）。
+**配置步骤**：
+1. 编辑 `~/.config/opencode/opencode.json`
+2. 添加 Provider 配置（参考文档配置章节）
+3. 重启 OpenCode 生效
 
 ### 执行第一个任务
 
-在 OpenCode 交互界面中：
+在 TUI 界面中：
 
-```
-# 进入 Plan 模式（规划任务）
-/plan
+```text:terminal
+1. 输入任务描述
+   帮我创建一个简单的 Python HTTP 服务器，监听 8080 端口，返回 "Hello OpenCode"
 
-# 提问
-帮我创建一个简单的 Python HTTP 服务器，监听 8080 端口，返回 "Hello OpenCode"
+2. 按 Tab 键切换 Plan/Build 模式
+   - Plan 模式：生成执行计划
+   - Build 模式：直接执行任务
 
-# 确认计划后，切换到 Build 模式执行
-/build
+3. 确认执行
+   查看生成的计划或代码，按 Enter 确认执行
 ```
 
 **预期输出**：
 
-```
-[Plan Mode] Creating plan...
-1. Create server.py with HTTP server code
-2. Add requirements.txt (if needed)
-3. Test the server
-
-[Build Mode] Executing plan...
+```text:terminal
 ✓ Created server.py
 ✓ Server ready to run: python server.py
 
@@ -169,7 +168,7 @@ Test command: curl http://localhost:8080
 
 ### 验证结果
 
-```bash
+```bash:terminal
 # 在另一个终端窗口中测试
 python server.py &
 
@@ -179,7 +178,7 @@ curl http://localhost:8080
 
 **预期输出**：
 
-```
+```text:terminal
 Hello OpenCode
 ```
 
@@ -187,25 +186,23 @@ Hello OpenCode
 
 ## 步骤四：验证核心功能
 
-### 测试 /undo 回滚
+### 验证核心功能
 
-```bash
-# 在 OpenCode 中执行
-/undo
+OpenCode 的核心特性：
 
-# 查看文件是否恢复
-cat server.py
-```
+- **文件快照**：自动保存文件变更历史，可回溯修改
+- **Tab 切换模式**：Plan 模式（规划）↔ Build 模式（执行）
+- **@ 文件引用**：按 Tab 可查看可用文件并引用作为上下文
 
 **预期输出**：
 
-```
+```text:terminal
 File restored to previous state.
 ```
 
 ### 测试 /diff 查看变更
 
-```bash
+```bash:terminal
 # 重新执行任务
 /build
 
@@ -215,7 +212,7 @@ File restored to previous state.
 
 **预期输出**：
 
-```diff
+```diff:terminal
 --- /dev/null
 +++ b/server.py
 @@ -0,0 +1,10 @@
@@ -234,18 +231,14 @@ File restored to previous state.
 +    server.serve_forever()
 ```
 
-### 常用命令速查
+### 常用操作
 
-| 命令 | 作用 | 使用场景 |
-|------|------|---------|
-| `/help` | 查看帮助 | 忘记命令时 |
-| `/plan` | 规划模式 | 复杂任务先规划再执行 |
-| `/build` | 执行模式 | 直接执行任务 |
-| `/undo` | 回滚操作 | 执行错误时恢复 |
-| `/redo` | 重做操作 | 回滚后重新执行 |
-| `/diff` | 查看变更 | 检查 AI 修改了什么 |
-| `/share` | 分享 Session | 导出对话记录 |
-| `/models` | 查看可用模型 | 切换 AI 模型 |
+| 操作 | 说明 | 使用场景 |
+|------|------|----------|
+| **Tab** | 切换模式/查看文件列表 | Plan↔Build 模式切换，@ 引用文件 |
+| **@** | 引用文件 | 按 Tab 查看可用文件并引用 |
+| **CLI** | 命令行操作 | `opencode run [message]` 运行任务 |
+| **~/.config/opencode/** | 配置文件目录 | 编辑 `opencode.json` 配置 Provider |
 
 ---
 
@@ -255,18 +248,17 @@ File restored to previous state.
 
 OpenCode 默认会询问敏感操作权限。首次使用建议：
 
-```json:.opencode/config.json
+```json:opencode.json
 {
-  "permissions": {
-    "edit": "ask",
-    "bash": "ask"
+  "permission": {
+    "*": "ask"
   }
 }
 ```
 
 ### 排除敏感目录
 
-```bash
+```bash:terminal
 # 创建 .opencodeignore
 cat > .opencodeignore << 'EOF'
 .env

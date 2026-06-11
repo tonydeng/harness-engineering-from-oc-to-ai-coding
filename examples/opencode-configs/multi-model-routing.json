@@ -1,0 +1,69 @@
+{
+  "provider": {
+    "deepseek": {
+      "name": "DeepSeek",
+      "models": {
+        "deepseek-chat": {
+          "baseUrl": "https://api.deepseek.com",
+          "apiKey": "${DEEPSEEK_API_KEY}"
+        }
+      }
+    },
+    "openai": {
+      "name": "OpenAI",
+      "models": {
+        "gpt-4o": {
+          "baseUrl": "https://api.openai.com",
+          "apiKey": "${OPENAI_API_KEY}"
+        }
+      }
+    }
+  },
+  "categories": {
+    "quick": {
+      "model": "deepseek/deepseek-chat",
+      "priority": 1,
+      "description": "快速响应：代码补全、格式化、简单问答"
+    },
+    "documentation": {
+      "model": "deepseek/deepseek-chat",
+      "priority": 2,
+      "description": "文档编写：README、注释、API 文档"
+    },
+    "refactoring-simple": {
+      "model": "deepseek/deepseek-chat",
+      "priority": 3,
+      "description": "简单重构：变量重命名、函数提取、代码清理"
+    },
+    "bug-fix": {
+      "model": "deepseek/deepseek-chat",
+      "priority": 3,
+      "description": "Bug 修复：单文件、单模块的问题修复"
+    },
+    "refactoring-complex": {
+      "model": "openai/gpt-4o",
+      "priority": 4,
+      "description": "复杂重构：跨模块、架构级重构"
+    },
+    "architecture": {
+      "model": "openai/gpt-4o",
+      "priority": 5,
+      "description": "架构设计：系统设计、技术方案、设计评审"
+    },
+    "security-audit": {
+      "model": "openai/gpt-4o",
+      "priority": 5,
+      "description": "安全审计：代码审查、漏洞分析、合规检查"
+    },
+    "testing": {
+      "model": "deepseek/deepseek-chat",
+      "weight": 2,
+      "description": "测试编写：单元测试、集成测试生成"
+    }
+  },
+  "routing": {
+    "strategy": "category-based",
+    "default_model": "deepseek/deepseek-chat",
+    "fallback_enabled": true
+  }
+}

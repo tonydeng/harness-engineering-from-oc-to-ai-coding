@@ -1,0 +1,114 @@
+{
+  "team": {
+    "name": "security-research",
+    "description": "遗留系统安全审计团队：5 人并行，5 维审计",
+    "members": [
+      {
+        "id": "team-lead",
+        "role": "coordinator",
+        "model": "pro-capability-model",
+        "skills": ["overall-planning", "dispatching-parallel-agents"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "分发审计任务",
+          "汇总 5 路审计结果",
+          "生成统一审计报告",
+          "CVSS 评分自动计算"
+        ]
+      },
+      {
+        "id": "static-analyzer",
+        "role": "worker",
+        "model": "balanced-model",
+        "skills": ["penetration-tester", "security-architect"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "ESLint 静态分析",
+          "代码注入检测（SQLi / XSS / RCE）",
+          "敏感函数调用审查（eval / exec / fs.write → 外部控制路径）"
+        ]
+      },
+      {
+        "id": "dependency-auditor",
+        "role": "worker",
+        "model": "balanced-model",
+        "skills": ["vulnerability-manager", "intelligence-analyst"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "npm audit 结果解析",
+          "CVE 关联与 EXP 状态查询",
+          "停止维护依赖标记",
+          "依赖链深度分析"
+        ]
+      },
+      {
+        "id": "auth-reviewer",
+        "role": "worker",
+        "model": "balanced-model",
+        "skills": ["security-architect", "penetration-tester"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "认证逻辑审查（JWT / Session / OAuth）",
+          "授权模型检查（RBAC 实现）",
+          "密码策略审计"
+        ]
+      },
+      {
+        "id": "infra-auditor",
+        "role": "worker",
+        "model": "balanced-model",
+        "skills": ["intelligence-analyst", "blue-team-defender"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "配置文件审查（.env / config/*.json）",
+          "网络暴露面分析",
+          "日志与监控检查",
+          "容器化配置检查（Dockerfile / .dockerignore）"
+        ]
+      },
+      {
+        "id": "compliance-checker",
+        "role": "worker",
+        "model": "balanced-model",
+        "skills": ["blue-team-defender", "security-architect"],
+        "permissions": {
+          "read": "allow",
+          "edit": "deny",
+          "bash": "allow",
+          "team_send_message": "allow"
+        },
+        "responsibilities": [
+          "OWASP Top 10 映射",
+          "安全基线检查（CSP / CORS / HSTS）",
+          "数据隐私合规（PII 数据处理）",
+          "最低权限原则验证"
+        ]
+      }
+    ]
+  }
+}

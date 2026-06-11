@@ -430,7 +430,7 @@ flowchart TB
     O --> P[生成计划]
     P --> Q[Metis 缺口分析]
     Q --> R[Momus 审查]
-    R -->|通过| S[/start-work 执行]
+    R -->|通过| S["/start-work 执行"]
     R -->|驳回| O
     S --> T[Atlas 分发]
     T --> U[Worker 执行]

@@ -1,0 +1,52 @@
+#!/bin/bash
+# Pre-commit hook for Harness Engineering book
+# Checks: internal .md links validity + mdbook build
+
+set -e
+
+echo "=== Pre-commit Check: Internal Links ==="
+
+# Collect modified .md files (staged)
+MODIFIED_MD=$(git diff --cached --name-only --diff-filter=ACM | grep '\.md$' || true)
+
+if [ -n "$MODIFIED_MD" ]; then
+  # Check SUMMARY.md links
+  if echo "$MODIFIED_MD" | grep -q "SUMMARY.md"; then
+    echo "SUMMARY.md changed - checking all link targets..."
+    awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do
+      if [ ! -f "src/$f" ]; then
+        echo "❌ BROKEN LINK: src/$f (referenced in SUMMARY.md)"
+        exit 1
+      fi
+    done
+    echo "✅ All SUMMARY.md links valid"
+  fi
+
+  # Basic internal link check in modified files
+  for file in $MODIFIED_MD; do
+    # Skip non-src files
+    case "$file" in
+      src/*.md) ;;
+      *) continue ;;
+    esac
+    
+    # Find markdown links to .md files
+    grep -oP '\]\([^)]+\.md[^)]*\)' "$file" 2>/dev/null | while read -r link; do
+      target=$(echo "$link" | sed 's/\]\(//;s/)$//')
+      # Handle relative links
+      basedir=$(dirname "$file")
+      fullpath="$basedir/$target"
+      # Normalize path
+      fullpath=$(realpath -m "$fullpath" 2>/dev/null || echo "$fullpath")
+      if [ ! -f "$fullpath" ] && [ ! -f "${fullpath%.md}/README.md" ]; then
+        echo "⚠️  Warning: $file → $target (not found)"
+      fi
+    done
+  done
+fi
+
+echo "=== Pre-commit Check: mdBook Build ==="
+mdbook build 2>&1 || { echo "❌ mdbook build failed"; exit 1; }
+echo "✅ mdbook build passed"
+
+echo "=== All pre-commit checks passed ==="

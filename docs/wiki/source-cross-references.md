@@ -189,7 +189,7 @@
 | Ch6 Art.6.7: 记忆系统 | 《马书》[第24章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch24) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part6/ch24.md) | — | 否 |
 | Ch6 Art.6.8: 安全总览 | 《马书》[第16章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch16) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch16.md) | — | 否 |
 | Ch6 Art.6.9: 沙箱与Hook系统 | 《马书》[第18章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch18) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch18.md) | OMO Hook | 否 |
-| Ch6 Art.6.10: CLAUDE.md系统 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch19.md) | — | 否 |
+| Ch6 Art.6.10: AGENTS.md约定系统 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch19.md) | — | 否 |
 | Ch6 Art.6.11: 可观测性 | 《马书》[第29章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch29) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part7/ch29.md) | OMO 54+事件 | 否 |
 | Ch6 Art.6.12: Feature Flags | 《马书》[第23章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch23) \| [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part6/ch23.md) | — | 否 |
 | Ch7 Art.7.1: 微服务案例 | 05 (案例1) | 03 (全链路图) | 否 |
@@ -244,7 +244,7 @@
 | 记忆系统 | 《马书》[第24章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch24) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part6/ch24.md) | Ch6 Art.6.7 | Memdir架构, Auto-Dream, Compaction |
 | 安全模型 | 《马书》[第16章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch16) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch16.md) | Ch6 Art.6.8 | 6权限模式, YOLO分类器, 注入防御 |
 | 沙箱隔离 | 《马书》[第18章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch18) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch18.md) | Ch6 Art.6.9 | Seatbelt/Bubblewrap, 53+Hook |
-| CLAUDE.md指令层 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch19.md) | Ch6 Art.6.10 | 用户指令覆盖, @include系统 |
+| AGENTS.md指令系统 | 《马书》[第19章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch19) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part5/ch19.md) | Ch6 Art.6.10 | AGENTS.md首要, CLAUDE.md后备, @include系统 |
 | 可观测性 | 《马书》[第29章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch29) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part7/ch29.md) | Ch6 Art.6.11 | logEvent, 5层遥测, 生产监控 |
 | Feature Flags路线图 | 《马书》[第23章](https://zhanghandong.github.io/harness-engineering-from-cc-to-ai-coding/#/ch23) | [本地](../harness-engineering-from-cc-to-ai-coding/book/src/part6/ch23.md) | Ch6 Art.6.12 | 89 Flags, 产品演进 |
 | Team Mode | 02 §Team Mode + 03 §4 T+S | — | Ch4 Art.4.3 | 12 tools, 成员类型, 内置Skills |

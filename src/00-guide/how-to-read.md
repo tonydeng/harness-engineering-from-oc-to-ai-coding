@@ -4,7 +4,7 @@
 
 ## 文章概述
 
-技术书的阅读方式没有标准答案。逐章精读适合系统性学习，按需跳跃适合快速解决问题。本文为这两种模式分别提供了操作建议，帮助你根据自己的学习风格做选择。书中各章节设计为可独立阅读，但某些概念链条（如 Agent → Skill → Workflow）有自然的递进关系，了解这些关系能让你在跳跃阅读时减少回查成本。
+技术书的阅读方式没有标准答案。逐章精读适合系统性学习，按需跳跃适合快速解决问题。本文为这两种模式分别提供了操作建议，帮助你根据自己的学习风格做选择。书中各章节设计为可独立阅读，但某些概念链条（如 Agent → Skill → Workflow）有自然的递进关系，了解这些关系能让你在跳跃阅读时减少回查成本。读完本文，你将能够选择适合自己的阅读模式，并掌握最大化学习收益的实操方法。
 
 除了阅读模式，本文还介绍了实操层面的建议：为什么双窗口（书籍 + 编辑器）是最高效的学习配置，如何在对配置不求甚解之前先建立概念模型，以及如何在读完整本书后把你的真实项目映射到书中模式上。最后，本文说明了如何通过 GitHub Issues 给出反馈，让这本书随着 OpenCode 生态一起进化。
 
@@ -214,7 +214,7 @@ flowchart TB
 
 ### 标准格式
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：[角色列表]
@@ -250,7 +250,7 @@ flowchart TB
 
 ### 示例：核心概念的价值声明块
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：AI 编程新手、OpenCode 用户、Skill 开发者、架构师
@@ -313,7 +313,7 @@ flowchart LR
 
 **示例：环境搭建的价值声明块**
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：所有读者（必读章节）
@@ -330,7 +330,7 @@ flowchart LR
 
 **示例：案例研究的价值声明块**
 
-```markdown
+```markdown:terminal
 ## 价值声明
 
 **目标读者**：有实践需求的开发者、技术负责人、架构师
@@ -398,7 +398,7 @@ flowchart LR
 {
   "model": "claude-3-opus"
 }
-```
+```text:terminal
 ````
 
 ### Q: 需要购买 OpenCode 许可证吗？
@@ -447,7 +447,7 @@ flowchart LR
 
 **A**: 这是 `SUMMARY.md` 未同步导致的。mdBook 的导航完全依赖 `SUMMARY.md`，新增/重命名/删除文件后必须同步更新其中的路径。建议运行验证命令检查所有链接目标是否存在：
 
-```bash
+```bash:terminal
 awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do [ -f "src/$f" ] || echo "BROKEN: src/$f"; done
 ```
 
@@ -455,7 +455,7 @@ awk -F '[()]' '/\.md\)/ {print $2}' src/SUMMARY.md | while read f; do [ -f "src/
 
 **A**: 本书内部链接遵循 mdBook 路径规则：同目录用 `[text](file.md)`，跨目录必须带 `../` 前缀（如 `[text](../target-chapter/file.md)`），指向章节首页的链接使用目录形式 `[text](chapter/)` 而非 `[text](chapter/README.md)`。运行以下命令检查所有链接：
 
-```bash
+```bash:terminal
 find src -name '*.md' -exec grep -n '\](' {} + | grep '\.md)'
 ```
 
@@ -479,7 +479,7 @@ find src -name '*.md' -exec grep -n '\](' {} + | grep '\.md)'
 
 **Issue 模板**：
 
-```markdown
+```markdown:terminal
 ## 问题类型
 - [ ] 内容错误
 - [ ] 示例不可运行

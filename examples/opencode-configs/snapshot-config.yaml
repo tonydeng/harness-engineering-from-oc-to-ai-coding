@@ -1,0 +1,10 @@
+# 快照配置
+snapshot:
+  enabled: true
+  before_operation: true
+  retention: 24h
+  max_size: 1GB
+  
+rollback:
+  enabled: true
+  auto_rollback_on_error: true

@@ -35,3 +35,6 @@ temp/
 
 # Trae
 .trae/
+
+#Claude Code
+.claude/

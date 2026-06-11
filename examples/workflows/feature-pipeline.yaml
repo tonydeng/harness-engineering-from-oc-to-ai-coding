@@ -1,0 +1,17 @@
+# Harness Engineer 的典型工作
+workflow:
+  name: feature-implementation-pipeline
+  steps:
+    - agent: plan
+      skill: requirements-analysis
+      output: design-doc
+    - agent: build
+      skill: tdd-implementation
+      input: design-doc
+      gates:
+        - type: test-coverage
+          threshold: 80%
+        - type: lint-check
+    - agent: review
+      skill: code-review
+      input: build-output

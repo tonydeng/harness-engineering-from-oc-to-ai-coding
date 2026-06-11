@@ -1,0 +1,21 @@
+workflow:
+  name: user-auth-implementation
+  steps:
+    - step: design
+      agent: plan
+      skill: architecture-design
+      output: architecture.md
+    
+    - step: implement
+      agent: build
+      skill: tdd-development
+      input: architecture.md
+      gates:
+        - test-coverage >= 80%
+        - no-security-warnings
+    
+    - step: review
+      agent: review
+      skill: security-review
+      input: implementation
+      output: review-report

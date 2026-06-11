@@ -1,0 +1,20 @@
+{
+  "profile": "debug",
+  "model": {
+    "default": "claude-sonnet-4-20250514"
+  },
+  "agent": {
+    "default_mode": "build",
+    "auto_approve": false
+  },
+  "tools": {
+    "bash": "ask",
+    "edit": "ask",
+    "write": "ask"
+  },
+  "behavior": {
+    "verbose": true,
+    "confirm_before_execute": true,
+    "log_level": "debug"
+  }
+}

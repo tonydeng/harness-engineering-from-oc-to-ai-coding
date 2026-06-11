@@ -27,6 +27,12 @@ jobs:
         uses: peaceiris/actions-mdbook@v2
         with:
           mdbook-version: 'latest'
+      - name: Check internal links
+        run: |
+          echo "Checking SUMMARY.md for broken link targets..."
+          cd src && awk -F '[()]' '/\.md\)/ {print $2}' SUMMARY.md | while read f; do
+            [ -f "$f" ] || echo "BROKEN LINK: $f (referenced in SUMMARY.md)"
+          done && echo "All SUMMARY.md links OK"
       - name: Build mdBook
         run: mdbook build
 

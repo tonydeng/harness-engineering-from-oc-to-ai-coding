@@ -1,0 +1,12 @@
+# skill-lock.yaml
+lock_version: 1
+skills:
+  - name: full-stack-dev
+    version: 2.0.0
+    checksum: sha256:abc123...
+  - name: frontend-architect
+    version: 2.1.0
+    checksum: sha256:def456...
+  - name: backend-architect
+    version: 1.8.0
+    checksum: sha256:ghi789...

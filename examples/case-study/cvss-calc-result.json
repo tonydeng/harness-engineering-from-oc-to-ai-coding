@@ -1,0 +1,21 @@
+{
+  "vulnerability": "SQL Injection in /api/user",
+  "cvssVector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+  "cvssScore": 9.1,
+  "severity": "Critical",
+  "rationale": {
+    "AV:N": "网络可访问",
+    "AC:L": "无需特殊条件",
+    "PR:N": "无需认证",
+    "UI:N": "无需用户交互",
+    "S:U": "不影响其他组件",
+    "C:H": "完全信息泄露",
+    "I:H": "可篡改数据",
+    "A:H": "可用性受影响"
+  },
+  "exploitability": {
+    "hasPublicPoC": true,
+    "hasMetasploitModule": false,
+    "requiresAuth": false
+  }
+}

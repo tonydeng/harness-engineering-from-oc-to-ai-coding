@@ -1,0 +1,34 @@
+{
+  "output_validation": {
+    "enabled": true,
+    "checks": [
+      {
+        "type": "format_check",
+        "rule": "code_blocks_must_close",
+        "severity": "error"
+      },
+      {
+        "type": "format_check",
+        "rule": "json_must_parse",
+        "severity": "error"
+      },
+      {
+        "type": "logic_check",
+        "rule": "no_undefined_variables",
+        "severity": "warning"
+      },
+      {
+        "type": "security_filter",
+        "rule": "no_sensitive_data_leak",
+        "severity": "block"
+      }
+    ],
+    "block_on": ["error", "block"],
+    "log_on": ["warning"],
+    "action_on_block": {
+      "type": "auto_retry",
+      "max_retries": 2,
+      "alternate_provider": "openai/gpt-4o-mini"
+    }
+  }
+}

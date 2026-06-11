@@ -12,7 +12,7 @@
 |------|------|
 | [什么是 Harness Engineer](what-is-harness-engineer.md) | 定义 Harness Engineer 的概念、核心能力和与传统开发者的区别 |
 | [为什么选择 OpenCode](why-opencode.md) | 分析 OpenCode 的独特优势：Agent 编排、Skill 系统、Workflow 引擎 |
-| [Harness Engineering 理论框架](harness-engineering-theory.md) | 系统化阐述 Harness Engineering 的理论模型：三层抽象、流水线思维、反馈闭环 |
+| [Harness Engineering 理论框架](harness-engineering-theory.md) | 系统化阐述 Harness Engineering 的理论模型：三层抽象、流程思维、反馈闭环 |
 | [AI 编程工具生态对比](ecosystem-comparison.md) | 对比 Copilot、Cursor、Claude Code、OpenCode 等主流工具的核心能力与适用场景 |
 | [国产 AI 编程生态适配](chinese-ecosystem.md) | 讨论国产大模型（DeepSeek、Qwen 等）与 OpenCode 的集成方案和注意事项 |
 | [AI 编程失败案例](failure-cases.md) | 通过真实场景的失败案例，揭示没有约束系统、上下文注入攻击、权限配置错误等常见陷阱 |

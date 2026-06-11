@@ -1,0 +1,19 @@
+{
+  "profile": "review",
+  "model": {
+    "default": "claude-sonnet-4-20250514"
+  },
+  "agent": {
+    "default_mode": "plan",
+    "auto_approve": false
+  },
+  "tools": {
+    "bash": "ask",
+    "edit": "deny",
+    "write": "deny"
+  },
+  "behavior": {
+    "verbose": true,
+    "confirm_before_execute": true
+  }
+}

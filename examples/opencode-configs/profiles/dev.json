@@ -1,0 +1,19 @@
+{
+  "profile": "dev",
+  "model": {
+    "default": "claude-sonnet-4-20250514"
+  },
+  "agent": {
+    "default_mode": "build",
+    "auto_approve": true
+  },
+  "tools": {
+    "bash": "allow",
+    "edit": "allow",
+    "write": "allow"
+  },
+  "behavior": {
+    "verbose": false,
+    "confirm_before_execute": false
+  }
+}
