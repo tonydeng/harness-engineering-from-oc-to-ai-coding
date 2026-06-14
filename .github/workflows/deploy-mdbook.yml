@@ -23,10 +23,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Rust toolchain
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Cache cargo binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin
+          key: ${{ runner.os }}-cargo-mdbook-${{ hashFiles('**/book.toml') }}
+
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v2
         with:
           mdbook-version: 'latest'
+
+      - name: Install mdbook-mermaid
+        shell: bash
+        run: |
+          if ! command -v mdbook-mermaid &> /dev/null; then
+            cargo install mdbook-mermaid
+          else
+            echo "mdbook-mermaid already installed"
+          fi
+
       - name: Check internal links
         run: |
           echo "Checking SUMMARY.md for broken link targets..."

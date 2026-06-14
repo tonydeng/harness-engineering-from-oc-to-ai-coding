@@ -36,6 +36,8 @@ Claude Code 的命令以 `/` 开头，在对话中直接输入。
 | `/terminal-setup` | 设置终端集成（Shell 集成、快捷键等） |
 | `/vim` | 切换 Vim 编辑模式 |
 
+→ 完整命令列表和详细用法见 [commands.md](./commands.md)。
+
 ### 命令使用示例
 
  
@@ -159,5 +161,98 @@ Claude Code 对工具调用有细粒度的权限控制。每次调用 Bash、Wri
 | 会话管理 | 压缩、导出、分享、撤销 | 压缩、清除 |
 | 开源状态 | 开源 | 闭源 |
 
+## 扩展机制
+
+Claude Code 的扩展方式相对收敛，主要依赖配置文件和外部协议。
+
+### CLAUDE.md 自定义指令
+
+CLAUDE.md 是最核心的扩展手段。通过编写结构化的指令，你可以改变 Claude 在项目中的行为，无需编写任何代码。多级 CLAUDE.md 支持全局、项目、目录三个层次的配置叠加。
+
+### 自定义命令
+
+在 `.claude/commands/` 目录下放置 Markdown 文件，每个文件自动注册为一个 `/` 命令。文件名即命令名，文件内容作为发送给 Claude 的 Prompt。这相当于一种轻量级的 Skill 机制，适合封装重复性的项目操作。
+
+```text:terminal
+.claude/commands/
+  review.md       # → /review 命令
+  fix-lint.md     # → /fix-lint 命令
+  deploy.md       # → /deploy 命令
+```
+
+### MCP Server 连接
+
+Claude Code 支持连接外部 MCP Server，通过 `.claude/settings.json` 配置。MCP 为 Claude Code 提供了接入外部工具和数据源的能力，比如数据库查询、API 调用、文件系统操作等。
+
+### 扩展方式对比
+
+| 扩展方式 | 实现形式 | 灵活度 | 适用场景 |
+|----------|----------|--------|----------|
+| CLAUDE.md 指令 | Markdown 文本 | 低 | 行为规范、编码约束 |
+| 自定义命令 | `.claude/commands/*.md` | 中 | 重复性操作封装 |
+| MCP Server | 外部进程 JSON-RPC | 高 | 外部工具、数据源接入 |
+
+与 OpenCode 的扩展体系相比，Claude Code 没有 Plugin 层（无法在 Agent 进程内注入运行时逻辑），也没有 Skill 市场（无法从社区安装可复用的指令包）。扩展能力集中在"指令配置 + 外部协议"两个维度。
+
+→ 扩展体系详解见 [plugins.md](./plugins.md)，涵盖 CLAUDE.md、Skills、MCP、Subagent、Hook、Plugin 六层架构。
+→ [Plugin 系统](../opencode/plugins.md) 详细介绍了 OpenCode 的 Plugin/Skill/MCP 三层扩展架构。
+
+## 生态与社区
+
+### Anthropic 生态
+
+Claude Code 的生态紧密围绕 Anthropic 的产品体系：
+
+- **Anthropic Console**：统一管理 API Key、用量监控、账单
+- **Claude 模型家族**：Sonnet（性价比）、Opus（最强能力）、Haiku（最快速度）
+- **Model Context Protocol**：Anthropic 主导的开放协议，用于标准化 AI 工具与外部系统的连接
+
+MCP 是 Claude Code 生态中最有价值的部分。通过 MCP，Claude Code 可以连接数据库、版本控制、CI/CD 流水线、项目管理工具等。Anthropic 维护了一份 MCP Server 参考实现列表，社区也贡献了大量 Server 实现。
+
+### 社区资源
+
+Anthropic 官方提供了完整的 Claude Code 使用指南。GitHub 上有多个展示 CLAUDE.md 最佳实践的参考项目，开发者也在论坛和社交媒体上分享配置方案和使用技巧。
+
+### 生态对比
+
+| 生态维度 | Claude Code | OpenCode |
+|----------|-------------|----------|
+| 模型生态 | 仅 Claude 模型族 | Claude/GPT/Gemini/本地模型等 10+ Provider |
+| 工具扩展 | MCP Server（JSON-RPC） | MCP + Plugin + Skill + 自定义 Tool |
+| 社区资产 | CLAUDE.md 模板、MCP Server 实现 | Skill 市场、Plugin 仓库、oh-my-openagent 社区 |
+| 协议标准 | MCP（Anthropic 主导） | MCP（完全兼容） + 原生 Plugin API |
+| 扩展粒度 | 指令级 + 外部工具级 | 代码级（Hook）+ 指令级 + 工具级 |
+
+Claude Code 的生态优势在于 Anthropic 的品牌背书和 MCP 协议的标准化推广。OpenCode 的生态优势在于多模型支持和更丰富的扩展层次（Plugin 可以拦截任意 Agent 行为）。
+
+→ [MCP 服务器](../06-advanced/mcp-servers.md) 详细讲解了 MCP 协议在 OpenCode 中的配置和实践。
+
+## 使用建议
+
+### 选择 Claude Code 还是 OpenCode
+
+两个工具的适用场景有明显重叠，但也各有侧重。如果你的团队已经全面使用 Claude 模型，且项目不需要复杂的 Agent 编排，Claude Code 的简洁性是一个优势。它上手快、配置少、没有 Plugin/Skill 的认知负担。
+
+如果你需要多模型灵活切换、自定义 Agent 行为、或团队共享工作流，OpenCode 的扩展体系更适合。OpenCode 的 Plugin 和 Skill 系统让你可以把最佳实践编码化，在团队内复制和演进。
+
+### CLAUDE.md 写作建议
+
+写好 CLAUDE.md 的关键：**具体、可执行、有边界**。避免空泛的描述（比如"写出高质量代码"），而是给出明确的规则（比如"所有函数必须有 JSDoc 注释"）。CLAUDE.md 的内容越具体，Claude 的行为越可控。
+
+推荐的 CLAUDE.md 结构：
+
+1. **项目简介**：一两句话说清楚这是什么项目
+2. **技术栈**：语言、框架、包管理器
+3. **代码规范**：命名约定、格式化规则、禁止的写法
+4. **常用命令**：构建、测试、lint 的具体命令
+5. **约束条件**：不能修改的文件、不能执行的操作
+
+### 权限配置建议
+
+Claude Code 的权限提示虽然安全，但频繁弹出会打断工作流。建议在项目早期就配置好 `settings.json` 的权限规则，把常用的构建命令、测试命令加入白名单，把危险操作（如 `rm -rf`、修改 `.env`）加入黑名单。这样既保证安全，又减少干扰。
+
+→ [commands.md](./commands.md) 有 Claude Code 所有命令的详细用法。
+→ [plugins.md](./plugins.md) 有 Claude Code 六层扩展体系的完整参考。
+→ [ecosystem.md](./ecosystem.md) 有 Claude Code 社区生态和最佳实践。
 → [OpenCode 内置能力](../opencode/capabilities.md) 有 OpenCode 各项能力的详细说明。
 → [核心概念](../02-core-concepts/) 章节对两者的设计哲学有更深入的对比。

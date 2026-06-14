@@ -38,3 +38,6 @@ temp/
 
 #Claude Code
 .claude/
+
+# playwright
+.playwright-mcp/

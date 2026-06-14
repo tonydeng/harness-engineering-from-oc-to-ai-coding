@@ -66,4 +66,8 @@
   - [OpenCode 内置能力](appendix-b/opencode/capabilities.md)
     - [OpenCode 内置命令](appendix-b/opencode/commands.md)
     - [OpenCode Plugin 系统](appendix-b/opencode/plugins.md)
+    - [OpenCode 生态参考](appendix-b/opencode/ecosystem.md)
   - [Claude Code 内置能力](appendix-b/claudecode/capabilities.md)
+    - [Claude Code 命令参考](appendix-b/claudecode/commands.md)
+    - [Claude Code 扩展机制](appendix-b/claudecode/plugins.md)
+    - [Claude Code 生态参考](appendix-b/claudecode/ecosystem.md)

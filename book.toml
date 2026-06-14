@@ -8,6 +8,9 @@ src = "src"
 build-dir = "_book"
 create-missing = false
 
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
 [output.html]
 default-theme = "navy"
 preferred-dark-theme = "navy"
@@ -16,20 +19,17 @@ no-section-label = true
 git-repository-url = "https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding"
 edit-url-template = "https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/edit/main/{path}"
 additional-css = [
-  "theme/simple-lightbox.min.css",  # 本地 CSS
-  "theme/pagetoc.css",
   "theme/custom.css",
-  "theme/mermaid.css",              # Mermaid 图表样式
+  "theme/mermaid-fullscreen.css",  # Mermaid 全屏样式
   "theme/vega.css"                  # Vega-Lite 图表样式
 ]
 additional-js = [
-  "theme/simple-lightbox.min.js",   # 本地 JS（必须在 mermaid-init.js 前）
-  "theme/pagetoc.js",
   "theme/mermaid.min.js",
+  "theme/mermaid-init.js",
+  "theme/mermaid-fullscreen.js",  # Mermaid 全屏功能（必须在 mermaid-init.js 后）
   "theme/vega.min.js",              # Vega 核心库（必须在 vega-lite 前）
   "theme/vega-lite.min.js",         # Vega-Lite 编译器（必须在 vega-embed 前）
   "theme/vega-embed.min.js",        # Vega-Embed 渲染器（必须在 vega-init.js 前）
-  "theme/mermaid-init.js",
   "theme/vega-init.js"              # Vega-Lite 渲染初始化
 ]
 

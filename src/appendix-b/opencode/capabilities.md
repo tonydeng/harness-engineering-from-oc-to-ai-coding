@@ -247,4 +247,75 @@ OpenCode 的扩展能力覆盖四个层面，从简单到复杂依次是：
 
 最高级别的扩展。在 `.opencode/agents/` 目录下创建 Agent 配置，定义独立的 Agent 类型。适合需要全新行为模式的场景。
 
+## MCP 生态
+
+MCP（Model Context Protocol）是 OpenCode 连接外部世界的标准化协议。通过 MCP，Agent 可以查询数据库、调用 API、搜索网络、操作文件系统，而不需要把这些能力硬编码到工具链里。
+
+MCP 定义了三种交互原语（Tool / Resource / Prompt），支持三种传输方式：
+
+| 传输类型 | 适用场景 | 特点 |
+|----------|----------|------|
+| stdio | 本地子进程 | 低延迟、高安全 |
+| streamable-http | 远程服务 | 灵活部署，跨网络调用 |
+| websocket | 全双工通信 | 实时推送、长连接 |
+
+MCP 服务器可以配置 OAuth 认证，保护远程服务的访问权限。OpenCode 在 `opencode.json` 的 `mcpServers` 字段中管理所有 MCP 连接，包括认证信息。
+
+→ [MCP 服务器](../06-advanced/mcp-servers.md) 章节有完整的 MCP 开发和配置指南。
+
+## 社区生态
+
+OpenCode 的生态由社区驱动，涵盖 Skills、配置模板、插件和示例文件。社区贡献的 Skills 可以通过 `skills-download` 命令安装，也可以直接从 GitHub 仓库克隆。Skills 按领域分类，覆盖开发框架、安全测试、思维模型、工作流等场景。
+
+### 示例文件
+
+`examples/` 目录包含 74 个示例文件，按功能类别组织：
+
+| 目录 | 内容 |
+|------|------|
+| opencode-configs/ | 权限、Provider、路由、合规配置 |
+| skills/ | SKILL.md 结构和最佳实践 |
+| workflows/ | 多步骤任务编排 |
+| quality-gates/ | 自动化检查规则 |
+| ast-grep-rules/ | 代码结构匹配模式 |
+
+### 版本参考
+
+本书基于 OpenCode v1.16.x 和 oh-my-openagent v4.7.x 编写。
+
+## 配置体系
+
+OpenCode 的配置以 `opencode.json` 为核心，支持多层继承和环境隔离。
+
+### 核心配置
+
+`opencode.json` 定义了 Provider、权限、MCP 服务器等全局设置：
+
+```jsonc:examples/opencode-configs/basic.jsonc
+{
+  "provider": {
+    "anthropic": {
+      "apiKey": "${ANTHROPIC_API_KEY}"
+    }
+  },
+  "mcpServers": {
+    "exa": {
+      "command": "npx",
+      "args": ["-y", "exa-mcp-server"]
+    }
+  }
+}
+```
+
+### Provider 与 Profile
+
+Provider 管理 LLM 的接入方式（API 密钥、模型列表、路由规则）。Profile 是配置的分层机制：
+
+| 层级 | 文件位置 | 说明 |
+|------|---------|------|
+| 全局 | `~/.config/opencode/opencode.json` | 所有项目共享 |
+| 项目 | `./opencode.json` | 项目级覆盖 |
+| 环境 | `opencode.{env}.json` | 环境特定配置 |
+
+→ [配置详解](../03-setup/opencode-config.md) 章节有完整的配置参考。
 → [高级配置](../06-advanced/) 章节有更多自定义扩展的实战案例。
