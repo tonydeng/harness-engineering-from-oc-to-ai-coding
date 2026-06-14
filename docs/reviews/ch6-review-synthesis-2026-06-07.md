@@ -30,10 +30,10 @@
 | 1.4 | feature-flags.md | P1 | 2 处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
 | 1.5 | mcp-servers.md | **P0** | 12 处 ` ```json` 缺少文件名 | 添加 `:opencode.json`、`:python:mcp-file-search/server.py` |
 | 1.6 | memory-system.md | P1 | 多处 ` ```jsonc` 缺少文件名 | 添加 `:opencode-mem.jsonc`、`:opencode.jsonc` |
-| 1.7 | prompt-caching.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
+| 1.7 | context/prompt-caching.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
 | 1.8 | sandbox-hooks.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
 | 1.9 | security-overview.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
-| 1.10 | token-budget.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
+| 1.10 | context-compression.md | P1 | 多处 ` ```json` 缺少文件名 | 添加 `:opencode.json` |
 
 #### 可观测性内容重组
 
@@ -51,7 +51,7 @@
 | 2.1 | 全书 | P1 | ` ```json` 格式的代码块不能直接复制运行 | 标注文件名后读者可以识别文件位置 |
 | 2.2 | mcp-servers.md | P2 | Python MCP 服务器示例中 `server.py` 路径为相对路径 | 添加注释说明运行方式：`python mcp-file-search/server.py` |
 | 2.3 | observability.md | P1 | 错误定位流程描述较抽象，缺少可运行的命令序列 | 已添加错误定位 6 步骤清单 |
-| 2.4 | prompt-caching.md | P2 | 多处中文标点修复（全角逗号→半角逗号） | 修复 20+ 处标点不一致 |
+| 2.4 | context/prompt-caching.md | P2 | 多处中文标点修复（全角逗号→半角逗号） | 修复 20+ 处标点不一致 |
 
 ### 第 3 轮：Munger 误导性
 
@@ -92,10 +92,10 @@
 | mcp-servers.md | 12 | 含 Python 和 JSON 两种语言 |
 | memory-system.md | 8 | ` ```jsonc` → ` ```jsonc:opencode-mem.jsonc` |
 | observability.md | 6 | 少量 JSON、主变更在内容重组 |
-| prompt-caching.md | 10 | 标点修复 + 代码块标注 |
+| context/prompt-caching.md | 10 | 标点修复 + 代码块标注 |
 | sandbox-hooks.md | 8 | ` ```json` → ` ```json:opencode.json` |
 | security-overview.md | 10 | 同上 |
-| token-budget.md | 4 | 同上 |
+| context-compression.md | 4 | 同上 |
 
 ### 可观测性内容重组
 
@@ -119,7 +119,7 @@
 
 ### 中文标点修复
 
-**prompt-caching.md**: 修复 20+ 处全角/半角混用
+**context/prompt-caching.md**: 修复 20+ 处全角/半角混用
 
 ---
 

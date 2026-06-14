@@ -140,8 +140,8 @@
 | 文章 | 内容 | 来源 | 优先级 |
 |------|------|------|--------|
 | `context-compression.md` | 自动压缩原理 + 微压缩 + 压缩后恢复 | 《马书》第9-11章 | **P0** |
-| `token-budget.md` | Token预算策略、估算规则、预算分配 | 《马书》第12章 | **P0** |
-| `prompt-caching.md` | 三级缓存架构、缓存断点、中断检测、7+优化模式 | 《马书》第13-15章 | **P0** |
+| `context-compression.md` | Token预算策略、估算规则、预算分配 | 《马书》第12章 | **P0** |
+| `context/prompt-caching.md` | 三级缓存架构、缓存断点、中断检测、7+优化模式 | 《马书》第13-15章 | **P0** |
 | `memory-system.md` | 跨会话记忆：Memdir架构、Auto-Dream、Compaction | 《马书》第24章 | **P0** |
 | `security-overview.md` | 安全总览：权限模型(6模式)、YOLO分类器、提示注入防御 | 《马书》第16-17b章 | **P0** |
 | `sandbox-hooks.md` | 沙箱系统(Seatbelt/Bubblewrap) + Hook点(53+事件) | 《马书》第18-18b章，OMO Hook | **P0** |
@@ -152,7 +152,7 @@
 **修改文章：**
 - `mcp-servers.md`：扩展 MCP 协议深度（stdio/SSE/WebSocket）、ToolRegistry 统一、MCP 服务器沙箱
 - `custom-agents.md`：增加《马书》三种Agent派生模式 + Effort/Fast Mode/Thinking 配置
-- `performance-tuning.md`：增加模型降级链、成本优化、Token预算策略
+- `context/performance-tuning.md`：增加模型降级链、成本优化、Token预算策略
 
 ---
 

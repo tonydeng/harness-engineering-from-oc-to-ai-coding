@@ -26,7 +26,7 @@
 
 **true-mem** ([rizal72/true-mem](https://github.com/rizal72/true-mem)) 是另一个记忆插件实现。在[记忆系统设计](../06-advanced/memory-system.md)中被引用。
 
-**DCP Plugin** ([Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning)) 是一个动态上下文裁剪插件，用于优化 Token 使用。在[Token 预算策略](../06-advanced/token-budget.md)中被引用。
+**DCP Plugin** ([Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning)) 是一个动态上下文裁剪插件，用于优化 Token 使用。在[Token 预算策略](../06-advanced/context-compression.md)中被引用。
 
 **OpenCode Issue #18100** ([anomalyco/opencode#18100](https://github.com/anomalyco/opencode/issues/18100)) 是 OpenCode 项目的一个 Issue，讨论了 Agent 派生模式的相关问题。在[Agent 派生模式](../04-workflows/agent-derivation.md)中被引用。
 
@@ -198,9 +198,9 @@
 
 **LangChain Experiments** ([langchain.com](https://www.langchain.com/)) 是 LangChain 框架团队进行的 AI Agent 能力实验。书中引用了 Agent 准确率从 52.8% 提升到 66.5% 的数据（通过 Harness 层），证明了结构化编排对 AI Agent 性能的显著提升。在[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)中被引用。
 
-**GPT-4 Technical Report** ([cdn.openai.com](https://cdn.openai.com/papers/gpt-4.pdf)) 是 OpenAI 于 2023 年 3 月发布的 GPT-4 技术报告，详细介绍了 GPT-4 的架构、训练方法和性能评估。书中引用了 Self-attention O(n²) 复杂度和 50K→200K 上下文窗口导致 ~16x 推理时间的数据，说明了长上下文处理的性能挑战。在[性能调优与成本管理](../06-advanced/performance-tuning.md)中被引用。
+**GPT-4 Technical Report** ([cdn.openai.com](https://cdn.openai.com/papers/gpt-4.pdf)) 是 OpenAI 于 2023 年 3 月发布的 GPT-4 技术报告，详细介绍了 GPT-4 的架构、训练方法和性能评估。书中引用了 Self-attention O(n²) 复杂度和 50K→200K 上下文窗口导致 ~16x 推理时间的数据，说明了长上下文处理的性能挑战。在[性能调优与成本管理](../06-advanced/context/performance-tuning.md)中被引用。
 
-**Context7** ([context7.dev](https://context7.dev/)) 是一个上下文管理工具，帮助 AI 编程工具更好地理解项目上下文。书中引用了使用 Context7 可以减少 30-50% 试错工具调用的数据，说明了上下文管理对 AI 编程效率的重要性。在[性能调优与成本管理](../06-advanced/performance-tuning.md)中被引用。
+**Context7** ([context7.dev](https://context7.dev/)) 是一个上下文管理工具，帮助 AI 编程工具更好地理解项目上下文。书中引用了使用 Context7 可以减少 30-50% 试错工具调用的数据，说明了上下文管理对 AI 编程效率的重要性。在[性能调优与成本管理](../06-advanced/context/performance-tuning.md)中被引用。
 
 **Prisma Case Studies** ([prisma.io/case-studies](https://www.prisma.io/case-studies)) 是 Prisma ORM 的官方案例研究集合，展示了不同规模项目使用 Prisma 的经验和成果。书中引用了使用 Prisma 可以减少 30-40% 运行时错误的数据，说明了类型安全 ORM 对代码质量的提升。在[案例一：从零搭建微服务](../07-case-studies/real-world-01.md)中被引用。
 

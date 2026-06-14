@@ -1,31 +1,33 @@
 # 记忆系统设计
 
-> 缓存让 Agent 记住"系统知道的"，记忆让 Agent 记住"自己经历过的"。OpenCode 原生不包含语义记忆系统，但插件生态提供了多种选择。**本文介绍真实可用的 OpenCode 记忆插件，帮助你在实际项目中选型落地。**
-> **适合读者**: 架构师 · 高级用户
+> 缓存让 Agent 记住"系统知道的"，记忆让 Agent 记住"自己经历过的"。OpenCode 原生不包含语义记忆系统，但插件生态提供了多种选择。**本文从概念原理到实战选型，完整覆盖记忆系统的设计与落地——包括 5 款记忆插件的深度对比、决策树、推荐配置和 MCP 记忆服务器方案。**
+> **适合读者**: 架构师 · 技术负责人 · 高级用户 · 效率开发者
 
 ## 文章概述
 
 缓存是被动的——它存储的是系统预设的内容（系统指令、工具定义、项目知识）。记忆是主动的——它记录的是 Agent 在执行任务过程中的上下文、决策和发现。这是两者的本质区别。记忆系统解决的问题是：当 Agent 从一个 Session 进入下一个 Session 时，如何不忘记之前做过什么、发现过什么、决定了什么。
 
-本文首先澄清"记忆 vs 缓存"的概念差异。然后介绍 OpenCode 记忆插件生态——4 款真实可用的插件，涵盖轻量集成、Claude Code 兼容、企业级高召回和认知心理学路线。接着分析 Auto-Dream 机制——记忆插件如何自动生成摘要、评估重要度、淘汰低价值记忆。然后介绍 Compaction 与记忆的配合：Compaction 保留重要决策和上下文，记忆为 Compaction 提供优先级参考。最后讨论记忆系统的安全考虑和选型建议。读完本文，你将能够根据自身需求选择合适的记忆插件，并配置 Agent 的跨 Session 上下文保持。
+本文首先澄清"记忆 vs 缓存"的概念差异。然后介绍 OpenCode 记忆插件生态——5 款真实可用的插件，涵盖本地优先、云同步、Claude Code 兼容、蒸馏架构和认知心理学路线。接着分析 Auto-Dream 机制——记忆插件如何自动生成摘要、评估重要度、淘汰低价值记忆。然后介绍 Compaction 与记忆的配合。在安全考虑之后，提供完整的实战选型指南：五款插件速览、全维度对比表、Mermaid 决策树、首选推荐配置、MCP 记忆服务器选型和常见误区。读完本文，你将能够根据自身需求选择合适的记忆插件，并配置 Agent 的跨 Session 上下文保持。
 
-> **⏱ 时间有限？先读这些：** 记忆与缓存的区别 → 插件选型 → Auto-Dream 机制 → Compaction 配合
+> **⏱ 时间有限？先读这些：** 记忆与缓存的区别 → 插件选型 → Auto-Dream 机制 → 实战选型指南（决策树 + 推荐配置）
 
 ## 内容要点
 
-1. **记忆 vs 缓存** — 记忆是被动的（Agent"记得"什么），缓存是被动的（系统"存了"什么）。记忆系统解决的核心问题：跨 Session 上下文保持。记忆的三个层次：短期记忆（当前 Session）、中期记忆（相关 Session）、长期记忆（项目级知识）。
+1. **记忆 vs 缓存** — 记忆是主动的（Agent"记得"什么），缓存是被动的（系统"存了"什么）。记忆系统解决的核心问题：跨 Session 上下文保持。记忆的三个层次：短期记忆（当前 Session）、中期记忆（相关 Session）、长期记忆（项目级知识）。
 
-2. **插件选型** — 4 款真实插件的设计理念和配置方法：`opencode-mem`（最成熟的 OpenCode 原生插件，SQLite+向量索引，Web UI）、`opencode-claude-memory`（移植 Claude Code 的 Memdir 模块，共享记忆目录）、`agentmemory`（企业级 BM25+向量+知识图谱混合检索，95.2% 召回率）、`true-mem`（认知心理学路线，艾宾浩斯遗忘曲线，STM/LTM 双存储）。
+2. **插件选型** — 5 款真实插件的设计理念和配置方法：`opencode-mem`（最成熟的 OpenCode 原生插件，SQLite+向量索引，Web UI）、`opencode-supermemory`（云同步记忆，Supermemory API 后端）、`opencode-claude-memory`（移植 Claude Code 的 Memdir 模块，共享记忆目录）、`@loreai/opencode`（蒸馏式三层记忆架构，模拟人类遗忘）、`true-mem`（认知心理学路线，艾宾浩斯遗忘曲线，STM/LTM 双存储）。
 
 3. **Auto-Dream 机制** — 自动生成记忆摘要的工作原理（Session 结束时自动总结），记忆重要度评分（基于任务类型、决策影响、用户反馈），记忆自动淘汰策略及跨 Session 融合。
 
 4. **Compaction 与记忆的配合** — Compaction 在保留重要决策和上下文时如何参考记忆系统的优先级排序，记忆作为 Compaction 的输入来源。
 
-5. **安全考虑与选型** — 敏感信息保护、多项目隔离、根据场景选择合适插件的决策树。
+5. **安全考虑** — 敏感信息保护、多项目隔离、记忆导出与备份。
+
+6. **实战选型指南** — 五款插件速览、全维度对比表、Mermaid 决策树、首选推荐配置（本地优先 + 云同步）、MCP 记忆服务器选型（@modelcontextprotocol/server-memory、Kronvex、Memstate）、常见误区。
 
 ## 关联章节
 
-- ← [提示词缓存机制](prompt-caching.md)（缓存是记忆的基础设施）
+- ← [提示词缓存机制](context/prompt-caching.md)（缓存是记忆的基础设施）
 - ← [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础）
 - → [可观测性](observability.md)（可观测性监控记忆效果）
 
@@ -94,9 +96,9 @@ graph TB
 
 ### ① opencode-mem（首选推荐）
 
-**npm**: `opencode-mem` · **GitHub**: [tickernelz/opencode-mem](https://github.com/tickernelz/opencode-mem) · **★ 810+** · **周下载**: 2,100
+**npm**: `opencode-mem` · **GitHub**: [tickernelz/opencode-mem](https://github.com/tickernelz/opencode-mem) · **★ 900+** · **周下载**: 2,787
 
-当前最成熟的 OpenCode 原生记忆插件，v2.14.3，59 个版本，30+ 贡献者。
+当前最成熟的 OpenCode 原生记忆插件，v2.17.1，60+ 版本，30+ 贡献者。
 
 **核心能力**：
 
@@ -469,35 +471,279 @@ Memory 是 Agent 的"私人笔记"——但不该记的东西不能记：
 - 定期备份 `~/.opencode-mem/` 目录
 - 记忆是"个人笔记"，提交到 Git 里通常是坏主意
 
-## 如何选择
+## 实战选型指南
+
+> 概念和原理已经讲清楚了。下面直接给出 5 款插件的深度对比和选型决策树——面对真实场景，你的项目到底该选哪个。
+
+### 五款插件速览
+
+以下 5 款插件覆盖了当前 OpenCode 社区的全部主流记忆方案。它们不是非此即彼的关系——你可以根据场景组合使用，但更常见的做法是选一个主力方案用到底。
+
+| 插件 | 一句话定位 | 最佳场景 |
+|------|-----------|---------|
+| **opencode-mem** | 本地优先的全功能记忆插件，SQLite+向量索引 | 隐私敏感的单人开发者，需要即装即用 |
+| **opencode-supermemory** | 云同步记忆，Supermemory API 后端 | 多设备跨项目协作，需要全部记忆互通 |
+| **@loreai/opencode** | 蒸馏式三层记忆架构，模拟人类遗忘 | 研究型用户，追求记忆精度而非数量 |
+| **opencode-claude-memory** | 与 Claude Code 共享同一份 Markdown 记忆文件 | OpenCode + Claude Code 双修用户 |
+| **true-mem** | 认知心理学路线，艾宾浩斯遗忘曲线 | Token 经济敏感用户，希望按规律管理记忆 |
+
+#### ⑤ opencode-supermemory（云同步）
+
+**npm**: `opencode-supermemory` · **GitHub**: [supermemoryai/opencode-supermemory](https://github.com/supermemoryai/opencode-supermemory) · **★ ~950** · **周下载**: —（通过 Bun 安装）
+
+opencode-mem 的灵感来源。如果说 opencode-mem 是本地派代表，opencode-supermemory 就是云派代表。它使用 Supermemory API 作为存储后端，所有记忆在云端持久化，跨机器、跨项目互通。
+
+安装方式不同——不是简单加一行配置，而是通过 `bunx opencode-supermemory@latest install` 执行安装脚本，自动注册插件并创建 `/supermemory-init` 命令。需要 Supermemory API Key（支持自托管或 Pro 套餐）。
+
+**关键能力**：Session 启动时自动注入上下文（用户画像 + 项目知识 + 语义相关记忆），关键词触发自动保存（"记住这个"、"保存一下"），上下文使用率达到 80% 时自动压缩并保存为记忆，支持 `<private>` 标签保护隐私。
+
+**一句话点评**：多设备切换频繁、需要全部记忆随处可查的开发团队的首选。代价是需要网络连接和付费计划。
+
+---
+
+#### ⑥ @loreai/opencode（蒸馏架构）
+
+**npm**: `@loreai/opencode`（别名 `opencode-lore`） · **GitHub**: [BYK/loreai](https://github.com/BYK/loreai) · **★ ~44** · **周下载**: ~1,200 · **v0.26.0**
+
+这是 5 款中设计理念最独特的一个。它不追求"记住更多"，而追求"记住更精"。基于 Sanity 的 Nuum 记忆架构和 Mastra 的 Observational Memory 系统，实现了三层存储架构：
+
+| 层级 | 存储内容 | 特征 |
+|------|---------|------|
+| L0 | 原始对话+工具调用 | 短期，自动滚动淘汰 |
+| L1 | 操作知识（文件路径、错误信息、具体决策） | 蒸馏压缩，保留操作精度 |
+| L2 | 长期模式（项目惯例、架构选择、团队偏好） | 跨 Session 自动提炼 |
+
+它叫"蒸馏"不叫"摘要"的原因：摘要会丢失细节（"优化了数据库查询"），蒸馏保留操作精度（"在 `findUsers` 方法中增加了 `LIMIT 100`，避免全表扫描"）。这对 Agent 的连续工作至关重要。
+
+**一句话点评**：如果你重视记忆质量而非数量，愿意为更精准的回忆做少量配置，@loreai/opencode 值得尝试。当前处于快速迭代期（0.x），API 可能变化。
+
+### 全维度对比
+
+| 维度 | opencode-mem | opencode-supermemory | @loreai/opencode | opencode-claude-memory | true-mem |
+|------|-------------|---------------------|-----------------|----------------------|---------|
+| **安装复杂度** | 低（一行配置，自动下载） | 中（需 Bun 安装脚本 + API Key） | 低（一行配置） | 中（npm install + Shell Hook） | 低（一行配置） |
+| **存储引擎** | SQLite + USearch 向量 | Supermemory 云端 API | SQLite + FTS5 + 本地嵌入 | 文件系统（Markdown） | SQLite + Jaccard（可选嵌入） |
+| **向量检索** | 原生支持 | 云端语义搜索 | 本地嵌入 / Voyage/OpenAI | 文件级关键词搜索 | 可选（实验性嵌入） |
+| **Web UI** | 4747 端口 | 无 | 无 | 无 | 无 |
+| **跨工具共享** | 仅 OpenCode | 同账号多设备 | 仅 OpenCode | 与 Claude Code | 仅 OpenCode |
+| **自动捕获** | 原生支持 | 关键词 + 压缩触发 | 生命周期钩子 | Shell Hook | 非阻塞异步提取 |
+| **遗忘机制** | 容量淘汰 | 压缩覆盖 | 三层蒸馏淘汰 | Auto-Dream 门控 | 艾宾浩斯衰减 + 7 分类 |
+| **GitHub Stars** | 900 | ~950 | ~44 | 24 | ~143 |
+| **每周下载** | 2,787 | — | ~1,200 | — | 315 |
 
 ### 决策树
 
-| 你的场景                                               | 推荐方案                 |
-| ------------------------------------------------------ | ------------------------ |
-| 刚接触 OpenCode，想要最简单的即装即用体验               | `opencode-mem`           |
-| 同时使用 Claude Code 和 OpenCode，希望共享记忆          | `opencode-claude-memory` |
-| 企业团队，需要最高召回率，使用多种 AI 编码工具          | `agentmemory`            |
-| 关注 Token 经济性，希望记忆按认知规律衰减               | `true-mem`               |
-| 需要可视化浏览和管理记忆                                | `opencode-mem`           |
-| 使用 MCP 客户端生态，希望记忆跨 Agent 共享              | `agentmemory`            |
+下面的决策树帮你从场景出发，逐级缩小选择范围：
 
-### 从零开始的推荐路径
+```mermaid
+graph TB
+    Start((你的场景是什么？)) --> Q1{需要云同步?}
 
-1. 从 `opencode-mem` 开始——一行配置即可启用，Web UI 降低认知门槛
-2. 如果需要与 Claude Code 共享记忆，改为 `opencode-claude-memory`
-3. 对召回率有极致要求时，升级到 `agentmemory`（代价是需要维护一个独立 server）
-4. 对 Token 成本和记忆管理哲学有更高认知时，尝试 `true-mem`
+    Q1 -->|是| Q2{多设备跨项目?}
+    Q2 -->|是| R1[opencode-supermemory]
+    Q2 -->|否| Q3
+
+    Q1 -->|否，本地优先| Q3{使用多种 AI 编码工具?}
+
+    Q3 -->|是| Q4{包括 Claude Code?}
+    Q4 -->|是| R2[opencode-claude-memory]
+    Q4 -->|否| R3[opencode-mem]
+
+    Q3 -->|否，仅 OpenCode| Q5{记忆管理哲学?}
+
+    Q5 -->|追求记忆质量| R4["@loreai/opencode"]
+    Q5 -->|追求 Token 经济性| R5[true-mem]
+    Q5 -->|功能均衡| R3
+
+    style Start fill:#4A90D9,color:#fff
+    style R1 fill:#A66CFF,color:#fff
+    style R2 fill:#A66CFF,color:#fff
+    style R3 fill:#FF9F43,color:#fff
+    style R4 fill:#A66CFF,color:#fff
+    style R5 fill:#A66CFF,color:#fff
+```
+
+### 首选推荐配置
+
+#### 本地优先：opencode-mem
+
+这是 80% 用户的最优起点。一行配置启用，Web UI 降低认知门槛，SQLite 本地存储保证隐私。
+
+**基础配置**（`~/.config/opencode/opencode.jsonc`）：
+
+```jsonc:~/.config/opencode/opencode.jsonc
+{
+  "plugin": ["opencode-mem"]
+}
+```
+
+**完整配置**（`~/.config/opencode/opencode-mem.jsonc`）：
+
+```jsonc:~/.config/opencode/opencode-mem.jsonc
+{
+  "storagePath": "~/.opencode-mem/data",
+  "embeddingModel": "Xenova/nomic-embed-text-v1",
+  "memory": {
+    "defaultScope": "project"
+  },
+  "webServerEnabled": true,
+  "webServerPort": 4747,
+  "autoCaptureEnabled": true,
+  "autoCaptureLanguage": "auto",
+  "opencodeProvider": "anthropic",
+  "opencodeModel": "claude-haiku-4-5-20251001",
+  "compaction": {
+    "enabled": true,
+    "memoryLimit": 10
+  },
+  "chatMessage": {
+    "enabled": true,
+    "maxMemories": 3,
+    "excludeCurrentSession": true,
+    "injectOn": "first"
+  }
+}
+```
+
+**验证安装**：重启 OpenCode，查看日志中是否有 `opencode-mem` 初始化成功的消息。访问 `http://localhost:4747` 确认 Web UI 正常。
+
+#### 云同步：opencode-supermemory
+
+适合多设备、跨项目、或需要团队共享记忆的场景。
+
+**安装**：
+
+```bash:terminal
+bunx opencode-supermemory@latest install
+```
+
+**配置 API Key**（`~/.config/opencode/supermemory.jsonc`）：
+
+```jsonc:~/.config/opencode/supermemory.jsonc
+{
+  "apiKey": "sm_...",
+  "maxMemories": 5,
+  "compactionThreshold": 0.8,
+  "containerTagPrefix": "my-team"
+}
+```
+
+**验证**：重启 OpenCode，运行 `opencode -c` 确认 `supermemory` 出现在工具列表中。
+
+> **注意**：opencode-supermemory 需要 Supermemory Pro 套餐或自托管后端。自托管方式：运行 `npx supermemory local`，然后设置 `export SUPERMEMORY_API_URL=http://localhost:6767`。
+
+### MCP 记忆服务器选型
+
+除了插件方案，还可以通过 MCP 协议给 OpenCode 添加记忆能力。MCP 方案的好处是记忆服务器独立运行，可以被多个 MCP 客户端共享（Claude Desktop、Cursor、Windsurf 等）。
+
+以下三款 MCP 记忆服务器值得关注：
+
+#### @modelcontextprotocol/server-memory
+
+**npm**: `@modelcontextprotocol/server-memory` · **周下载**: 226K · **官方参考实现**
+
+这是 MCP 官方的记忆服务器参考实现，使用知识图谱（Knowledge Graph）存储实体、关系和观察。数据存储在本机 JSONL 文件中，支持实体创建、关系建立、观察添加和搜索。
+
+**适用场景**：需要标准 MCP 兼容的记忆方案，愿意自定义 prompt 来引导 Agent 如何使用记忆工具。适合对记忆格式有定制需求的团队。
+
+**OpenCode 配置**：
+
+```jsonc:~/.config/opencode/opencode.jsonc
+{
+  "mcp": {
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": true
+    }
+  }
+}
+```
+
+#### Kronvex
+
+**官网**: [kronvex.io](https://kronvex.io) · **MCP 记忆 API**
+
+Kronvex 提供了一个托管的记忆 API，通过 MCP 协议为 AI Agent 提供持久化记忆。它的核心卖点是零配置——注册账号、获取 API Key、配置 MCP，三步完成。
+
+**适用场景**：不想维护自建基础设施，愿意使用托管服务换取零运维的记忆方案。
+
+**OpenCode 配置**：
+
+```jsonc:~/.config/opencode/opencode.jsonc
+{
+  "mcp": {
+    "kronvex": {
+      "type": "local",
+      "command": ["npx", "-y", "@kronvex/mcp"],
+      "enabled": true,
+      "environment": {
+        "KRONVEX_API_KEY": "kv_..."
+      }
+    }
+  }
+}
+```
+
+#### Memstate
+
+**官网**: [memstate.ai](https://memstate.ai) · **结构化树状记忆**
+
+Memstate 的特色是结构化记忆——不是简单的键值对或知识图谱，而是树状层次结构的记忆树。每条记忆可以挂载到项目、子项目、具体模块的层级下，检索时按子树精度返回。
+
+**适用场景**：项目结构复杂，需要按模块粒度管理记忆的团队。树状结构更贴近实际工程组织方式。
+
+**OpenCode 配置**：
+
+```jsonc:~/.config/opencode/opencode.jsonc
+{
+  "mcp": {
+    "memstate": {
+      "type": "local",
+      "command": ["npx", "-y", "@memstate/mcp"],
+      "enabled": true,
+      "environment": {
+        "MEMSTATE_API_KEY": "ms_..."
+      }
+    }
+  }
+}
+```
+
+#### 插件 vs MCP 服务器：如何选
+
+| 维度 | 插件方案 | MCP 服务器方案 |
+|------|---------|--------------|
+| 安装复杂度 | 低（一行配置或 Bun 安装） | 中（需配置 MCP 端点） |
+| 独立运行 | 嵌入在 OpenCode 进程中 | 独立进程，可被多客户端共享 |
+| 跨工具共享 | 仅 OpenCode 生态内 | 所有 MCP 客户端 |
+| 运维负担 | 零运维 | 需要管理进程生命周期 |
+| 性能 | 无进程间通信开销 | 有 stdio/HTTP 通信开销 |
+
+**建议**：单人单工具场景选插件方案，多工具多用户场景选 MCP 服务器方案。
+
+### 常见误区
+
+**"插件装得越多记忆越好"** —— 多个记忆插件同时运行会导致重复存储和上下文膨胀。选一个主力插件，禁用其他。
+
+**"MCP 服务器比插件更强大"** —— 不一定。插件方案的集成深度（Hook 点、生命周期绑定、自动捕获）通常优于 MCP 方案。MCP 的优势在跨工具共享，不在单工具能力。
+
+**"记忆插件的 Web UI 是锦上添花"** —— 对新手来说，可视化浏览记忆是理解"Agent 记住了什么"的最快方式。opencode-mem 的 Web UI 是它的核心竞争力之一。
+
+**"向量检索一定比关键词搜索好"** —— 对于代码上下文（变量名、函数名、路径），关键词搜索的精度往往高于向量检索。这是 opencode-claude-memory 用 Markdown 文件级搜索依然可用的原因。
 
 ## 验证标准
 
 完成本章学习后，请确认你能够：
 
 - [ ] 区分记忆系统与缓存系统的本质差异
-- [ ] 列出 4 款 OpenCode 记忆插件及其核心定位
+- [ ] 列出 5 款 OpenCode 记忆插件及其核心定位
 - [ ] 配置 opencode-mem 插件并描述其核心能力
 - [ ] 说明 opencode-claude-memory 与 Claude Code 的兼容方式
-- [ ] 区分 agentmemory（需独立 server）和 opencode-mem（纯插件）的架构差异
+- [ ] 说明 opencode-supermemory 的云同步能力和安装方式
+- [ ] 解释 @loreai/opencode 的蒸馏架构（L0/L1/L2 三层存储）
 - [ ] 解释 true-mem 的 7 种记忆分类和衰减策略
 - [ ] 说明 Compaction 如何与记忆系统协同工作
-- [ ] 根据自身场景做出合理的记忆插件选型
+- [ ] 使用决策树根据自身场景做出合理的记忆插件选型
+- [ ] 对比插件方案和 MCP 服务器方案的适用场景
+- [ ] 识别记忆插件选型的常见误区

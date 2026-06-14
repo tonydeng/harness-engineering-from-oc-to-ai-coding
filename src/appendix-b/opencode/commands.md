@@ -36,8 +36,8 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 
 **上下文压缩**（Compaction）是长会话的必备技能。当对话轮次增多、上下文接近 Token 窗口上限时，`/compact` 会触发后台 Agent 分析当前对话，生成摘要并保留关键信息，释放 Token 空间。
 
-→ [上下文压缩技术](../../06-advanced/context-compression.md) 深入讲解压缩机制和触发策略。
-→ [Token 预算策略](../../06-advanced/token-budget.md) 讲解如何合理分配有限的 Token 空间。
+→ [上下文压缩与Token 预算](../../06-advanced/context-compression.md) 深入讲解压缩机制和触发策略。
+→ [Token 预算策略](../../06-advanced/context-compression.md) 讲解如何合理分配有限的 Token 空间。
 
 ### 模型与配置
 

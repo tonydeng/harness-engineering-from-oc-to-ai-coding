@@ -12,9 +12,9 @@ All 13 content articles in src/06-advanced/ are FULL content (0 stubs). Average 
 | observability.md | 532 | 396 | 可观测性 |
 | memory-system.md | 503 | 368 | 记忆系统设计 |
 | agents-dot-md.md | 481 | 357 | AGENTS.md 约定系统 |
-| prompt-caching.md | 475 | 348 | 提示词缓存机制 |
-| token-budget.md | 399 | 303 | Token 预算策略 |
+| context/prompt-caching.md | 475 | 348 | 提示词缓存机制 |
+| context-compression.md | 399 | 303 | Token 预算策略 |
 | context-compression.md | 350 | 262 | 上下文压缩技术 |
 | observability-reference.md | 333 | 281 | 可观测性参考 |
-| performance-tuning.md | 328 | 259 | 性能调优与成本管理 |
+| context/performance-tuning.md | 328 | 259 | 性能调优与成本管理 |
 | feature-flags.md | 306 | 223 | Feature Flags 路线图 |

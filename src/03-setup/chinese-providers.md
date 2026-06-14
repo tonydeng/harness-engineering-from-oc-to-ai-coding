@@ -702,6 +702,6 @@ export HTTPS_PROXY="http://127.0.0.1:7890"
 
 ### 下一步
 
-- → [性能调优与成本管理](../06-advanced/performance-tuning.md) — 国产模型在模型降级链中的应用
+- → [性能调优与成本管理](../06-advanced/context/performance-tuning.md) — 国产模型在模型降级链中的应用
 - ← [快速上手](quickstart.md) — Provider 配置基础
 - ← [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md) — 生态现状与配置前提

@@ -142,7 +142,7 @@ examples/opencode-configs/
 - AST-grep is an **external tool** (npm package `@ast-grep/cli`)
 - OpenCode does NOT natively integrate AST-grep
 - The directory `examples/ast-grep-rules/` does not exist in this project
-- AST-grep is referenced elsewhere in the project as a "recommended local tool" (in `src/06-advanced/performance-tuning.md`)
+- AST-grep is referenced elsewhere in the project as a "recommended local tool" (in `src/06-advanced/context/performance-tuning.md`)
 
 **Conclusion**: Article misrepresents AST-grep as an integrated feature.
 

@@ -16,9 +16,9 @@
 | 7 | `src/06-advanced/context-compression.md` | — | 有文章概述 |
 | 8 | `src/06-advanced/feature-flags.md` | 308 | 有文章概述 |
 | 9 | `src/06-advanced/observability-reference.md` | 333 | 参考文档，无文章概述 |
-| 10 | `src/06-advanced/performance-tuning.md` | — | 有文章概述 |
-| 11 | `src/06-advanced/prompt-caching.md` | — | 有文章概述 |
-| 12 | `src/06-advanced/token-budget.md` | — | 有文章概述 |
+| 10 | `src/06-advanced/context/performance-tuning.md` | — | 有文章概述 |
+| 11 | `src/06-advanced/context/prompt-caching.md` | — | 有文章概述 |
+| 12 | `src/06-advanced/context-compression.md` | — | 有文章概述 |
 | 13 | `src/appendix-a/glossary.md` | 324 | 术语表，无文章概述 |
 
 ## 格式

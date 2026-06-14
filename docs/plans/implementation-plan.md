@@ -207,8 +207,8 @@
 | ID | 任务 | 文件 | 最终行数 | 状态 |
 |----|------|------|---------|------|
 | R-1A-1 | Ch6 Art.6.4: 上下文压缩 | `context-compression.md` | 352 | ✅ 完成 |
-| R-1A-2 | Ch6 Art.6.5: Token预算策略 | `token-budget.md` | 405 | ✅ 完成 |
-| R-1A-3 | Ch6 Art.6.6: 提示词缓存 | `prompt-caching.md` | 477 | ✅ 完成 |
+| R-1A-2 | Ch6 Art.6.5: Token预算策略 | `context-compression.md` | 405 | ✅ 完成 |
+| R-1A-3 | Ch6 Art.6.6: 提示词缓存 | `context/prompt-caching.md` | 477 | ✅ 完成 |
 | R-1A-4 | Ch6 Art.6.7: 记忆系统 | `memory-system.md` | 503 | ✅ 完成 |
 | R-1B-1 | Ch6 Art.6.8: 安全总览 | `security-overview.md` | 569 | ✅ 完成 |
 | R-1B-2 | Ch6 Art.6.9: 沙箱与Hook | `sandbox-hooks.md` | 563 | ✅ 完成 |

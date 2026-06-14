@@ -24,7 +24,7 @@
 | 属性 | 内容 |
 |------|------|
 | **来源** | 24-Agent 报告 A9, 说人话(ch06) |
-| **影响文件** | agents-dot-md.md, context-compression.md, custom-agents.md, feature-flags.md, mcp-servers.md, memory-system.md, observability.md, performance-tuning.md, prompt-caching.md, sandbox-hooks.md, security-overview.md, token-budget.md |
+| **影响文件** | agents-dot-md.md, context-compression.md, custom-agents.md, feature-flags.md, mcp-servers.md, memory-system.md, observability.md, context/performance-tuning.md, context/prompt-caching.md, sandbox-hooks.md, security-overview.md, context-compression.md |
 | **修复方案** | 每篇文章开头添加 `> **本文适合**：xxx` 标注 |
 | **工作量** | 12 文件 × 1 行 = 极小 |
 

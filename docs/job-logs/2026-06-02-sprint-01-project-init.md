@@ -235,7 +235,7 @@ src/05-skills/skill-best-practices.md
 src/06-advanced/README.md            # 第6章索引
 src/06-advanced/mcp-servers.md
 src/06-advanced/custom-agents.md
-src/06-advanced/performance-tuning.md
+src/06-advanced/context/performance-tuning.md
 src/07-case-studies/README.md        # 第7章索引
 src/07-case-studies/real-world-01.md
 src/07-case-studies/real-world-02.md

@@ -421,8 +421,8 @@ graph TB
 | 优先级 | 定义 | 文章列表 |
 |--------|------|----------|
 | **P0（必备）** | 核心概念、必读章节 | [读者导航](./), [多角色阅读路径](reading-paths.md), [5 分钟快速体验](quick-start.md), [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md), [Agent 编排](../02-core-concepts/agent-orchestration.md), [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [快速上手](../03-setup/quickstart.md), [OpenCode 配置详解](../03-setup/opencode-config.md), [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [Prometheus 规划模式](../04-workflows/prometheus-mode.md), [多 Agent 协作](../04-workflows/multi-agent-collab.md), [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [安全总览](../06-advanced/security-overview.md), [从零搭建微服务](../07-case-studies/real-world-01.md) |
-| **P1（重要）** | 进阶内容、推荐阅读 | [如何使用本书](how-to-read.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [MCP 服务器](../06-advanced/mcp-servers.md), [性能调优](../06-advanced/performance-tuning.md), [上下文压缩技术](../06-advanced/context-compression.md), [Token 预算策略](../06-advanced/token-budget.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [可观测性](../06-advanced/observability.md), [遗留系统现代化](../07-case-studies/real-world-02.md), [安全审计流水线](../07-case-studies/case-security-audit.md), [全流程自动化](../07-case-studies/case-full-pipeline.md), [国产模型混合架构](../07-case-studies/case-multi-model.md), [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) |
-| **P2（锦上添花）** | 高级话题、按需阅读 | [AI 编程失败案例](../01-introduction/failure-cases.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [多环境部署方案](../03-setup/multi-env-setup.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md), [Skill 插件化模式](../05-skills/plugin-patterns.md), [自定义 Agent](../06-advanced/custom-agents.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md) |
+| **P1（重要）** | 进阶内容、推荐阅读 | [如何使用本书](how-to-read.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [约束系统解析](../02-core-concepts/constraints-system.md), [验证护栏体系](../02-core-concepts/validation-harness.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [MCP 服务器](../06-advanced/mcp-servers.md), [性能调优](../06-advanced/context/performance-tuning.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [可观测性](../06-advanced/observability.md), [遗留系统现代化](../07-case-studies/real-world-02.md), [安全审计流水线](../07-case-studies/case-security-audit.md), [全流程自动化](../07-case-studies/case-full-pipeline.md), [国产模型混合架构](../07-case-studies/case-multi-model.md), [团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md) |
+| **P2（锦上添花）** | 高级话题、按需阅读 | [AI 编程失败案例](../01-introduction/failure-cases.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [多环境部署方案](../03-setup/multi-env-setup.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md), [Skill 插件化模式](../05-skills/plugin-patterns.md), [自定义 Agent](../06-advanced/custom-agents.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md) |
 
 ---
 
@@ -481,8 +481,8 @@ graph TB
 | 7 | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) | 精读 | 35-45 分钟 | ✅ 已完成 |
 | 8 | [多 Agent 协作](../04-workflows/multi-agent-collab.md) | 精读 | 40-50 分钟 | ✅ 已完成 |
 | 9 | [自定义工作流](../04-workflows/custom-workflows.md) | 精读 | 35-45 分钟 | ✅ 已完成 |
-| 10 | [性能调优](../06-advanced/performance-tuning.md) | 精读 | 25-35 分钟 | ✅ 已完成 |
-| 11 | [Token 预算策略](../06-advanced/token-budget.md) | 精读 | 20-30 分钟 | ✅ 已完成 |
+| 10 | [性能调优](../06-advanced/context/performance-tuning.md) | 精读 | 25-35 分钟 | ✅ 已完成 |
+| 11 | [Token 预算策略](../06-advanced/context-compression.md) | 精读 | 20-30 分钟 | ✅ 已完成 |
 | 12 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 30-40 分钟 | ✅ 已完成 |
 
 **跳过建议**：
@@ -490,7 +490,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md)（已有 OpenCode 基础，可跳过）
 - [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md), [国产模型供应商配置](../03-setup/chinese-providers.md)（如无国产模型需求）
 - [自定义 Agent](../06-advanced/custom-agents.md)（初期可跳过）
-- [提示词缓存机制](../06-advanced/prompt-caching.md)、[记忆系统设计](../06-advanced/memory-system.md)（高级优化，按需阅读）
+- [提示词缓存机制](../06-advanced/context/prompt-caching.md)、[记忆系统设计](../06-advanced/memory-system.md)（高级优化，按需阅读）
 
 **路径特点**：
 - 跳过入门章节，直接深入核心概念
@@ -593,8 +593,8 @@ graph TB
 | 5 | [Agent 编排](../02-core-concepts/agent-orchestration.md) | 浏览 | 15 分钟 | ✅ 已完成 |
 | 6 | [Skill 系统](../02-core-concepts/skills-system.md) | 浏览 | 15 分钟 | ✅ 已完成 |
 | 7 | [工作流模式](../02-core-concepts/workflow-patterns.md) | 浏览 | 15 分钟 | ✅ 已完成 |
-| 8 | [性能调优](../06-advanced/performance-tuning.md) | 浏览 | 15 分钟 | ✅ 已完成 |
-| 9 | [Token 预算策略](../06-advanced/token-budget.md) | 浏览 | 15 分钟 | ✅ 已完成 |
+| 8 | [性能调优](../06-advanced/context/performance-tuning.md) | 浏览 | 15 分钟 | ✅ 已完成 |
+| 9 | [Token 预算策略](../06-advanced/context-compression.md) | 浏览 | 15 分钟 | ✅ 已完成 |
 | 10 | [从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 30-40 分钟 | ✅ 已完成 |
 | 11 | [遗留系统现代化](../07-case-studies/real-world-02.md) | 精读 | 30-40 分钟 | ✅ 已完成 |
 | 12 | [全流程自动化](../07-case-studies/case-full-pipeline.md) | 精读 | 25-35 分钟 | ✅ 已完成 |
@@ -603,7 +603,7 @@ graph TB
 - [环境搭建章节](../03-setup/quickstart.md)（技术实施细节，可交给团队）
 - [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节，可交给团队）
 - [Skill 开发](../05-skills/creating-skills.md)（技术实施细节，可交给团队）
-- [MCP 服务器](../06-advanced/mcp-servers.md), [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md) 高级话题（技术细节，可跳过）
+- [MCP 服务器](../06-advanced/mcp-servers.md), [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md) 高级话题（技术细节，可跳过）
 
 **路径特点**：
 - 聚焦工具对比和 ROI 分析
@@ -675,7 +675,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md)（环境搭建细节，可快速浏览）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md)（工作流细节，了解即可）
 - [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，了解即可）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 深入架构和安全分析
@@ -711,7 +711,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill 最佳实践](../05-skills/skill-best-practices.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [沙箱与 Hook 系统](../06-advanced/sandbox-hooks.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以 MCP 服务端集成为核心
@@ -842,7 +842,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [创建 Skill](../05-skills/creating-skills.md), [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以安全为核心，深入威胁分析
@@ -878,7 +878,7 @@ graph TB
 - [环境搭建细节](../03-setup/quickstart.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 多进程协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
-- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩技术](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
+- [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 以攻击面评估为核心
@@ -945,7 +945,7 @@ graph TB
 1. 跳过 [快速上手](../03-setup/quickstart.md)
 2. 深入 [上下文工程核心](../02-core-concepts/context-engineering-core.md)、[约束系统解析](../02-core-concepts/constraints-system.md)
 3. 精读 [多 Agent 协作](../04-workflows/multi-agent-collab.md)、[自定义工作流](../04-workflows/custom-workflows.md)
-4. 阅读 [性能调优](../06-advanced/performance-tuning.md)、[Token 预算策略](../06-advanced/token-budget.md)
+4. 阅读 [性能调优](../06-advanced/context/performance-tuning.md)、[Token 预算策略](../06-advanced/context-compression.md)
 
 **新增阅读时间**：约 3 小时
 

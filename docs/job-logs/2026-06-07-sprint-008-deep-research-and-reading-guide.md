@@ -99,7 +99,7 @@ Sprint 需求通过 `/agile-coach` 命令触发，请求组织团队进行全书
 | Ch1 竞品更新 | ecosystem-comparison.md, chinese-ecosystem.md | 定价刷新（8 行 +，6 行 -） |
 | Ch3 配置修复 | chinese-providers.md | 配置结构重构（36 行 +，36 行 -） |
 | Ch4 OMO 归属 | multi-agent-collab.md, README.md, agent-derivation.md | 归属修正（15 行 +，15 行 -） |
-| Ch6 OMO 标注 | feature-flags.md + 4 个 OMO 头文件 + token-budget.md | 版本号修正 + OMO 标注 + compaction 修复（138 行 +，134 行 -） |
+| Ch6 OMO 标注 | feature-flags.md + 4 个 OMO 头文件 + context-compression.md | 版本号修正 + OMO 标注 + compaction 修复（138 行 +，134 行 -） |
 | Ch2+Ch6 compaction | context-engineering-core.md | tokenBudget→compaction（65 行 +，65 行 -） |
 
 #### Sprint 2 — 阅读指引追加
@@ -121,7 +121,7 @@ Sprint 需求通过 `/agile-coach` 命令触发，请求组织团队进行全书
 |--------|:--------:|:--------:|
 | `mdbook build` | ✅ 零错误 | ✅ 零错误 |
 | P0 修复确认 | ✅ 18 处全部验证 | — |
-| tokenBudget 残留检查 | ✅ 仅 performance-tuning.md 合法残留 | — |
+| tokenBudget 残留检查 | ✅ 仅 context/performance-tuning.md 合法残留 | — |
 | 阅读指引覆盖率 | — | ✅ 100%（51 文件含 README.md 过滤） |
 
 ### 3.6 交付阶段
@@ -179,11 +179,11 @@ Sprint 需求通过 `/agile-coach` 命令触发，请求组织团队进行全书
 | `src/04-workflows/multi-agent-collab.md` | +6/-6 | OMO 归属 + Hyperplan 脚注 |
 | `src/04-workflows/agent-derivation.md` | +8/-8 | oh-my-opencode 旧名修正 |
 | `src/02-core-concepts/context-engineering-core.md` | +65/-65 | tokenBudget→compaction（3 块） |
-| `src/06-advanced/token-budget.md` | +118/-118 | tokenBudget→compaction（4 块） |
+| `src/06-advanced/context-compression.md` | +118/-118 | tokenBudget→compaction（4 块） |
 | `src/06-advanced/feature-flags.md` | +16/-16 | 版本号 v0.x→OMO v4.5.x |
 | `src/06-advanced/custom-agents.md` | +2/-0 | OMO 归属标注头 |
 | `src/06-advanced/security-overview.md` | +2/-0 | OMO 归属标注头 |
-| `src/06-advanced/performance-tuning.md` | +2/-0 | OMO 归属标注头 |
+| `src/06-advanced/context/performance-tuning.md` | +2/-0 | OMO 归属标注头 |
 | `src/06-advanced/sandbox-hooks.md` | +2/-0 | OMO 归属标注头 |
 
 ### Sprint 2：阅读指引追加（13 文件，每文件 +1 行）
@@ -199,9 +199,9 @@ Sprint 需求通过 `/agile-coach` 命令触发，请求组织团队进行全书
 | `src/06-advanced/context-compression.md` | 文章概述段落尾 |
 | `src/06-advanced/feature-flags.md` | 文章概述段落尾 |
 | `src/06-advanced/observability-reference.md` | 首行 blockquote 后 |
-| `src/06-advanced/performance-tuning.md` | 文章概述段落尾 |
-| `src/06-advanced/prompt-caching.md` | 文章概述段落尾 |
-| `src/06-advanced/token-budget.md` | 文章概述段落尾 |
+| `src/06-advanced/context/performance-tuning.md` | 文章概述段落尾 |
+| `src/06-advanced/context/prompt-caching.md` | 文章概述段落尾 |
+| `src/06-advanced/context-compression.md` | 文章概述段落尾 |
 | `src/appendix-a/glossary.md` | # 术语表 段落后 |
 
 ### 文档新增

@@ -71,8 +71,8 @@
 | **security-overview.md** | YOLO→Risk Classifier；Secret Store精简 | B | ~30行 |
 | **context-compression.md** | 删除张一鸣式总结 | B | ~5行 |
 | **sandbox-hooks.md** | 删除芒格引用 | B | ~3行 |
-| **token-budget.md** | malloc比喻替换 | C | ~1行 |
-| **prompt-caching.md** | 中文标点统一 | C | 全局替换 |
+| **context-compression.md** | malloc比喻替换 | C | ~1行 |
+| **context/prompt-caching.md** | 中文标点统一 | C | 全局替换 |
 | **feature-flags.md** | 89个→8个代表性示例 | C | ~300行精简 |
 | **glossary.md** | 各术语加"人话："行 | C | ~20行新增 |
 | **ch06所有文章** | 加"目标读者"标注 | A | 每篇2行 |

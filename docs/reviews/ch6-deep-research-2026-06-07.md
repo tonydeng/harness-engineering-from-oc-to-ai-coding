@@ -16,13 +16,13 @@
 | agents-dot-md.md | ✅ Accurate | AGENTS.md loading priority is native OpenCode behavior; confirmed via repo |
 | observability.md | ✅ Accurate | General observability concepts, no specific false claims |
 | observability-reference.md | ✅ Accurate | Reference data, no technical claims to verify |
-| prompt-caching.md | ✅ Accurate | General caching concepts, no specific false claims |
+| context/prompt-caching.md | ✅ Accurate | General caching concepts, no specific false claims |
 | context-compression.md | ✅ Accurate | General compression concepts, no specific false claims |
-| token-budget.md | ⚠️ Partial OMO | `tokenBudget` config key is OMO extension; fixed with attribution |
+| context-compression.md | ⚠️ Partial OMO | `tokenBudget` config key is OMO extension; fixed with attribution |
 | feature-flags.md | ❌ P0 fixed | Version numbers wrong; `opencode flags list` is OMO-only; `feature_flags` key is OMO extension |
 | custom-agents.md | ❌ P0 fixed | `definePlugin` API is OMO; native OpenCode uses async functions returning hook objects |
 | security-overview.md | ❌ P0 fixed | `secrets`, `audit`, `yolo`, `security.prompt_injection` are OMO extensions |
-| performance-tuning.md | ❌ P0 fixed | `tokenBudget`, `compaction`, `hashline` are OMO extensions; "54+ Event Hooks" is OMO |
+| context/performance-tuning.md | ❌ P0 fixed | `tokenBudget`, `compaction`, `hashline` are OMO extensions; "54+ Event Hooks" is OMO |
 | sandbox-hooks.md | ❌ P0 fixed | `sandbox` config block, 53+ Hooks, Workflow-level hooks are OMO extensions |
 | README.md | ✅ Accurate | No technical claims to verify |
 
@@ -56,16 +56,16 @@
 |-----|--------|-------------------|
 | `feature_flags` | 🚫 OMO only | feature-flags.md |
 | `sandbox` (platform.macos/linux) | 🚫 OMO only | sandbox-hooks.md |
-| `tokenBudget` | 🚫 OMO only | token-budget.md, performance-tuning.md |
-| `compaction` | 🚫 OMO only | performance-tuning.md |
-| `hashline` | 🚫 OMO only | performance-tuning.md |
+| `tokenBudget` | 🚫 OMO only | context-compression.md, context/performance-tuning.md |
+| `compaction` | 🚫 OMO only | context/performance-tuning.md |
+| `hashline` | 🚫 OMO only | context/performance-tuning.md |
 | `secrets` | 🚫 OMO only | security-overview.md |
 | `audit` | 🚫 OMO only | security-overview.md |
 | `yolo` | 🚫 OMO only | security-overview.md |
 | `security.prompt_injection` | 🚫 OMO only | security-overview.md |
 | `hooks.pipelines` / `hooks.custom` | 🚫 OMO only | sandbox-hooks.md |
-| `model.downgradeChain` | 🚫 OMO only | performance-tuning.md |
-| `experimental.hashline` | 🚫 OMO only | performance-tuning.md |
+| `model.downgradeChain` | 🚫 OMO only | context/performance-tuning.md |
+| `experimental.hashline` | 🚫 OMO only | context/performance-tuning.md |
 | `instruction_overlay` | 🚫 OMO only | agents-dot-md.md (borderline) |
 
 ### 3. CLI Command Verification
@@ -132,7 +132,7 @@ Multiple sources confirm this format: `opencodex.cc`, issue #16331, GitHub `READ
 ### security-overview.md
 - ✅ Added OMO attribution header for `secrets`, `audit`, `yolo`, `security.prompt_injection`
 
-### performance-tuning.md
+### context/performance-tuning.md
 - ✅ Added OMO attribution header for `tokenBudget`, `compaction`, `hashline`, 54+ Event Hooks
 
 ### sandbox-hooks.md
@@ -142,7 +142,7 @@ Multiple sources confirm this format: `opencodex.cc`, issue #16331, GitHub `READ
 
 ## P1 Items (Not Fixed, Informational)
 
-1. **token-budget.md** — References `tokenBudget` config key (OMO-specific). Minor impact since article content is conceptual. Could add attribution in future pass.
+1. **context-compression.md** — References `tokenBudget` config key (OMO-specific). Minor impact since article content is conceptual. Could add attribution in future pass.
 2. **agents-dot-md.md** — The `instruction_overlay` config key appears to be OMO-specific (confirmed earlier). Minor impact since the article's core claims about AGENTS.md loading are accurate.
 
 ---

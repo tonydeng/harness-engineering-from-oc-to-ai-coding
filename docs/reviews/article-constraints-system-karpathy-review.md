@@ -236,7 +236,7 @@ grep -r "mode.*passive" $OPENDOC_PATH/
 
 **验证**：
 - 代码库中 `examples/ast-grep-rules/` 目录**不存在**
-- AST-grep 在文档中仅作为"推荐安装的本地工具"（`src/06-advanced/performance-tuning.md` 行 244）
+- AST-grep 在文档中仅作为"推荐安装的本地工具"（`src/06-advanced/context/performance-tuning.md` 行 244）
 - OpenCode **没有** 原生集成的 AST-grep 约束系统
 
 **结论**：❌ **虚构**。AST-grep 是外部工具，不是 OpenCode 内置功能。

@@ -23,8 +23,8 @@
 
 **涉及文件：**
 - `src/02-core-concepts/context-engineering-core.md`（第 26、329、385 行）
-- `src/06-advanced/token-budget.md`（第 113、262、300、359 行）
-- `src/06-advanced/performance-tuning.md`（第 141 行）
+- `src/06-advanced/context-compression.md`（第 113、262、300、359 行）
+- `src/06-advanced/context/performance-tuning.md`（第 141 行）
 
 **书中写法：**
 ```json

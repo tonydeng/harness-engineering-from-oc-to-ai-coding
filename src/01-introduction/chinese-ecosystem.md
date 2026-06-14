@@ -417,5 +417,5 @@ opencode:
 
 - ← [AI 编程工具生态对比](ecosystem-comparison.md)（国产是生态环境的一部分）
 - → [国产模型供应商配置](../03-setup/chinese-providers.md)（国产模型 Provider 配置的详细实操）
-- → [性能调优与成本管理](../06-advanced/performance-tuning.md)（混合架构的成本优化策略）
+- → [性能调优与成本管理](../06-advanced/context/performance-tuning.md)（混合架构的成本优化策略）
 - → [案例：国产模型混合架构](../07-case-studies/case-multi-model.md)（混合架构的完整案例）

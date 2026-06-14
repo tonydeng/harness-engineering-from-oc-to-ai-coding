@@ -619,6 +619,6 @@ graph TB
 - → [验证护栏体系](validation-harness.md)：验证护栏与上下文的交互，确保基于上下文的输出正确
 - ← [简介](../01-introduction/)：Harness Engineering 理论框架为上下文工程提供方法论基础
 - → [高级话题](../06-advanced/)：上下文工程的深入实现与调优
-- → [上下文压缩技术](../06-advanced/context-compression.md)：压缩机制的深入原理与调优
-- → [Token 预算策略](../06-advanced/token-budget.md)：预算分配的详细策略
-- → [提示词缓存机制](../06-advanced/prompt-caching.md)：缓存机制的完整实现
+- → [上下文压缩与Token 预算](../06-advanced/context-compression.md)：压缩机制的深入原理与调优
+- → [Token 预算策略](../06-advanced/context-compression.md)：预算分配的详细策略
+- → [提示词缓存机制](../06-advanced/context/prompt-caching.md)：缓存机制的完整实现

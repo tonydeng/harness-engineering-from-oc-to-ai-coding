@@ -431,7 +431,7 @@ opencode
 ## 关联章节
 
 - ← [OpenCode 配置详解](opencode-config.md) — Agent 配置基础
-- → [性能调优与成本管理](../06-advanced/performance-tuning.md) — 环境相关的成本管控配置
+- → [性能调优与成本管理](../06-advanced/context/performance-tuning.md) — 环境相关的成本管控配置
 - → [工作流实战](../04-workflows/) — 不同环境使用不同的工作流模式
 
 ---

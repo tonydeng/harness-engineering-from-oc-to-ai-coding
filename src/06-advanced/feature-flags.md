@@ -304,7 +304,7 @@ Flag 标记 deprecated 后的生命周期：运行时警告（3 个版本）→ 
 
 ## 关联章节
 
-- ← [性能调优与成本管理](performance-tuning.md)（性能优化相关的 Flags 详解）
+- ← [性能调优与成本管理](context/performance-tuning.md)（性能优化相关的 Flags 详解）
 - ← [沙箱与 Hook 系统](sandbox-hooks.md)（安全类 Flags 的执行机制）
-- ← [上下文压缩技术](context-compression.md)（压缩算法 Flags 的技术背景）
+- ← [上下文压缩与Token 预算](context-compression.md)（压缩算法 Flags 的技术背景）
 - → [全书](../)

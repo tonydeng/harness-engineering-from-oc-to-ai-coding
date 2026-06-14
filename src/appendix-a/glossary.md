@@ -230,7 +230,7 @@
 
 > **人话**: 一次任务最多花多少钱
 
-**首次出现**:[Token 预算策略](../06-advanced/token-budget.md)
+**首次出现**:[Token 预算策略](../06-advanced/context-compression.md)
 
 ### Tool(工具)
 
