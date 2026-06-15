@@ -176,37 +176,37 @@ myapp/
 ```mermaid
 flowchart TB
     subgraph GlobalOC["OpenCode 全局（首要）"]
-        OC_G[~/.config/opencode/AGENTS.md]
+        OC_G["~/.config/opencode/AGENTS.md"]
     end
 
     subgraph GlobalCC["Claude Code 全局（后备）"]
-        CC_G[~/.claude/CLAUDE.md]
+        CC_G["~/.claude/CLAUDE.md"]
     end
 
     subgraph Project["项目指令层"]
-        P1[./AGENTS.md]
-        P2[./CLAUDE.md]
+        P1["./AGENTS.md"]
+        P2["./CLAUDE.md"]
     end
 
     subgraph Subdir["子目录指令层"]
-        S1[./src/api/AGENTS.md]
-        S2[./src/components/CLAUDE.md]
+        S1["./src/api/AGENTS.md"]
+        S2["./src/components/CLAUDE.md"]
     end
 
     subgraph Rules["规则仓库"]
-        R1[.opencode/rules/project-rules.md]
-        R2[.opencode/rules/api-rules.md]
-        R3[.opencode/rules/ui-rules.md]
+        R1[".opencode/rules/project-rules.md"]
+        R2[".opencode/rules/api-rules.md"]
+        R3[".opencode/rules/ui-rules.md"]
     end
 
-    OC_G -->|存在则锁定| P1
-    CC_G -.->|仅 AGENTS 不存在时| P2
-    P1 -->|@include| R1
-    P1 -.->|未找到 AGENTS 时回退| P2
-    P2 -->|被覆盖| S1
-    P1 -->|被覆盖| S2
-    S1 -->|@include| R2
-    S2 -->|@include| R3
+    OC_G -->|"存在则锁定"| P1
+    CC_G -.->|"仅 AGENTS 不存在时"| P2
+    P1 -->|"@include"| R1
+    P1 -.->|"未找到 AGENTS 时回退"| P2
+    P2 -->|"被覆盖"| S1
+    P1 -->|"被覆盖"| S2
+    S1 -->|"@include"| R2
+    S2 -->|"@include"| R3
 
     style GlobalOC fill:#A66CFF,color:#fff
     style GlobalCC fill:#A66CFF,color:#fff,stroke-dasharray: 5 5
