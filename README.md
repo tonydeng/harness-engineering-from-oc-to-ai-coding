@@ -31,7 +31,7 @@ mdbook serve
 
 ```
 src/               - 书籍正文（mdBook 源目录）
-docs/              - 编写计划与需求文档
+docs/              - 编写计划(planning/ 含 requirements/ plans/ sprints/ specs/)、评审(reviews/ 含 articles/ chapters/ deep-research/ overall/ archive/)、参考(reference/)、日志(logs/)
 assets/            - 图片等静态资源
 examples/          - 配套配置和代码示例
 .opencode/         - oh-my-openagent 项目配置
