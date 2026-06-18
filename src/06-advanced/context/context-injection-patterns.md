@@ -1004,3 +1004,13 @@ async function chunkCodebase(repoPath: string) {
 - → [性能调优与成本管理](context/performance-tuning.md)（分块策略对 Token 消耗和检索延迟的影响）
 - → [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程全景定位）
 - → [创建 Skill](../05-skills/creating-skills.md)（Skill 加载机制的基础）
+
+## 验证标准
+
+完成本文学习后，你应该能：
+
+1. 实现延迟加载（lazy loading）注入策略，按需拉取上下文而非全量预加载
+2. 配置三层上下文架构（热层/温层/冷层），并说明每层的刷新策略
+3. 使用 AST 感知语义分块，根据代码结构（函数/类/模块）切分上下文块
+4. 在实际项目中应用 Context Assembly Layer（CAL）模式，组装多源上下文并控制优先级
+5. 配置 MCP 检索工具，实现基于语义相似度的上下文检索并验证召回率

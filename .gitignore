@@ -41,3 +41,7 @@ temp/
 
 # playwright
 .playwright-mcp/
+
+# log
+logs/
+*.log

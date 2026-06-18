@@ -308,3 +308,13 @@ Flag 标记 deprecated 后的生命周期：运行时警告（3 个版本）→ 
 - ← [沙箱与 Hook 系统](sandbox-hooks.md)（安全类 Flags 的执行机制）
 - ← [上下文压缩与Token 预算](context-compression.md)（压缩算法 Flags 的技术背景）
 - → [全书](../)
+
+## 验证标准
+
+完成本文学习后，你应该能：
+
+1. 解释 OpenCode 的三种 Flag 类型（stable/beta/experimental）及其风险等级差异
+2. 在配置中启用或禁用一个 Feature Flag，并说明其对应的行为变化
+3. 描述 Flag 从实验阶段到废弃的完整生命周期（deprecated → 默认值变更 → 代码移除）
+4. 使用 `opencode flags list` 命令按领域或状态筛选 Flag
+5. 设计一个分阶段灰度发布策略，利用 Flag 控制新功能的逐步放量
