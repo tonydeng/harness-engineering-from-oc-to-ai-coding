@@ -302,6 +302,8 @@ flowchart LR
 
 **工作原理**：根据对话内容生成简洁的会话标题，便于历史会话管理。
 
+> Hidden Agent 是 OpenCode 系统的**内置后台进程**（自动运行，无需用户触发）。与之不同，用户还可以通过 `delegate_task(run_in_background: true)` 主动启动业务层面的后台任务，实现子 Agent 的异步并行执行。→ 详见[后台任务机制](../04-workflows/multi-agent-collab.md#后台任务机制)
+
 ### Agent 信任边界图
 
 Primary Agent 与 Subagent 之间存在明确的信任边界和数据隔离：
@@ -866,5 +868,5 @@ Agent 是 OpenCode 的核心执行单元，理解 Agent 体系是掌握 Harness 
 - → [Skill 系统](skills-system.md)：Agent 是 Skill 的宿主，Skill 通过 Agent 加载和执行
 - → [工作流模式](workflow-patterns.md)：Agent 是工作流的基本执行单元
 - ← [简介](../01-introduction/)：承接"为什么需要 Harness Engineering"
-- → [工作流实战](../04-workflows/)：多 Agent 协作是复杂工作流的构建基础
+- → [工作流实战](../04-workflows/)：多 Agent 协作是复杂工作流的构建基础（含[后台任务机制](../04-workflows/multi-agent-collab.md#后台任务机制)）
 - → [高级话题](../06-advanced/)：自定义 Agent 与 Plugin 扩展

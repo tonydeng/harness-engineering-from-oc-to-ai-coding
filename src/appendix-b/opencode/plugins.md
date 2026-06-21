@@ -1,6 +1,6 @@
 # OpenCode Plugin 系统参考
 
-> **OMO 扩展说明**：本参考手册中部分 API（如 `definePlugin`）、Hook 链式执行模型、OMO 扩展的 53+ Hook 点以及 `plugin` 配置块的对象格式（`{ "path": "...", "enabled": true }`）是 **oh-my-openagent (OMO)** 对 OpenCode Plugin 系统的扩展。原生 OpenCode 的 Plugin 使用异步函数返回 Hook 对象（非 `definePlugin`），Hook 数量约为 20+（非 53+）。OpenCode 版本 v1.16.x，OMO 版本 v4.7.x。
+> **OMO 扩展说明**：本参考手册中部分 API（如 `definePlugin`）、Hook 链式执行模型、OMO 扩展的 53+ Hook 点以及 `plugin` 配置块的对象格式（`{ "path": "...", "enabled": true }`）是 **oh-my-openagent (OMO)** 对 OpenCode Plugin 系统的扩展。原生 OpenCode 的 Plugin 使用异步函数返回 Hook 对象（非 `definePlugin`），Hook 数量约为 20+（非 53+）。OpenCode 版本 v1.17.x，OMO 版本 v4.7.x。
 >
 > 本手册是 OpenCode Plugin 系统的完整参考，涵盖 API、Hook 点、配置和安全实践。适合 Plugin 作者和需要深度定制 Agent 行为的开发者。
 
@@ -648,6 +648,234 @@ Plugin 只应注册它真正需要的 Hook 点。Env Guard 只需要 `file:befor
 
 → [沙箱与 Hook 系统 · Hook 点威胁分析](../../06-advanced/sandbox-hooks.md)
 → [安全总览](../../06-advanced/security-overview.md)
+
+---
+
+## 实时通信
+
+Plugin 不仅可以被动响应 Hook 事件，还可以主动建立持久化连接，实现实时数据推送和多 Agent 间的异步通信。本节讨论 Plugin 层面的实时通信模式。
+
+### WebSocket 连接管理
+
+Plugin 可以在 `session:start` Hook 中建立 WebSocket 连接，在 `session:end` 中关闭，实现与外部服务的实时双向通信：
+
+```typescript:plugins/realtime-websocket/index.ts
+import { definePlugin } from "opencode";
+import { WebSocket } from "ws";  // npm install ws
+
+export default definePlugin({
+  name: "realtime-websocket",
+  description: "WebSocket 实时通信示例",
+  hooks: {
+    "session:start": async (session) => {
+      const ws = new WebSocket("wss://your-service.com/events");
+
+      ws.on("message", (data) => {
+        console.log(`[实时数据] ${data}`);
+        // 可以写入上下文或触发自定义逻辑
+      });
+
+      ws.on("error", (err) => {
+        console.error(`[WebSocket 错误] ${err.message}`);
+      });
+
+      // 将连接存储在 session 上下文中
+      session.context = { ...session.context, ws };
+    },
+    "session:end": async (session) => {
+      const ws = session.context?.ws;
+      if (ws) {
+        ws.close();
+        console.log("WebSocket 连接已关闭");
+      }
+    }
+  }
+});
+```
+
+> **注意**：WebSocket 连接的生命周期应与 Session 绑定。不要在频繁触发的 Hook（如 `tool:before`）中创建新连接，会导致资源泄露。
+
+### SSE 事件流
+
+Plugin 可以在 Tool Handler 中通过 SSE（Server-Sent Events）从外部服务获取流式数据，适合逐步返回处理进度的场景：
+
+```typescript:plugins/sse-stream/index.ts
+import { definePlugin } from "opencode";
+
+export default definePlugin({
+  name: "sse-stream",
+  description: "SSE 流式数据消费",
+  tools: [
+    {
+      name: "long_task",
+      description: "执行耗时任务并逐步报告进度",
+      parameters: {
+        type: "object",
+        properties: {
+          taskId: { type: "string", description: "任务 ID" }
+        },
+        required: ["taskId"]
+      },
+      handler: async (params) => {
+        const response = await fetch(
+          `https://your-service.com/tasks/${params.taskId}/progress`
+        );
+
+        // 使用 ReadableStream 逐行处理 SSE 事件
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let result = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          // SSE 格式: "data: {...}\n\n"
+          for (const line of chunk.split("\n")) {
+            if (line.startsWith("data: ")) {
+              const payload = JSON.parse(line.slice(6));
+              result += `[${payload.stage}] ${payload.message}\n`;
+            }
+          }
+        }
+
+        return result;
+      }
+    }
+  ]
+});
+```
+
+### 事件总线模式
+
+当多个 Plugin 需要相互通信时，可以使用事件总线（Event Bus）模式。定义共享的 EventEmitter 实例，Plugin 之间通过事件名称解耦：
+
+```typescript:plugins/shared-bus.ts
+import { EventEmitter } from "events";
+
+// 全局事件总线（所有 Plugin 共享）
+export const pluginBus = new EventEmitter();
+pluginBus.setMaxListeners(100);
+```
+
+```typescript:plugins/event-producer/index.ts
+import { definePlugin } from "opencode";
+import { pluginBus } from "../shared-bus";
+
+export default definePlugin({
+  name: "event-producer",
+  description: "事件生产者",
+  hooks: {
+    "tool:after": async (params) => {
+      pluginBus.emit("tool:completed", {
+        tool: params.tool,
+        duration: params.duration,
+        timestamp: Date.now()
+      });
+    }
+  }
+});
+```
+
+```typescript:plugins/event-consumer/index.ts
+import { definePlugin } from "opencode";
+import { pluginBus } from "../shared-bus";
+
+export default definePlugin({
+  name: "event-consumer",
+  description: "事件消费者",
+  hooks: {
+    "session:start": async () => {
+      pluginBus.on("tool:completed", (data) => {
+        console.log(`[监控] 工具 ${data.tool} 耗时 ${data.duration}ms`);
+      });
+    }
+  }
+});
+```
+
+### 断开重连策略
+
+对于需要长期保持连接的 Plugin，建议实现自动重连机制，使用指数退避避免频繁重试：
+
+```typescript:plugins/reconnect/index.ts
+import { definePlugin } from "opencode";
+
+function createReconnectingWebSocket(url: string) {
+  let ws: WebSocket | null = null;
+  let retryCount = 0;
+  const maxRetries = 5;
+
+  function connect() {
+    ws = new WebSocket(url);
+
+    ws.onopen = () => {
+      retryCount = 0;
+      console.log("WebSocket 连接已建立");
+    };
+
+    ws.onclose = () => {
+      if (retryCount < maxRetries) {
+        const delay = Math.min(1000 * Math.pow(2, retryCount), 30000);
+        retryCount++;
+        console.log(`${delay}ms 后尝试第 ${retryCount} 次重连...`);
+        setTimeout(connect, delay);
+      }
+    };
+
+    ws.onerror = () => { /* ws 的 error 后会自动触发 close */ };
+  }
+
+  return { connect, close: () => ws?.close() };
+}
+
+export default definePlugin({
+  name: "resilient-connection",
+  description: "具备自动重连的 Plugin",
+  hooks: {
+    "session:start": async (session) => {
+      const conn = createReconnectingWebSocket("wss://service.example.com/events");
+      conn.connect();
+      session.context = { ...session.context, conn };
+    },
+    "session:end": async (session) => {
+      session.context?.conn?.close();
+    }
+  }
+});
+```
+
+重连策略建议：
+
+| 参数 | 建议值 | 说明 |
+|------|--------|------|
+| 最大重试次数 | 5 次 | 避免无限重连耗尽资源 |
+| 退避基数 | 1 秒 | `delay = min(1000 × 2^retry, 30000)` |
+| 最大退避 | 30 秒 | 等待时间上限 |
+| 连接超时 | 10 秒 | 超过此时间未建立视为失败 |
+
+### MCP 的实时传输模式
+
+MCP（Model Context Protocol）支持两种实时传输模式，Plugin 可以通过 MCP Server 间接实现实时通信：
+
+| 传输模式 | 适用场景 | 特点 |
+|---------|---------|------|
+| **streamable-http** | 服务器推送进度、逐步返回结果 | 基于 HTTP 流式响应，兼容性好 |
+| **websocket** | 低频双向实时通信 | 持久连接，延迟低 |
+
+Plugin 可以在 Tool Handler 中调用 MCP Server 的 Tool，由 MCP Server 管理实时连接。关于 MCP 传输模式的完整说明见：
+
+→ [MCP 服务器 · 三种传输类型](../../06-advanced/mcp-servers.md#三种传输类型)
+
+### 实时通信选型建议
+
+| 需求 | 推荐方案 |
+|------|---------|
+| 与外部服务双向实时通信 | WebSocket（Plugin 内直接建立） |
+| 消费外部事件的单向推送 | SSE（Tool Handler 内消费流式响应） |
+| Plugin 间通信（同一 Agent 进程） | 事件总线（EventEmitter） |
+| 通过 MCP 实现的外部实时通信 | MCP streamable-http / websocket |
 
 ---
 

@@ -1276,5 +1276,6 @@ Teams 并行 Agent 协作是超越单 Agent 限制的关键架构。通过基于
 ## 关联章节
 
 - ← [Agent 派生模式](agent-derivation.md) — 派生是 Team 的基础
+- ← [多 Agent 协作](multi-agent-collab.md) — Team Mode 之前的轻量级后台任务机制（[后台任务机制](multi-agent-collab.md#后台任务机制)）
 - → [案例研究](../07-case-studies/) — 案例中的 Team Mode 应用
 - → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 在 Team 中的集成

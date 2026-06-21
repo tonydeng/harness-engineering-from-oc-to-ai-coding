@@ -801,6 +801,6 @@ Agent 派生是扩展单一 Agent 能力边界的关键机制。通过子 Agent 
 
 ## 关联章节
 
-- ← [多 Agent 协作](multi-agent-collab.md) — 派生是多 Agent 协作的一种形式
+- ← [多 Agent 协作](multi-agent-collab.md) — 派生是多 Agent 协作的一种形式（含[后台任务机制](multi-agent-collab.md#后台任务机制)的 `run_in_background` 完整说明）
 - → [Teams 并行 Agent 协作](teams-collaboration.md) — Teams 是更高级的派生模式
 - → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 中的派生实现

@@ -10,9 +10,9 @@
 
 本文系统讲解四种 Agent 协作模式：串行模式（A → B → C 顺序执行）、并行模式（A 同时触发多个子 Agent 并汇总结果）、主从模式（Master 分配任务给 Slave 独立执行）和竞争模式（多个 Agent 从不同角度分析并达成共识）。然后深入 7-Agent Pipeline 的设计和实现——这是当前最成熟的多 Agent 协作方案，包含 Planner、Debater、Implementor、Reviewer、Tester、Linter 和 Committer 七个角色。
 
-你还会学到 `task()` 的子 Agent 调用方法、WORKFLOW_STATE.md 的文件交接模式（比对话历史交接更可审计、可恢复）、各 Agent 的温度策略设计（Planner 0.1、Implementor 0.1、Debater 0.3 等），以及权限隔离方案（Reviewer 和 Tester 在权限层面无法修改代码）。
+你还会学到 `task()` 的子 Agent 调用方法、后台任务机制（`run_in_background` 异步执行与 `background_output()` 结果收集）、WORKFLOW_STATE.md 的文件交接模式（比对话历史交接更可审计、可恢复）、各 Agent 的温度策略设计（Planner 0.1、Implementor 0.1、Debater 0.3 等），以及权限隔离方案（Reviewer 和 Tester 在权限层面无法修改代码）。
 
-> **⏱ 时间有限？先读这些：** Agent 协作的四种模式 → 7-Agent Pipeline → 前端场景 Agent 编排示例 → 实战：启动 7-Agent Pipeline
+> **⏱ 时间有限？先读这些：** Agent 协作的四种模式 → 后台任务机制 → 7-Agent Pipeline → 前端场景 Agent 编排示例 → 实战：启动 7-Agent Pipeline
 
 ---
 
@@ -433,6 +433,287 @@ function mergeTaskResults(results, strategy) {
   }
 }
 ```
+
+---
+
+## 后台任务机制
+
+> 从同步到异步：理解 OpenCode 后台任务的执行模型、生命周期管理和结果收集策略，让你的子 Agent 调用不再阻塞主线流程。
+
+`task()` 和 `delegate_task()` 默认是**同步**调用——父 Agent 会等待子 Agent 完成后才继续执行。这在步骤依赖的场景中是合理的，但当你有多个独立子任务时，同步调用意味着串行等待，浪费时间。
+
+后台任务机制让子 Agent 在后台异步执行，父 Agent 可以继续处理其他工作，待子任务完成后再收集结果。这是实现并行模式（Parallelization）的底层支撑。
+
+### 执行模型
+
+```mermaid
+flowchart TB
+    subgraph 同步["同步调用（默认）"]
+        A1[父 Agent] -->|"task() 调用"| B1[子 Agent]
+        B1 -->|"等待..."| C1[父 Agent 阻塞]
+        C1 -->|"子 Agent 返回"| D1[父 Agent 继续]
+    end
+    
+    subgraph 异步["后台调用（run_in_background=true）"]
+        A2[父 Agent] -->|"delegate_task() 调用"| B2[子 Agent 后台执行]
+        A2 -->|"不阻塞，继续其他工作"| C2[父 Agent 并行执行]
+        B2 -->|"完成通知"| D2[父 Agent 收集结果]
+    end
+
+    style B1 fill:#4A90D9,color:#fff
+    style B2 fill:#50C878,color:#fff
+    style C1 fill:#ffcccc
+    style C2 fill:#ccffcc
+```
+
+**核心区别**：
+
+| 维度 | 同步（默认） | 异步（后台） |
+|------|------------|------------|
+| **阻塞** | 父 Agent 等待子 Agent 完成 | 父 Agent 立即继续执行 |
+| **结果获取** | 函数返回值 | `background_output()` 查询 |
+| **适用场景** | 步骤依赖、需要即时结果 | 独立探索、并行任务 |
+| **错误传播** | 直接抛出异常 | 后台捕获，需主动查询 |
+| **资源释放** | 完成后自动释放 | 需确认结果后释放 |
+
+### run_in_background 参数
+
+`run_in_background` 是 `delegate_task()`（OMO）的参数，控制子 Agent 以同步还是异步方式执行：
+
+```javascript:terminal
+// 同步调用（默认）——父 Agent 等待
+const result = delegate_task(
+  description: "安全审查",
+  prompt: "检查代码中的 SQL 注入风险",
+  category: "unspecified-high",
+  load_skills: ["security-architect"],
+  run_in_background: false   // 默认值，可省略
+)
+// 此处代码等安全审查完成后才执行
+console.log(result.output)
+
+// 异步调用（后台）——父 Agent 不等待
+const bgTaskId = delegate_task(
+  description: "后台安全审查",
+  prompt: "检查代码中的 SQL 注入风险",
+  category: "unspecified-high",
+  load_skills: ["security-architect"],
+  run_in_background: true    // 异步执行
+)
+// 此处代码立即执行，不等待安全审查完成
+console.log("后台任务已启动:", bgTaskId)
+```
+
+> `run_in_background` 是 OMO `delegate_task()` 的参数。OpenCode 核心 `task()` 不支持后台执行——这是两者在编排能力上的关键差异。
+
+### 后台任务生命周期
+
+一个后台任务经历以下阶段：
+
+```mermaid
+flowchart TB
+    A[创建任务] -->|"delegate_task(run_in_background: true)"| B[任务调度]
+    B --> C[后台执行]
+    C -->|"执行中"| D{完成通知}
+    C -->|"超时/失败"| E[任务终止]
+    D -->|"system-reminder"| F[收集结果]
+    F -->|"background_output()"| G[处理结果]
+    E --> H[错误处理]
+    H -->|"重试/降级"| I[继续流程]
+    
+    style A fill:#4A90D9,color:#fff
+    style C fill:#50C878,color:#fff
+    style F fill:#FF9F43,color:#fff
+```
+
+| 阶段 | 事件 | 说明 |
+|------|------|------|
+| **创建** | `delegate_task()` 调用 | 系统分配后台任务 ID（`bg_...`），启动子 Agent |
+| **执行** | 后台运行 | 子 Agent 独立执行，不阻塞父 Agent |
+| **完成通知** | 系统推送 | 任务完成时系统发送 `<system-reminder>` 通知 |
+| **结果收集** | `background_output()` | 父 Agent 收到通知后调用 API 获取结果 |
+| **清理** | 确认完成后 | 任务资源自动释放 |
+
+### 结果收集：background_output()
+
+后台任务完成后，通过 `background_output()` 收集结果：
+
+```javascript:terminal
+// 启动后台任务
+const bgTaskId = delegate_task(
+  description: "并行代码审查",
+  prompt: "审查 src/auth/ 目录的安全漏洞",
+  category: "unspecified-high",
+  load_skills: ["security-architect"],
+  run_in_background: true
+)
+
+// ... 此处父 Agent 可以并行做其他工作 ...
+
+// 收到 <system-reminder> 通知后，收集结果
+const result = background_output(
+  task_id: bgTaskId,
+  block: false   // 不阻塞，已确认任务完成
+)
+```
+
+**参数说明**：
+
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| `task_id` | string | 是 | 后台任务 ID，格式 `bg_xxx...` |
+| `block` | boolean | 否 | 是否阻塞等待（默认 `false`） |
+| `timeout` | number | 否 | 最大等待时间（毫秒），默认 60000 |
+| `full_session` | boolean | 否 | 返回完整会话消息 |
+| `include_thinking` | boolean | 否 | 是否包含推理过程 |
+| `message_limit` | number | 否 | 返回消息数量上限（最大 100） |
+
+**收集策略**：
+
+```markdown:terminal
+重要规则：
+1. 等待通知 → 不要轮询。系统会在任务完成时推送 <system-reminder>
+2. 收到通知后再调用 background_output()，设置 block: false 即可
+3. 不要在任务运行中轮询——这是高消耗的反模式
+4. 从未收到通知？检查任务是否被取消或超时
+```
+
+### 后台任务 ID 体系
+
+OpenCode 中有两种 ID，用途不同，不要混淆：
+
+| ID 类型 | 格式 | 用途 | 使用 API |
+|---------|------|------|---------|
+| **后台任务 ID** | `bg_xxx...` | 标识一次后台执行，用于收集结果 | `background_output(task_id="bg_xxx")` |
+| **延续会话 ID** | `ses_xxx...` | 标识一个子 Agent 会话，用于继续对话 | `task(task_id="ses_xxx")` |
+
+**典型配合使用**：
+
+```javascript:terminal
+// 1. 启动后台任务，获得 bg_xxx ID
+const bgTaskId = delegate_task(
+  description: "架构审查",
+  prompt: "审查当前项目的架构设计",
+  category: "unspecified-high",
+  run_in_background: true
+)
+
+// bgTaskId 输出示例:
+// task-xxx | bg_abc123  ← 后台任务 ID
+
+// 2. 任务完成通知到达后，收集结果
+const output = background_output(task_id: "bg_abc123")
+
+// 3. 如果需要继续之前的子 Agent 会话（而非重新启动），
+//    使用 ses_xxx ID 延续对话
+const continuationSessionId = "ses_def456"  // 从上一次 task() 输出中获得
+const continuedResult = task(
+  task_id: continuationSessionId,
+  description: "继续架构审查",
+  prompt: "接着上一步的分析，评估数据库设计的性能风险"
+)
+```
+
+### 任务取消
+
+后台任务启动后，可以在完成前取消：
+
+```javascript:terminal
+// 取消单个后台任务
+background_cancel(taskId: "bg_abc123")
+
+// 使用场景举例：
+// - 用户中途取消了主任务
+// - 后台任务已经不再需要（如主流程已判定无需审计）
+// - 任务超时，决定放弃等待
+```
+
+> **注意**：`background_cancel(all: true)` 会取消所有后台任务——仅在最终交付前清理环境时使用。常规场景应按 ID 逐个取消。
+
+### 同步 vs 异步：选择决策树
+
+```mermaid
+graph TB
+    A[选择执行模式] --> B{子任务是否需要<br/>结果才能继续?}
+    B -->|是| C[同步]
+    B -->|否| D{子任务之间<br/>是否有依赖?}
+    
+    D -->|有依赖| E[同步/串行]
+    D -->|无依赖| F{等待子任务期间<br/>父Agent有其他事可做吗?}
+    
+    F -->|有| G[异步（后台）]
+    F -->|没有| H[同步即可]
+    
+    C --> I[使用 task() 默认调用]
+    E --> I
+    G --> J[使用 delegate_task()<br/>run_in_background: true]
+    H --> I
+    
+    style C fill:#4A90D9,color:#fff
+    style G fill:#50C878,color:#fff
+    style J fill:#50C878,color:#fff
+```
+
+**场景速查表**：
+
+| 场景 | 推荐模式 | 理由 |
+|------|---------|------|
+| 需要子任务输出才能继续 | 同步 | 结果必须就绪，阻塞合理 |
+| 同时探索多个独立方向 | 后台异步 | 并发加速，不阻塞主线 |
+| 并发安全审计 + 主线开发 | 后台异步 | 安全审计不阻塞开发流程 |
+| 子任务有步骤依赖 | 同步串行 | 顺序执行保证正确性 |
+| 子任务结果不重要（fire-and-forget） | 后台异步 | 启动了就不用管 |
+| 任务数量不确定（动态分配） | 后台异步 | 主从模式动态调度 |
+
+### 实际案例：并行探索 + 结果汇总
+
+以下示例展示后台任务在代码审查场景中的典型用法——同时启动三个独立的安全审计子任务，父 Agent 处理其他工作，待三个子任务都完成后再汇总结果：
+
+```javascript:terminal
+// 父 Agent 同时启动三个后台审计任务
+
+// 任务 1：SQL 注入扫描（后台）
+delegate_task(
+  description: "SQL 注入审计",
+  prompt: "扫描项目中所有 SQL 查询，检查是否存在拼接注入风险",
+  category: "unspecified-high",
+  load_skills: ["security-architect"],
+  run_in_background: true
+)
+
+// 任务 2：敏感信息泄露检查（后台）
+delegate_task(
+  description: "敏感信息审计",
+  prompt: "扫描代码库中硬编码的 API Key、密码和 Token",
+  category: "unspecified-high",
+  load_skills: ["penetration-tester"],
+  run_in_background: true
+)
+
+// 任务 3：依赖漏洞检查（后台）
+delegate_task(
+  description: "依赖审计",
+  prompt: "分析项目依赖的第三方库，查找已知安全漏洞",
+  category: "unspecified-high",
+  load_skills: ["vulnerability-manager"],
+  run_in_background: true
+)
+
+// 三个后台任务并行执行，父 Agent 不阻塞，
+// 可以继续处理其他逻辑或等待通知
+```
+
+### 后台任务的最佳实践
+
+| 实践 | 说明 |
+|------|------|
+| **不要轮询** | 等待系统 `<system-reminder>` 通知，不要循环调用 `background_output(block: true)` |
+| **先确认再收集** | 收到通知后才调用 `background_output()`，设置 `block: false` |
+| **超时兜底** | 在父 Agent 中设置合理的超时逻辑，防止后台任务永久挂起 |
+| **善用延续会话** | 保存 `ses_xxx` ID，需要子 Agent 继续工作时使用 `task(task_id="ses_xxx")` |
+| **独立任务用异步** | 无依赖的独立子任务始终使用后台模式，最大化并行度 |
+| **关键路径用同步** | 主流程的关键步骤使用同步模式，避免异步结果未到时的复杂协调 |
+| **及时清理** | 不再需要的后台任务及时取消，释放系统资源 |
 
 ---
 
@@ -1243,6 +1524,11 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 - [ ] 解释四种 Agent 协作模式的区别和适用场景
 - [ ] 使用 task() 调用子 Agent 并配置权限隔离
+- [ ] 理解同步调用与后台异步调用的区别，并按场景合理选择
+- [ ] 使用 `run_in_background: true` 启动后台任务
+- [ ] 通过 `background_output()` 收集后台任务结果
+- [ ] 区分后台任务 ID（`bg_xxx`）和延续会话 ID（`ses_xxx`）的用途
+- [ ] 使用 `background_cancel()` 取消不再需要的后台任务
 - [ ] 理解 7-Agent Pipeline 中每个角色的职责
 - [ ] 配置 7-Agent 的权限矩阵和温度策略
 - [ ] 编写 WORKFLOW_STATE.md 记录 Pipeline 执行状态
@@ -1255,4 +1541,7 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 - ← [Ultrawork 模式](ultrawork-mode.md) — 单 Agent → 多 Agent
 - → [自定义工作流](custom-workflows.md) — Team Mode 是更高级的协作形式
+- → [Agent 派生模式](agent-derivation.md) — `delegate_task()` 的三种派生模式详解
+- → [Teams 并行 Agent 协作](teams-collaboration.md) — 更高阶的并行协作：同一进程内多个独立 Agent 实例
 - ← [工作流模式](../02-core-concepts/workflow-patterns.md) — Command 触发 Pipeline
+- ← [Agent 编排](../02-core-concepts/agent-orchestration.md) — Agent 类型体系与 Hidden Agent 后台自动化

@@ -86,6 +86,18 @@
 
 ## H
 
+### 后台任务（Background Task）
+
+**定义**:通过 `delegate_task(run_in_background: true)` 启动的异步子 Agent 执行单元，在后台独立运行，不阻塞父 Agent。任务完成后通过系统通知触发结果收集。
+
+> **人话**: 让子 Agent 在后台默默干活，不耽误你继续做其他事情
+
+**相关概念**:
+- **后台任务 ID（`bg_xxx`）**:标识一次后台执行，用于收集结果
+- **延续会话 ID（`ses_xxx`）**:标识子 Agent 会话，用于继续对话
+
+**首次出现**:[多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务机制)
+
 ### Harness Engineering
 
 **定义**:设计和管理 AI 工程流水线的方法论,核心是让 AI 的输出可靠、可复现、有价值。三大原则:可复现(Reproducible)、可审计(Auditable)、可改进(Improveable)。
@@ -205,6 +217,14 @@
 > **人话**: 一次对话从开始到结束的全过程
 
 **首次出现**:[上下文工程核心](../02-core-concepts/context-engineering-core.md)
+
+### 延续会话 ID（Session Continuation ID）
+
+**定义**:格式为 `ses_xxx...` 的会话标识符,用于在一个子 Agent 的现有对话基础上继续工作。通过 `task(task_id="ses_xxx")` 重用已有上下文,避免重头开始。
+
+> **人话**: 告诉子 Agent"接着上次说的继续"
+
+**首次出现**:[多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务id体系)
 
 ### System Prompt(系统提示词)
 
@@ -331,5 +351,8 @@
 | 工具 | Tool | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
 | 验证护栏 | Validation Harness | [验证护栏体系](../02-core-concepts/validation-harness.md) |
 | 工作流 | Workflow | [工作流模式](../02-core-concepts/workflow-patterns.md) |
+| 后台任务 | Background Task | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务机制) |
+| 后台任务 ID | bg_xxx | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务id体系) |
+| 延续会话 ID | ses_xxx | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务id体系) |
 | 风险分类器 (Risk Classifier) | Risk Classifier | [验证护栏体系](../02-core-concepts/validation-harness.md) |
 | 约束系统 | Constraints System | [约束系统解析](../02-core-concepts/constraints-system.md) |

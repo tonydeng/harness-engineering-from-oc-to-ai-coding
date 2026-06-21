@@ -5,7 +5,7 @@
 Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 Skill），在交互式 TUI 中以 `/` 触发；**CLI 命令**（Shell 级别），在终端中直接运行。此外，Claude Code 支持通过 `.claude/commands/` 目录或 `.claude/skills/` 目录创建自定义命令。
 
 → [Claude Code 内置能力](./capabilities.md) 提供了全貌概览。
-→ [Claude Code 扩展机制](./plugins.md) 详细讲解自定义命令和 Skills 系统。
+→ [Claude Code 扩展机制](./extensions.md) 详细讲解自定义命令和 Skills 系统。
 
 ---
 
@@ -274,7 +274,7 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 ## 相关章节
 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
-- → [Claude Code 扩展机制](./plugins.md) — Skills、Subagent、Hook、MCP 等扩展体系
+- → [Claude Code 扩展机制](./extensions.md) — Skills、Subagent、Hook、MCP 等扩展体系
 - → [Claude Code 生态参考](./ecosystem.md) — 社区项目、最佳实践和集成工作流
 - → [OpenCode 内置命令参考](../opencode/commands.md) — OpenCode 命令系统对比参考
 
