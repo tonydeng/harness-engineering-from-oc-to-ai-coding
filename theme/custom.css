@@ -1,4 +1,9 @@
 /* LuminaInsight 自定义样式 - 基于 Navy 主题优化 */
+.content main {
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+    max-width: 80%;
+}
 
 /* 基础字体优化 */
 html {
