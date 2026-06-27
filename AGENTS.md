@@ -94,7 +94,7 @@ src/               ← 正文（10 个章节，约 53 篇文章）
   appendix-b/      ← OpenCode & Claude Code 内置能力
 book.toml          ← mdBook 配置（主题、搜索、Mermaid、Vega）
 theme/             ← 自定义 CSS/JS（Vega、Mermaid、lightbox、pagetoc）
-docs/              ← 写作计划、PRD、评审、job-logs、PR 记录、Wiki
+docs/              ← 规划(planning/ 含 requirements/ plans/ sprints/ specs/)、评审(reviews/ 含 articles/ chapters/ deep-research/ overall/ archive/)、参考(reference/)、执行日志(logs/)
 examples/          ← 示例配置（opencode-configs/ + skills/）
 assets/            ← 图片等静态资源
 ```
@@ -112,6 +112,10 @@ assets/            ← 图片等静态资源
 ```bash
 git config core.hooksPath .githooks
 ```
+
+## 语言约束
+
+AI 助手的回复**必须使用简体中文**，除非用户明确要求或引用的英文术语需要保留原名。全书为中文书籍，所有交流、分析、建议均以中文输出。
 
 ## 写完后的验证
 
