@@ -546,7 +546,7 @@ your-project/
 | **代码级扩展** | 无（纯配置文件）| `definePlugin` TypeScript API |
 | **Hook 数量** | 14+ 外部 Shell 事件 | 20+ 进程内函数回调（OMO 53+）|
 | **Subagent** | 自动委派 + 持久记忆 + worktree 隔离 | Agent 类型配置 |
-| **权限模型** | 5 种模式 + allow/deny/ask 规则 | 插件沙箱 |
+| **权限模型** | 6 种模式 + allow/deny/ask 规则 | 插件沙箱 |
 | **插件分发** | 纯文件目录 + JSON 清单（零构建）| npm 包 + TypeScript 编译 |
 | **生态规模** | 9,000+ 插件 | 较小 |
 | **学习曲线** | 配置驱动，声明式 | 代码驱动，编程式 |
