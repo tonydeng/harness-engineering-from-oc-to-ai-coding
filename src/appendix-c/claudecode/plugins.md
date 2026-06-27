@@ -551,6 +551,57 @@ your-project/
 | **生态规模** | 9,000+ 插件 | 较小 |
 | **学习曲线** | 配置驱动，声明式 | 代码驱动，编程式 |
 
+## 读者视角
+
+### 使用示例
+
+场景：通过 MCP 服务器将外部数据库集成到 Claude Code 工作流。
+
+1. 在 `~/.claude/servers.json` 中注册 Postgres MCP 服务器
+2. 重启 Claude Code，自动发现并使用 `query_database` 工具
+3. 在对话中直接说"查询最近 10 条用户记录"
+
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "node",
+      "args": ["/path/to/mcp-postgres-server/index.js"],
+      "env": {
+        "PGHOST": "localhost",
+        "PGDATABASE": "myapp"
+      }
+    }
+  }
+}
+```
+
+### 工程化示例
+
+场景：CI 中自动监督 MCP 工具调用权限。
+
+```yaml
+# .github/workflows/audit-mcp.yml
+name: MCP 权限审计
+on:
+  push:
+    paths:
+      - '.claude/servers.json'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 检查高风险 MCP 工具
+        run: |
+          HAS_SHELL=$(jq '.mcpServers | to_entries[] | select(.value.command == "bash" or .value.command == "sh")' .claude/servers.json)
+          if [ -n "$HAS_SHELL" ]; then
+            echo "❌ 高风险: MCP 暴露 Shell 执行能力"
+            exit 1
+          fi
+          echo "✅ MCP 权限审计通过"
+```
+
 ## 相关章节
 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考

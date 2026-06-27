@@ -206,3 +206,88 @@ Pi 的配置分全局和项目两层：
 
 → 更详细的配置说明见 [生态与集成场景](./ecosystem.md#安全与沙箱)
 → 完整命令列表参见 Pi 官方文档：[pi.dev/docs/latest](https://pi.dev/docs/latest)
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — Pi 的 4 种运行模式降低了使用门槛，适合快速上手
+- 智能体开发工程师 — Extension API 为深度定制提供 TypeScript 支持
+- 效率开发者 — 丰富的 Slash 命令和编辑器特性提升工作效率
+- 技术负责人 — 容器化方案（Gondolin/Docker/OpenShell）满足企业安全要求
+- Skill 作者 — Skills 系统遵循标准化，易于创建和分享
+- 系统架构师 — 明确的安全边界和信任机制，便于架构评估
+- 安全工程师 — 安全模型透明，易于威胁建模和合规评估
+
+### 典型使用场景
+- 日常编码中使用 Pi 的交互模式，提高代码编辑效率
+- 通过 Print 模式实现单次查询，集成到 CI/CD 管道
+- 使用 JSON Event Stream 模式实现自动化测试和监控
+- 通过 RPC 模式实现跨语言集成，构建多语言开发工具
+- 使用 Session Tree 分支管理，实现并行探索和实验
+- 通过 Gondolin 容器化方案实现安全隔离，满足企业需求
+- 使用 Extension API 构建自定义工具，满足特定领域需求
+
+### 使用示例
+```bash
+# 启动交互模式
+pi
+
+# 执行单次查询
+pi -p "列出当前目录的文件"
+
+# 使用 JSON Event Stream 模式
+pi --mode json -p "重构这个函数"
+
+# 使用 RPC 模式
+pi --mode rpc
+
+# 创建新会话
+/new
+
+# 恢复历史会话
+/resume
+
+# 使用 Slash 命令
+/settings
+/trust
+/tree
+/compact
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **安装 Pi Core**
+   ```bash
+   npm install -g @earendil-works/pi-coding-agent
+   ```
+
+2. **创建项目目录**
+   ```bash
+   mkdir -p my-project
+   cd my-project
+   ```
+
+3. **启动 Pi 并配置**
+   ```bash
+   pi --name "my task"
+   ```
+
+4. **使用 Slash 命令**
+   ```bash
+   /settings { "theme": "dark" }
+   /trust
+   ```
+
+5. **执行任务**
+   ```bash
+   /new
+   # 输入提示词
+   ```
+
+### 与前/后文章的衔接
+- ← [Pi Agent 概述与核心概念](../overview.md) — 提供 Pi 的设计哲学和核心架构
+- → [扩展体系详解](./customization.md) — 学习 Pi 的四层扩展体系

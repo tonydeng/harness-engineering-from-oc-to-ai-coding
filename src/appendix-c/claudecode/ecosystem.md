@@ -300,6 +300,24 @@ Skills 作为可复用指令集，在 Harness Engineering 中扮演"质量门禁
 | awesome-claude-code | 最大的 Claude Code 资源精选（45.7K Star） |
 | claude-code-system-prompts | 系统提示词逆向分析（8.6K Star） |
 
+## 迁移指南
+
+从其他 AI 编程工具迁移到 Claude Code 时，需要关注以下关键差异：
+
+### 从 OpenCode 迁移
+
+- **AGENTS.md → CLAUDE.md**：OpenCode 的 `AGENTS.md` 项目指令在 Claude Code 中对应 `CLAUDE.md`，格式大部分兼容。需注意 Claude Code 不支持 Mermaid 图表和 OMO 扩展语法，需移除或替换为纯文本描述
+- **Plugin → Skills + Hooks**：OpenCode 的 Plugin（TypeScript API）在 Claude Code 中没有直接对应——Claude Code 的扩展体系使用 JSON 和 Shell 脚本。Plugin 中的 Hook 逻辑需重构为 Claude Code 的外部 Shell Hook 或 MCP 工具
+- **Category → Subagent**：OMO Category 系统定义的 Agent 行为需重写为 Claude Code 的 `AGENTS.md` 中 `@agents` 块或独立的 `.mdc` 文件。Category 的模型/工具组合需手动分配到对应 Subagent
+- **命令习惯**：OpenCode 的 `/compact`、`/undo` 等命令在 Claude Code 中存在对应版本（`/compact`、`/undo`），但功能范围和参数不同
+
+### 从 Pi Agent 迁移
+
+- **Extension → Hooks + MCP**：Pi Agent 的 Extension（TypeScript 函数）在 Claude Code 中可拆为外部 Hook（Shell 脚本）和 MCP 工具两部分。需要监听生命周期用 Hook，提供外部能力用 MCP
+- **Provider 配置**：Pi Agent 支持 20+ Provider；Claude Code 仅支持 Anthropic 提供的 Claude 系列模型。迁移后模型选择范围大幅缩小
+- **命令体系**：Pi Agent 的 `/model`、`/system` 等命令在 Claude Code 中没有直接对应，需通过 `CLAUDE.md` 配置预设系统提示词来替代
+- **迁移前提**：如果项目需要多模型支持或复杂 Plugin 生态，建议先评估 OpenCode 或保留 Pi Agent
+
 ## 相关章节
 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具、配置方式的完整参考
@@ -307,4 +325,85 @@ Skills 作为可复用指令集，在 Harness Engineering 中扮演"质量门禁
 - → [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践
 - → [生态对比](../../01-introduction/ecosystem-comparison.md) — AI 编程工具生态全景
 
-> 数据来源：Anthropic 官方文档、awesome-claude-code 注册表、ComposioHQ 精选列表。数据截止 2026 年 6 月。Claude Code 生态发展迅速，建议参考官方文档获取最新信息。
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要查找 Claude Code 社区扩展和最佳实践
+- 需要了解 MCP 服务器生态和集成工作流
+- 需要评估 Claude Code 与 OpenCode 的生态对比
+- 需要查找官方和社区资源
+- 需要进行工具迁移和对比
+
+### 使用示例
+```bash
+# 查找 MCP 服务器
+claude mcp list
+
+# 添加 MCP 服务器
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 配置 Hook
+claude /hooks
+
+# 打包插件
+claude plugin validate ./my-plugin --strict
+
+# 启动 Claude Code
+claude
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：MCP 服务器配置**
+   ```json
+   // .claude/settings.json
+   {
+     "mcpServers": {
+       "github": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-github"],
+         "env": {
+           "GITHUB_TOKEN": "ghp_..."
+         }
+       }
+     }
+   }
+   ```
+
+2. **第2步：Hook 配置**
+   ```json
+   // .claude/settings.json
+   {
+     "hooks": {
+       "PostToolUse": {
+         "command": "node",
+         "args": [".claude/hooks/validate-output.js"],
+         "timeout": 10000
+       }
+     }
+   }
+   ```
+
+3. **第3步：插件打包**
+   ```bash
+   # 验证插件
+   claude plugin validate ./my-plugin --strict
+   
+   # 安装插件
+   claude plugin install ./my-plugin
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code 内置能力](./capabilities.md) — 命令、工具、配置方式的完整参考
+- → [OpenCode 生态参考](../opencode/ecosystem.md) — OpenCode 开源生态对比

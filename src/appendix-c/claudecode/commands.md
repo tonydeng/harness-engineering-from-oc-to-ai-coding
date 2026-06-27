@@ -278,4 +278,101 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 - → [Claude Code 生态参考](./ecosystem.md) — 社区项目、最佳实践和集成工作流
 - → [OpenCode 内置命令参考](../opencode/commands.md) — OpenCode 命令系统对比参考
 
-> 数据来源：Anthropic 官方文档 code.claude.com/docs。命令列表基于 Claude Code v2.1.x（2026 年 6 月）。
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的内置命令和工具集
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要查找特定 Slash 命令的用法
+- 需要管理后台会话和子 Agent
+- 需要配置 MCP 服务器连接
+- 需要处理权限控制和安全审核
+- 需要进行代码审查和质量检查
+
+### 使用示例
+```bash
+# 查找特定命令的帮助信息
+claude /help
+
+# 启动交互式会话
+claude
+
+# 非交互式模式执行命令
+claude -p "审查这个 PR"
+
+# 继续最近一次会话
+claude -c
+
+# 恢复指定会话
+claude -r "auth-refactor" "完成这个 PR"
+
+# 添加 MCP 服务器
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 列出已配置服务器
+claude mcp list
+
+# 管理权限
+claude /permissions
+
+# 执行代码审查
+claude /code-review --fix
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：会话启动**
+   ```bash
+   # 启动交互式会话
+   claude
+   
+   # 非交互式模式执行命令
+   claude -p "审查这个 PR" --print
+   ```
+
+2. **第2步：MCP 服务器配置**
+   ```json
+   // .claude/settings.json
+   {
+     "mcpServers": {
+       "github": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-github"],
+         "env": {
+           "GITHUB_TOKEN": "ghp_..."
+         }
+       }
+     }
+   }
+   ```
+
+3. **第3步：权限配置**
+   ```json
+   // .claude/settings.json
+   {
+     "permissions": {
+       "allow": [
+         "Bash(npm test)",
+         "Bash(npm run build)",
+         "Write(src/**)"
+       ],
+       "deny": [
+         "Bash(rm -rf *)",
+         "Write(.env*)"
+       ]
+     }
+   }
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
+- → [Claude Code 扩展机制](./extensions.md) — Skills、Subagent、Hook、MCP 等扩展体系

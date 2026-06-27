@@ -524,6 +524,87 @@ Claude: 正在通过天气 MCP 服务器查询三个城市...
 
 ## 相关资源
 
+- [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考（生产级配置、上下文管理、错误重试）
 - [扩展机制参考](./plugins.md) — Claude Code 六层扩展体系详解
 - [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践（跨工具参考）
 - [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要编程式驱动 Agent 引擎
+- 需要嵌入 Claude Code 到自定义应用中
+- 需要实现 CI/CD 流水线集成
+- 需要开发自定义工具和 MCP 服务器
+- 需要实现生产级 Agent 配置和管理
+
+### 使用示例
+```bash
+# 安装 MCP 服务器
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 配置 Hook
+claude /hooks
+
+# 打包插件
+claude plugin validate ./my-plugin --strict
+
+# 启动 Claude Code
+claude
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：MCP 服务器配置**
+   ```json
+   // .claude/settings.json
+   {
+     "mcpServers": {
+       "github": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-github"],
+         "env": {
+           "GITHUB_TOKEN": "ghp_..."
+         }
+       }
+     }
+   }
+   ```
+
+2. **第2步：Hook 配置**
+   ```json
+   // .claude/settings.json
+   {
+     "hooks": {
+       "PostToolUse": {
+         "command": "node",
+         "args": [".claude/hooks/validate-output.js"],
+         "timeout": 10000
+       }
+     }
+   }
+   ```
+
+3. **第3步：插件打包**
+   ```bash
+   # 验证插件
+   claude plugin validate ./my-plugin --strict
+   
+   # 安装插件
+   claude plugin install ./my-plugin
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考
+- → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践

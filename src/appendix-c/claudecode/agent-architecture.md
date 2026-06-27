@@ -636,3 +636,108 @@ color: green
 - → [oh-my-openagent Agent 设计指南](../opencode/agent-architecture.md) — OMO 三层编排体系对比参考
 - → [自定义工作流](../../04-workflows/custom-workflows.md) — Team Mode 多 Agent 协作
 - → [Agent 派生模式](../../04-workflows/agent-derivation.md) — Agent 动态生成模式
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要创建自定义 Subagent 处理特定任务
+- 需要设计 Agent + Skill 组合实现专业知识
+- 需要实现多 Agent 协作工作流
+- 需要设置 Hook 自动触发 Subagent
+- 需要实现批量任务分解和并行处理
+
+### 使用示例
+```bash
+# 创建自定义 Subagent
+/clone my-helper "重构这个模块的 API 接口"
+
+# 切换到特定 Agent
+/agents
+
+# 手动转后台
+/background
+
+# 批量分解任务
+/batch "重构整个服务层"
+
+# 设置 Hook 自动审查
+/hooks
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：创建 Subagent 文件**
+   ```markdown
+   # .claude/agents/my-helper.md
+   ---
+   name: my-helper
+   description: 我的通用助手，处理常规开发任务
+   model: sonnet
+   effort: medium
+   maxTurns: 30
+   tools: Read Write Edit Bash Grep Glob
+   ---
+   
+   # System Prompt
+   
+   你是一个通用的开发助手。请遵循以下原则：
+   
+   1. 先理解问题再动手，必要时列出方案让用户选择
+   2. 修改前先读取相关文件，理解上下文
+   3. 所有输出用中文
+   ```
+
+2. **第2步：创建 Skill**
+   ```markdown
+   # .claude/skills/react-performance.md
+   ---
+   name: react-performance
+   description: React 性能优化最佳实践
+   ---
+   
+   当你分析 React 组件性能时，遵循以下步骤：
+   
+   1. **识别问题**：检查不必要的重渲染、大组件拆分、状态提升层次
+   2. **分析工具**：用 React DevTools Profiler 或浏览器 Performance 面板定位瓶颈
+   3. **优化手段**（按优先级）：
+      - `React.memo` 包裹纯展示组件
+      - `useMemo` / `useCallback` 缓存计算和回调
+      - 状态下推，减少 Context 提供者范围
+   4. **验证**：优化前后对比渲染次数
+   ```
+
+3. **第3步：配置 Hook**
+   ```json
+   # .claude/hooks/hooks.json
+   {
+     "hooks": {
+       "PostToolUse": [
+         {
+           "matcher": "Write|Edit",
+           "hooks": [
+             {
+               "type": "agent",
+               "agent": "code-reviewer",
+               "prompt": "审查刚刚修改的文件：{{output}}"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code 扩展机制](./extensions.md) — Subagent、Hooks、Plugins 完整参考
+- → [Claude Code 命令参考](./commands.md) — `/fork`、`/background`、`/agents` 命令详解

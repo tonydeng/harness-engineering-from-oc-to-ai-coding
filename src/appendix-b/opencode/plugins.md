@@ -997,6 +997,51 @@ export default definePlugin({
 
 ---
 
+## 测试与调试
+
+### 本地测试工作流
+
+Plugin 开发阶段使用 `file://` 协议加载本地路径，无需发布到 npm：
+
+```json
+{ "plugin": ["file:///absolute/path/to/plugin"] }
+```
+
+启动时加 `--log-level debug` 查看加载日志，看到 `[Plugin] 加载 xxx` 即成功。加载失败时检查路径是否为绝对路径、TypeScript 有无编译错误。
+
+### 单元测试 Hook
+
+Plugin 本质是返回 Hook 对象的异步函数，可用 Bun 的测试框架单独测试每个 Hook：
+
+```typescript
+const instance = await myPlugin(mockContext);
+const result = await instance.hooks["tool:before"]({
+  tool: "bash", params: { command: "rm -rf /" }
+});
+expect(result.reject).toBe(true);
+```
+
+重点覆盖：Hook 返回值正确性、异步操作时序、不同输入路径的跳转逻辑。
+
+### 调试技巧
+
+- **结构化日志**：用 `client.app.log({ level: "debug", message: "..." })` 替代 `console.log`，支持按级别过滤
+- **错误边界**：每个 Hook 用 try-catch 包裹，异常由 `hook:error` 统一捕获，不会崩掉整个 Agent
+- **文件日志**：复杂 Plugin 写入独立日志文件，启动后 `tail -f` 实时观察
+
+### 常见陷阱
+
+| 陷阱 | 现象 | 解决方案 |
+|------|------|----------|
+| **异步时序** | Hook 返回时异步操作未完成 | 所有异步操作用 `await`，确保 Pipeline 继续前已 resolve |
+| **Context 突变** | 共享 context 被后续 Plugin 污染 | 用不可变模式 `return { modify: { ...params } }`，不修改原对象 |
+| **权限绕过** | Plugin 异常后安全检查被跳过 | `permission:check` 中始终显式返回 `{ allow: true/false }`，不依赖默认值 |
+| **路径加载失败** | Plugin 静默不加载 | 先用 `bun build` 验证无报错，再确认 `opencode.json` 中的 path 为绝对路径 |
+
+### CI 集成
+
+在 CI 中运行 `bun test` 覆盖 Plugin 核心逻辑。使用 `opencode --dry-run --log-level debug` 验证 Plugin 加载成功。建议测试用例和 Plugin 放在同一仓库，每次提交自动运行。
+
 ## 相关章节导航
 
 | 章节 | 内容 |
@@ -1008,3 +1053,87 @@ export default definePlugin({
 | → [MCP 服务器](../../06-advanced/mcp-servers.md) | 外部工具接入方式 |
 | → [Skill 插件化模式](../../05-skills/plugin-patterns.md) | Skill 的插件化扩展 |
 | → [OpenCode 配置详解](../../03-setup/opencode-config.md) | opencode.json 完整配置 |
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 适合快速上手 OpenCode 的基础能力，了解核心概念和常用命令
+- 智能体开发工程师 — 需要设计、调试、进化 AI 编码智能体，建立系统化的 Agent 工程体系
+- 效率开发者 — 已用 AI 工具，想掌握 Agent 编排和工作流模式，提升日常开发效率 2x+
+- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 Harness Engineering 体系
+- Skill 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
+- 工程经理 — 评估团队工具选型，判断 OpenCode 的投资回报率
+- 需求分析师/产品经理 — 验证需求覆盖完整性，评估内容价值主张
+- 系统架构师/技术顾问 — 评估 OpenCode 的技术可行性、架构集成与安全合规
+- 后端开发者/API 工程师 — 将 AI Agent 嵌入后端开发工作流，掌握 MCP 服务端集成
+- 前端开发者/UI 工程师 — 将 Agent 编排应用到前端场景，类比理解 Skill 系统
+- 文档 UX 专家 — 确保文档可读性、Mermaid 规范、移动端/无障碍体验
+- 技术审校/QA 编辑 — 建立质量门禁，验证代码示例可运行性、术语一致性
+- 安全工程师/架构师 — 建立 OpenCode 安全基线，评估企业级合规
+- 安全研究人员/红队成员 — 评估 AI Agent 攻击面，利用 Agent 自动化安全测试
+
+### 典型使用场景
+- 快速上手 OpenCode，完成第一个成功的尝试
+- 设计和调试 AI 智能体，建立系统化的 Agent 工程体系
+- 掌握 Agent 编排和工作流模式，提升日常开发效率
+- 建立团队级 Harness Engineering 体系，进行技术决策
+- 开发高质量、可复用的 Skill，封装领域知识
+- 评估 OpenCode 的投资回报率，进行工具选型决策
+- 验证需求覆盖完整性，评估内容价值主张
+- 评估 OpenCode 的技术可行性，进行架构集成与安全合规
+- 将 AI Agent 嵌入后端开发工作流，实现 MCP 服务端集成
+- 将 Agent 编排应用到前端场景，类比理解 Skill 系统
+- 确保文档可读性、Mermaid 规范、移动端/无障碍体验
+- 建立质量门禁，验证代码示例可运行性、术语一致性
+- 建立 OpenCode 安全基线，评估企业级合规
+- 评估 AI Agent 攻击面，利用 Agent 自动化安全测试
+
+### 使用示例
+```bash
+# 快速上手 OpenCode
+opencode serve
+
+# 创建项目知识库
+opencode /init
+
+# 使用自定义 Skill
+opencode "分析代码质量"
+
+# 执行自动化安全审计
+opencode /ralph-loop
+
+# 并行执行多个任务
+opencode /hyperplan
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：初始化项目**
+   ```bash
+   opencode /init
+   ```
+
+2. **第2步：配置 Provider**
+   ```json
+   {
+     "providers": {
+       "anthropic": {
+         "apiKey": "sk-ant-...",
+         "defaultModel": "claude-3-5-sonnet-20241022"
+       }
+     }
+   }
+   ```
+
+3. **第3步：加载 Skill**
+   ```bash
+   opencode skills add myorg/my-skill
+   ```
+
+### 与前/后文章的衔接
+- ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
+- → [OpenCode 内置命令参考](./commands.md) — 详细了解每个命令的用法和参数

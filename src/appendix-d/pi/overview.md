@@ -304,3 +304,85 @@ Pi 的核心论点是：**不同的团队、不同的项目、不同的安全需
 | 适用场景 | DIY 开发者、嵌入场景 | 多模型团队、复杂工作流 | Claude 生态系统用户 |
 
 > 详细对比见 [AI 编程工具生态对比](../../01-introduction/ecosystem-comparison.md)
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 适合 Pi 的极简核心，让新手无需面对复杂配置即可上手
+- 智能体开发工程师 — Pi 的 Extension API 为深度定制提供 TypeScript 支持
+- 效率开发者 — 4 工具 + 20+ Provider 组合，满足快速迭代需求
+- 技术负责人 — 容器化方案（Gondolin/Docker/OpenShell）满足企业安全要求
+- Skill 作者 — Skills 系统遵循标准化，易于创建和分享
+- 系统架构师 — 明确的安全边界和信任机制，便于架构评估
+- 安全工程师 — 安全模型透明，易于威胁建模和合规评估
+
+### 典型使用场景
+- 嵌入式 AI 工具开发，提供极简的编程智能体核心
+- 构建定制化代码编辑器，替换内置工具实现特定工作流
+- 构建多模型切换工作流，动态调整模型以适应不同任务
+- 构建安全沙箱环境，隔离生产环境中的 AI 工具执行
+- 构建 Skill 市场，分享和复用社区编写的领域知识
+- 构建安全审计流水线，评估 AI 工具的攻击面
+- 构建模型路由系统，实现不同复杂度任务的模型自动选择
+
+### 使用示例
+```bash
+# 安装 Pi Agent
+npm install -g @earendil-works/pi-coding-agent
+
+# 启动交互模式
+pi
+
+# 创建一个简单的 Pi Extension
+pi -e ./my-extension.ts
+
+# 加载自定义 Skill
+/skill:weather-assistant
+
+# 使用 Prompt Template
+/cl
+
+# 切换主题
+/settings { "theme": "dark" }
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **安装 Pi Core**
+   ```bash
+   npm install -g @earendil-works/pi-coding-agent
+   ```
+
+2. **创建 Extension 目录**
+   ```bash
+   mkdir -p ~/.pi/agent/extensions/my-extension
+   cd ~/.pi/agent/extensions/my-extension
+   ```
+
+3. **编写 Extension**
+   ```typescript
+   // my-extension/index.ts
+   import type { ExtensionAPI } from "@earendil-works/pi-agent-core";
+   
+   export default function (pi: ExtensionAPI) {
+     pi.registerTool({
+       name: "my_tool",
+       description: "我的自定义工具",
+       parameters: { type: "object", properties: {} },
+       execute: async () => "工具执行结果"
+     });
+   }
+   ```
+
+4. **启动 Pi**
+   ```bash
+   pi -e ~/.pi/agent/extensions/my-extension
+   ```
+
+### 与前/后文章的衔接
+- ← [Pi Agent 概述与核心概念](overview.md) — 提供 Pi 的设计哲学和核心架构
+- → [CLI 命令与交互模式参考](./commands.md) — 学习 Pi 的运行模式和编辑器功能

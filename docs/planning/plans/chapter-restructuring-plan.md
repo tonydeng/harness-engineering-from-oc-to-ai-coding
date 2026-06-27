@@ -175,6 +175,55 @@
 
 ---
 
+### 附录 B/C/D: 生态与参考
+
+**当前状态：** 附录 B（OpenCode）、附录 C（Claude Code）、附录 D（Pi Agent）已完成，共 20 篇文章。
+
+> **注：** 现已有附录 B/C/D 三个附录，每附录的平均文章数为 7/8/5 篇。
+
+#### 附录 B — OpenCode 内置能力（7 篇）
+
+涵盖 OpenCode 的核心能力参考：内置能力概览、命令参考、Plugin 系统、Agent 架构、SDK、Agent SDK 以及生态参考。作为 OpenCode 核心能力参考手册。
+
+| 文章 | 说明 |
+|------|------|
+| `capabilities.md` | OpenCode 内置能力全景概览 |
+| `commands.md` | 内置命令速查手册 |
+| `plugins.md` | Plugin API、Hook 点与配置管理 |
+| `agent-architecture.md` | Agent 架构设计与编排模型 |
+| `sdk.md` | Plugin SDK 与 npm SDK |
+| `agent-sdk.md` | Agent SDK 编程接口 |
+| `ecosystem.md` | 社区项目、Skill 推荐与 MCP 服务器 |
+
+#### 附录 C — Claude Code 内置能力（8 篇）
+
+涵盖 Claude Code 的完整能力参考：内置能力、命令参考、扩展机制、SDK、Agent SDK、Agent 设计指南以及生态参考。作为竞品对照参考。
+
+| 文章 | 说明 |
+|------|------|
+| `capabilities.md` | Claude Code 内置能力与工具集 |
+| `commands.md` | Slash 命令与 CLI 命令速查 |
+| `extensions.md` | 扩展机制概览 |
+| `plugins.md` | 六层扩展体系详解 |
+| `sdk.md` | MCP 服务器与 CLI 程序化集成 |
+| `agent-sdk.md` | Agent SDK 编程接口 |
+| `agent-architecture.md` | Agent 设计模式与架构 |
+| `ecosystem.md` | 社区扩展与最佳实践 |
+
+#### 附录 D — Pi Agent（5 篇）
+
+涵盖 Pi Agent 的核心能力：概述与核心概念、CLI 命令与交互模式、扩展体系、SDK 以及生态参考。作为生态扩展参考。
+
+| 文章 | 说明 |
+|------|------|
+| `overview.md` | Pi 设计哲学与核心架构 |
+| `commands.md` | 交互模式编辑器与 Slash 命令 |
+| `customization.md` | 四层扩展体系详解 |
+| `sdk.md` | Agent Session API 与 RPC 模式 |
+| `ecosystem.md` | Provider 生态与集成场景 |
+
+---
+
 ## 执行顺序
 
 ```
@@ -208,7 +257,10 @@ Phase 3: 生态与案例
 | Ch5 | 2 | 0 | 2 天 |
 | Ch6 | 9 | 3 | 15 天（含 P0 核心 7 篇） |
 | Ch7 | 4 | 2 | 6 天 |
-| **合计** | **27** | **14** | **42 天** |
+| 附录 B | 7 | 0 | 3 天 |
+| 附录 C | 8 | 0 | 3 天 |
+| 附录 D | 5 | 0 | 2 天 |
+| **合计** | **47** | **14** | **50 天** |
 
 ---
 
@@ -237,6 +289,6 @@ Phase 3: 生态与案例
 
 ---
 
-> **版本**: v1.0 | **创建**: 2026-05-31 | **制作者**: 敏捷教练
+> **版本**: v1.1 | **创建**: 2026-05-31 | **更新**: 2026-06-27 | **制作者**: 敏捷教练
 > **前置输入**: HE实践（4文件4073行）、《马书》读书笔记（30章）、cc-to-ai book（7部分）
 > **基于**: 13读者角色45用户故事 + 8角色团队评审结果

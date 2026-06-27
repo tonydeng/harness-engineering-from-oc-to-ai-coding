@@ -551,6 +551,42 @@ your-project/
 | **生态规模** | 9,000+ 插件 | 较小 |
 | **学习曲线** | 配置驱动，声明式 | 代码驱动，编程式 |
 
+## 测试与调试
+
+### Subagent 测试工作流
+
+自定义 Subagent 可直接通过 CLI 绕过主 Agent 单独测试：
+
+```bash
+claude --agent security-reviewer -p "Review this codebase"
+```
+
+使用 `/fork` 命令将子 Agent 的上下文 fork 到主会话，观察其内部决策。Hooks 配合 `--debug` 标志查看详细执行日志。
+
+### Hooks 调试
+
+Hooks 是外部 Shell 进程，stdout/stderr 默认不可见。关键调试手段是显式写日志文件：
+
+```bash
+echo "[DEBUG] Hook fired for $CLAUDE_TOOL_NAME" >> /tmp/hook-debug.log
+```
+
+另一个终端运行 `tail -f /tmp/hook-debug.log` 实时观察。JSON 输出型 Hook 先用 `jq` 在命令行验证 JSON 合法性，再接入 Hook 系统。LLM Prompt Hook 可以用短 prompt 测试评估逻辑是否符合预期。
+
+### 常见陷阱
+
+| 陷阱 | 现象 | 解决方案 |
+|------|------|----------|
+| **Shell 退出码** | Hook 不生效但无报错 | `command` 类型需返回 0（放行）或 2（阻断），其他退出码被静默忽略 |
+| **路径解析** | Hook 脚本找不到文件 | 使用 `$CLAUDE_PROJECT_DIR` 作为根路径构造相对路径，避免硬编码 |
+| **环境变量缺失** | Hook 运行时报变量未定义 | 在 `settings.json` 的 `env` 字段声明，或 Hook 内用 `export VAR=value` |
+| **事件名拼写** | Hook 注册后不触发 | 事件名为精确 CamelCase：`PreToolUse`（非 `Pretooluse`、`pre_tool_use`）|
+| **JSON 格式错误** | LLM Hook 解析报错 | 用 `echo '{"decision":"allow"}' | jq .` 预验证 JSON 输出格式 |
+
+### CI 集成
+
+使用社区工具 `claude-code-hook-tester` 在 CI 中自动测试所有 Hooks：向每个 Hook 发送模拟 JSON 载荷，验证退出码和 JSON 输出合法性。Subagent 和 Plugin 配置可通过 `claude plugin validate ./my-plugin --strict` 验证结构正确性。
+
 ## 相关章节
 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
@@ -559,4 +595,110 @@ your-project/
 - → [OpenCode Plugin 系统参考](../opencode/plugins.md) — OpenCode 插件系统对比参考
 - → [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践
 
-> 数据来源：Anthropic 官方文档 code.claude.com/docs，社区项目 awesome-claude-code。基于 Claude Code v2.1.x（2026 年 6 月）。Claude Code 生态发展迅速，建议参考官方文档获取最新信息。
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的扩展机制
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要配置项目级 CLAUDE.md 文件
+- 需要创建自定义 Skill 和 Subagent
+- 需要连接外部 MCP 服务器
+- 需要设置生命周期事件 Hook
+- 需要打包和分发插件
+
+### 使用示例
+```bash
+# 初始化项目，生成 CLAUDE.md
+claude /init
+
+# 编辑 CLAUDE.md 文件
+claude /memory
+
+# 创建自定义 Skill
+mkdir -p .claude/skills/my-skill
+cat > .claude/skills/my-skill/SKILL.md << 'EOF'
+---
+name: my-skill
+description: 这个 Skill 做什么以及何时使用
+allowed-tools: Read Grep Bash
+disallowed-tools: Write Edit
+context: fork
+agent: Explore
+---
+
+# 指令内容
+这里是 Skill 的核心指令...
+EOF
+
+# 添加 MCP 服务器
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+
+# 配置 Hook
+claude /hooks
+
+# 打包插件
+claude plugin validate ./my-plugin --strict
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：项目初始化**
+   ```bash
+   # 初始化项目，生成 CLAUDE.md
+   claude /init
+   ```
+
+2. **第2步：CLAUDE.md 配置**
+   ```markdown
+   # .claude/CLAUDE.md
+   # 项目简介和技术栈说明
+   # 代码风格和命名规范
+   # 测试和构建命令
+   # 常用路径和模块说明
+   # 不能做的事（约束条件）
+   ```
+
+3. **第3步：Skill 配置**
+   ```yaml
+   # .claude/skills/my-skill/SKILL.md
+   ---
+   name: my-skill
+   description: 这个 Skill 做什么以及何时使用
+   allowed-tools: Read Grep Bash
+   disallowed-tools: Write Edit
+   context: fork
+   agent: Explore
+   ---
+   
+   # 指令内容
+   这里是 Skill 的核心指令...
+   ```
+
+4. **第4步：MCP 服务器配置**
+   ```json
+   # .claude/settings.json
+   {
+     "mcpServers": {
+       "github": {
+         "command": "npx",
+         "args": ["-y", "@modelcontextprotocol/server-github"],
+         "env": {
+           "GITHUB_TOKEN": "ghp_..."
+         }
+       }
+     }
+   }
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
+- → [Claude Code 命令参考](./commands.md) — 内置命令和捆绑 Skill 的详细用法

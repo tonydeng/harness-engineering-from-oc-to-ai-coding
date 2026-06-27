@@ -1,8 +1,8 @@
 # 用户故事追溯矩阵 (Traceability Matrix)
 
-> 版本：v2.3 | 生成日期：2026-06-04  
-> 映射对象：47 个用户故事 → 50 篇文章（8 章 + 附录）  
-> 角色：13 个（5 核心 + 8 扩展）
+> 版本：v2.5 | 生成日期：2026-06-28  
+> 映射对象：55 个用户故事 → 60+ 篇文章（8 章 + 附录 A/B/C/D）  
+> 角色：14 个（6 核心 + 8 扩展）
 
 ---
 
@@ -21,6 +21,9 @@
 | **US-POWER-04** | 命令复用和工作流自动化 | `02-core-concepts/workflow-patterns.md`（Command 系统：8 个内置命令 + Markdown 格式自定义命令 + 参数化命令示例）、`04-workflows/custom-workflows.md`（自定义工作流 + Team Mode 12 个 team_\* 工具） | **部分** |
 | **US-POWER-05** | 成本优化 | `06-advanced/context/performance-tuning.md`（三层成本优化模型 + 类别路由 + 自动降级链 + Token 预算 + 上下文压缩 + 工具输出保护）、`06-advanced/context-compression.md`（Token 预算分配 + 超限处理 + 降级策略） | **部分** |
 | **US-POWER-06** | Agent 派生与 Teams 编排 | `04-workflows/agent-derivation.md`（三种派生模式：子 Agent/委派/协调者 + task() API 完整示例 + category/load_skills/结果合并 + 安全边界对比表 + 权限继承风险分析）、`04-workflows/teams-collaboration.md`（Teams 多进程通信机制 + 消息传递 + Team vs 独立 Agent 对比表 + 数据隔离模型） | **完整** |
+| **US-AE-01** | Agent 配置最佳实践 | `02-core-concepts/agent-orchestration.md`（Agent 概念与 AGENTS.md 基础）、`03-setup/opencode-config.md`（配置分层体系）、`03-setup/multi-env-setup.md`（Profile \$extends 继承机制）——需补充 AGENTS.md 标准化模板和最佳实践指南 | **部分** |
+| **US-AE-02** | 上下文工程与压缩策略 | `06-advanced/context/context-injection.md`（上下文注入策略）、`06-advanced/context/context-caching.md`（缓存策略）、`06-advanced/context/performance-tuning.md`（Token 预算 + 上下文压缩）、`06-advanced/context/context-compression.md`（压缩策略对比） | **部分** |
+| **US-AE-03** | 循环工程设计模式 | `04-workflows/ultrawork-mode.md`（Ralph Loop 详解 + 控制参数 + 停止条件）、`04-workflows/prometheus-mode.md`（访谈式规划模式）——需补充循环工程调试方法和多阶段演进路径 | **部分** |
 | **US-LEAD-01** | 完整的团队落地指南 | `03-setup/multi-env-setup.md`（Profile \$extends 继承链 + 三套环境模板 + Secret 管理最佳实践 + 团队 Git 配置管理）、`07-case-studies/case-skills-marketplace.md`（团队 Skill 治理 + 目录结构标准 + 发布流程）、`04-workflows/custom-workflows.md`（Team Mode 多 Agent 团队配置） | **部分** |
 | **US-LEAD-02** | 安全合规策略 | `06-advanced/security-overview.md`（四层安全模型 + 6 种权限模式 + 三级作用域 + Bash 白名单 + STRIDE 威胁建模 + NIST/SOC2/等保合规映射）、`06-advanced/custom-agents.md`（Env Guard Plugin 三种策略）、`06-advanced/sandbox-hooks.md`（沙箱隔离 + Hook 点体系） | **部分** |
 | **US-LEAD-03** | 7-Agent Pipeline 工作流 | `04-workflows/multi-agent-collab.md`（Planner→Debater→Implementor→Reviewer→Tester→Linter→Committer 完整流程 + WORKFLOW_STATE.md 文件交接模式 + 各 Agent 温度策略 0.1/0.3 设计 + Reviewer/Tester 权限隔离方案） | **完整** |
@@ -57,6 +60,11 @@
 | **US-REDTEAM-01** | AI Agent 安全边界评估 | `06-advanced/security-overview.md`（高危操作类型：Bash/文件系统/网络 + 权限控制 allowlist/blocklist 配置示例 + 审计日志记录与导出 + 沙箱隔离说明）、`06-advanced/sandbox-hooks.md`（Seatbelt/Bubblewrap 沙箱原理 + 进程隔离策略） | **部分** |
 | **US-REDTEAM-02** | 基于 Agent 编排的安全测试 | `07-case-studies/case-security-audit.md`（安全审计 Skill 示例：SQL 注入/XSS/CSRF 扫描 + 依赖 CVE 检测 + 配置泄露检查 + 自动 CVSS 评分 + security-research 技能使用）、`05-skills/skill-best-practices.md`（最小权限原则） | **部分** |
 | **US-REDTEAM-03** | AI 编程工具安全评估方法论 | 相关概念分散在 `06-advanced/security-overview.md`（数据流/权限/隔离性）、`06-advanced/mcp-servers.md`（MCP 安全）、`06-advanced/custom-agents.md`（Plugin 权限）——但无完整安全评估框架、MCP 安全检查清单、第三方供应链风险审查方法 | **缺失** |
+| **US-CL-01** | Claude Code 内置能力快速认知 | `appendix-c/claudecode/capabilities.md`（Claude Code 内置能力概览 + 与 OpenCode 对比表）、`appendix-c/claudecode/commands.md`（Slash 命令 + CLI 命令分类速查） | **完整** |
+| **US-CL-02** | Agent 架构跨工具对比学习 | `appendix-c/claudecode/agent-architecture.md`（Subagent 五种设计模式 + 选择决策树）、`appendix-c/claudecode/agent-sdk.md`（SDK Programmatic Subagent）、`appendix-b/opencode/agent-architecture.md`（OpenCode Agent 架构供对比） | **完整** |
+| **US-CL-03** | Claude Code 扩展生态深度评估 | `appendix-c/claudecode/plugins.md`（六层扩展体系完整参考）、`appendix-c/claudecode/sdk.md`（SDK 程序化集成）、`appendix-c/claudecode/extensions.md`（扩展机制详解） | **完整** |
+| **US-PI-01** | Pi Agent 核心概念快速入门 | `appendix-d/pi/overview.md`（Pi Agent 概述与核心概念）、`appendix-d/pi/commands.md`（CLI 命令与交互模式参考） | **完整** |
+| **US-PI-02** | Pi Agent 定制化能力与生态评估 | `appendix-d/pi/customization.md`（四层扩展体系详解）、`appendix-d/pi/sdk.md`（SDK 参考）、`appendix-d/pi/ecosystem.md`（生态与集成场景） | **完整** |
 
 ---
 
@@ -64,10 +72,10 @@
 
 | 指标 | 数量 | 占比 |
 |------|------|------|
-| **完整** | 17 | 36.2% |
-| **部分** | 21 | 44.7% |
-| **缺失** | 9 | 19.1% |
-| **合计** | 47 | 100% |
+| **完整** | 22 | 40.0% |
+| **部分** | 24 | 43.6% |
+| **缺失** | 9 | 16.4% |
+| **合计** | 55 | 100% |
 
 ### 缺失故事清单（9 个，需优先补充）
 
@@ -88,10 +96,11 @@
 | 角色 | 完整 | 部分 | 缺失 | 覆盖率（完整+部分） |
 |------|------|------|------|-------------------|
 | US-BEGINNER（入门开发者） | 4 | 1 | 0 | 100% |
-| US-POWER（效率开发者） | 3 | 3 | 0 | 100% |
+| US-POWER（效率开发者） | 6 | 3 | 0 | 100% |
+| US-AE（智能体开发工程师） | 0 | 3 | 0 | 100% |
 | US-LEAD（技术负责人） | 2 | 2 | 0 | 100% |
 | US-SKILL（Skill 作者） | 4 | 1 | 0 | 100% |
-| US-MANAGER（工程经理） | 0 | 2 | 0 | 100% |
+| US-MANAGER（工程经理） | 2 | 2 | 0 | 100% |
 | US-ANALYST（需求分析师） | 0 | 2 | 1 | 66.7% |
 | US-SYSA（系统架构师） | 0 | 3 | 0 | 100% |
 | US-BACKEND（后端开发者） | 2 | 1 | 1 | 75% |
@@ -107,7 +116,7 @@
 
 基于全面评估报告（`docs/reviews/overall-evaluation-2026-06-11.md`），v1.0 发布中 9 个缺失用户故事决策如下：
 
-**决策依据**：(1) 本书核心价值在工程实践方法论，非特定技术实现细节；(2) 缺失故事优先级为 P1/P2，不阻塞 v1.0 发布；(3) 38/47 故事已覆盖，覆盖率 80.9%。
+**决策依据**：(1) 本书核心价值在工程实践方法论，非特定技术实现细节；(2) 缺失故事优先级为 P1/P2，不阻塞 v1.0 发布；(3) 46/55 故事已覆盖，覆盖率 83.6%。
 
 | ID | 名称 | 决策 | 依据 |
 |----|------|------|------|
@@ -128,5 +137,5 @@
 - **"完整"** 判定标准：所有验收标准均被文章显式覆盖，读者可依据文章独立完成该用户故事描述的目标。
 - **"部分"** 判定标准：部分验收标准被覆盖，或内容虽触及主题但深度/格式不符合验收要求。
 - **"缺失"** 判定标准：没有任何文章直接回应验收标准中的要求。
-- 本矩阵基于 2026-06-04 快照检查，内容更新后需同步更新此矩阵。
-- **2026-06-11 决策**：9 个缺失用户故事已作为已知限制延后至 v1.1/v1.2，详见「缺失故事决策」章节。v1.0 发布覆盖率 80.9%（38/47），核心价值在工程实践方法论已充分覆盖。
+- 本矩阵基于 2026-06-28 快照检查，内容更新后需同步更新此矩阵。
+- **2026-06-11 决策**：9 个缺失用户故事已作为已知限制延后至 v1.1/v1.2，详见「缺失故事决策」章节。v1.0 发布覆盖率 83.6%（46/55），核心价值在工程实践方法论已充分覆盖。

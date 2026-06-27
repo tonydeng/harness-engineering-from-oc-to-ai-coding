@@ -603,3 +603,88 @@ app.get("/api/weather/:city", async (req, res) => {
 - [扩展体系详解](./customization.md) — Pi Extensions 的完整开发指南
 - [生态与集成场景](./ecosystem.md) — Provider、容器化、社区生态
 - Pi SDK 官方文档：[pi.dev/docs/latest/sdk](https://pi.dev/docs/latest/sdk)
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — Pi 的 SDK 提供简单的 API，让新手无需面对复杂配置即可上手
+- 智能体开发工程师 — SDK 为深度定制提供 TypeScript 支持，实现高级 Agent 编排
+- 效率开发者 — SDK 嵌入支持，实现自动化工作流，提升 2x+ 效率
+- 技术负责人 — SDK 集成支持，实现团队级 Harness Engineering 体系
+- Skill 作者 — SDK 支持 Skill 开发，实现高质量 Skill 的创建
+- 系统架构师 — SDK 集成支持，实现架构评估和安全合规
+- 安全工程师 — SDK 集成支持，实现安全基线建立和威胁建模
+
+### 典型使用场景
+- 通过 SDK 嵌入 Pi Agent 到 Node.js 应用中，实现自动化工作流
+- 通过 SDK 实现自定义工具和命令，满足特定领域需求
+- 通过 SDK 实现多 Session 管理和动态替换，支持长时间运行的服务端应用
+- 通过 SDK 实现事件流处理，实现可观测性和监控
+- 通过 SDK 实现上下文管理和压缩，支持长时间运行的应用
+- 通过 SDK 实现安全认证和权限控制，实现企业级安全合规
+- 通过 SDK 实现模型管理和路由，实现不同复杂度任务的模型自动选择
+
+### 使用示例
+```typescript
+// 安装 Pi SDK
+npm install @earendil-works/pi-coding-agent
+
+// 创建 Agent Session
+import { createAgentSession, AuthStorage, ModelRegistry, SessionManager } from "@earendil-works/pi-coding-agent";
+
+const { session } = await createAgentSession({
+  sessionManager: SessionManager.inMemory(),
+  authStorage: AuthStorage.create(),
+  modelRegistry: ModelRegistry.create(AuthStorage.create()),
+});
+
+// 发送提示词
+await session.prompt("列出当前目录的文件");
+
+// 关闭 Session
+await session.close();
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **安装 Pi SDK**
+   ```bash
+   npm install @earendil-works/pi-coding-agent
+   ```
+
+2. **创建项目目录**
+   ```bash
+   mkdir -p my-project
+   cd my-project
+   ```
+
+3. **创建 SDK 嵌入文件**
+   ```typescript
+   // embed-example.ts
+   import { createAgentSession, AuthStorage, ModelRegistry, SessionManager } from "@earendil-works/pi-coding-agent";
+   
+   async function weatherAgentExample() {
+     const { session } = await createAgentSession({
+       sessionManager: SessionManager.inMemory(),
+       authStorage: AuthStorage.create(),
+       modelRegistry: ModelRegistry.create(AuthStorage.create()),
+       systemPrompt: "你是一个全球天气预报助手。",
+     });
+     
+     const result = await session.prompt("东京今天的天气如何？");
+     console.log(result.content);
+   }
+   ```
+
+4. **运行 SDK 嵌入示例**
+   ```bash
+   npx ts-node embed-example.ts
+   ```
+
+### 与前/后文章的衔接
+- ← [Pi Agent 概述与核心概念](../overview.md) — 提供 Pi 的设计哲学和核心架构
+- → [生态与集成场景](./ecosystem.md) — 学习 Pi 的生态和集成场景

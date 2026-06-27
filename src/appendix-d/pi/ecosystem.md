@@ -247,6 +247,32 @@ Extension 类型：
 
 ---
 
+## 迁移指南
+
+从其他工具迁移到 Pi Agent 时，需要关注以下关键差异：
+
+### 从 Claude Code 迁移
+
+- **模型灵活性**：Claude Code 仅支持 Claude 系列模型，Pi 支持 20+ Provider/324 个模型。迁移后可通过 `/model` 命令随时切换模型，无需配置多套环境
+- **扩展机制**：Claude Code 的六层扩展体系（CLAUDE.md + Skills + MCP + Subagent + Hook + Plugin）对应 Pi 的四层体系（Extensions/Skills/Prompt Templates/Themes）。自定义工具需按 Pi 的 Extension API 用 TypeScript 重写，而非 Shell 脚本 Hook
+- **安全模型**：Claude Code 内置权限审批弹窗，Pi 无内置沙箱——如需安全隔离必须使用 Gondolin/Docker/OpenShell 容器化方案
+- **命令差异**：部分 Slash 命令名称不同，如 Pi 的 `/compact` 行为类似但参数不同，建议查阅 [CLI 命令参考](./commands.md) 逐一确认
+
+### 从 OpenCode 迁移
+
+- **SDK 差异**：OpenCode 使用 REST API（`@opencode-ai/sdk`）通信，Pi 使用原生 TypeScript API（`@earendil-works/pi-agent-core`）或 RPC JSONL 协议。需将 HTTP 调用模式替换为直接函数调用或 stdio 消息
+- **Plugin → Extension**：OpenCode 的 Plugin/Hook 机制在 Pi 中对应 Extension 体系，API 模式不同。已有 Plugin 需按 [Extensions 指南](./customization.md) 重写
+- **Provider 配置**：OpenCode 通过 `opencode.json` 管理 Provider；Pi 通过环境变量或 `~/.pi/config.yaml` 配置，迁移时需转换格式
+- **Session 模型**：OpenCode Session 通过 REST API 创建管理；Pi Session 存储在本地 JSONL 文件，支持 `fork`/`clone`/`tree` 等高级分支操作
+
+### 通用注意事项
+
+1. **Provider 差异**：不同 Provider 的 API 响应格式和 Token 计价方式各异，迁移后需重新评估成本
+2. **Extension 信任**：Extensions 运行在 Agent 进程中（同一信任边界），安装前需审计代码来源
+3. **工具集覆盖**：Pi 内置 4 个核心工具（read/write/edit/bash），其他能力通过 Extension 提供——迁移前检查 workflow 依赖的工具是否都已覆盖
+
+---
+
 ## 社区精选项目
 
 ### 官方资源
@@ -284,3 +310,90 @@ Extension 类型：
 - → [生态对比](../../01-introduction/ecosystem-comparison.md) — AI 编程工具生态全景
 
 > 数据来源：Pi Agent 官方文档、GitHub 仓库、npm 统计。数据截止 2026 年 6 月。
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — Pi 的生态资源丰富，降低了使用门槛，适合快速上手
+- 智能体开发工程师 — Pi 的 SDK 和 Extension API 为深度定制提供支持
+- 效率开发者 — Pi 的 Provider 策略和模型路由支持快速迭代
+- 技术负责人 — Pi 的容器化方案（Gondolin/Docker/OpenShell）满足企业安全要求
+- Skill 作者 — Pi 的 Skills 系统遵循标准化，易于创建和分享
+- 系统架构师 — Pi 的安全模型和信任机制，便于架构评估
+- 安全工程师 — Pi 的安全模型透明，易于威胁建模和合规评估
+
+### 典型使用场景
+- 通过 Provider 策略实现多模型切换，适应不同任务复杂度
+- 通过容器化方案实现安全隔离，满足企业需求
+- 通过 Session 管理实现持久化和分支管理，支持长时间运行的应用
+- 通过 Extension 体系实现自定义工具和命令，满足特定领域需求
+- 通过 Pi Packages 实现扩展分发和共享，实现团队协作
+- 通过安全模型实现威胁建模和合规评估，实现企业级安全合规
+- 通过模型路由实现不同复杂度任务的模型自动选择，实现高效工作流
+
+### 使用示例
+```bash
+# 安装 Pi Core
+npm install -g @earendil-works/pi-coding-agent
+
+# 启动 Pi
+pi
+
+# 使用 Provider 策略
+/model
+
+# 使用容器化方案
+pi -e ~/.pi/agent/extensions/gondolin
+
+# 使用 Session 管理
+/new
+/tree
+
+# 使用 Extension
+pi -e ./my-extension.ts
+
+# 安装 Pi Package
+pi packages install my-pi-package
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **安装 Pi Core**
+   ```bash
+   npm install -g @earendil-works/pi-coding-agent
+   ```
+
+2. **创建项目目录**
+   ```bash
+   mkdir -p my-project
+   cd my-project
+   ```
+
+3. **启动 Pi**
+   ```bash
+   pi --name "my task"
+   ```
+
+4. **使用 Provider 策略**
+   ```bash
+   /model
+   ```
+
+5. **使用容器化方案**
+   ```bash
+   pi -e ~/.pi/agent/extensions/gondolin
+   ```
+
+6. **使用 Session 管理**
+   ```bash
+   /new
+   # 输入提示词
+   ```
+
+### 与前/后文章的衔接
+- ← [Pi Agent 概述与核心概念](../overview.md) — 提供 Pi 的设计哲学和核心架构
+- → [Pi Agent SDK 参考](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用

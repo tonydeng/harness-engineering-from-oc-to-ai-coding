@@ -399,6 +399,43 @@ for await (const message of query({
 
 ---
 
+## 安全注意事项
+
+将 Claude Agent SDK 集成到生产环境时，以下安全要点需要特别注意：
+
+### API Key 管理
+
+API Key 通过环境变量 `ANTHROPIC_API_KEY` 传递给子进程，**绝不要**在代码或配置文件中硬编码。生产环境中应使用密钥管理服务（如 AWS Secrets Manager、HashiCorp Vault）或 CI/CD 的 Secrets 功能注入：
+
+```yaml
+# GitHub Actions 示例
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```
+
+### 最小权限原则
+
+通过 `allowedTools` 限制 Agent 的能力范围。只读任务只给 `Read`/`Glob`/`Grep` 三个工具；即使使用 `bypassPermissions`，也务必配合严格的 `allowedTools`：
+
+```typescript
+// 只读 Agent——bypassPermissions 在严格工具限制下安全使用
+options: { allowedTools: ['Read', 'Glob', 'Grep'], permissionMode: 'bypassPermissions' }
+```
+
+### Session 隔离
+
+每个 `query()` 调用默认创建独立子进程，天然具备进程级隔离。多租户场景中，通过不同 `cwd` 和 `settingSources` 确保租户间上下文不交叉污染。
+
+### 输入验证
+
+如果 prompt 来源包含用户输入（如 Web 表单、API 参数），需要在传入 `query()` 前验证和消毒。恶意构造的 prompt 可能导致 Agent 执行意外操作（Prompt 注入攻击）。
+
+### 审计日志
+
+通过 `PostToolUse` Hook 记录所有工具调用，建立完整的操作审计链。生产环境建议将审计日志写入独立存储（如 ELK、Splunk），保留至少 90 天便于安全事件追溯。
+
+---
+
 ## 权限模式
 
 | 模式 | 行为 | 适用场景 |
@@ -939,6 +976,15 @@ jobs:
             })
 ```
 
+### Docker 部署说明
+
+Claude Agent SDK 的子进程模式在容器化环境中需要额外注意：
+
+- **子进程权限**：`query()` 内部 spawn 的 Claude Code 子进程继承容器用户的权限。建议在 Dockerfile 中使用非 root 用户运行，遵循最小权限原则
+- **资源限制**：通过 Docker 的 `--memory` 和 `--cpus` 限制容器资源，避免 OOM kill（子进程退出码 137）导致任务中断
+- **环境变量注入**：所有 SDK 配置（API Key、超时参数）通过容器环境变量传入，确保 `ANTHROPIC_API_KEY` 不写入镜像层
+- **预热策略**：如果需要在容器内多次调用 `query()`，使用 `startup()` 预热可减少每次调用的子进程启动开销
+
 ---
 
 ## 对比 Claude Code CLI vs SDK 工作流
@@ -1078,9 +1124,92 @@ for await (const msg of query({
 
 ## 相关章节
 
+- → [Claude Code SDK 参考](./sdk.md) — 三层次 SDK 总览（MCP / Hooks / CLI / 天气 Agent 案例）
 - → [Claude Code Agent 设计指南](./agent-architecture.md) — Filesystem Subagent 方式（配置文件比）
 - → [Claude Code 扩展机制](./extensions.md) — 六层扩展体系
 - → [Claude Code 命令参考](./commands.md) — CLI 命令参考
-- → [Claude Code 生态参考](./ecosystem.md) — SDK 仓库链接与社区资源
+- → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
 - → [OpenCode SDK](../opencode/agent-sdk.md) — 对应功能的对比参考
 - → [Agent SDK 官方文档](https://code.claude.com/docs/en/agent-sdk/overview) — Anthropic 官方 SDK 文档
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
+- 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
+- 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+
+### 典型使用场景
+- 需要编程式驱动 Agent 引擎
+- 需要嵌入 Claude Code 到自定义应用中
+- 需要实现 CI/CD 流水线集成
+- 需要开发自定义工具和 MCP 服务器
+- 需要实现生产级 Agent 配置和管理
+
+### 使用示例
+```typescript
+import { query } from '@anthropic-ai/claude-agent-sdk'
+
+async function main() {
+  for await (const message of query({
+    prompt: '这个目录下有哪些文件？',
+    options: {
+      allowedTools: ['Bash', 'Glob'],
+      permissionMode: 'bypassPermissions',
+    },
+  })) {
+    if (message.type === 'assistant') {
+      for (const block of message.message.content) {
+        if ('text' in block) console.log(block.text)
+      }
+    }
+    if (message.type === 'result') {
+      console.log('Done:', message.subtype)
+    }
+  }
+}
+
+main()
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：安装 SDK**
+   ```bash
+   npm install @anthropic-ai/claude-agent-sdk
+   ```
+
+2. **第2步：初始化 Agent**
+   ```typescript
+   import { query } from '@anthropic-ai/claude-agent-sdk'
+   
+   for await (const message of query({
+     prompt: '分析这个代码库',
+     options: {
+       allowedTools: ['Read', 'Glob', 'Grep'],
+       permissionMode: 'acceptEdits',
+       maxTurns: 50,
+     },
+   })) {
+     // 处理消息
+   }
+   ```
+
+3. **第3步：配置 MCP 服务器**
+   ```typescript
+   import { createSdkMcpServer } from '@anthropic-ai/claude-agent-sdk'
+   
+   const mcpServer = createSdkMcpServer({
+     tools: [weatherTool],
+   })
+   ```
+
+### 与前/后文章的衔接
+- ← [Claude Code Agent 设计指南](./agent-architecture.md) — Subagent 配置方式对比参考
+- → [Claude Code SDK 参考](./sdk.md) — 三层次 SDK 总览

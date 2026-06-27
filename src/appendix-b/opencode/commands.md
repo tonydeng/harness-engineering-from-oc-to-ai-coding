@@ -328,3 +328,87 @@ model: claude-opus-4
 | `agent` | frontmatter | 指定执行 Agent 类型 |
 | `model` | frontmatter | 指定使用的模型 |
 | 子命令 | 目录层级 | `command:subcommand` 形式 |
+
+---
+
+## 读者视角
+
+### 适用读者角色
+- 入门开发者 — 适合快速上手 OpenCode 的基础能力，了解核心概念和常用命令
+- 智能体开发工程师 — 需要设计、调试、进化 AI 编码智能体，建立系统化的 Agent 工程体系
+- 效率开发者 — 已用 AI 工具，想掌握 Agent 编排和工作流模式，提升日常开发效率 2x+
+- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 Harness Engineering 体系
+- Skill 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
+- 工程经理 — 评估团队工具选型，判断 OpenCode 的投资回报率
+- 需求分析师/产品经理 — 验证需求覆盖完整性，评估内容价值主张
+- 系统架构师/技术顾问 — 评估 OpenCode 的技术可行性、架构集成与安全合规
+- 后端开发者/API 工程师 — 将 AI Agent 嵌入后端开发工作流，掌握 MCP 服务端集成
+- 前端开发者/UI 工程师 — 将 Agent 编排应用到前端场景，类比理解 Skill 系统
+- 文档 UX 专家 — 确保文档可读性、Mermaid 规范、移动端/无障碍体验
+- 技术审校/QA 编辑 — 建立质量门禁，验证代码示例可运行性、术语一致性
+- 安全工程师/架构师 — 建立 OpenCode 安全基线，评估企业级合规
+- 安全研究人员/红队成员 — 评估 AI Agent 攻击面，利用 Agent 自动化安全测试
+
+### 典型使用场景
+- 快速上手 OpenCode，完成第一个成功的尝试
+- 设计和调试 AI 智能体，建立系统化的 Agent 工程体系
+- 掌握 Agent 编排和工作流模式，提升日常开发效率
+- 建立团队级 Harness Engineering 体系，进行技术决策
+- 开发高质量、可复用的 Skill，封装领域知识
+- 评估 OpenCode 的投资回报率，进行工具选型决策
+- 验证需求覆盖完整性，评估内容价值主张
+- 评估 OpenCode 的技术可行性，进行架构集成与安全合规
+- 将 AI Agent 嵌入后端开发工作流，实现 MCP 服务端集成
+- 将 Agent 编排应用到前端场景，类比理解 Skill 系统
+- 确保文档可读性、Mermaid 规范、移动端/无障碍体验
+- 建立质量门禁，验证代码示例可运行性、术语一致性
+- 建立 OpenCode 安全基线，评估企业级合规
+- 评估 AI Agent 攻击面，利用 Agent 自动化安全测试
+
+### 使用示例
+```bash
+# 快速上手 OpenCode
+opencode serve
+
+# 创建项目知识库
+opencode /init
+
+# 使用自定义 Skill
+opencode "分析代码质量"
+
+# 执行自动化安全审计
+opencode /ralph-loop
+
+# 并行执行多个任务
+opencode /hyperplan
+```
+
+### 工程化示例
+
+**配置顺序检查表：**
+
+1. **第1步：初始化项目**
+   ```bash
+   opencode /init
+   ```
+
+2. **第2步：配置 Provider**
+   ```json
+   {
+     "providers": {
+       "anthropic": {
+         "apiKey": "sk-ant-...",
+         "defaultModel": "claude-3-5-sonnet-20241022"
+       }
+     }
+   }
+   ```
+
+3. **第3步：加载 Skill**
+   ```bash
+   opencode skills add myorg/my-skill
+   ```
+
+### 与前/后文章的衔接
+- ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
+- → [OpenCode Plugin 系统参考](./plugins.md) — 了解 Plugin 系统的完整参考

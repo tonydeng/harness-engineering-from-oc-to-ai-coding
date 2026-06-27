@@ -1,188 +1,126 @@
-# Appendix A: 参考资料规格说明
+# 附录规格说明（Appendices A-D）
 
 ## 1. 概述
 
+全书包含 4 个附录，为读者提供不同层次的参考内容：术语与参考资料（A）、OpenCode 内置能力参考（B）、Claude Code 竞品对照参考（C）、Pi Agent 生态扩展参考（D）。
+
+**章节规模**：4 个附录共 21 篇文章（2 + 7 + 7 + 5），不含各目录 README。
+
+## 2. 附录 A — 术语 & 参考资料
+
+### 2.1 概述
+
 附录 A 收录全书的参考资料和辅助内容，为读者提供快速查阅的参考手册。
 
-## 2. 内容架构
+- **术语表** (glossary.md) — 全书核心术语的完整索引，按拼音字母排序，包含定义、人话解释、首次出现章节
+- **参考资料** (references.md) — 全书引用资源汇总，含书籍、论文、工具文档、社区资源等
 
-### 2.1 现有内容
+### 2.2 已完成
 
-- **术语表** (glossary.md) — 全书核心术语的完整索引，按拼音字母排序
+- 术语表涵盖 Agent、Skill、Workflow、MCP、Plugin 等 30+ 核心术语
+- 参考资料按工具文档、学术论文、社区资源、书籍分类排列
 
-### 2.2 新增内容
+## 3. 附录 B — OpenCode 内置能力与生态（7 篇）
 
-| 文章 | 说明 | 优先级 |
-|------|------|--------|
-| Built-in Commands Reference（内置命令参考） | OpenCode 所有内置命令的完整参考手册 | P0 |
-| Plugin System Reference（Plugin 系统参考） | OpenCode Plugin 系统的完整参考手册 | P0 |
+### 3.1 概述
 
-## 3. Built-in Commands Reference 规格
+附录 B 作为 OpenCode 核心能力参考手册，涵盖内置能力、命令参考、Plugin 系统、Agent 架构、SDK、Agent SDK 以及生态参考。
 
-### 3.1 目标读者
+> 该附录的内容源自原单一附录 B（拆分前），与新增的附录 C（Claude Code）和附录 D（Pi Agent）共同构成工具生态参考系列。
 
-所有 OpenCode 用户，特别是需要快速查阅命令用法的开发者。
+### 3.2 文章清单
 
-### 3.2 内容要求
-
-#### 3.2.1 Core Commands（核心命令）
-
-必须包含以下 OpenCode 原生命令：
-
-| Command | 功能 | 分类 |
-|---------|------|------|
-| `/init` | 生成 AGENTS.md 项目知识库 | 项目初始化 |
-| `/undo` | 撤销上一步操作 | 会话管理 |
-| `/redo` | 重做撤销的操作 | 会话管理 |
-| `/share` | 导出会话 | 会话管理 |
-| `/help` | 显示帮助 | 系统 |
-| `/new` (alias: `/clear`) | 新建会话 | 会话管理 |
-| `/sessions` (aliases: `/resume`, `/continue`) | 会话管理 | 会话管理 |
-| `/compact` (alias: `/summarize`) | 上下文压缩 | 上下文管理 |
-| `/export` | 导出会话为 Markdown | 会话管理 |
-| `/connect` | 添加 LLM Provider | 配置 |
-| `/models` | 模型列表 | 配置 |
-| `/themes` | 主题切换 | 配置 |
-| `/editor` | 编辑器 | 配置 |
-| `/details` | 工具详情 | 系统 |
-| `/thinking` | 推理显示 | 配置 |
-| `/exit` | 退出 | 系统 |
-
-#### 3.2.2 oh-my-openagent Extended Commands（OMO 扩展命令）
-
-必须包含以下 OMO 扩展命令：
-
-| Command | 功能 | 分类 |
-|---------|------|------|
-| `/ralph-loop` | 自引用开发循环 | 自动化循环 |
-| `/ulw-loop` | Ultrawork 模式循环 | 自动化循环 |
-| `/cancel-ralph` | 取消活跃的 Ralph Loop | 自动化循环 |
-| `/refactor` | 智能重构 | 代码质量 |
-| `/start-work` | 从 Prometheus 计划开始工作 | 工作流 |
-| `/stop-continuation` | 停止所有续接机制 | 会话管理 |
-| `/remove-ai-slops` | 移除 AI 生成的代码异味 | 代码质量 |
-| `/handoff` | 创建上下文摘要用于新会话续接 | 会话管理 |
-| `/hyperplan` | 对抗性多 Agent 规划 | 工作流 |
-
-#### 3.2.3 Custom Commands（自定义命令）
-
-必须包含：
-- 两种创建方式：Markdown 文件（推荐）vs opencode.json 配置
-- 模板语法：`$ARGUMENTS`, `!shell`, `@file`
-- 高级特性：frontmatter 指定 agent/model，子命令
-- 团队共享命令库
-
-### 3.3 格式要求
-
-- 使用 Markdown 表格展示命令列表
-- 每个命令包含：名称、功能描述、使用场景、示例
-- 使用 `→ [章节名称](相对路径.md)` 格式添加交叉引用
-- 代码块使用 `language:path` 格式
-
-## 4. Plugin System Reference 规格
-
-### 4.1 目标读者
-
-需要扩展 OpenCode 功能的高级用户和 Plugin 开发者。
-
-### 4.2 内容要求
-
-#### 4.2.1 Plugin 概述
-
-- 什么是 Plugin
-- Plugin vs Skill vs MCP 的区别
-- 何时使用 Plugin
-
-#### 4.2.2 Plugin API Reference
-
-- `definePlugin` API
-- Plugin 配置选项
-- Tool 定义 schema
-
-#### 4.2.3 Hook Points Reference
-
-必须包含所有 20+ 内置 Hook 点：
-
-| Hook Name | 触发时机 | 参数 | 典型用途 |
-|-----------|---------|------|---------|
-| `session:start` | Session 创建时 | `session` 对象 | 初始化资源 |
-| `session:end` | Session 结束时 | `session` 对象 | 清理资源 |
-| `message:before` | 消息处理前 | `message` 内容 | 内容过滤 |
-| `message:after` | 消息处理后 | `response` 内容 | 结果后处理 |
-| `tool:before` | 工具调用前 | `tool, params` | 审计、权限检查 |
-| `tool:after` | 工具调用后 | `tool, result, duration` | 结果验证 |
-| `command:before` | Command 执行前 | `command, args` | 指令拦截 |
-| `command:after` | Command 执行后 | `command, result` | 指令日志 |
-| `permission:check` | 权限校验时 | `action, resource` | 自定义权限规则 |
-| `file:beforeRead` | 文件读取前 | `filePath` | 敏感文件拦截 |
-| `file:afterRead` | 文件读取后 | `filePath, content` | 内容过滤 |
-| `file:beforeWrite` | 文件写入前 | `filePath, content` | 内容安全审查 |
-| `file:afterWrite` | 文件写入后 | `filePath` | 文件变更通知 |
-| `llm:before` | LLM 请求前 | `messages, options` | Prompt 注入 |
-| `llm:after` | LLM 响应后 | `response` | 响应校验 |
-| `agent:before` | Agent 切换前 | `from, to` | 切换逻辑 |
-| `agent:after` | Agent 切换后 | `agent` | 切换通知 |
-| `hook:error` | Hook 异常时 | `hook, error` | 错误处理 |
-| `context:assemble` | 上下文组装时 | `context` 对象 | 注入额外信息 |
-| `provider:before` | Provider 请求前 | `provider, request` | 请求修改 |
-
-#### 4.2.4 OMO Extended Hooks
-
-必须包含 OMO 扩展的 53+ Hook 点列表。
-
-#### 4.2.5 Plugin Configuration
-
-必须包含 opencode.json 配置格式和路径加载规则。
-
-#### 4.2.6 Plugin Management
-
-必须包含管理命令和版本管理。
-
-#### 4.2.7 Security Considerations
-
-必须包含：
-- Hook 风险分级
-- 权限提升风险
-- 安全最佳实践
-
-### 4.3 格式要求
-
-- 使用 Markdown 表格展示 Hook 点列表
-- 代码示例使用 TypeScript 格式
-- 使用 `→ [章节名称](相对路径.md)` 格式添加交叉引用
-- OMO 特性需标注免责声明
-
-## 5. 术语表更新
-
-### 5.1 新增术语
-
-必须在术语表中添加以下术语：
-
-| 术语 | 英文 | 定义 |
+| 文章 | 文件 | 说明 |
 |------|------|------|
-| 插件 | Plugin | OpenCode 中代码层面的扩展点，通过 Hook 系统拦截和修改 Agent 的行为 |
+| OpenCode 内置能力 | `capabilities.md` | OpenCode 内置能力全景概览：工具集、Provider 集成、Agent 体系 |
+| OpenCode 内置命令 | `commands.md` | 内置命令速查手册：核心命令、OMO 扩展命令、自定义命令 |
+| OpenCode Plugin 系统 | `plugins.md` | Plugin API 参考、20+ Hook 点、配置管理、安全考虑 |
+| OpenCode Agent 架构 | `agent-architecture.md` | Agent 架构设计与编排模型：Build/Plan/Explore/Agent 调用链 |
+| OpenCode SDK 参考 | `sdk.md` | Plugin SDK 与 npm SDK：definePlugin API、Tool 定义 Schema |
+| OpenCode Agent SDK 编程 | `agent-sdk.md` | Agent SDK 编程接口：自定义 Agent 开发、事件处理、工具注册 |
+| OpenCode 生态参考 | `ecosystem.md` | 社区项目、Skill 推荐、MCP 服务器、资源汇总 |
 
-### 5.2 格式要求
+### 3.3 目标读者
 
-- 按拼音字母排序
-- 包含定义、人话解释、首次出现章节
-- 添加到术语索引表
+- 需要快速查阅 OpenCode 命令和配置的高级用户
+- 需要开发 Plugin 或扩展 OpenCode 功能的开发者
+- 希望了解 OpenCode 生态全貌的架构师和技术负责人
 
-## 6. 导航更新
+### 3.4 格式要求
 
-### 6.1 appendix-a/README.md
+- 使用 Markdown 表格展示命令列表、API 参考、Hook 点
+- 代码示例使用 TypeScript/JSON 格式
+- 使用 `→ [章节名称](相对路径.md)` 格式添加交叉引用
+- OMO 特性需标注"oh-my-openagent 特有"免责声明
 
-更新内容导航，添加新文章链接。
+## 4. 附录 C — Claude Code 内置能力与生态（7 篇）
 
-### 6.2 src/SUMMARY.md
+### 4.1 概述
 
-在附录 A 部分添加新文章条目。
+附录 C 作为竞品对照参考手册，系统整理 Claude Code 的内置能力、命令参考、扩展机制、SDK、Agent SDK、Agent 设计指南以及生态参考，方便读者对比 OpenCode 与 Claude Code 的设计差异。
 
-## 7. 验证标准
+### 4.2 文章清单
 
-- [ ] 所有内置命令完整列出
-- [ ] 所有 Hook 点完整列出
-- [ ] 术语表更新完成
-- [ ] 导航更新完成
+| 文章 | 文件 | 说明 |
+|------|------|------|
+| Claude Code 内置能力 | `capabilities.md` | Claude Code 内置能力与工具集：Agent 工具、文件系统、MCP、Shell |
+| Claude Code 命令参考 | `commands.md` | Slash 命令与 CLI 命令速查：内置命令、Hook、权限设置 |
+| Claude Code 扩展机制 | `extensions.md` | 扩展机制概览：自定义 Slash Command、Hook 配置文件 |
+| Claude Code Plugin 系统 | `plugins.md` | 六层扩展体系详解：CLAUDE.md、Hook、Command 等 |
+| Claude Code SDK 参考 | `sdk.md` | MCP 服务器与 CLI 程序化集成：SDK 安装、服务器开发 |
+| Claude Code Agent SDK 编程 | `agent-sdk.md` | Agent SDK 编程接口：Agent 配置、工具定义、会话管理 |
+| Claude Code Agent 设计指南 | `agent-architecture.md` | Agent 设计模式与架构：CLAUDE.md、工具/模型路由、MCP |
+| Claude Code 生态参考 | `ecosystem.md` | 社区扩展与最佳实践：常用 MCP 服务器、CLI 集成、团队实践 |
+
+### 4.3 目标读者
+
+- 正在评估 OpenCode vs Claude Code 的技术选型者
+- 从 Claude Code 迁移到 OpenCode 的开发者
+- 需要了解竞品架构差异的 AI 编程工具研究者
+
+### 4.4 格式要求
+
+- 使用 Markdown 表格展示命令、API 和扩展点
+- 代码示例使用 TypeScript/JSON/YAML 格式
+- 每个条目标注与 OpenCode 的对应关系（相同、不同、独有）
+- 使用 `对比：→ [OpenCode 对应章节](相对路径.md)` 格式做交叉对照
+
+## 5. 附录 D — Pi Agent（5 篇）
+
+### 5.1 概述
+
+附录 D 作为生态扩展与竞品参考手册，涵盖 Pi Agent 的核心能力：概述与核心概念、CLI 命令与交互模式、扩展体系、SDK 以及生态参考。
+
+### 5.2 文章清单
+
+| 文章 | 文件 | 说明 |
+|------|------|------|
+| Pi Agent 概述与核心概念 | `overview.md` | Pi 设计哲学与核心架构：文件映射架构、Rule 系统、Provider 模型 |
+| CLI 命令与交互模式参考 | `commands.md` | 交互模式编辑器（Vim/Nano/Emacs）、Slash 命令、CLI 命令 |
+| 扩展体系详解 | `customization.md` | 四层扩展体系详解：CLI 配置、Rule 系统、Provider、MCP |
+| Pi Agent SDK 参考 | `sdk.md` | Agent Session API 与 RPC 模式：会话管理、远程 Agent |
+| 生态与集成场景 | `ecosystem.md` | Provider 生态（Anthropic/OpenAI/GCP Vertex/OpenRouter）与集成场景 |
+
+### 5.3 目标读者
+
+- 正在评估 OpenCode vs Pi Agent 的技术选型者
+- 对多 Agent 编程工具有兴趣的开发者
+- 需要了解 Pi Agent 独特架构（文件映射、Rule 系统）的研究者
+
+### 5.4 格式要求
+
+- 使用 Markdown 表格展示命令、配置和 API
+- 代码示例使用 TypeScript/JSON/YAML 格式
+- 每个条目标注与 OpenCode 的对应关系（相同、不同、独有）
+- 使用 `对比：→ [OpenCode 对应章节](相对路径.md)` 格式做交叉对照
+
+## 6. 验证标准
+
+- [ ] 附录 A 术语表覆盖全书 30+ 核心术语
+- [ ] 附录 B 内置命令完整列出，Plugin Hook 点完整
+- [ ] 附录 C Claude Code 能力完整覆盖，与 OpenCode 做交叉引用
+- [ ] 附录 D Pi Agent 架构准确描述，对比标注正确
+- [ ] 所有 4 个附录与 SUMMARY.md 导航一致
+- [ ] 跨附录交叉引用格式统一（`→ [章节](路径.md)`）
 - [ ] mdbook build 通过
 - [ ] 内部链接无 404
