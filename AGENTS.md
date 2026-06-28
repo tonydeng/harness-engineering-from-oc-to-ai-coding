@@ -133,6 +133,23 @@ mdbook build
 awk '/^```[a-z]/ && !/mermaid/ && !/:/ {count++} END {print count+0 " blocks without path"}' src/**/*.md
 ```
 
+### HEDQ 质量审计
+
+8 维度内容质量评分（满分 52.5，自动检测口径）。标准详见 [docs/reference/hedq-quality-standard.md](docs/reference/hedq-quality-standard.md)。
+
+```bash
+# 快速模式：D1 结构 + D6 文风 + D7 术语（满分 23，约 10 秒）
+python scripts/qa/run-hedq.py --quick
+
+# 完整模式：8 个维度全检（满分 52.5，约 30 秒）
+python scripts/qa/run-hedq.py
+
+# JSON 输出（供 CI/脚本消费）
+python scripts/qa/run-hedq.py --json --no-save
+```
+
+评级标准：≥90% READY · 75-89% CONDITIONAL · 60-74% NEEDS WORK · <60% DRAFT。报告自动保存到 `scripts/qa/reports/`（含 JSON 快照 + results.tsv 趋势记录）。
+
 ## 经验总结（来自 9 轮 Sprint 实践）
 
 ### 编排原则

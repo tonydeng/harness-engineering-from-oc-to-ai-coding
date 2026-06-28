@@ -1,0 +1,174 @@
+{
+  "timestamp": "2026-06-28 17:05:47",
+  "commit": "2cfc7ef",
+  "mode": "full",
+  "total_score": 26.6,
+  "total_max": 100,
+  "percentage": 26.6,
+  "grade": "DRAFT",
+  "grade_emoji": "🔴",
+  "dimensions": [
+    {
+      "dimension": "D1",
+      "name": "结构与元数据规范性",
+      "score": 4.5,
+      "max": 15
+    },
+    {
+      "dimension": "D2",
+      "name": "内容准确性与时效性",
+      "score": 4.6,
+      "max": 20
+    },
+    {
+      "dimension": "D3",
+      "name": "读者角色覆盖与导航",
+      "score": 0.0,
+      "max": 15
+    },
+    {
+      "dimension": "D4",
+      "name": "实操可执行性",
+      "score": 0.0,
+      "max": 15
+    },
+    {
+      "dimension": "D5",
+      "name": "反面案例与边界条件",
+      "score": 4.4,
+      "max": 10
+    },
+    {
+      "dimension": "D6",
+      "name": "文风与可读性",
+      "score": 0.6,
+      "max": 10
+    },
+    {
+      "dimension": "D7",
+      "name": "术语与品牌一致性",
+      "score": 9.6,
+      "max": 10
+    },
+    {
+      "dimension": "D8",
+      "name": "图表与可视化质量",
+      "score": 3.0,
+      "max": 5
+    }
+  ],
+  "details": [
+    {
+      "dim": "D1",
+      "subitem": "D1.1",
+      "score": 3,
+      "max": 3,
+      "details": "SUMMARY.md：90 条路径正常，0 条断裂"
+    },
+    {
+      "dim": "D1",
+      "subitem": "D1.2",
+      "score": 0,
+      "max": 4,
+      "details": "内部链接：共 1102 条，13 条断裂 — file.md (位于 src/00-guide/how-to-read.md); ../target-chapter/file.md (位于 src/00-guide/how-to-read.md); chapter/README.md (位于 src/00-guide/how-to-read.md); ../06-advanced/mcp-servers.md (位于 src/appendix-b/opencode/capabilities.md); ../opencode/agent-sdk.md (位于 src/appendix-c/claudecode/agent-sdk.md) (+8 more)"
+    },
+    {
+      "dim": "D1",
+      "subitem": "D1.4",
+      "score": 1.5,
+      "max": 4,
+      "details": "品牌名错误：5 处"
+    },
+    {
+      "dim": "D2",
+      "subitem": "D2.2",
+      "score": 4.6,
+      "max": 6,
+      "details": "过期版本引用：14 处 — v4.12.（src/00-guide/README.md）; v4.12.（src/00-guide/README.md）; v1.14.（src/04-workflows/agent-derivation.md）; v1.14.（src/04-workflows/agent-derivation.md）; v1.14.（src/04-workflows/agent-derivation.md）; v1.14.（src/04-workflows/agent-derivation.md）; v4.3.（src/04-workflows/ultrawork-mode.md）; v4.3.（src/04-workflows/ultrawork-mode.md） （+5 more）"
+    },
+    {
+      "dim": "D3",
+      "subitem": "D3.1",
+      "score": 0,
+      "max": 6,
+      "details": "追溯矩阵：0 行数据"
+    },
+    {
+      "dim": "D4",
+      "subitem": "D4.1",
+      "score": 0,
+      "max": 4,
+      "details": "代码块：共 1473 个，122 个缺少 :path 注释 — src/00-guide/how-to-read.md:L396（`markdown）; src/00-guide/how-to-read.md:L402（`）; src/07-case-studies/case-frontend-react.md:L68（`）; src/07-case-studies/case-frontend-react.md:L99（`）; src/07-case-studies/case-frontend-react.md:L114（`）; src/07-case-studies/case-frontend-react.md:L128（`）; src/07-case-studies/case-frontend-react.md:L139（`）; src/07-case-studies/case-frontend-react.md:L147（`） （+114 more）"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.1",
+      "score": 0.3,
+      "max": 4,
+      "details": "反模式章节：5/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.2",
+      "score": 0.8,
+      "max": 3,
+      "details": "失败场景章节：18/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.3",
+      "score": 1.1,
+      "max": 3,
+      "details": "边界条件章节：24/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "total",
+      "score": 2.2,
+      "max": 10,
+      "details": "反模式覆盖总分"
+    },
+    {
+      "dim": "D6",
+      "subitem": "D6.3",
+      "score": 0.6,
+      "max": 2,
+      "details": "AI 腔命中：7 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.1",
+      "score": 3.5,
+      "max": 4,
+      "details": "品牌名错误：3 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.2",
+      "score": 3.0,
+      "max": 3,
+      "details": "术语大小写错误：0 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.3",
+      "score": 3.0,
+      "max": 3,
+      "details": "交叉引用格式：317/317 正确"
+    },
+    {
+      "dim": "D8",
+      "subitem": "D8.1",
+      "score": 2,
+      "max": 2,
+      "details": "Mermaid 块：共 5122 行，语法错误 0 处"
+    },
+    {
+      "dim": "D8",
+      "subitem": "D8.2",
+      "score": 1.0,
+      "max": 1,
+      "details": "配色合规：115/175 正确"
+    }
+  ]
+}
