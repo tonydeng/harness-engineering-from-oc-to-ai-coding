@@ -34,7 +34,7 @@ Extensions 在 Pi 的 Agent 运行时中注册钩子，可以：
 
 Extensions 是标准的 TypeScript 文件，放置在 `~/.pi/agent/extensions/` 或 `.pi/extensions/` 目录：
 
-```typescript
+```typescript:src/appendix-d/pi/customization.md
 // ~/.pi/agent/extensions/my-extension.ts
 import type { ExtensionAPI } from "@earendil-works/pi-agent-core";
 
@@ -108,7 +108,7 @@ Extensions 可监听的**关键事件**，覆盖 Agent 完整生命周期：
 
 **异步工厂**：当 Extension 需要初始化（如获取远程配置）时返回 Promise：
 
-```typescript
+```typescript:src/appendix-d/pi/customization.md
 export default async function (pi: ExtensionAPI) {
   const response = await fetch("http://localhost:1234/v1/models");
   const payload = await response.json();
@@ -129,7 +129,7 @@ export default async function (pi: ExtensionAPI) {
 
 **长时间资源管理**：不要在 factory 中启动后台资源（进程、socket、文件监听）。改为在 `session_start` 中延迟初始化，`session_shutdown` 中清理：
 
-```typescript
+```typescript:src/appendix-d/pi/customization.md
 export default function (pi: ExtensionAPI) {
   let watcher: FileWatcher | null = null;
 
@@ -191,7 +191,7 @@ my-extension/
 
 Extension 的加载错误**不会**导致 Pi 崩溃——Pi 捕获异常后记录日志并继续运行。但强烈建议在 `execute()` 中自行捕获异常：
 
-```typescript
+```typescript:src/appendix-d/pi/customization.md
 execute: async (args) => {
   try {
     return { content: [{ type: "text", text: result }], details: {} };
@@ -254,7 +254,7 @@ Skills 从多个位置加载：
 
 通过 `/skill:name` 在编辑器中调用已识别到的 Skill。Pi 的 harness 层（`formatSkillsForSystemPrompt`）将 Skill 内容格式化为 XML 块注入到系统提示中：
 
-```xml
+```xml:src/appendix-d/pi/customization.md
 <skill name="add-llm-provider">
 你是一个 LLM Provider 配置专家。你的职责是：
 ...
@@ -614,7 +614,7 @@ pi packages install my-pi-package
    ```
 
 3. **编写 Extension**
-   ```typescript
+   ```typescript:src/appendix-d/pi/customization.md
    // my-extension/index.ts
    import type { ExtensionAPI } from "@earendil-works/pi-agent-core";
    

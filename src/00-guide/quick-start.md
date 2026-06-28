@@ -26,8 +26,8 @@ node --version && python --version && git --version
 **预期输出**：
 
 ```text:terminal
-v18.x.x (或更高)
-Python 3.10.x (或更高)
+v22.x.x (或更高)
+Python 3.11.x (或更高)
 git version 2.x.x (或更高)
 ```
 

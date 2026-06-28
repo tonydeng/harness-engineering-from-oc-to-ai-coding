@@ -283,7 +283,7 @@ flowchart LR
 
 不过，`Agent = Model + Harness` 是一个简洁的抽象，但在当前模型可靠性水平下（见前文可靠性边界），这个二维公式需要补充第三维：**Human-in-the-Loop**。当前阶段，Harness Engineer 的工作不仅是设计 Harness 层，还包括设计**人机协作的决策点**——哪些步骤自动放行，哪些需要人工审批，哪些需要人类亲自执行。这并非对 Harness 框架的否定，而是对工程现实主义的尊重。
 
-换句话说，Harness Engineering 不是"全部自动化"或"全部手动"的二元选择。它是一个**自主度光谱**：
+Harness Engineering 不是"全部自动化"或"全部手动"的二元选择，而是一个**自主度光谱**：
 
 | 自主度 | 模式 | 适用场景 | 示例 |
 |-------|------|---------|------|
@@ -618,7 +618,7 @@ Harness Engineering 的三大原则——可复现、可审计、可改进——
 4. **分工混乱陷阱**：Harness Engineer 和 Tech Lead 的职责重叠。→ 建议：初期由 Tech Lead 兼任，等体系成熟后再考虑角色分离。
 
 [^1]: Mitchell Hashimoto, "My AI Adoption Journey," February 2026. 来源: https://mitchellh.com/writing/ai-adoption-journey
-[^2]: LangChain 团队实验表明，改进 Harness 层可将 Agent 准确率从 52.8% 提升至 66.5%。需要注意的是，66.5% 的准确率距离生产级可靠性（99.9%+）仍有较大差距，但这一提升证明了 Harness 层的方向价值——它通过系统化的错误检测和预防机制，在模型 baseline 基础上减少了 AI 输出的不可靠性。Harrison Chase, "Harness Engineering: The Missing Piece in AI Development," VentureBeat 播客, 2026 年 3 月 7 日.
+[^2]: LangChain 团队实验表明，改进 Harness 层可将 Agent 准确率从 52.8% 提升至 66.5%。66.5% 的准确率距离生产级可靠性（99.9%+）仍有较大差距，但这一提升证明了 Harness 层的方向价值——它通过系统化的错误检测和预防机制，在模型 baseline 基础上减少了 AI 输出的不可靠性。Harrison Chase, "Harness Engineering: The Missing Piece in AI Development," VentureBeat 播客, 2026 年 3 月 7 日.
 
 ## 关联章节
 

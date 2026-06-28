@@ -338,7 +338,7 @@ flowchart LR
     PERM -->|"permission:check"| H1
     S_END -->|"session:end"| H1
 
-    style Agent_Pipeline fill:#e3f2fd
+    style Agent_Pipeline fill:#4A90D9,color:#fff
     style Hook_Pipeline fill:#fff3e0
     style H1 fill:#50C878,color:#fff
     style H2 fill:#50C878,color:#fff

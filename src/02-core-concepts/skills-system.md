@@ -159,7 +159,10 @@ graph LR
     S1 --> S2 --> S3
     
     style Page fill:#4A90D9,stroke:#333,color:#fff
-    style Workflow fill:#50C878,stroke:#333,color:#fff
+    style Workflow fill:#FF9F43,stroke:#333,color:#fff
+    style S1 fill:#50C878,stroke:#333,color:#fff
+    style S2 fill:#50C878,stroke:#333,color:#fff
+    style S3 fill:#50C878,stroke:#333,color:#fff
 ```
 
 **单一职责原则**

@@ -94,7 +94,7 @@ flowchart LR
 
 ### 完整 SKILL.md 骨架
 
-以下是以调查研究 Skill 为例的完整 SKILL.md 骨架。其余 5 个模板均基于此骨架结构，仅在 frontmatter 字段、工具链、工作流程等维度存在差异，详见差异矩阵表。
+以下是以调查研究 Skill 为例的完整 SKILL.md 骨架。其余 5 个模板均以此骨架为基础，仅在 frontmatter 字段、工具链、工作流程等维度存在差异，详见差异矩阵表。
 
 ```markdown:examples/skills/deep-research/SKILL.md
 ---

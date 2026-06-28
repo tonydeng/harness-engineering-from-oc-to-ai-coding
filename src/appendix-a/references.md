@@ -333,3 +333,29 @@
 | CVE 参考 | 5 |
 | 协议与标准 | 8 |
 | **合计** | **103** |
+
+---
+
+## 版本新鲜度检查
+
+> **最后检查日期**：2026-06-28
+> **建议频率**：每月检查一次
+
+本书涉及的关键工具版本（每月检查 freshness check）：
+
+| 工具 | 当前推荐版本 | 本书引用版本 | 检查方式 |
+|------|------------|------------|---------|
+| OpenCode | v1.17.11 | v1.17+ | `opencode --version` |
+| oh-my-openagent | v4.12.0 | v4.12+ | `omo --version` |
+| Node.js | 22+ | 22+ | `node --version` |
+| Python | 3.11+ | 3.11+ | `python3 --version` |
+| mdBook | latest | latest | `mdbook --version` |
+
+### 更新指引
+
+当工具发布新版本时：
+
+1. 运行 `python scripts/qa/run-hedq.py` 检查 D2.2 维度
+2. 更新本书中的版本引用
+3. 更新本表的"最后检查日期"（last check date）
+4. 提交变更并说明版本升级原因

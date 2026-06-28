@@ -30,7 +30,7 @@ npm install opencode            # TypeScript 类型定义
 
 ### 核心 API
 
-```typescript
+```typescript:src/appendix-b/opencode/sdk.md
 import { definePlugin } from "opencode";
 
 export default definePlugin({
@@ -82,7 +82,7 @@ npm install @opencode-ai/sdk
 
 ### 核心 API
 
-```typescript
+```typescript:src/appendix-b/opencode/sdk.md
 import { createOpencodeClient } from "@opencode-ai/sdk";
 
 // 创建客户端（连接已有 OpenCode Server）

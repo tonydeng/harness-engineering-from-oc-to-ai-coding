@@ -353,7 +353,7 @@ graph TB
 当 Token 使用接近上限时，系统依次触发三级响应：
 
 ```mermaid
-flowchart TD
+flowchart TB
     A[Token 使用 > 80%] --> B{触发压缩}
     B --> |成功| C[继续执行]
     B --> |仍超限| D{模型降级}

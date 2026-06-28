@@ -122,7 +122,7 @@ ultrawork 重构用户服务，提取公共逻辑
 
 ### 方式二：设置为默认模式
 
-在 `.opencode/oh-my-openagent.jsonc` 中配置默认模式（OMO v4.3.0+），让所有任务都使用 Ultrawork：
+在 `.opencode/oh-my-openagent.jsonc` 中配置默认模式（OMO v4.12.0+），让所有任务都使用 Ultrawork：
 
 ```json:.opencode/oh-my-openagent.jsonc
 {
@@ -131,7 +131,7 @@ ultrawork 重构用户服务，提取公共逻辑
 }
 ```
 
-> **注**：`ultrawork` 和 `ralph_loop` 是 oh-my-openagent（OMO）v4.3.0+ 的原生配置项，非 OpenCode 核心配置。OMO 采用扁平 boolean schema，不需要嵌套 `default_mode` 结构。
+> **注**：`ultrawork` 和 `ralph_loop` 是 oh-my-openagent（OMO）v4.12.0+ 的原生配置项，非 OpenCode 核心配置。OMO 采用扁平 boolean schema，不需要嵌套 `default_mode` 结构。
 
 **特点**：
 - 所有任务默认使用 Ultrawork
@@ -316,7 +316,7 @@ Ralph Loop 不依赖 `stop_condition` 或完成度百分比。它的停止机制
 
 | 配置项 | 说明 | 所属 |
 |-------|------|------|
-| `ultrawork` | 启用 Ultrawork 作为默认模式（OMO v4.3.0+，扁平 boolean） | oh-my-openagent |
+| `ultrawork` | 启用 Ultrawork 作为默认模式（OMO v4.12.0+，扁平 boolean） | oh-my-openagent |
 | `ralph_loop` | 启用 Ralph Loop 自我迭代 | oh-my-openagent |
 
 > OMO 采用扁平 boolean schema，不存在 `default_mode` 嵌套结构或 `ultrawork.enabled`/`ultrawork.maxParallelAgents`/`ultrawork.autoVerify`/`ultrawork.verificationLevel` 等配置项。上述配置中 `ultrawork` 和 `ralph_loop` 是 OMO 插件提供的能力，非 OpenCode 核心配置。

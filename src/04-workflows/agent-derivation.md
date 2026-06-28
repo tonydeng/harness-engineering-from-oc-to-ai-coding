@@ -314,8 +314,9 @@ const result = task(
 #### task() 权限行为
 
 派生出的子 Agent **不继承**父 Agent 的权限。实际行为：
-- **v1.14.46 之前**：子 Agent 以 **RESTRICTED** 权限启动，默认禁用 `todowrite`、`todoread`、`task` 等敏感操作
-- **v1.14.46 之后**：`deriveSubagentSessionPermission()` 会将父 Agent 的所有 deny 规则**追加**到子 Agent 中，可能导致子 Agent 权限**比父 Agent 更严格**
+<!-- 历史版本号，保留用于变更记录 -->
+- **`v1.14.46` 之前**：子 Agent 以 **RESTRICTED** 权限启动，默认禁用 `todowrite`、`todoread`、`task` 等敏感操作
+- **`v1.14.46` 之后**：`deriveSubagentSessionPermission()` 会将父 Agent 的所有 deny 规则**追加**到子 Agent 中，可能导致子 Agent 权限**比父 Agent 更严格**
 - **建议显式指定权限**：不要在子 Agent 中开启 `tools: { task: true }`，否则可能引发无限递归
 
 ### oh-my-openagent delegate_task() 扩展
@@ -428,8 +429,9 @@ const mergeStrategies = {
 
 子 Agent **不继承**父 Agent 的权限。实际情况恰恰相反：
 
-- **v1.14.46 之前**：派生出的子 Agent 默认以 **RESTRICTED** 权限启动，`todowrite`、`todoread`、`task` 等敏感功能默认禁用
-- **v1.14.46 之后**：`deriveSubagentSessionPermission()` 将父 Agent 的**所有 deny 规则追加**到子 Agent，子 Agent 的权限约束**比父 Agent 更严格**
+<!-- 历史版本号，保留用于变更记录 -->
+- **`v1.14.46` 之前**：派生出的子 Agent 默认以 **RESTRICTED** 权限启动，`todowrite`、`todoread`、`task` 等敏感功能默认禁用
+- **`v1.14.46` 之后**：`deriveSubagentSessionPermission()` 将父 Agent 的**所有 deny 规则追加**到子 Agent，子 Agent 的权限约束**比父 Agent 更严格**
 
 因此权限提升攻击的威胁模型需要重新评估——攻击者更可能通过 **prompt 注入** 让子 Agent 执行超出预期的操作（在其有限权限范围内），而非继承到父 Agent 的高权限。
 

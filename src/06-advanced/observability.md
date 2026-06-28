@@ -448,7 +448,7 @@ flowchart TB
     ToolLayer --> NetworkLayer
     NetworkLayer --> SystemLayer
 
-    style AgentLayer fill:#e3f2fd
+    style AgentLayer fill:#4A90D9,color:#fff
     style SessionLayer fill:#fff3e0
     style ToolLayer fill:#e8f5e9
     style NetworkLayer fill:#fce4ec

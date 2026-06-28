@@ -204,7 +204,7 @@ flowchart LR
     PERM -->|"permission:check"| H1
     S_END -->|"session:end"| H1
 
-    style Agent_Pipeline fill:#e3f2fd
+    style Agent_Pipeline fill:#4A90D9,color:#fff
     style Hook_Pipeline fill:#fff3e0
     style H1 fill:#50C878,color:#fff
     style H2 fill:#50C878,color:#fff
@@ -1013,7 +1013,7 @@ Plugin 开发阶段使用 `file://` 协议加载本地路径，无需发布到 n
 
 Plugin 本质是返回 Hook 对象的异步函数，可用 Bun 的测试框架单独测试每个 Hook：
 
-```typescript
+```typescript:src/appendix-b/opencode/plugins.md
 const instance = await myPlugin(mockContext);
 const result = await instance.hooks["tool:before"]({
   tool: "bash", params: { command: "rm -rf /" }

@@ -127,8 +127,8 @@ class D1StructuralCheck(BaseCheck):
             for lineno, line in enumerate(lines, 1):
                 stripped = line.rstrip()
 
-                # 跳过代码块内容
-                if stripped.startswith("```"):
+                # 跳过代码块内容（支持缩进的代码块围栏，如列表项内的 ```bash）
+                if stripped.lstrip().startswith("```"):
                     in_code_block = not in_code_block
                     continue
                 if in_code_block:

@@ -32,7 +32,7 @@ npm install @opencode-ai/sdk
 
 ### 创建 Server + Client（一体式启动）
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import { createOpencode } from '@opencode-ai/sdk'
 
 const { client, server } = await createOpencode({
@@ -58,7 +58,7 @@ console.log(`Server version: ${health.data.version}`)
 
 如果你的 OpenCode Server 已经在运行（手动启动或由其他进程管理），使用 `createOpencodeClient()`：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import { createOpencodeClient } from '@opencode-ai/sdk'
 
 const client = createOpencodeClient({
@@ -75,7 +75,7 @@ console.log(`Active sessions: ${sessions.data.length}`)
 
 OpenCode SDK 也支持在 E2B Sandbox 中运行，实现完全隔离的执行环境：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import { Sandbox } from 'e2b'
 import { createOpencodeClient } from '@opencode-ai/sdk'
 
@@ -161,7 +161,7 @@ SDK 的能力按命名空间组织，以下是核心方法速查：
 
 SDK 的 `session.prompt()` 支持 `format` 参数，让 AI 返回 JSON 格式的结构化数据，而非自然语言：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 const result = await client.session.prompt({
   path: { id: sessionId },
   body: {
@@ -198,7 +198,7 @@ OpenCode Server 内置了自动上下文压缩机制：
 - **压缩过程**：使用专用 Agent（`AgentSummarizer`）对先前的对话生成摘要摘要消息，替代原始的多轮对话。原始消息被归档，新消息在摘要后续接
 - **标记**：压缩后 Session 的 `SummaryMessageID` 字段指向摘要消息；`PromptTokens` 和 `CompletionTokens` 计数器重置
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 查看 Session 的 Token 消耗状态
 const { data: session } = await client.session.get({
   path: { id: sessionId },
@@ -216,7 +216,7 @@ console.log({
 
 在 TUI 中可以用 `/compact` 命令手动触发压缩。通过 SDK 可以调用 `session.summarize()`：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 await client.session.summarize({
   path: { id: sessionId },
   body: { messageID: lastMessageId },
@@ -227,7 +227,7 @@ await client.session.summarize({
 
 ### Token 预算意识
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 在每次 prompt 后检查 Token 消耗
 const { data: result } = await client.session.prompt({
   path: { id: session.id },
@@ -267,7 +267,7 @@ if ((updated.promptTokens + updated.completionTokens) > TOKEN_WARNING) {
 
 在 `createOpencode()` 的 `config` 中设置模型的 `maxTokens` 限制：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 const { client } = await createOpencode({
   hostname: '127.0.0.1',
   port: 4096,
@@ -284,7 +284,7 @@ const { client } = await createOpencode({
 
 `createOpencode()` 支持传入 `AbortSignal` 和超时时间：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import { createOpencode } from '@opencode-ai/sdk'
 
 const controller = new AbortController()
@@ -319,7 +319,7 @@ try {
 
 对于长时间运行的分析任务，可以在客户端设置一个 HTTP 级别的超时。`createOpencodeClient()` 的选项中没有直接超时参数，但可以传入自定义 `fetch` 实现：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 const client = createOpencodeClient({
   baseUrl: 'http://localhost:4096',
   throwOnError: true,
@@ -337,7 +337,7 @@ const client = createOpencodeClient({
 
 当某个 prompt 不需要继续执行时（例如用户取消了操作），可以主动中止：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 在另一个控制路径中
 await client.session.abort({ path: { id: sessionId } })
 ```
@@ -348,7 +348,7 @@ await client.session.abort({ path: { id: sessionId } })
 
 当只需要向 Session 注入上下文而不期望 AI 回复时（比如提前告知 Agent 某些项目规则），使用 `noReply: true`：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 注入系统上下文，不消耗响应 Token
 await client.session.prompt({
   path: { id: session.id },
@@ -373,7 +373,7 @@ const { data: result } = await client.session.prompt({
 
 Session 对象包含 `cost` 字段，可以在每次 prompt 后检查消耗：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 async function promptWithBudget(
   client: any,
   sessionId: string,
@@ -446,7 +446,7 @@ SDK 编程中最常见的一类 Bug 就是**没有妥善处理网络错误和部
 
 Server 连接失败、网络抖动、临时过载时，重试是最直接的策略：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 async function promptWithRetry(
   client: any,
   sessionId: string,
@@ -494,7 +494,7 @@ function isRetryableError(err: any): boolean {
 
 长时间运行的 prompt 可能因为各种原因卡住（模型推理慢、工具调用循环、输出量超大）：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 async function promptWithTimeout(
   client: any,
   sessionId: string,
@@ -517,7 +517,7 @@ async function promptWithTimeout(
 
 如果检测到超时，建议同时中止 Server 端的执行，避免资源浪费：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 async function promptWithAbortOnTimeout(
   client: any,
   sessionId: string,
@@ -543,7 +543,7 @@ async function promptWithAbortOnTimeout(
 
 在 SDK 应用中，推荐统一的错误处理结构：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 interface PromptResult {
   success: boolean
   data?: any
@@ -590,7 +590,7 @@ async function safePrompt(
 
 长 prompt 的中间部分可能失败（例如模型在分析 100 个文件时，中途工具调用出错）。此时不会抛出异常，而是消息中可能包含 `structuredOutput` 的错误信息：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 const { data: result } = await client.session.prompt({
   path: { id: sessionId },
   body: {
@@ -621,7 +621,7 @@ if (result.data.info.structured_output?.partial) {
 
 ### 配置式 Agent 的工作方式（来自 `agent-architecture.md`）
 
-```jsonc
+```jsonc:src/appendix-b/opencode/agent-sdk.md
 // oh-my-openagent.jsonc
 {
   "categories": {
@@ -636,14 +636,14 @@ if (result.data.info.structured_output?.partial) {
 
 使用时在 TUI 中通过 `task()` 调用：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 在 OMO 工作流内
 task(category="code-reviewer", prompt="审查最新的 git diff")
 ```
 
 ### SDK 等效实现
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import { createOpencodeClient } from '@opencode-ai/sdk'
 
 const client = createOpencodeClient({ baseUrl: 'http://localhost:4096' })
@@ -843,7 +843,7 @@ npx tsx data-analysis-agent.ts
 3. **Web 应用集成**：在 Next.js API Route 中调用 SDK，提供 AI 驱动的数据分析接口
 4. **多会话并行**：并行创建多个 Session，独立分析不同数据集
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 // 并行分析多个项目
 const projects = ['/data/project-a', '/data/project-b', '/data/project-c']
 const results = await Promise.all(
@@ -923,7 +923,7 @@ services:
 
 每次创建新 Session 会丢失上下文。如果需要多轮对话，复用同一个 Session：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 const { data: session } = await client.session.create({ body: { title: 'Long Session' } })
 
 // 第一轮
@@ -956,7 +956,7 @@ await client.session.prompt({ path: { id: session.id }, body: { parts: [{ type: 
 
 SDK 的所有 API 都有完整的 TypeScript 类型定义，建议充分利用：
 
-```typescript
+```typescript:src/appendix-b/opencode/agent-sdk.md
 import type { Session, Message, Part, Config } from '@opencode-ai/sdk'
 
 const session: Session = await client.session.get({

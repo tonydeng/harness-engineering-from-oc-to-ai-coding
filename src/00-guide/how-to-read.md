@@ -393,7 +393,7 @@ flowchart LR
 
 所有可运行的示例都会在代码块中标注文件路径，如：
 
-````markdown
+````markdown:src/00-guide/how-to-read.md
 ```json:opencode.json
 {
   "model": "claude-3-opus"

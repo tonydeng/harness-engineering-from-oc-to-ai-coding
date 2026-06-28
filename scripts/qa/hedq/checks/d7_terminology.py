@@ -61,7 +61,7 @@ class D7TerminologyCheck(BaseCheck):
             in_code_block = False
             for line in lines:
                 stripped = line.rstrip()
-                if stripped.startswith("```"):
+                if stripped.lstrip().startswith("```"):
                     in_code_block = not in_code_block
                     continue
                 if in_code_block:

@@ -218,7 +218,8 @@ gantt
 
 ### 当前状态一览
 
-截至 OMO v4.5.0，89 个 Feature Flag 的状态分布：
+<!-- 历史版本快照，版本号保留用于变更追溯 -->
+截至 `OMO v4.5.0`，89 个 Feature Flag 的状态分布：
 
 | 状态 | 数量 | 占比 |
 |------|------|------|
@@ -233,8 +234,9 @@ gantt
 
 所有时间线都基于当前规划的版本节奏估算。OpenCode 采用滚动发布模式，大约每 6-8 周一个版本：
 
-- **OMO v4.5.x**（已发布）：31 个 experimental Flags 可用，24 个 stable
-- **OMO v4.6.x**（已发布）：新增约 8 个 Flags，3 个 experimental 升级为 stable
+<!-- 以下为版本演进时间线，历史版本号保留用于变更追溯 -->
+- **`OMO v4.5.x`**（已发布）：31 个 experimental Flags 可用，24 个 stable
+- **`OMO v4.6.x`**（已发布）：新增约 8 个 Flags，3 个 experimental 升级为 stable
 - **OMO v4.13.x**（当前）：新增约 10 个 Flags，5 个 experimental 升级为 stable
 - **OMO v5.0**（预计 Q4 2026）：规划中 Flags 基本完成，首个大版本
 
@@ -291,7 +293,7 @@ OPENCODE_FEATURE_FLAGS='{"agent_parallel_orchestration":true}' opencode run
 
 以启用 `agent_parallel_orchestration` 为例：
 
-1. **确认状态**：`opencode flags show --name agent_parallel_orchestration` → experimental，OMO v4.5.x+
+1. **确认状态**：`opencode flags show --name agent_parallel_orchestration` → experimental，`OMO v4.5.x+`
 2. **了解限制**：见 Issue #892——不支持嵌套并行，默认并发数 4，依赖外部服务的工具不适合并行
 3. **本地启用**：在配置中添加 `"agent_parallel_orchestration": true`
 4. **验证效果**：对比开启前后 `opencode run --task ... --duration --measure` 的结果

@@ -26,7 +26,7 @@ npm install @earendil-works/pi-coding-agent
 
 ### 核心 API 速查
 
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 import {
   AuthStorage,
   createAgentSession,
@@ -64,7 +64,7 @@ await session.close();
 
 ### AgentSession 选项
 
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 const { session } = await createAgentSession({
   sessionManager: SessionManager.inMemory(),
   authStorage,
@@ -80,7 +80,7 @@ const { session } = await createAgentSession({
 
 ### 事件流
 
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 // 监听 Agent 事件
 session.on("message", (msg) => {
   console.log("新消息:", msg.role, msg.content);
@@ -101,7 +101,7 @@ session.on("error", (err) => {
 
 适用于需要动态替换 Session 的场景（如长时间运行的服务端应用）：
 
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 import {
   createAgentSessionRuntime,
   AgentSessionRuntime,
@@ -456,7 +456,7 @@ directWeatherCall();
 
 通过 RPC 模式从非 Node.js 应用调用：
 
-```python
+```python:src/appendix-d/pi/sdk.md
 # weather_client.py
 import subprocess
 import json
@@ -544,7 +544,7 @@ Agent: 正在使用 get_weather 和 batch_weather 工具查询...
 
 ### 通过 SDK 嵌入（Node.js 应用）
 
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 import { weatherAgent } from "./weather-agent/embed-example";
 
 // 在 Express 路由中使用
@@ -627,7 +627,7 @@ app.get("/api/weather/:city", async (req, res) => {
 - 通过 SDK 实现模型管理和路由，实现不同复杂度任务的模型自动选择
 
 ### 使用示例
-```typescript
+```typescript:src/appendix-d/pi/sdk.md
 // 安装 Pi SDK
 npm install @earendil-works/pi-coding-agent
 
@@ -663,7 +663,7 @@ await session.close();
    ```
 
 3. **创建 SDK 嵌入文件**
-   ```typescript
+   ```typescript:src/appendix-d/pi/sdk.md
    // embed-example.ts
    import { createAgentSession, AuthStorage, ModelRegistry, SessionManager } from "@earendil-works/pi-coding-agent";
    
