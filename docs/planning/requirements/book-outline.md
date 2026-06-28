@@ -16,18 +16,18 @@ Harness Engineering — From OpenCode to AI Coding
 | 章节 | 标题 | 文章数（含 README） | 说明 |
 |------|------|--------------------|------|
 | Ch0 | 读者导航 | 4 | 3 篇文章 + README |
-| Ch1 | 简介 | 7 | 6 篇文章 + README |
+| Ch1 | 简介 | 8 | 7 篇文章 + README |
 | Ch2 | 核心概念 | 7 | 6 篇文章 + README |
 | Ch3 | 环境搭建 | 6 | 5 篇文章 + README |
 | Ch4 | 工作流实战 | 7 | 6 篇文章 + README |
 | Ch5 | Skill 开发 | 6 | 5 篇文章 + README |
-| Ch6 | 高级话题 | 16 | 10 篇文章 + 5 个子文章 + README |
-| Ch7 | 案例研究 | 7 | 6 篇文章 + README |
+| Ch6 | 高级话题 | 16 | 9 篇文章 + 6 个子文章 + README |
+| Ch7 | 案例研究 | 9 | 8 篇文章 + README |
 | 附录 A | 术语&参考 | 3 | glossary + references + README |
 | 附录 B | OpenCode 内置能力 | 8 | 7 篇文章（capabilities/commands/plugins/agent-architecture/sdk/agent-sdk/ecosystem）+ README |
 | 附录 C | Claude Code 内置能力 | 9 | 8 篇文章（capabilities/commands/extensions/sdk/agent-sdk/agent-architecture/plugins/ecosystem）+ README |
 | 附录 D | Pi Agent | 6 | 5 篇文章（overview/commands/customization/sdk/ecosystem）+ README |
-| **合计** | **8 章 + 4 附录** | **86+** | **~89 个 .md 文件** |
+| **合计** | **8 章 + 4 附录** | **90** | **~90 个 .md 文件** |
 
 ## 全书主线
 
