@@ -6,7 +6,7 @@
 
 **章节核心主题**：从"能让它跑起来"到"让它顺手好用"——搭建一个真正能投入工程使用的 AI 编程环境。
 
-> **章节规模**：6 篇文章（3 现有 + 3 新增），2 篇修改
+> **章节规模**：5 篇文章（3 现有 + 2 新增），2 篇修改
 
 ### 创作辅助
 
@@ -243,7 +243,7 @@
 #### 核心概念
 - **OMO是Plugin，不是替代品**：OMO以Plugin形式叠加在OpenCode之上，扩展而非替换。两者的关系类似于"操作系统内核"和"Shell增强工具"。
 - **类别路由的双层设计**：OpenCode有基本的Agent路由（Build/Plan/@subagent），OMO在其上叠加工作流路由和模型路由。
-- **13+ Agent的设计意图**：每个Agent对应一种工作模式（战略规划/任务执行/代码审计），人不需要切换context，Agents自行适应。
+- **13 Agent的设计意图**：每个Agent对应一种工作模式（战略规划/任务执行/代码审计），人不需要切换context，Agents自行适应。
 
 #### 代码/配置示例
 - OMO安装命令
@@ -572,54 +572,3 @@ OPENAI_API_KEY=sk-...
 | 多环境部署架构图 | `architecture` | Article 3.5 | Dev/CI/Production 三环境拓扑 |
 
 ---
-
-### Article 3.6: oh-my-openagent 安装配置
-- **阅读时间**：15 min
-- **学习目标**：
-  - 理解 oh-my-openagent 的安装方式
-  - 掌握配置文件位置和结构
-  - 完成 Provider 认证配置
-- **前置知识**：Article 3.1（OpenCode 基础安装）
-
-#### 大纲
-1. 安装方式
-   - bunx oh-my-opencode install
-   - 交互式安装向导
-2. 配置文件位置
-   - 项目级：.opencode/oh-my-openagent.json
-   - 用户级：~/.config/opencode/oh-my-openagent.json
-3. Provider 认证
-   - OpenCode Zen
-   - Anthropic API Key
-   - OpenAI API Key
-   - GitHub Copilot
-
-#### 核心概念
-- **安装向导的交互式设计**：oh-my-openagent 通过交互式问答自动生成适配项目的配置文件
-- **配置分层的工程价值**：项目级配置覆盖用户级配置，团队共享配置与个人偏好分离
-
-#### 代码/配置示例
-- 安装命令执行流程
-- 交互式安装向导问答示例
-- 完整的 oh-my-openagent.json 配置示例
-
-#### Mermaid 图表
-- 安装流程图（交互式向导分支）
-- 配置文件优先级图
-
-#### 关联章节
-- ← Article 3.1（OpenCode 基础安装）
-- ← Article 3.3（oh-my-openagent 集成概念）
-- → Article 3.4（国产模型 Provider 配置）
-
-#### 验证标准
-- [ ] 文章 ≥ 200 行有效内容
-- [ ] 包含完整的安装步骤
-- [ ] 包含至少 2 种 Provider 认证配置
-- [ ] 所有命令可执行
-
-
-**创作辅助**:
-- 思维框架：没有调查没有发言权（国产模型适配需实测数据）
-- 人物视角：张一鸣（本土化策略）
-- 理由：国产模型配置涉及特定技术细节
