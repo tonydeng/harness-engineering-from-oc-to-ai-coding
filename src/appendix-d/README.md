@@ -1,6 +1,6 @@
 # 附录 D
 
-本附录收录 Pi Agent 的核心能力、架构设计与生态参考。
+本附录收录 Pi **Agent（智能体）** 的核心能力、架构设计与生态参考。
 
 Pi 是由 Mario Zechner（badlogicgames）创建、Earendil Inc. 维护的开源终端编码智能体工具。它强调"极简核心 + 强力扩展"的设计哲学，提供 4 个核心工具、4 种运行模式和 4 层扩展体系。截至 2026 年中，Pi 拥有 **65K+ GitHub Stars** 和 **210 万周 npm 下载量**。
 
@@ -8,13 +8,13 @@ Pi 是由 Mario Zechner（badlogicgames）创建、Earendil Inc. 维护的开源
 
 - [Pi Agent 概述与核心概念](./pi/overview.md) — Pi 的设计哲学、四层进化能力映射、核心架构全景
 - [CLI 命令与交互模式参考](./pi/commands.md) — 交互模式编辑器、Slash 命令、键盘快捷键、4 种运行模式
-- [扩展体系详解](./pi/customization.md) — 四层扩展：Extensions、Skills、Prompt Templates、Themes，以及 Pi Packages 打包分发机制
+- [扩展体系详解](./pi/customization.md) — 四层扩展：Extensions、Skills、**Prompt（提示词）** Templates、Themes，以及 Pi Packages 打包分发机制
 - [Pi Agent SDK 参考](./pi/sdk.md) — Agent Session API、Runtime API 与 RPC 模式，含天气预报智能体案例
 - [生态与集成场景](./pi/ecosystem.md) — 20+ Provider、SDK/RPC 嵌入、Containerization、社区与 Pi Packages 市场
 
 ## 内容概要
 
-**[pi/overview.md](./pi/overview.md)** — 从 Harness Engineering 视角审视 Pi 的核心设计：它的极简哲学（4 工具、~1K token 系统提示）、包结构（pi-ai / pi-agent-core / pi-coding-agent / pi-tui）、与 L1-L4 四层进化能力的映射关系、以及它在 AI 编码工具生态中的独特定位。
+**[pi/overview.md](./pi/overview.md)** — 从 **Harness Engineering（驾驭工程）** 视角审视 Pi 的核心设计：它的极简哲学（4 工具、~1K token 系统提示）、包结构（pi-ai / pi-agent-core / pi-coding-agent / pi-tui）、与 L1-L4 四层进化能力的映射关系、以及它在 AI 编码工具生态中的独特定位。
 
 **[pi/commands.md](./pi/commands.md)** — Pi 交互模式的完整参考，涵盖编辑器特性（@引用文件、!bash 执行、消息队列）、所有 Slash 命令速查表、键盘快捷键、以及 4 种运行模式（交互 / Print & JSON / RPC / SDK）。
 

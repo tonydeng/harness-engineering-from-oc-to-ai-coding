@@ -1,8 +1,8 @@
 # oh-my-openagent 集成
 
-> OMO 是叠加在 OpenCode 之上的社区编排框架，将单 Agent 能力扩展为多 Agent 协作系统。
+> OMO 是叠加在 OpenCode 之上的社区编排框架，将单 **Agent（智能体）** 能力扩展为多 Agent 协作系统。
 
-opencode.json 配好了，OpenCode 已经能完成单 Agent 任务。但 Harness Engineering 的核心是编排，而编排需要多个专业化 Agent 协同工作。oh-my-openagent（OMO）正是为此而生——它不是一个独立工具，而是一个以 Plugin 形式运行在 OpenCode 上的编排框架，类似于"操作系统内核"之上的"Shell 增强工具"。
+opencode.json 配好了，OpenCode 已经能完成单 Agent 任务。但 **Harness Engineering（驾驭工程）** 的核心是编排，而编排需要多个专业化 Agent 协同工作。oh-my-openagent（OMO）正是为此而生——它不是一个独立工具，而是一个以 **Plugin（插件）** 形式运行在 OpenCode 上的编排框架，类似于"操作系统内核"之上的"Shell 增强工具"。
 
 这篇文章覆盖 OMO 的安装、架构理解和基本配置。你会了解 OMO 的 11 个核心 Agent（Sisyphus / Prometheus / Atlas / Hephaestus / Oracle 等）各自负责什么工作模式，类别路由如何在 OpenCode 原生路由之上叠加工作流路由和模型路由，以及 Ultrawork 和 Prometheus 模式的配置方法。读完本文，你的 OpenCode 将从"一个人的工具"升级为"一个 Agent 团队的引擎"。
 
@@ -567,7 +567,7 @@ task(category="visual-engineering", prompt="优化登录页面的动画效果")
 
 #### skills 配置
 
-控制 Skill 的来源和行为：
+控制 **Skill（技能）** 的来源和行为：
 
 ```json:.opencode/oh-my-openagent.jsonc
 "skills": {
@@ -722,5 +722,5 @@ bunx oh-my-openagent refresh-model-capabilities
 
 - ← [OpenCode 配置详解](opencode-config.md) — 需要在 opencode.json 中配置 OMO 插件
 - → [工作流实战](../04-workflows/) — OMO 的工作流模式在 Ch4 深入展开
-- → [MCP 服务器](../06-advanced/mcp-servers.md) — OMO 与 MCP 的协同
+- → [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md) — OMO 与 MCP 的协同
 - → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 依赖 OMO 的扩展能力

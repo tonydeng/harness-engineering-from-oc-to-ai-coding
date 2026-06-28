@@ -20,7 +20,7 @@ Karpathy 视角聚焦于文档中的**事实性错误**，发现了 4 个 CRITIC
 | 问题 | 严重性 | 状态 |
 |------|--------|------|
 | OpenCode 版本过时 (v1.15.x → v1.16.x) | CRITICAL | ✅ 已修正 |
-| oh-my-openagent 版本过时 (v4.5.x → v4.7.x) | CRITICAL | ✅ 已修正 |
+| oh-my-openagent 版本过时 (v4.5.x → v4.13.x) | CRITICAL | ✅ 已修正 |
 | mdBook 版本过时 (v0.4.x → v0.5.x) | HIGH | ✅ 已修正 |
 | 仓库 URL 错误 (`samanhappy` → `code-yeongyu`) | CRITICAL | ✅ 已修正 |
 | 时间线日期完全错误 (2024 → 2025) | CRITICAL | ✅ 已修正 |
@@ -99,7 +99,7 @@ TechLead 视角同样聚焦事实性错误，但更突出**实际影响**：
 |---|------|---------|--------|------|
 | 1 | 仓库 URL 错误 (`samanhappy` → `code-yeongyu`) | Karpathy, TechLead | CRITICAL | ✅ 已修正 |
 | 2 | OpenCode 版本过时 (v1.15.x → v1.16.x) | Karpathy, TechLead | CRITICAL | ✅ 已修正 |
-| 3 | oh-my-openagent 版本过时 (v4.5.x → v4.7.x) | Karpathy, TechLead | CRITICAL | ✅ 已修正 |
+| 3 | oh-my-openagent 版本过时 (v4.5.x → v4.13.x) | Karpathy, TechLead | CRITICAL | ✅ 已修正 |
 | 4 | mdBook 版本过时 (v0.4.x → v0.5.x) | Karpathy, TechLead | HIGH | ✅ 已修正 |
 | 5 | 时间线日期完全错误 (2024 → 2025) | Karpathy, TechLead | CRITICAL | ✅ 已修正 |
 | 6 | 技术栈错误 ("Rust" → "Node.js/TypeScript") | Karpathy, TechLead | CRITICAL | ✅ 已修正 |

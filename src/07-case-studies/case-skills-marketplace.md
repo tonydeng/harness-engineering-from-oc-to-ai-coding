@@ -1,4 +1,4 @@
-# 案例：团队级 Skill 市场
+# 案例：团队级 **Skill（技能）** 市场
 
 > 从中大型团队的痛点出发——Skill 质量参差不齐、重复建设严重、经验难以沉淀——设计一套完整的内部 Skill 生态治理方案。
 
@@ -18,7 +18,7 @@ Skill 市场的核心是**标准化**。所有 Skill 必须遵守统一的 `fron
 
 2. **内部 Skill 市场设计** — 目录结构标准（层级 / 命名 / 索引文件）。质量门禁的 3 个关卡：格式检查、权限审计、功能测试。版本管理和发布流程（语义版本号 + CHANGELOG）。
 
-3. **Skill 标准化规范** — `frontmatter` 必须字段和可选字段。`allowed-tools` 的最小权限原则——只声明真正需要的工具。`target_agent` 的作用域规范——明确 Skill 适用的 Agent 角色。标准化模板示例。
+3. **Skill 标准化规范** — `frontmatter` 必须字段和可选字段。`allowed-tools` 的最小权限原则——只声明真正需要的工具。`target_agent` 的作用域规范——明确 Skill 适用的 **Agent（智能体）** 角色。标准化模板示例。
 
 4. **团队协作模式** — Skill 作者 → 技术审校 → 发布的三段式流水线。使用统计和反馈收集（自动埋点 + 定期用户调研）。废弃和淘汰机制（版本废弃通知 + 迁移路径）。
 
@@ -161,7 +161,7 @@ skills/
 - 权限变更 diff review（对比上一版本）
 
 **第三关：功能测试（半自动化）**
-- 用预定义的 Test Prompt 执行 Skill，检查输出是否符合预期格式
+- 用预定义的 Test **Prompt（提示词）** 执行 Skill，检查输出是否符合预期格式
 - 至少覆盖 3 个典型场景（happy path + edge case + error case）
 - 测试结果自动记录到 CHANGELOG
 
@@ -175,7 +175,7 @@ skills/
 | Minor | 1.0.0 → 1.1.0 | 功能新增：增加新工具、添加新示例、扩展适用范围 |
 | Patch | 1.0.0 → 1.0.1 | Bug 修复：修正拼写错误、优化表述、补充遗漏的前置条件 |
 
-发布命令示例（⚠️ **前瞻性设计**：以下 `opencode skill` CLI 子命令为 Skill 市场方案的概念设计，截至 OpenCode v1.16.x 尚未内置。当前可通过 Shell 脚本 + CI 流水线实现等价功能）：
+发布命令示例（⚠️ **前瞻性设计**：以下 `opencode skill` CLI 子命令为 Skill 市场方案的概念设计，截至 OpenCode v1.17.x 尚未内置。当前可通过 Shell 脚本 + CI 流水线实现等价功能）：
 ```bash:terminal
 # 本地验证（概念设计——当前可用 shellcheck + yamllint 替代）
 opencode skill validate ./skills/code-review/

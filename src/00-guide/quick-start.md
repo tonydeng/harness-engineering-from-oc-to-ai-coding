@@ -15,7 +15,7 @@
 | 工具 | 版本要求 | 验证命令 | 说明 |
 |------|---------|---------|------|
 | **Node.js** | >= 18 | `node --version` | npm 安装方式所需（curl/brew 安装不需要） |
-| **Python** | >= 3.10 | `python --version` | 可选，部分 Skill 需要 |
+| **Python** | >= 3.10 | `python --version` | 可选，部分 **Skill（技能）** 需要 |
 | **Git** | >= 2.x | `git --version` | 版本控制基础 |
 
 ```bash:terminal
@@ -72,7 +72,7 @@ opencode --version
 **预期输出**：
 
 ```text:terminal
-OpenCode v1.16.0
+OpenCode v1.17.11
 ```
 
 > **故障排查**：
@@ -269,7 +269,7 @@ credentials/
 EOF
 ```
 
-> **安全原则**：永远不要让 AI 自动修改生产环境代码或执行危险命令。`ask` 权限模式是 Harness Engineering 的第一道防线。
+> **安全原则**：永远不要让 AI 自动修改生产环境代码或执行危险命令。`ask` 权限模式是 **Harness Engineering（驾驭工程）** 的第一道防线。
 
 ---
 
@@ -288,7 +288,7 @@ EOF
 | 你的角色 | 下一步 |
 |---------|--------|
 | **入门开发者** | → [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) — 理解核心理念 |
-| **效率开发者** | → [Agent 编排](../02-core-concepts/agent-orchestration.md) — 掌握高级工作流 |
+| **效率开发者** | → [**Agent（智能体）** 编排](../02-core-concepts/agent-orchestration.md) — 掌握高级工作流 |
 | **技术负责人** | → [OpenCode 配置详解](../03-setup/opencode-config.md) — 深入配置和安全策略 |
 | **Skill 作者** | → [Skill 系统](../02-core-concepts/skills-system.md) — 开始 Skill 开发 |
 

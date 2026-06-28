@@ -1,6 +1,6 @@
-# Pi Agent 扩展体系详解
+# Pi **Agent（智能体）** 扩展体系详解
 
-Pi 的核心设计哲学是"极简核心 + 强力扩展"。它主动不做许多功能（MCP、子智能体、Plan 模式等），而是提供 4 层扩展机制，让用户按需构建工作流。
+Pi 的核心设计哲学是"极简核心 + 强力扩展"。它主动不做许多功能（**MCP（模型上下文协议）**、子智能体、Plan 模式等），而是提供 4 层扩展机制，让用户按需构建工作流。
 
 ## 扩展体系总览
 
@@ -221,7 +221,7 @@ execute: async (args) => {
 
 Skills 遵循 [agentskills.io](https://agentskills.io) 标准，以 SKILL.md 文件提供按需加载的系统指令。
 
-### Skill 文件格式
+### **Skill（技能）** 文件格式
 
 ```markdown
 ---
@@ -263,7 +263,7 @@ Skills 从多个位置加载：
 
 ---
 
-## Prompt Templates（提示词模板）
+## **Prompt（提示词）** Templates（提示词模板）
 
 Prompt Templates 是命名后可复用的提示词片段。它们与 Skills 的区别在于：
 
@@ -326,7 +326,7 @@ Pi 的 TUI 支持热重载主题配置：
 
 ---
 
-## Context Files（上下文文件）
+## **Context（上下文）** Files（上下文文件）
 
 Pi 支持多层级上下文文件配置：
 
@@ -495,7 +495,7 @@ Extensions 是 TypeScript 模块，**拥有宿主进程的完整权限**：
 
 ## 扩展体系对比
 
-| 维度 | Pi Agent Extensions | OpenCode Plugin | Claude Code Hooks |
+| 维度 | Pi Agent Extensions | OpenCode **Plugin（插件）** | Claude Code Hooks |
 |------|---------------------|-----------------|-------------------|
 | 语言 | TypeScript | TypeScript | Node.js / Shell |
 | 工具注册 | `pi.registerTool()` | `definePlugin()` | CLAUDE.md 自定义命令 |

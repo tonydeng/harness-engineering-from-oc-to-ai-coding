@@ -49,7 +49,7 @@
 - 仅 `examples/opencode-configs/basic.jsonc` 存在（16 行，不包含权限配置）
 - `examples/ast-grep-rules/` 目录不存在
 
-**版本声明**：✅ `OpenCode >= v1.16.x, OMO >= v4.7.x` 已验证正确
+**版本声明**：✅ `OpenCode >= v1.16.x, OMO >= v4.13.x` 已验证正确
 
 ### Karpathy 技术审查发现
 

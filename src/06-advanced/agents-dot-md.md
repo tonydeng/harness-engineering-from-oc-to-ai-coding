@@ -5,7 +5,7 @@
 
 ## 文章概述
 
-在 AI 编程工作流中，指令的来源是分层的。AGENTS.md 是 OpenCode 的**首要指令文件**，定义了项目的根本规则和架构决策——它是编写者视角的约束。CLAUDE.md 则代表了使用者的直接指令——用户告诉 Agent "当前这个任务，我希望你这样做"——同时在 OpenCode 中作为 AGENTS.md 不存在时的后备方案。两者的核心区别：AGENTS.md 是写给所有 Agent 的通用规范，CLAUDE.md 是针对当前项目和任务的特定指令。
+在 AI 编程工作流中，指令的来源是分层的。AGENTS.md 是 OpenCode 的**首要指令文件**，定义了项目的根本规则和架构决策——它是编写者视角的约束。CLAUDE.md 则代表了使用者的直接指令——用户告诉 **Agent（智能体）** "当前这个任务，我希望你这样做"——同时在 OpenCode 中作为 AGENTS.md 不存在时的后备方案。两者的核心区别：AGENTS.md 是写给所有 Agent 的通用规范，CLAUDE.md 是针对当前项目和任务的特定指令。
 
 本文首先阐述 AGENTS.md 作为项目约定系统的核心角色——架构级约束、编码规范、项目结构的统一载体。然后对比 AGENTS.md 与 CLAUDE.md 的职责划分：AGENTS.md 负责"不变的东西"，CLAUDE.md 负责"今天要这么干的东西"。接着介绍指令覆盖策略的四层结构：**OpenCode 全局 AGENTS.md（首要）→ Claude Code 全局 CLAUDE.md（后备）→ 项目根指令文件（AGENTS.md 优先）→ 子目录 @include**。最后深入 `@include` 指令系统——文件包含、指令嵌套、优先级和合并规则，并给出团队级指令管理的最佳实践。读完本文，你将能够正确划分 AGENTS.md 与 CLAUDE.md 的职责、配置多层指令覆盖策略并管理团队级指令。
 

@@ -1,15 +1,15 @@
-# Skill 系统
+# **Skill（技能）** 系统
 
 > 理解 Skill 的结构规范、发现路径与加载机制——从定义领域知识包到实现精确权限控制。
 
 > **前置条件**
-> - 已完成 [Agent 编排](agent-orchestration.md)，理解 Agent 的加载和执行机制
+> - 已完成 [**Agent（智能体）** 编排](agent-orchestration.md)，理解 Agent 的加载和执行机制
 > - 已安装 OpenCode CLI 并完成基础配置
 > - 已了解 YAML frontmatter 和 Markdown 格式
 
 ## 文章概述
 
-Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每次从零学习，而是像加载驱动程序一样按需获取专业技能。本章节详细讲解 SKILL.md 的完整格式规范，包括 frontmatter 元数据字段（name、description、allowed-tools、target_agent）、正文结构（工作流 + 指令 + 输出规范）以及捆绑资源目录（scripts/、templates/、reference/）。读者将理解 Skill 与普通 Prompt 的核心差异——权限控制、工具绑定和元数据索引——这是 Skill 能够工程化复用的根基。
+Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每次从零学习，而是像加载驱动程序一样按需获取专业技能。本章节详细讲解 SKILL.md 的完整格式规范，包括 frontmatter 元数据字段（name、description、allowed-tools、target_agent）、正文结构（工作流 + 指令 + 输出规范）以及捆绑资源目录（scripts/、templates/、reference/）。读者将理解 Skill 与普通 **Prompt（提示词）** 的核心差异——权限控制、工具绑定和元数据索引——这是 Skill 能够工程化复用的根基。
 
 Skill 的发现路径（项目级→用户级→内置）和加载机制是整个 Skill 系统的工作流核心。我们深入分析语义匹配的设计权衡——降低认知负荷的同时可能带来不精确触发——以及渐进式披露策略如何实现按需加载。在 OMO 扩展部分，我们介绍 Skills Marketplace（社区共享与版本管理）、Scoped Skills（target_agent 限定可见性）和 Skill Overrides 机制。学完本节，读者应能独立创建 Skill 文件，并为团队搭建可共享的 Skill 体系。
 
@@ -139,7 +139,7 @@ graph TB
 
 **Composition = 编排**
 
-多个组件组合成页面，多个 Skill 组合成 Workflow：
+多个组件组合成页面，多个 Skill 组合成 **Workflow（工作流）**：
 
 ```mermaid
 graph LR
@@ -339,11 +339,11 @@ OpenCode 按照以下优先级搜索 Skill（按优先级降序排列）：
 graph TB
     subgraph Search[Skill 搜索路径（6 个位置）]
         direction TB
-        P1[.opencode/skills/] --> P2[~/.config/opencode/skills/]
-        P2 --> P3[.claude/skills/]
-        P3 --> P4[~/.claude/skills/]
-        P4 --> P5[.agents/skills/]
-        P5 --> P6[~/.agents/skills/]
+        P1[.opencode/skills/] --> P2["~/.config/opencode/skills/"]
+        P2 --> P3["~/.claude/skills/"]
+        P3 --> P4["~/.claude/skills/"]
+        P4 --> P5["~/.agents/skills/"]
+        P5 --> P6["~/.agents/skills/"]
     end
     
     P1 --> |"最高优先级"| R1[项目特定 Skill]
@@ -659,7 +659,7 @@ allowed-tools:
 }
 ```
 
-## Skill vs Plugin
+## Skill vs **Plugin（插件）**
 
 Skill 和 Plugin 是 OpenCode 生态中两个互补的概念：
 
@@ -687,7 +687,7 @@ graph TB
 |------|-------|--------|
 | 本质 | 指令包 | 能力扩展 |
 | 作用 | 教 Agent "怎么做" | 改 Agent "能做什么" |
-| 示例 | 代码审查流程、架构设计方法论 | MCP 服务器、自定义工具 |
+| 示例 | 代码审查流程、架构设计方法论 | **MCP（模型上下文协议）** 服务器、自定义工具 |
 | 配置 | SKILL.md | opencode.json plugins 字段 |
 | 权限 | allowed-tools | 工具注册 |
 

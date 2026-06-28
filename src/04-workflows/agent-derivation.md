@@ -1,4 +1,4 @@
-# Agent 派生模式
+# **Agent（智能体）** 派生模式
 
 > 父 Agent 动态生成子 Agent 处理子任务——子 Agent、委派、协调者三种派生模式的设计原理和工程实践。
 
@@ -26,7 +26,7 @@ Agent 派生是扩展单一 Agent 能力边界的关键机制。当一个 Agent 
 
 2. **权限隔离需求**：某些任务需要最小权限原则。例如，代码审查 Agent 不应该有修改代码的权限，安全审计 Agent 不应该访问生产环境凭证。
 
-3. **专业化分工**：不同任务需要不同的 Skill 组合。前端组件生成需要 `ui-designer` 和 `frontend-architect`，安全审计需要 `penetration-tester` 和 `vulnerability-manager`。
+3. **专业化分工**：不同任务需要不同的 **Skill（技能）** 组合。前端组件生成需要 `ui-designer` 和 `frontend-architect`，安全审计需要 `penetration-tester` 和 `vulnerability-manager`。
 
 派生机制让父 Agent 能够"分身"——创建专注于特定子任务的子 Agent，每个子 Agent 拥有独立的上下文窗口、权限边界和 Skill 配置。
 
@@ -803,4 +803,4 @@ Agent 派生是扩展单一 Agent 能力边界的关键机制。通过子 Agent 
 
 - ← [多 Agent 协作](multi-agent-collab.md) — 派生是多 Agent 协作的一种形式（含[后台任务机制](multi-agent-collab.md#后台任务机制)的 `run_in_background` 完整说明）
 - → [Teams 并行 Agent 协作](teams-collaboration.md) — Teams 是更高级的派生模式
-- → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 中的派生实现
+- → [自定义 Agent 与 **Plugin（插件）**](../06-advanced/custom-agents.md) — 自定义 Agent 中的派生实现

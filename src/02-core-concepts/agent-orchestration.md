@@ -1,9 +1,9 @@
-# Agent 编排
+# **Agent（智能体）** 编排
 
 > 理解 OpenCode 的 Agent 体系——从内置执行单元到 OMO 扩展生态，掌握任务分派与权限隔离的设计哲学。
 
 > **前置条件**
-> - 已完成 [简介](../01-introduction/)，理解 Harness Engineering 基本概念
+> - 已完成 [简介](../01-introduction/)，理解 **Harness Engineering（驾驭工程）** 基本概念
 > - 已安装 OpenCode CLI 并完成基础配置
 > - 已了解 AI Agent 的基本工作原理
 
@@ -11,7 +11,7 @@
 
 Agent 是 OpenCode 中一切任务执行的起点。了解 Agent 类型和它们如何协作，是使用 OpenCode 的第一步。OpenCode 内置 2 种 Agent 类型（Primary Agent 和 Subagent），5 个用户调用 Agent（Build/Plan/General/Explore/Scout），plus 2 个后台系统进程（compaction/title）。Primary Agent 和 Subagent 的分层设计实现了权限隔离，Hidden Agent 在后台自动完成上下文压缩和会话管理。Plan 模式是"先思考后执行"工程原则的具体体现，`@` 子 Agent 调用语法让你能灵活指派任务。
 
-在 OMO 扩展中，Sisyphus、Prometheus、Atlas、Hephaestus、Oracle 等专业 Agent 各有分工，类别路由系统按任务复杂度自动分派到最优模型。本节还会分析 Prompt 注入风险，并提供 Agent 选择决策树，帮你根据任务特征选合适的 Agent 组合。学完本节，你应能独立规划多 Agent 协作方案，并理解分层设计对工程安全的意义。
+在 OMO 扩展中，Sisyphus、Prometheus、Atlas、Hephaestus、Oracle 等专业 Agent 各有分工，类别路由系统按任务复杂度自动分派到最优模型。本节还会分析 **Prompt（提示词）** 注入风险，并提供 Agent 选择决策树，帮你根据任务特征选合适的 Agent 组合。学完本节，你应能独立规划多 Agent 协作方案，并理解分层设计对工程安全的意义。
 
 读完本文，你将能够识别 OpenCode 的 7 种 Agent 类型并合理选择，掌握 Primary Agent 与 Subagent 的分层协作模式，以及根据任务特征规划多 Agent 组合方案。
 
@@ -54,7 +54,7 @@ $$\text{Agent} = \text{Model} + \text{Tools} + \text{Skills} + \text{Memory}$$
 | **CPU** | Model | 提供计算/推理能力 |
 | **系统调用** | Tools | 进程通过系统调用访问硬件资源 |
 | **动态链接库** | Skills | 按需加载的功能模块 |
-| **内存** | Context Window | 进程的工作记忆空间 |
+| **内存** | **Context（上下文）** Window | 进程的工作记忆空间 |
 | **进程间通信** | @ Agent 调用 | 进程之间传递消息和数据 |
 
 这个类比帮助理解几个关键设计：
@@ -141,7 +141,7 @@ flowchart TB
 | **Agent 层** | 任务编排与执行 | Primary Agent（主执行）、Subagent（子任务）、Hidden Agent（后台自动化） |
 | **Tool 层** | 能力原子化 | 文件操作、命令执行、网络请求、代码搜索 |
 | **Provider 层** | 模型接入 | 多模型适配（Claude/GPT/Gemini/本地模型） |
-| **扩展层** | 能力增强 | Skills（知识）、Plugins（能力）、MCP（外部协议） |
+| **扩展层** | 能力增强 | Skills（知识）、Plugins（能力）、**MCP（模型上下文协议）**（外部协议） |
 
 Agent 层是整个架构的**编排中枢**——向上接收用户指令，向下调度工具和模型，横向加载 Skills 和 Plugins。
 
@@ -830,6 +830,29 @@ OpenCode 的 Agentic Loop 与马书框架的对应关系：
 2. **ToolCall 是关键**：工具调用决策是 Agent 与聊天机器人的分水岭
 3. **状态转换是设计重点**：合理的状态转换逻辑确保 Agent 可控
 
+## 循环工程：让 Agent 持续做对事
+
+AI 编码智能体的能力进化分为四个层级：**L1 提示词工程** → **L2 上下文工程** → **L3 驾驭工程** → **L4 循环工程**。本节聚焦循环工程——当 Agent 进入自动化循环后，如何确保它持续做对事、不掉入死循环、不浪费 Token。
+
+### Generator-Evaluator 模式
+
+循环工程中最核心的模式是 **Generator-Evaluator（生成器-验证器分离）**——写代码的 Agent 不应同时负责验证自己的代码。将生成和验证分给不同的 Agent，是提高自动化循环可靠性的最有效手段：
+
+| 角色 | 职责 | 工具权限 | 示例 Agent |
+|------|------|---------|-----------|
+| **Generator** | 分析需求、生成代码 | 读写 + 命令执行 | Build Agent / @general |
+| **Evaluator** | 检查语法、运行测试、验证语义 | 只读 + 测试命令 | Plan Agent / @explore |
+
+### 重试、降级与自我修正
+
+自动化循环中必须处理步骤失败。三个实战策略：
+
+1. **指数退避重试**：失败后等待时间指数增长（1s → 2s → 4s → 8s），避免反复快速重试浪费 Token
+2. **降级路径**：连续失败 3 次后自动切换到备选方案（换低成本模型、触发人工接管）
+3. **自我修正**：检测到输出有误时先分析根因（上下文不足？指令不清？），再调整策略重来，而非简单重试同一操作
+
+> → 循环工程的更多实践——重试循环、验证循环、升级循环等设计模式——详见 [工作流模式 - 循环工程工作流模式](workflow-patterns.md#循环工程工作流模式)。
+
 ## 小结
 
 Agent 是 OpenCode 的核心执行单元，理解 Agent 体系是掌握 Harness Engineering 的基础：
@@ -869,4 +892,4 @@ Agent 是 OpenCode 的核心执行单元，理解 Agent 体系是掌握 Harness 
 - → [工作流模式](workflow-patterns.md)：Agent 是工作流的基本执行单元
 - ← [简介](../01-introduction/)：承接"为什么需要 Harness Engineering"
 - → [工作流实战](../04-workflows/)：多 Agent 协作是复杂工作流的构建基础（含[后台任务机制](../04-workflows/multi-agent-collab.md#后台任务机制)）
-- → [高级话题](../06-advanced/)：自定义 Agent 与 Plugin 扩展
+- → [高级话题](../06-advanced/)：自定义 Agent 与 **Plugin（插件）** 扩展

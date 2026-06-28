@@ -6,14 +6,14 @@
 
 - [Claude Code 内置能力](./claudecode/capabilities.md) — Claude Code 内置命令和功能参考
 - [Claude Code 命令参考](./claudecode/commands.md) — 按功能分类的详细命令速查手册，含 Slash 命令、CLI 命令和配置参考
-- [Claude Code 扩展机制](./claudecode/plugins.md) — 六层扩展体系：CLAUDE.md、Skills、MCP、Subagent、Hook、Plugin
+- [Claude Code 扩展机制](./claudecode/plugins.md) — 六层扩展体系：CLAUDE.md、Skills、**MCP（模型上下文协议）**、Subagent、Hook、**Plugin（插件）**
 - [Claude Code SDK 参考](./claudecode/sdk.md) — MCP 服务器、Hooks 与 CLI 程序化集成，含天气预报智能体案例
 - [Claude Code 生态参考](./claudecode/ecosystem.md) — Claude Code 社区扩展、CLAUDE.md 实践、MCP 服务器生态和集成工作流
 
 ## 内容概要
 
 
-**[claudecode/capabilities.md](./claudecode/capabilities.md)** 梳理 Claude Code 的内置命令、工具集、Agent 模式（Plan Mode / Code Mode）和 CLAUDE.md 配置方式，并通过对比表格说明 OpenCode 与 Claude Code 在模型支持、扩展机制、工具链、Hook 系统等维度的主要差异。适合想了解 Claude Code 能力或在两者之间做选型对比的读者。
+**[claudecode/capabilities.md](./claudecode/capabilities.md)** 梳理 Claude Code 的内置命令、工具集、**Agent（智能体）** 模式（Plan Mode / Code Mode）和 CLAUDE.md 配置方式，并通过对比表格说明 OpenCode 与 Claude Code 在模型支持、扩展机制、工具链、Hook 系统等维度的主要差异。适合想了解 Claude Code 能力或在两者之间做选型对比的读者。
 
 **[claudecode/commands.md](./claudecode/commands.md)** 是 Claude Code 所有命令的详细参考手册。Slash 命令覆盖会话管理、模型控制、代码审查、MCP 扩展等 12 个类别，共 70+ 个命令；CLI 命令涵盖会话启动、后台管理、MCP 管理等 25+ 个 Shell 级别命令；另有 CLI 标志速查和键盘快捷键参考。适合需要在 Claude Code 中快速查找命令用法的用户。
 

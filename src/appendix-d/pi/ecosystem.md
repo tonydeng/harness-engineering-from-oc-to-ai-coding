@@ -1,4 +1,4 @@
-# Pi Agent 生态参考
+# Pi **Agent（智能体）** 生态参考
 
 本章节围绕 **Harness Engineering（驾驭工程）** 和 **Loop Engineering（循环工程）** 两大主线，将 Pi Agent 生态资源按工程价值分类组织，帮助你在实际工作中找到最相关的工具和实践参考。
 
@@ -238,7 +238,7 @@ Extension 类型：
 | 维度 | Pi Agent | OpenCode | Claude Code |
 |------|----------|----------|-------------|
 | Provider 数量 | 20+ (324 模型) | 75+ | 仅 Claude |
-| SDK 集成 | 原生 TypeScript API + RPC | Plugin Hook 系统 | CLI 调用 |
+| SDK 集成 | 原生 TypeScript API + RPC | **Plugin（插件）** Hook 系统 | CLI 调用 |
 | 容器化方案 | Gondolin / Docker / OpenShell | Docker | Docker（官方镜像） |
 | Session 分享 | GitHub Gist + OSS 社区 | 本地文件 | 无 |
 | 扩展分发 | Pi Packages (npm) | npm Plugin | 无标准机制 |
@@ -254,7 +254,7 @@ Extension 类型：
 ### 从 Claude Code 迁移
 
 - **模型灵活性**：Claude Code 仅支持 Claude 系列模型，Pi 支持 20+ Provider/324 个模型。迁移后可通过 `/model` 命令随时切换模型，无需配置多套环境
-- **扩展机制**：Claude Code 的六层扩展体系（CLAUDE.md + Skills + MCP + Subagent + Hook + Plugin）对应 Pi 的四层体系（Extensions/Skills/Prompt Templates/Themes）。自定义工具需按 Pi 的 Extension API 用 TypeScript 重写，而非 Shell 脚本 Hook
+- **扩展机制**：Claude Code 的六层扩展体系（CLAUDE.md + Skills + **MCP（模型上下文协议）** + Subagent + Hook + Plugin）对应 Pi 的四层体系（Extensions/Skills/**Prompt（提示词）** Templates/Themes）。自定义工具需按 Pi 的 Extension API 用 TypeScript 重写，而非 Shell 脚本 Hook
 - **安全模型**：Claude Code 内置权限审批弹窗，Pi 无内置沙箱——如需安全隔离必须使用 Gondolin/Docker/OpenShell 容器化方案
 - **命令差异**：部分 Slash 命令名称不同，如 Pi 的 `/compact` 行为类似但参数不同，建议查阅 [CLI 命令参考](./commands.md) 逐一确认
 
@@ -320,7 +320,7 @@ Extension 类型：
 - 智能体开发工程师 — Pi 的 SDK 和 Extension API 为深度定制提供支持
 - 效率开发者 — Pi 的 Provider 策略和模型路由支持快速迭代
 - 技术负责人 — Pi 的容器化方案（Gondolin/Docker/OpenShell）满足企业安全要求
-- Skill 作者 — Pi 的 Skills 系统遵循标准化，易于创建和分享
+- **Skill（技能）** 作者 — Pi 的 Skills 系统遵循标准化，易于创建和分享
 - 系统架构师 — Pi 的安全模型和信任机制，便于架构评估
 - 安全工程师 — Pi 的安全模型透明，易于威胁建模和合规评估
 

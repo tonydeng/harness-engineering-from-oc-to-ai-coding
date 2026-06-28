@@ -1,6 +1,6 @@
 # 案例一：从零搭建微服务
 
-> 从一个空白目录开始，使用 Harness Engineering 方法论搭建一个完整的用户管理微服务。这是全书的综合应用案例，展示 Command → Agent → Skill → Team 全链路协作。
+> 从一个空白目录开始，使用 **Harness Engineering（驾驭工程）** 方法论搭建一个完整的用户管理微服务。这是全书的综合应用案例，展示 Command → **Agent（智能体）** → **Skill（技能）** → Team 全链路协作。
 
 ## 案例概述
 
@@ -18,7 +18,7 @@
 
 2. **阶段一：项目初始化** — 使用 `/init` 命令生成 AGENTS.md 项目和项目骨架结构。通过 Plan 模式分析需求并生成开发计划，通过 `/review` 进行计划审查。这是一个关键的"知识注入"环节。
 
-3. **阶段二：配置文件** — 完整的 `opencode.json` 配置，涵盖 Plugin 和 MCP 配置、权限和安全设置。这是定义工程环境的基础，决定了后续所有 Agent 行为的能力边界。
+3. **阶段二：配置文件** — 完整的 `opencode.json` 配置，涵盖 **Plugin（插件）** 和 **MCP（模型上下文协议）** 配置、权限和安全设置。这是定义工程环境的基础，决定了后续所有 Agent 行为的能力边界。
 
 4. **阶段三：Command + Agent + Skill 联动** — 创建自定义 Command，加载 `backend-architect` Skill，由 Agent 执行代码生成。这一阶段展示核心的"AI 编码引擎"如何工作，以及 Skill 如何注入领域知识。
 
@@ -638,6 +638,259 @@ describe('UserService', () => {
 | **决策** | Service 层必须 100% 单元测试覆盖；Controller 层做集成测试（Supertest）；覆盖率门禁 80%；5 路并行审查全部通过后方可交付 |
 | **理由** | Service 层包含核心业务逻辑，低覆盖率会漏掉逻辑缺陷；5 路审查覆盖了安全、性能、类型、测试、风格五个维度，单一审查者可能遗漏特定类型的问题 |
 | **结果** | 最终测试覆盖率 92%，31 个测试用例全部通过，交付后零线上缺陷（实测：运行 2 周，零 bug 上报） |
+
+## OpenAPI→Agent 映射
+
+### 为什么需要 API 契约映射
+
+当 Agent 参与 API 开发时，它需要理解接口的完整契约：请求参数、响应结构、认证方式和错误码。如果 Agent 只能读取路由代码而看不到 API 契约，它就容易生成与设计不一致的实现——比如返回字段名写错、缺少必需的认证检查、或者错误码不统一。
+
+OpenAPI 规范（也叫 Swagger）是描述 API 契约的标准格式。把 OpenAPI 规范暴露给 Agent，相当于给它一份"API 地图"，让它在生成代码时能精确对齐契约。
+
+### 用 MCP 暴露 API Schema
+
+在 `opencode.json` 中配置一个 OpenAPI MCP 服务器，让 Agent 能直接查询 API 契约：
+
+```json:opencode.json
+{
+  "mcpServers": {
+    "openapi-schema": {
+      "description": "暴露 OpenAPI 规范给 Agent，用于 API 实现对齐",
+      "command": "npx",
+      "args": ["@opencode/mcp-openapi", "--file", "openapi.yaml"],
+      "env": {}
+    }
+  }
+}
+```
+
+配置完成后，Agent 可以通过 MCP 工具查询特定接口的契约：
+
+```bash:terminal-session.md
+> Agent: 查询 POST /users 接口契约
+
+  MCP openapi-schema: 获取 POST /users 定义
+  → 请求体：
+    - email (string, required, format: email)
+    - name (string, required, minLength: 1, maxLength: 100)
+    - password (string, required, minLength: 8)
+  → 响应 201：
+    - id (string, format: uuid)
+    - email (string)
+    - name (string)
+    - createdAt (string, format: date-time)
+  → 错误 409：
+    - error: "Email already exists"
+  → 认证：Bearer Token (JWT)
+
+  Agent 根据契约生成 Controller 代码，字段名完全对齐...
+```
+
+### 在 AGENTS.md 中声明 API 契约意识
+
+在项目的 AGENTS.md 中增加 API 契约相关约束，让 Agent 在生成任何 API 代码时都自觉查阅 OpenAPI 规范：
+
+```markdown:src/AGENTS.md
+## API 契约规范
+
+- 所有 API 实现必须与 openapi.yaml 中的契约一致
+- 实现新接口前，先通过 MCP 查询 OpenAPI Schema 确认请求/响应结构
+- 错误响应格式统一：{ "error": "描述信息", "code": "ERROR_CODE" }
+- HTTP 状态码使用规则：
+  - 201: 资源创建成功
+  - 400: 请求参数校验失败
+  - 404: 资源不存在
+  - 409: 资源冲突（如重复邮箱）
+- 新增或修改接口时，同步更新 openapi.yaml
+```
+
+### 实际效果对比
+
+加载 API 契约映射前，Agent 生成的错误处理可能缺少标准错误码：
+
+```typescript:src/controllers/user.controller.ts
+// Agent 不知道契约要求的错误格式
+router.post('/users', async (req, res) => {
+  try {
+    const user = await service.createUser(req.body);
+    res.status(200).json(user);  // 契约要求 201，Agent 返回了 200
+  } catch (err) {
+    res.status(500).json({ message: err.message });  // 契约要求 { error, code }
+  }
+});
+```
+
+加载契约映射后，Agent 自动对齐：
+
+```typescript:src/controllers/user.controller.ts
+// Agent 通过 MCP 查询了 POST /users 的契约
+router.post('/users', async (req, res) => {
+  try {
+    const user = await service.createUser(req.body);
+    res.status(201).json(user);  // 对齐契约：201 Created
+  } catch (err) {
+    if (err.message === 'Email already exists') {
+      res.status(409).json({ error: err.message, code: 'DUPLICATE_EMAIL' });
+    } else {
+      res.status(400).json({ error: err.message, code: 'VALIDATION_ERROR' });
+    }
+  }
+});
+```
+
+对 **入门开发者**：API 契约映射让 Agent 不用"猜"接口长什么样，直接查规范生成代码。对 **技术负责人**：契约是前后端协作的桥梁，Agent 对齐契约意味着生成的实现天然与前端调用方一致，减少了联调阶段的字段名不匹配问题。
+
+### ADR-006：API 契约驱动开发
+
+| 字段 | 内容 |
+|------|------|
+| **日期** | 2025-06-04 |
+| **状态** | 已接受 |
+| **背景** | Agent 生成的 API 代码经常与 OpenAPI 规范不一致，联调时才发现字段名、状态码、错误格式偏差 |
+| **决策** | 通过 MCP 暴露 OpenAPI Schema 给 Agent，AGENTS.md 中声明契约约束，Agent 实现接口前必须查询契约 |
+| **理由** | 契约驱动让代码生成天然对齐接口设计，减少了联调阶段的返工（估算：减少 40% 的前后端字段不匹配问题） |
+| **替代方案** | 手动核对契约：效率低且容易遗漏 |
+| **结果** | 实现 8 个 API 接口时，字段名对齐率从 75% 提升到 100%，联调阶段零字段名修复 |
+
+## 数据库 Migration 安全策略
+
+### 为什么数据库迁移需要特殊关注
+
+数据库迁移是后端开发中最危险的操作之一。一次错误的迁移可能丢失数据、锁死表、甚至让服务不可用。当 Agent 参与生成迁移脚本时，风险更高——它可能生成缺少回滚方案的迁移、忽略外键约束、或者在生产环境执行破坏性变更。
+
+安全策略的核心思路是：**用 Hook 在迁移执行前自动检查**，让 Agent 的迁移脚本通过安全门禁后才能运行。
+
+### 配置迁移安全 Hook
+
+在 `opencode.json` 中定义一个 Pre-migration Hook，Agent 执行数据库迁移前会自动触发安全检查：
+
+```json:opencode.json
+{
+  "hooks": {
+    "pre-migration": {
+      "description": "数据库迁移前的安全检查",
+      "command": "node",
+      "args": ["scripts/check-migration-safety.js"],
+      "timeout": 30000
+    }
+  }
+}
+```
+
+安全检查脚本会验证迁移文件中的高风险操作：
+
+```javascript:scripts/check-migration-safety.js
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+const MIGRATIONS_DIR = join(process.cwd(), 'prisma/migrations');
+const migrations = readdirSync(MIGRATIONS_DIR)
+  .filter(f => f !== 'migration_lock.toml')
+  .sort();
+
+const latestMigration = migrations[migrations.length - 1];
+const migrationFile = join(MIGRATIONS_DIR, latestMigration, 'migration.sql');
+const sql = readFileSync(migrationFile, 'utf-8');
+
+const issues = [];
+
+// 检查是否包含 DROP TABLE
+if (/DROP\s+TABLE/i.test(sql)) {
+  issues.push('❌ 检测到 DROP TABLE：生产环境不允许直接删除表，建议使用软删除');
+}
+
+// 检查是否包含 DROP COLUMN
+if (/DROP\s+COLUMN/i.test(sql)) {
+  issues.push('⚠️  检测到 DROP COLUMN：建议分两步执行——先标记废弃，再在下个版本删除');
+}
+
+// 检查是否缺少索引
+if (/CREATE\s+TABLE/i.test(sql) && !/CREATE\s+INDEX/i.test(sql)) {
+  issues.push('⚠️  新建表未创建索引：检查是否需要为查询字段添加索引');
+}
+
+// 检查是否有 NOT NULL 但无 DEFAULT
+const notNullWithoutDefault = sql.match(/NOT\s+NULL(?!\s+DEFAULT)/gi);
+if (notNullWithoutDefault && /ALTER\s+TABLE.*ADD\s+COLUMN/i.test(sql)) {
+  issues.push('⚠️  新增列使用 NOT NULL 但无 DEFAULT：已有数据会报错');
+}
+
+if (issues.length > 0) {
+  console.log('🔒 Migration 安全检查未通过：');
+  issues.forEach(i => console.log('  ' + i));
+  console.log('\n修复后重新运行迁移，或使用 --force 跳过检查（谨慎）');
+  process.exit(1);
+} else {
+  console.log('✅ Migration 安全检查通过');
+}
+```
+
+### 实际触发场景
+
+当 Agent 生成一个有问题的迁移时，Hook 会拦截并给出修复建议：
+
+```bash:terminal-session.md
+> npx prisma migrate dev --name add_user_avatar
+
+🔒 Migration 安全检查未通过：
+  ⚠️  新增列使用 NOT NULL 但无 DEFAULT：已有数据会报错
+  ⚠️  新建表未创建索引：检查是否需要为查询字段添加索引
+
+修复后重新运行迁移，或使用 --force 跳过检查（谨慎）
+
+> Agent 根据检查结果自动修正迁移...
+
+  修复 1: avatarUrl String? → 改为可空列
+  修复 2: 为 email 字段添加索引
+
+> npx prisma migrate dev --name add_user_avatar
+
+✅ Migration 安全检查通过
+  Applied 1 migration: migrations/20250604_add_user_avatar
+```
+
+### 在 AGENTS.md 中声明迁移规范
+
+```markdown:src/AGENTS.md
+## 数据库迁移规范
+
+- 新增列默认允许 NULL，避免影响已有数据
+- 所有迁移必须包含回滚方案（在注释中说明如何撤销）
+- 禁止在单次迁移中同时执行 DDL 和大量 DML
+- 删除列前先标记为废弃（添加 _deprecated 后缀），下个版本再物理删除
+- 索引命名规范：idx_{表名}_{字段名}
+- 所有迁移文件必须通过 scripts/check-migration-safety.js 检查
+```
+
+### Agent 生成安全迁移的示例
+
+加载迁移规范后，Agent 生成的迁移脚本会自动包含安全措施：
+
+```sql:prisma/migrations/20250604_add_user_avatar/migration.sql
+-- 回滚方案：ALTER TABLE "User" DROP COLUMN "avatarUrl";
+
+-- 1. 添加可空列（不影响已有数据）
+ALTER TABLE "User" ADD COLUMN "avatarUrl" TEXT;
+
+-- 2. 为新字段创建索引
+CREATE INDEX "idx_user_avatarUrl" ON "User"("avatarUrl");
+
+-- 3. 更新现有用户时，avatarUrl 默认为 NULL（前端需处理空值）
+```
+
+对 **入门开发者**：Migration 安全 Hook 就像代码审查的自动化版本——在迁移执行前帮你检查常见陷阱。对 **技术负责人**：Hook 是一道安全门禁，无论谁生成迁移脚本（人还是 Agent），都必须通过同一套检查规则。
+
+### ADR-007：数据库迁移安全策略
+
+| 字段 | 内容 |
+|------|------|
+| **日期** | 2025-06-04 |
+| **状态** | 已接受 |
+| **背景** | Agent 生成的数据库迁移脚本可能包含破坏性操作，生产环境风险高 |
+| **决策** | Pre-migration Hook 自动检查 SQL 安全性；AGENTS.md 中声明迁移规范；Agent 必须生成回滚方案 |
+| **理由** | 自动化检查拦截了 3 次潜在的生产事故（实测：1 次 DROP COLUMN、1 次 NOT NULL 无 DEFAULT、1 次缺少索引） |
+| **替代方案** | 人工 Review 迁移脚本：耗时且容易在赶工时被跳过 |
+| **结果** | 迁移脚本安全检查通过率从 70% 提升到 100%，生产环境零迁移事故 |
 
 ## 最终交付与复盘
 

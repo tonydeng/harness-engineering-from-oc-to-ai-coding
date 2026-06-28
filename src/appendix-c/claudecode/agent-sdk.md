@@ -1,6 +1,6 @@
-# Claude Agent SDK：编程式 Agent 开发
+# Claude **Agent（智能体）** SDK：编程式 Agent 开发
 
-> 通过 `@anthropic-ai/claude-agent-sdk` 将 Claude Code 的 Agent 引擎嵌入你的应用——用代码驱动工具调用、子 Agent 调度和 MCP 集成。
+> 通过 `@anthropic-ai/claude-agent-sdk` 将 Claude Code 的 Agent 引擎嵌入你的应用——用代码驱动工具调用、子 Agent 调度和 **MCP（模型上下文协议）** 集成。
 
 Claude Agent SDK 把 Claude Code 的 Agent 循环（工具执行、上下文管理、自动压缩）作为库暴露出来。和 [Agent 设计指南](./agent-architecture.md) 中介绍的 filesystem Subagent（`.claude/agents/*.md`）不同，SDK 面向的是**在代码中创建和管理 Agent**的场景——CI/CD 流水线、自定义 Web 应用、后台服务。
 
@@ -428,7 +428,7 @@ options: { allowedTools: ['Read', 'Glob', 'Grep'], permissionMode: 'bypassPermis
 
 ### 输入验证
 
-如果 prompt 来源包含用户输入（如 Web 表单、API 参数），需要在传入 `query()` 前验证和消毒。恶意构造的 prompt 可能导致 Agent 执行意外操作（Prompt 注入攻击）。
+如果 prompt 来源包含用户输入（如 Web 表单、API 参数），需要在传入 `query()` 前验证和消毒。恶意构造的 prompt 可能导致 Agent 执行意外操作（**Prompt（提示词）** 注入攻击）。
 
 ### 审计日志
 
@@ -1113,7 +1113,7 @@ for await (const msg of query({
 | **包名** | `@anthropic-ai/claude-agent-sdk` | `@opencode-ai/sdk` |
 | **架构** | 子进程（spawn Claude Code CLI） | REST API 客户端 |
 | **入口** | `query()` async 生成器 | `createOpencodeClient()` + `.session.prompt()` |
-| **自定义工具** | `tool()` + `createSdkMcpServer()` | 通过 Plugin 系统 |
+| **自定义工具** | `tool()` + `createSdkMcpServer()` | 通过 **Plugin（插件）** 系统 |
 | **子 Agent** | `agents` 参数（`AgentDefinition`） | 在 prompt 中 @mention |
 | **Hook** | `PreToolUse`/`PostToolUse` 回调 | Plugin Hook 链 |
 | **预热** | `startup()` 支持 | 无需预热（已运行 Server） |
@@ -1140,8 +1140,8 @@ for await (const msg of query({
 - 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
 - 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
 - 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
-- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
-- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 **Harness Engineering（驾驭工程）** 体系
+- **Skill（技能）**作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
 
 ### 典型使用场景
 - 需要编程式驱动 Agent 引擎

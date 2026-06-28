@@ -1,6 +1,6 @@
 # OpenCode SDK 与程序化集成
 
-OpenCode 提供多种程序化集成方式，允许开发者将 Agent 能力嵌入到自己的应用和流水线中。本章涵盖 OpenCode 的 Plugin SDK、npm 包 SDK、以及命令行程序化调用。
+OpenCode 提供多种程序化集成方式，允许开发者将 **Agent（智能体）** 能力嵌入到自己的应用和流水线中。本章涵盖 OpenCode 的 **Plugin（插件）** SDK、npm 包 SDK、以及命令行程序化调用。
 
 > **SDK 深入参考**：如果你只关心 `@opencode-ai/sdk` npm 包的深入使用（生产级配置、上下文管理、错误重试等），见 [OpenCode Agent SDK 编程](./agent-sdk.md)。
 
@@ -14,7 +14,7 @@ OpenCode 有三层 SDK/API，对应不同的集成深度：
 |------|------|--------|----------|---------|
 | **Plugin SDK** | `import { definePlugin } from "opencode"` | ⭐⭐⭐⭐⭐ | Agent 进程内 | 自定义工具、Hook 拦截、Agent 行为扩展 |
 | **npm SDK** | `@opencode-ai/sdk` / `github.com/sst/opencode-sdk-go` | ⭐⭐⭐⭐ | 独立进程 | 外部应用集成，服务端 Agent 调用 |
-| **CLI 程序化** | `opencode --json` / MCP 协议 | ⭐⭐⭐ | Shell/子进程 | CI/CD 流水线，脚本集成 |
+| **CLI 程序化** | `opencode --json` / **MCP（模型上下文协议）** 协议 | ⭐⭐⭐ | Shell/子进程 | CI/CD 流水线，脚本集成 |
 
 ---
 
@@ -658,8 +658,8 @@ Agent: 正在查询三个城市...
 - 入门开发者 — 适合快速上手 OpenCode 的基础能力，了解核心概念和常用命令
 - 智能体开发工程师 — 需要设计、调试、进化 AI 编码智能体，建立系统化的 Agent 工程体系
 - 效率开发者 — 已用 AI 工具，想掌握 Agent 编排和工作流模式，提升日常开发效率 2x+
-- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 Harness Engineering 体系
-- Skill 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
+- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 **Harness Engineering（驾驭工程）** 体系
+- **Skill（技能）** 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
 - 工程经理 — 评估团队工具选型，判断 OpenCode 的投资回报率
 - 需求分析师/产品经理 — 验证需求覆盖完整性，评估内容价值主张
 - 系统架构师/技术顾问 — 评估 OpenCode 的技术可行性、架构集成与安全合规

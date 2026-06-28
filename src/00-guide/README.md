@@ -60,14 +60,14 @@ flowchart TB
 | 角色 | 简称 | 典型特征 | 核心目标 | 推荐优先级 |
 |------|------|----------|----------|------------|
 | **入门开发者** | 入门 | 刚接触 AI 编程，基本编程能力 OK | 快速上手 OpenCode | ★★★★★ |
-| **智能体开发工程师** | 智能体工程师 | 已有 AI 工具使用经验，需要设计、调试、进化 AI 编码智能体 | 掌握 Agent 配置、上下文工程、循环工程 | ★★★★★ |
+| **智能体开发工程师** | 智能体工程师 | 已有 AI 工具使用经验，需要设计、调试、进化 AI 编码智能体 | 掌握 Agent 配置、**Context Engineering（上下文工程）**、循环工程 | ★★★★★ |
 | **效率开发者** | 效率 | 已用 AI 工具，想升级到 Agent 编排 | 提升 2x+ 效率 | ★★★★★ |
 | **技术负责人** | 技术负责人 | 团队技术决策者，关注标准化 | 建立团队级体系 | ★★★★★ |
-| **Skill 作者** | Skill 作者 | 有 AI 使用经验，想扩展能力 | 开发高质量 Skill | ★★★★★ |
+| **Skill 作者** | **Skill（技能）** 作者 | 有 AI 使用经验，想扩展能力 | 开发高质量 Skill | ★★★★★ |
 | **工程经理** | 工程经理 | 评估团队工具选型 | 判断投资回报率 | ★★★★☆ |
 | **需求分析师** | 需求分析师 | 需求分析、产品规划经验 | 验证需求覆盖完整性 | ★★★☆☆ |
 | **系统架构师** | 架构师 | 5 年以上架构经验 | 评估技术可行性 | ★★★★☆ |
-| **后端开发者** | 后端 | 熟悉 REST/微服务/数据库 | MCP 服务端集成 | ★★★★☆ |
+| **后端开发者** | 后端 | 熟悉 REST/微服务/数据库 | **MCP（模型上下文协议）** 服务端集成 | ★★★★☆ |
 | **前端开发者** | 前端 | 熟悉 React/Vue/Angular | 前端工作流应用 | ★★★☆☆ |
 | **文档 UX 专家** | UX | 信息架构/开发者文档经验 | 文档体验优化 | ★★☆☆☆ |
 | **技术审校** | QA | 测试或技术写作背景 | 建立质量门禁 | ★★★☆☆ |
@@ -233,7 +233,7 @@ graph TB
 | 前置知识 | 要求程度 | 说明 |
 |----------|----------|------|
 | **AI 编程助手** | 使用过至少一种 | Copilot / Claude Code / Cursor / Codeium 等 |
-| **Agent/LLM 概念** | 了解基本概念 | 知道什么是 LLM、Prompt、Context 即可 |
+| **Agent/LLM 概念** | 了解基本概念 | 知道什么是 LLM、**Prompt（提示词）**、Context 即可 |
 | **MCP 协议** | 听说过即可 | Model Context Protocol，后续章节会详细讲解 |
 
 ### 前置知识自检清单
@@ -323,8 +323,8 @@ graph TB
 
 | 组件 | 版本 | 说明 |
 |------|------|------|
-| **[OpenCode](https://github.com/anomalyco/opencode)** | v1.16.x | 核心 AI 编程引擎（当前为 v1.16.2） |
-| **[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)** | v4.7.x | Agent 编排套件（当前为 v4.7.5） |
+| **[OpenCode](https://github.com/anomalyco/opencode)** | v1.17.x | 核心 AI 编程引擎（当前为 v1.17.11） |
+| **[oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)** | v4.12.x | Agent 编排套件（当前为 v4.12.0） |
 | **[mdBook](https://github.com/rust-lang/mdBook)** | v0.5.x | 书籍渲染引擎（当前为 v0.5.3） |
 | **[Mermaid](https://github.com/mermaid-js/mermaid)** | v10+ | 图表和架构图 |
 | **[Node.js](https://nodejs.org/)** | >=18 | npm 安装方式所需运行时（curl/brew 安装不需要） |
@@ -378,7 +378,7 @@ flowchart LR
 |----------|----------|
 | **入门** | 跳转到 [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
 | **效率** | 跳转到 [Agent 编排](../02-core-concepts/agent-orchestration.md) |
-| **技术负责人** | 跳转到 [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) |
+| **技术负责人** | 跳转到 [**Harness Engineering（驾驭工程）** 理论框架](../01-introduction/harness-engineering-theory.md) |
 | **Skill 作者** | 跳转到 [Skill 系统](../02-core-concepts/skills-system.md) |
 | **工程经理** | 跳转到 [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) |
 | **后端** | 跳转到 [MCP 服务器](../06-advanced/mcp-servers.md) |
@@ -391,7 +391,7 @@ flowchart LR
 
 ## 章节导航
 
-> ✅ **写作状态提示**：本书 **50 篇文章全部完成**（100%）。阅读路径和各章节链接均已标注完整规划。
+> ✅ **写作状态提示**：本书 **90 篇全部完成**（100%）。阅读路径和各章节链接均已标注完整规划。
 
 本章包含以下内容：
 

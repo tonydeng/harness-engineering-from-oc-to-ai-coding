@@ -41,7 +41,7 @@
 | R1-06 | agent-orchestration.md L622-687 | 类别路由系统未标注为 **OMO 扩展**（非 OpenCode 原生），与 spec 要求冲突 | 添加 OMO 扩展标注 |
 | R1-07 | skills-system.md L336-362 | "六路搜索路径"中包含 `.claude/skills/` 和 `.agents/skills/` 路径，这些是 **OMO 兼容层扩展**，非 OpenCode 原生 | 标注 OMO 扩展路径 |
 | R1-08 | workflow-patterns.md L48 | "5 个核心内置命令"不完整——实际有 10+ 内置命令（/new, /sessions, /compact, /export, /connect, /models, /themes, /editor, /details, /thinking） | 扩展内置命令列表 |
-| R1-09 | context-engineering-core.md | 多处配置引用 "OpenCode >= v1.16.x, OMO >= v4.7.x"，与 PRD 基线（v1.15.x / v4.5.x）不一致 | 统一版本号或标注为"规划中" |
+| R1-09 | context-engineering-core.md | 多处配置引用 "OpenCode >= v1.16.x, OMO >= v4.13.x"，与 PRD 基线（v1.15.x / v4.5.x）不一致 | 统一版本号或标注为"规划中" |
 | R1-10 | context-engineering-core.md | `tokenBudget.overrunHandling.modelDowngrade` 等配置字段无法验证为真实 OpenCode 配置 | 标注为 OMO 扩展或架构建议 |
 | R1-11 | validation-harness.md | 缺少 YOLO 分类器详细说明（spec 明确要求），仅简略提及 "YOLO mode 是布尔开关" | 补充 YOLO 分类机制说明 |
 

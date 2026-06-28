@@ -1,13 +1,13 @@
 # 上下文注入与检索
 
 > 上下文不是越多越好。选择性上下文注入教你在对的时机注入对的信息，AST感知分块让代码检索看到完整的函数和类。本文从注入策略到代码语义分块，覆盖"注入什么、怎么分块、如何检索"的完整链路。
-> **适合读者**: 架构师 · 效率开发者 · Skill 作者
+> **适合读者**: 架构师 · 效率开发者 · **Skill（技能）** 作者
 
 ## 文章概述
 
 在前几篇文章中，你已经了解了上下文压缩（压缩已有信息）、Token 预算（分配有限空间）和缓存机制（复用不变内容）。这些都是围绕"已有上下文怎么管"展开的。但有一个问题还没有回答：**上下文是怎么进入 Agent 的工作记忆的？**更进一步，当 Agent 需要在庞大的代码库中找到相关代码时，**怎么确保检索到的代码片段是完整的、可理解的？**
 
-每次请求发出去，Agent 看到一个巨大的上下文窗口。但这个窗口里的内容不是凭空出现的——它由多层来源组装而成：系统指令、AGENTS.md、工具定义、对话历史、文件内容、MCP 返回数据。这些内容在什么时机、以什么顺序、按什么粒度注入到上下文中，直接决定了 Token 的利用效率和 Agent 的推理质量。
+每次请求发出去，**Agent（智能体）** 看到一个巨大的上下文窗口。但这个窗口里的内容不是凭空出现的——它由多层来源组装而成：系统指令、AGENTS.md、工具定义、对话历史、文件内容、**MCP（模型上下文协议）** 返回数据。这些内容在什么时机、以什么顺序、按什么粒度注入到上下文中，直接决定了 Token 的利用效率和 Agent 的推理质量。
 
 另一方面，代码不是散文。按字符数切割代码块，就像按页数拆掉一座桥——每个碎片都失去了结构意义。AST 感知分块让 Agent 在检索代码时看到的是完整的函数和类，而不是断成两半的片段。
 
@@ -996,14 +996,14 @@ async function chunkCodebase(repoPath: string) {
 
 ## 关联章节
 
-- ← [上下文压缩与Token 预算](context-compression.md)（压缩与分层上下文的温层协作，检索块的质量直接影响压缩保真度）
-- → [提示词缓存机制](context/prompt-caching.md)（CAL 稳定前缀是缓存受益者）
-- → [记忆系统设计](memory-system.md)（冷层与记忆系统的关系）
-- → [AGENTS.md 约定系统](agents-dot-md.md)（三区结构的 AGENTS.md 设计）
-- → [MCP 服务器](mcp-servers.md)（MCP协议基础，检索工具的运行环境）
-- → [性能调优与成本管理](context/performance-tuning.md)（分块策略对 Token 消耗和检索延迟的影响）
-- → [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程全景定位）
-- → [创建 Skill](../05-skills/creating-skills.md)（Skill 加载机制的基础）
+- ← [上下文压缩与Token 预算](../context-compression.md)（压缩与分层上下文的温层协作，检索块的质量直接影响压缩保真度）
+- → [提示词缓存机制](prompt-caching.md)（CAL 稳定前缀是缓存受益者）
+- → [记忆系统设计](../memory-system.md)（冷层与记忆系统的关系）
+- → [AGENTS.md 约定系统](../agents-dot-md.md)（三区结构的 AGENTS.md 设计）
+- → [MCP 服务器](../mcp-servers.md)（MCP协议基础，检索工具的运行环境）
+- → [性能调优与成本管理](performance-tuning.md)（分块策略对 Token 消耗和检索延迟的影响）
+- → [上下文工程核心](../../02-core-concepts/context-engineering-core.md)（上下文工程全景定位）
+- → [创建 Skill](../../05-skills/creating-skills.md)（Skill 加载机制的基础）
 
 ## 验证标准
 

@@ -1,15 +1,15 @@
 # 上下文工程核心
 
-> 管理 Agent 的"工作记忆"——在有限的 Token 空间内实现信息优先级的精准编排。
+> 管理 **Agent（智能体）** 的"工作记忆"——在有限的 Token 空间内实现信息优先级的精准编排。
 
 > **前置条件**
-> - 已完成 [简介](../01-introduction/)，理解 Harness Engineering 基本概念
+> - 已完成 [简介](../01-introduction/)，理解 **Harness Engineering（驾驭工程）** 基本概念
 > - 已安装 OpenCode CLI 并完成基础配置
 > - 已了解 LLM 上下文窗口和 Token 计数的基本概念
 
 ## 文章概述
 
-每个 Agent 的上下文窗口（Context Window）容量有限，装不下所有信息。上下文工程就是管理这个有限空间的技术——决定哪些信息保留、哪些丢弃、如何预留空间，直接影响 Agent 的决策准确度。本章围绕三个核心维度展开：**压缩**（缩减信息量）、**缓存**（重用已有信息）、**预算**（分配有限空间），讲解每个维度的实现原理。你会理解 Compaction 自动压缩机制如何选择性保留关键信息、Session 级与跨 Session 缓存的差异、以及 Token 预算在系统指令/用户输入/工具输出之间的分配策略与超限处理机制。
+每个 Agent 的上下文窗口（**Context（上下文）** Window）容量有限，装不下所有信息。上下文工程就是管理这个有限空间的技术——决定哪些信息保留、哪些丢弃、如何预留空间，直接影响 Agent 的决策准确度。本章围绕三个核心维度展开：**压缩**（缩减信息量）、**缓存**（重用已有信息）、**预算**（分配有限空间），讲解每个维度的实现原理。你会理解 Compaction 自动压缩机制如何选择性保留关键信息、Session 级与跨 Session 缓存的差异、以及 Token 预算在系统指令/用户输入/工具输出之间的分配策略与超限处理机制。
 
 上下文工程与约束系统配合使用：上下文工程确保 Agent "看得到"需要的信息，约束系统确保 Agent "不做"不该做的事。验证护栏则在输出阶段验证结果正确性。学完本节，你应能根据任务特征配置上下文管理参数，理解压缩后信息保真度与性能的权衡关系，并掌握跨会话上下文保持的基本方法。
 
@@ -63,7 +63,7 @@
 - 一个中型项目可能有数十万行代码
 - 完整的 API 文档可能超过 10 万字
 - 一次长会话的对话历史可能积累数万 Token
-- MCP 工具返回的查询结果可能非常庞大
+- **MCP（模型上下文协议）** 工具返回的查询结果可能非常庞大
 
 **核心矛盾**：有限的工作记忆 vs 无限的信息需求。上下文工程就是为了解决这个矛盾而诞生的方法论。
 
@@ -118,6 +118,8 @@ graph TB
 
 三层之间存在依赖关系：**缓存优先**（能复用就不重传），**预算控制**（分配各部分空间），**压缩兜底**（超限时智能缩减）。
 
+> **配置映射速查**：压缩层对应 `compaction` 字段（如 `compaction.auto`、`compaction.reserved`）；缓存层对应 `caching` 字段（如 `caching.crossSession`）；预算层通过 `compaction.reserved` 控制整体预留空间，推理预算通过 `provider.*.models.*.options.thinking.budgetTokens` 设置。部分高级配置（如微压缩规则）需要 OpenCode >= v1.17.x 和 OMO >= v4.13.x。没有直接对应配置的概念（如上下文注入），通过 AGENTS.md 或 **Skill（技能）** 配置实现。
+
 ## 上下文压缩原理
 
 ### 自动压缩机制（Compaction）
@@ -156,7 +158,7 @@ sequenceDiagram
 除了自动压缩，OpenCode 还支持细粒度的微压缩配置：
 
 ```json:opencode.json
-// Requires OpenCode >= v1.16.x, OMO >= v4.7.x
+// Requires OpenCode >= v1.17.x, OMO >= v4.13.x
 {
   "compaction": {
     "strategy": "selective",
@@ -244,7 +246,7 @@ graph LR
 
 **Session 级缓存的内容**：
 
-- 系统指令（System Prompt）— 每个 Session 固定
+- 系统指令（System **Prompt（提示词）**）— 每个 Session 固定
 - 工具定义（Tool Definitions）— MCP 工具的 JSON Schema
 - 项目上下文（Project Context）— README、CLAUDE.md 等
 
@@ -253,7 +255,7 @@ graph LR
 跨 Session 缓存需要显式配置，适用于长期项目：
 
 ```json:opencode.json
-// Requires OpenCode >= v1.16.x, OMO >= v4.7.x
+// Requires OpenCode >= v1.17.x, OMO >= v4.13.x
 {
   "caching": {
     "crossSession": {

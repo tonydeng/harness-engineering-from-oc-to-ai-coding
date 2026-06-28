@@ -1,4 +1,4 @@
-# 多 Agent 协作
+# 多 **Agent（智能体）** 协作
 
 > 串行、并行、主从、竞争——四种协作模式的设计原理、配置方法和工程实践，以及完整的 7-Agent Pipeline 实现。
 
@@ -20,7 +20,7 @@
 
 多 Agent 协作的本质是将复杂任务分解为多个子任务，由不同角色的 Agent 分别执行。根据任务间的依赖关系和执行方式，我们可以归纳出四种基本协作模式。
 
-### 串行模式（Prompt Chaining）
+### 串行模式（**Prompt（提示词）** Chaining）
 
 串行模式是最直观的协作方式：Agent A 完成任务后，将结果传递给 Agent B，B 完成后传递给 Agent C，形成 A → B → C 的顺序执行链。
 
@@ -265,7 +265,7 @@ flowchart TB
 | **一致性** | 高（固定流程） | 低（需合并） | 高（编排协调） | 高（共识机制） |
 | **容错性** | 低（单点故障） | 高（部分失败可继续） | 高（重试机制） | 中（依赖仲裁） |
 | **适用场景** | 固定子任务顺序 | 独立子任务并行 | 动态分解任务 | 多角度分析决策 |
-| **OpenCode 实现** | Skill/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate* |
+| **OpenCode 实现** | **Skill（技能）**/Command | 多 Task 调用 | Primary Agent 编排 | Hyperplan/Debate* |
 | **成本** | 低 | 中（并行调用） | 高（多次调用） | 高（多轮交互） |
 | **可控性** | 高 | 中 | 高 | 中 |
 
@@ -1508,13 +1508,88 @@ Pipeline 执行过程中，每个 Agent 会输出其执行状态：
 
 ## 小结
 
-多 Agent 协作是 Harness Engineering 的核心实践。通过角色分离，我们将复杂的软件开发流程拆分为多个专注的 Agent，每个 Agent 只做一件事，显著降低了单个 Agent 的复杂度，提高了输出质量。
+多 Agent 协作是 **Harness Engineering（驾驭工程）** 的核心实践。通过角色分离，我们将复杂的软件开发流程拆分为多个专注的 Agent，每个 Agent 只做一件事，显著降低了单个 Agent 的复杂度，提高了输出质量。
 
 四种协作模式——串行、并行、主从、竞争——覆盖了绝大多数工作流场景。串行模式适合固定流程，并行模式适合独立任务，主从模式适合动态分解，竞争模式适合多角度决策。
 
 7-Agent Pipeline 是当前最成熟的协作方案，通过 Planner、Debater、Implementor、Reviewer、Tester、Linter、Committer 七个角色的紧密配合，实现了从需求到提交的完整开发流程。WORKFLOW_STATE.md 的文件交接模式让状态持久化、可审计、可恢复，是"可审计"原则的具体实践。
 
 权限隔离和温度策略是 Pipeline 安全和质量的关键保障。Reviewer 和 Tester 在权限层面无法修改代码，防止了审查和测试阶段的意外修改；低温度策略确保了规划和实现的确定性输出。
+
+---
+
+## Pipeline 故障级联与恢复
+
+Pipeline 是串行执行链，任何一个 Agent 失败都会影响后续环节。理解故障传播规律，才能在出问题时快速恢复。
+
+### 故障传播模型
+
+| Agent | 失败影响 | 已工作成果是否保留 | 恢复策略 |
+|-------|---------|-------------------|---------|
+| **Planner** | 整个 Pipeline 终止，后续所有阶段无法启动 | 无已产出成果 | 修复输入后重新启动 |
+| **Debater** | 跳过辩论阶段，Planner 计划直接交给 Implementor | Planner 计划保留 | 可降级继续，或修复后重跑 |
+| **Implementor** | Reviewer/Test/Linter/Committer 全部阻塞 | Planner + Debater 成果保留 | 从 Implementor 阶段重启 |
+| **Reviewer** | 测试和提交阻塞，但代码变更已存在 | 实现阶段成果保留 | 修复问题后从 Reviewer 重跑 |
+| **Tester** | Linter 和 Committer 阻塞 | Plan 到 Review 全部保留 | 修复测试问题后从 Tester 重跑 |
+| **Linter** | Committer 阻塞 | Plan 到 Test 全部保留 | 修复 lint 问题后从 Linter 重跑 |
+| **Committer** | 提交未完成，但所有检查已通过 | 全部成果保留 | 人工介入完成提交 |
+
+### 三种故障场景与处理
+
+#### 场景一：Implementor 持续失败
+
+典型原因：依赖安装超时、代码生成陷入死循环、权限不足无法写文件。
+
+处理流程：暂停 Pipeline → 人工诊断 Implementor 失败原因 → 修复环境问题（如切换 npm 镜像源、调整权限） → 从 Implementor 阶段重启，Planner 和 Debater 的输出无需重跑。
+
+```bash:terminal
+# 从 Implementor 阶段重启
+/pipeline --resume --stage implementor
+```
+
+#### 场景二：Reviewer 审查通过但 Tester 发现问题
+
+Reviewer 和 Tester 关注维度不同：Reviewer 看代码质量和安全，Tester 验证功能正确性。Reviewer 通过不代表测试能过。
+
+处理流程：Tester 报告失败 → 回退到 Implementor → 根据测试报告修复代码 → 重新走 Review → Test。注意不能跳过 Review，因为修复可能引入新的审查问题。
+
+```bash:terminal
+# 测试失败后从 Implementor 重跑
+/pipeline --retry --stage implementor
+```
+
+#### 场景三：Pipeline 中途取消
+
+用户手动取消、网络中断、或会话断开。
+
+处理流程：检查 WORKFLOW_STATE.md 是否已保存 → 确认最后完成的阶段 → 从该阶段恢复。WORKFLOW_STATE.md 记录了每个阶段的执行状态和输出摘要，是恢复的唯一依据。
+
+```bash:terminal
+# 查看当前 Pipeline 状态
+/cat WORKFLOW_STATE.md
+
+# 从最后保存的阶段恢复
+/pipeline --resume
+```
+
+### 状态保存机制
+
+WORKFLOW_STATE.md 中记录三类恢复信息：
+
+| 信息类型 | 记录内容 | 作用 |
+|---------|---------|------|
+| **已完成阶段** | 每个 Agent 的执行状态（✅/❌/⏳） | 判断从哪里恢复 |
+| **阶段输出摘要** | 每个阶段的关键产出（计划/方案/代码变更列表） | 恢复时无需重跑已有成果 |
+| **恢复点标记** | 当前阶段 + 最后写入时间戳 | 精确定位恢复起点 |
+
+### 恢复操作步骤
+
+1. 打开 `WORKFLOW_STATE.md`，查看"元信息"中的"当前阶段"字段
+2. 确认该阶段及之前所有阶段的状态均为 ✅
+3. 运行 `/pipeline --resume`，Pipeline 自动从下一个阶段继续
+4. 如果某个已完成阶段的输出需要修正，手动编辑 WORKFLOW_STATE.md 后再恢复
+
+> WORKFLOW_STATE.md 的完整模板和字段说明见上文 [WORKFLOW_STATE.md 文件交接模式](#workflow_statemd-文件交接模式)。
 
 ---
 

@@ -1,6 +1,6 @@
 # 自定义工作流
 
-> 使用 Team Mode 和 12 个 team_* 工具构建自定义多 Agent 工作流，以及 Hyperplan 对抗式规划模式的设计哲学。
+> 使用 Team Mode 和 12 个 team_* 工具构建自定义多 **Agent（智能体）** 工作流，以及 Hyperplan 对抗式规划模式的设计哲学。
 
 ## 文章概述
 
@@ -596,7 +596,7 @@ Hyperplan 是一种"对抗式规划"模式，通过 5 个"敌对"评审者的三
 
 #### 5 个评审者角色
 
-Hyperplan 使用 5 个 category-based 评审者，由 Sisyphus Lead 协调。每个评审者通过 `kind: "category"` 路由到对应的 Agent 类别，而非绑定特定 Skill。
+Hyperplan 使用 5 个 category-based 评审者，由 Sisyphus Lead 协调。每个评审者通过 `kind: "category"` 路由到对应的 Agent 类别，而非绑定特定 **Skill（技能）**。
 
 > **注**：以下角色名（Skeptic、Validator、Researcher、Architect、Creative）是**概念化的角色标签**，用于描述各评审者的立场和关注点。实际的 Agent 类别通过 `kind: "category"` 路由到对应的内置 Agent 类型（`unspecified-low`、`unspecified-high`、`deep`、`ultrabrain`、`artistry`），而非绑定特定 Skill 名称。
 

@@ -1,13 +1,13 @@
 # 安全总览
 
-> **OMO 扩展说明**：本文中的 `secrets`、`audit`、`yolo`、`security.prompt_injection` 等配置字段是 **oh-my-openagent (OMO)** 对 OpenCode 安全系统的扩展。原生 OpenCode 的安全配置通过 `permission` 字段控制（allow/ask/deny 三级策略 + glob 模式匹配），不包含独立的审计、Secret Store 或 YOLO 风险分类器模块。Permission 模型的 `allow/ask/deny` 策略和 `opencode.json` 中的 `permission` 配置块是原生 OpenCode 功能。OpenCode 版本 v1.16.x，OMO 版本 v4.7.x。
+> **OMO 扩展说明**：本文中的 `secrets`、`audit`、`yolo`、`security.prompt_injection` 等配置字段是 **oh-my-openagent (OMO)** 对 OpenCode 安全系统的扩展。原生 OpenCode 的安全配置通过 `permission` 字段控制（allow/ask/deny 三级策略 + glob 模式匹配），不包含独立的审计、Secret Store 或 YOLO 风险分类器模块。Permission 模型的 `allow/ask/deny` 策略和 `opencode.json` 中的 `permission` 配置块是原生 OpenCode 功能。OpenCode 版本 v1.17.x，OMO 版本 v4.13.x。
 >
 > AI 编程工作流的安全不是事后补丁，而是架构设计的固有部分。从权限模型到提示注入防御，系统化构筑安全防线。
 > **适合读者**: 安全工程师 · 红队
 
 ## 文章概述
 
-当 Agent 能够读写文件、执行命令、调用 API 时，安全就不再是"等出了问题再处理"的事情。OpenCode 的安全模型覆盖四个层面：**权限控制**（谁可以做什么）、**风险分类**（当前操作有多危险）、**执行隔离**（操作在哪里执行）、**注入防御**（恶意指令怎么被识别）。这四个维度共同构成了纵深防御体系。
+当 **Agent（智能体）** 能够读写文件、执行命令、调用 API 时，安全就不再是"等出了问题再处理"的事情。OpenCode 的安全模型覆盖四个层面：**权限控制**（谁可以做什么）、**风险分类**（当前操作有多危险）、**执行隔离**（操作在哪里执行）、**注入防御**（恶意指令怎么被识别）。这四个维度共同构成了纵深防御体系。
 
 本文从安全的整体架构出发，首先展示四层安全模型——权限、分类、隔离、防御。然后详细讲解 6 种权限模式（全局/项目/会话/工具 + 允许/询问/禁止三级策略）和自定义规则的优先级机制。接着深入风险分类器 (Risk Classifier)——它能根据历史数据判断当前操作的风险等级（高/中/低），并支持自定义分类规则。针对最常见的威胁——提示注入，分析攻击类型和防御策略。最后介绍权限审计功能，包括审计日志配置和合规映射（NIST/SOC2/等保）。本文还将使用 STRIDE 方法在 Agent 编排全过程中系统性地分析威胁面。读完本文，你将能够配置四层安全模型、应对提示注入攻击并建立合规审计机制。
 
@@ -51,6 +51,46 @@
 | **SOC 2** | CC6.6 安全传输 | 环境变量注入 + TLS |
 | **等保 2.0** | 身份鉴别 | API Key 验证 + MDM 托管 |
 | **等保 2.0** | 访问控制 | Permission Rule + Agent 权限覆盖 |
+
+## AI 编程工具安全评估框架
+
+在引入 AI 编程工具之前，组织需要系统性地评估其安全风险。以下框架基于行业实践整理，适用于 OpenCode 及同类工具的选型评估。
+
+### **MCP（模型上下文协议）** 安全检查清单
+
+MCP（Model **Context（上下文）** Protocol）让 Agent 能调用外部工具，也带来了新的攻击面。部署 MCP 服务器前，逐项检查：
+
+| # | 检查项 | 说明 |
+|---|--------|------|
+| 1 | **认证机制** | MCP 服务器是否要求身份验证？匿名访问应禁止 |
+| 2 | **权限最小化** | 工具暴露的权限是否仅限于必需操作？ |
+| 3 | **输入验证** | 工具参数是否做了类型和范围校验？ |
+| 4 | **传输加密** | 通信是否走 TLS？明文传输应禁止 |
+| 5 | **日志审计** | 工具调用是否记录日志？异常调用是否告警？ |
+| 6 | **沙箱隔离** | MCP 服务器是否在沙箱或容器中运行？ |
+
+### 供应链风险评估
+
+AI 编程工具的依赖链长，第三方组件的风险不可忽视：
+
+| 评估维度 | 关注点 | 检查方法 |
+|----------|--------|----------|
+| **Skill 来源** | 社区 **Skill（技能）** 是否经过安全审查？ | 查看 Skill 源码、检查发布者信誉 |
+| **MCP 插件** | 插件是否有已知漏洞？ | 查询 CVE 数据库、检查依赖版本 |
+| **模型提供商** | API 调用的数据是否被用于训练？ | 审查服务商的数据使用政策 |
+| **配置文件** | `opencode.json` 是否泄露敏感信息？ | 使用 `validate-prod-config.sh` 检查 |
+
+### 实用评估流程
+
+引入 AI 编程工具前，按以下步骤评估：
+
+```text:terminal
+1. 资产盘点：列出将被 Agent 访问的代码仓库、配置文件和密钥
+2. 权限映射：明确 Agent 需要哪些读/写/执行权限
+3. 风险分级：按 STRIDE 模型对每类操作评估风险等级
+4. 控制措施：配置权限规则、审计日志、注入防御
+5. 持续监控：定期审查审计日志，更新风险分类规则
+```
 
 ## 6 种权限模式
 
@@ -213,7 +253,7 @@
 
 ## 提示注入防御
 
-提示注入（Prompt Injection）是 Agent 系统的头号威胁。攻击者通过构造恶意输入让 Agent 执行非预期操作。
+提示注入（**Prompt（提示词）** Injection）是 Agent 系统的头号威胁。攻击者通过构造恶意输入让 Agent 执行非预期操作。
 
 ### 直接注入
 
@@ -559,6 +599,293 @@ opencode --bypass-permission
 ```
 
 **修复**：bypass 仅限本地调试。生产环境通过配置管理权限，`--bypass-permission` 在 CI/CD 流水线中做准入拦截。
+
+## Secret 管理实践
+
+在生产环境中，API Key 的存储方式直接决定安全边界。不同方案的适用场景和安全等级差异显著。
+
+### 存储方案对比
+
+| 方案 | 安全等级 | 适用场景 | 配置复杂度 | 轮换支持 |
+|------|----------|----------|------------|----------|
+| 环境变量 | 中 | 单机开发 | 低 | 手动 |
+| .env 文件 | 低 | 本地开发（禁止提交） | 低 | 手动 |
+| HashiCorp Vault | 高 | 企业集群 | 高 | 自动 |
+| AWS Secrets Manager | 高 | AWS 生态 | 中 | 自动 |
+
+### 各方案配置示例
+
+**环境变量**（推荐用于 CI/CD）：
+
+```bash:src/06-advanced/security-overview.md
+# 在 CI/CD 系统中设置，不要写在脚本里
+export ANTHROPIC_API_KEY="${OPENCODE_ANTHROPIC_KEY}"
+export OPENAI_API_KEY="${OPENCODE_OPENAI_KEY}"
+
+# opencode.json 中引用环境变量
+# "apiKey": "${env:ANTHROPIC_API_KEY}"
+```
+
+**.env 文件**（仅限本地开发）：
+
+```bash:src/06-advanced/security-overview.md
+# .env（必须加入 .gitignore）
+ANTHROPIC_API_KEY=sk-ant-xxx
+OPENAI_API_KEY=sk-xxx
+
+# 加载到当前 shell
+set -a && source .env && set +a
+```
+
+**HashiCorp Vault**（企业环境）：
+
+```python:src/06-advanced/security-overview.md
+# vault_client.py
+import hvac
+
+client = hvac.Client(url="https://vault.example.com", token=os.environ["VAULT_TOKEN"])
+
+secret = client.secrets.kv.read_secret_version(path="opencode/api-keys")
+api_key = secret["data"]["data"]["anthropic_key"]
+# 注入到 OpenCode 进程环境
+os.environ["ANTHROPIC_API_KEY"] = api_key
+```
+
+**AWS Secrets Manager**（Node.js）：
+
+```javascript:src/06-advanced/security-overview.md
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+
+const client = new SecretsManagerClient({ region: "ap-east-1" });
+const resp = await client.send(new GetSecretValueCommand({ SecretId: "opencode/api-keys" }));
+const secrets = JSON.parse(resp.SecretString);
+process.env.ANTHROPIC_API_KEY = secrets.anthropic_key;
+```
+
+### API Key 自动轮换脚本
+
+```bash:src/06-advanced/security-overview.md
+#!/bin/bash
+# rotate-key.sh — 自动轮换 Anthropic API Key
+set -euo pipefail
+
+NEW_KEY="$1"
+OLD_KEY="$ANTHROPIC_API_KEY"
+VAULT_ADDR="https://vault.example.com"
+
+# 1. 在 Vault 中更新为新 Key
+curl -s -X POST "$VAULT_ADDR/v1/secret/data/opencode/api-keys" \
+  -H "X-Vault-Token: $VAULT_TOKEN" \
+  -d "{\"data\":{\"anthropic_key\":\"$NEW_KEY\"}}"
+
+# 2. 同时支持新旧 Key（grace period）
+export ANTHROPIC_API_KEY="$NEW_KEY"
+opencode --headless --task "echo key rotated" || {
+  echo "新 Key 验证失败，回滚..."
+  curl -s -X POST "$VAULT_ADDR/v1/secret/data/opencode/api-keys" \
+    -H "X-Vault-Token: $VAULT_TOKEN" \
+    -d "{\"data\":{\"anthropic_key\":\"$OLD_KEY\"}}"
+  exit 1
+}
+
+echo "Key 轮换完成，grace period 24 小时后旧 Key 失效"
+```
+
+### 禁止事项
+
+以下行为会直接暴露 API Key，导致安全风险：
+
+- ❌ 在 AGENTS.md 中写入 API Key
+- ❌ 在 Skill 文件中硬编码密钥
+- ❌ 将包含 Key 的 `.env` 文件提交到 Git 仓库
+- ❌ 在日志或审计输出中打印未脱敏的 Key
+
+始终通过环境变量或 Secret Store 注入，确保 Key 不落盘、不入库、不出现在版本控制中。
+
+## 审计日志实践
+
+审计日志是安全合规的基础。通过合理配置，可以追溯"谁在什么时候对什么做了什么操作"。
+
+### audit_all_messages 配置详解
+
+```json:src/06-advanced/security-overview.md
+{
+  "audit": {
+    "enabled": true,
+    "audit_all_messages": true,
+    "log_file": "/var/log/opencode/audit.log",
+    "format": "json",
+    "events": [
+      "permission_check",
+      "permission_deny",
+      "permission_allow",
+      "tool_call",
+      "model_request",
+      "yolo_classification",
+      "prompt_injection_detected"
+    ],
+    "retention_days": 90,
+    "rotation": {
+      "maxSize": "50MB",
+      "maxBackups": 30
+    }
+  }
+}
+```
+
+`audit_all_messages: true` 会记录所有 Agent 交互（包括用户输入和模型输出），适用于需要完整审计追踪的合规场景。生产环境建议仅记录事件元数据，通过 `captureMode: "span"` 避免记录完整的 Prompt 内容。
+
+### 审计日志存储位置
+
+默认存储在 `opencode.json` 中 `audit.log_file` 指定的路径。单机部署时通常为 `/var/log/opencode/audit.log`，集群部署时建议输出到集中式日志系统（Elasticsearch / Loki）。
+
+日志格式为每行一个 JSON 对象（NDJSON），便于 `jq` 等工具解析。
+
+### 日志保留与清理脚本
+
+```bash:src/06-advanced/security-overview.md
+#!/bin/bash
+# cleanup-audit-logs.sh — 清理超过 90 天的审计日志
+set -euo pipefail
+
+LOG_DIR="/var/log/opencode"
+RETENTION_DAYS=90
+
+# 删除过期日志
+find "$LOG_DIR" -name "audit-*.log.*" -mtime +$RETENTION_DAYS -delete
+
+# 压缩 7 天以上但未删除的日志
+find "$LOG_DIR" -name "audit-*.log" -mtime +7 ! -name "*.gz" -exec gzip {} \;
+
+echo "审计日志清理完成，保留最近 $RETENTION_DAYS 天"
+```
+
+配合 cron 定期执行：`0 2 * * * /usr/local/bin/cleanup-audit-logs.sh >> /var/log/opencode/cleanup.log 2>&1`。
+
+### 审计日志查询示例
+
+用 `jq` 过滤特定 Agent 的操作记录：
+
+```bash:src/06-advanced/security-overview.md
+# 过滤 build agent 的所有操作
+jq 'select(.agentId == "build")' /var/log/opencode/audit.log
+
+# 查找所有被拒绝的操作
+jq 'select(.event_type == "permission_deny")' /var/log/opencode/audit.log
+
+# 统计每小时的工具调用次数
+jq -r 'select(.event_type == "tool_call") | .timestamp[:13]' /var/log/opencode/audit.log | sort | uniq -c
+
+# 查找过去 24 小时内的高风险操作
+jq 'select(.yolo_risk == "high" and .timestamp > (now - 86400 | todate))' /var/log/opencode/audit.log
+```
+
+## 多环境配置隔离
+
+不同环境（开发 / 测试 / 生产）的 OpenCode 配置必须隔离，避免开发配置泄露到生产环境。
+
+### 三环境配置对比
+
+| 配置项 | 开发环境 | 测试环境 | 生产环境 |
+|--------|----------|----------|----------|
+| `permission.read` | `allow` | `allow` | `allow` |
+| `permission.edit` | `allow` | `ask` | `deny` |
+| `permission.commands.rm` | `allow` | `ask` | `deny` |
+| `yolo.enabled` | `true` | `false` | `false` |
+| `telemetry.logging.level` | `debug` | `info` | `warn` |
+| `limits.maxTokensPerSession` | 无限制 | 200000 | 500000 |
+| `security.prompt_injection` | `false` | `true` | `true` |
+| API Key 来源 | `.env` 文件 | CI 变量 | Vault / Secrets Manager |
+
+### 环境变量覆盖机制
+
+OpenCode 支持通过环境变量覆盖 `opencode.json` 中的配置，优先级高于配置文件：
+
+```bash:src/06-advanced/security-overview.md
+# 生产环境启动脚本中覆盖关键配置
+export OPENCODE_PERMISSION_EDIT="deny"
+export OPENCODE_YOLO_ENABLED="false"
+export OPENCODE_TELEMETRY_LOGGING_LEVEL="warn"
+export OPENCODE_AUDIT_ENABLED="true"
+```
+
+环境变量命名规则：`OPENCODE_` 前缀 + 配置路径（用下划线替代点号），全大写。
+
+### 配置验证脚本
+
+在部署前运行此脚本，检查生产环境没有使用开发 Key 或不安全的配置：
+
+```bash:src/06-advanced/security-overview.md
+#!/bin/bash
+# validate-prod-config.sh — 生产环境配置安全检查
+set -euo pipefail
+
+CONFIG="${1:-opencode.json}"
+ERRORS=0
+
+# 检查是否硬编码了 API Key
+if grep -qE '"apiKey":\s*"sk-' "$CONFIG"; then
+  echo "❌ 发现硬编码的 API Key"
+  ERRORS=$((ERRORS + 1))
+fi
+
+# 检查 yolo 是否关闭
+if jq -e '.yolo.enabled == true' "$CONFIG" > /dev/null 2>&1; then
+  echo "❌ 生产环境不应启用 yolo 模式"
+  ERRORS=$((ERRORS + 1))
+fi
+
+# 检查 edit 权限是否为 deny 或 ask
+EDIT_PERM=$(jq -r '.permission.edit // "ask"' "$CONFIG")
+if [ "$EDIT_PERM" = "allow" ]; then
+  echo "❌ 生产环境 permission.edit 不应为 allow"
+  ERRORS=$((ERRORS + 1))
+fi
+
+# 检查审计是否启用
+AUDIT=$(jq -r '.audit.enabled // false' "$CONFIG")
+if [ "$AUDIT" != "true" ]; then
+  echo "❌ 生产环境必须启用审计"
+  ERRORS=$((ERRORS + 1))
+fi
+
+if [ $ERRORS -eq 0 ]; then
+  echo "✅ 生产环境配置检查通过"
+else
+  echo "❌ 发现 $ERRORS 个问题，请修复后重新部署"
+  exit 1
+fi
+```
+
+在 CI/CD 中作为门禁步骤运行：`./validate-prod-config.sh opencode.json`。
+
+### Team Mode 权限隔离
+
+Team Mode 下，不同团队的权限需要按职责隔离：
+
+```json:src/06-advanced/security-overview.md
+{
+  "team_permissions": {
+    "frontend-team": {
+      "read": ["src/frontend/**", "docs/**"],
+      "edit": ["src/frontend/**"],
+      "deny": ["src/backend/**", "**/secrets/**"]
+    },
+    "backend-team": {
+      "read": ["src/backend/**", "docs/**"],
+      "edit": ["src/backend/**"],
+      "deny": ["src/frontend/**", "**/secrets/**"]
+    },
+    "security-team": {
+      "read": ["**/*"],
+      "edit": ["**/security/**", "opencode.json"],
+      "deny": []
+    }
+  }
+}
+```
+
+安全团队拥有全局读取权限但只能修改安全相关文件，前后端团队互相隔离，所有团队禁止访问 secrets 目录。这种配置通过最小权限原则降低误操作和横向越权风险。
 
 ## 关联章节
 

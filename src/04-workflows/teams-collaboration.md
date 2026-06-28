@@ -1,4 +1,4 @@
-# Teams 并行 Agent 协作
+# Teams 并行 **Agent（智能体）** 协作
 
 > 超越单 Agent 限制：同一进程内的多个并行 Agent 实例通过消息传递机制协同工作，构建大规模多视角 AI 编程工作流。
 
@@ -28,7 +28,7 @@
 
 3. **故障隔离需求**：单进程内的任何错误都可能影响整个 Agent。当某个子任务失败（如依赖安装超时），可能导致主任务也被中断。
 
-Teams 架构通过并行 Agent 协作解决这些问题：每个 Team 成员是同一进程内的独立 Agent 会话实例，拥有独立的 Prompt 上下文和故障边界。
+Teams 架构通过并行 Agent 协作解决这些问题：每个 Team 成员是同一进程内的独立 Agent 会话实例，拥有独立的 **Prompt（提示词）** 上下文和故障边界。
 
 ### Team 的成员角色定义
 
@@ -245,7 +245,7 @@ Team Lead 向 Worker 分配子任务的消息类型：
 |------|------|---------|
 | **广播** | 所有 Worker 收到相同任务 | 冗余执行、竞争模式 |
 | **轮询** | 依次分配给各 Worker | 均衡负载 |
-| **能力匹配** | 根据 Skill 匹配最合适的 Worker | 专业任务 |
+| **能力匹配** | 根据 **Skill（技能）** 匹配最合适的 Worker | 专业任务 |
 | **负载感知** | 分配给当前负载最低的 Worker | 动态调度 |
 
 #### 状态同步（Status Sync）
@@ -1278,4 +1278,4 @@ Teams 并行 Agent 协作是超越单 Agent 限制的关键架构。通过基于
 - ← [Agent 派生模式](agent-derivation.md) — 派生是 Team 的基础
 - ← [多 Agent 协作](multi-agent-collab.md) — Team Mode 之前的轻量级后台任务机制（[后台任务机制](multi-agent-collab.md#后台任务机制)）
 - → [案例研究](../07-case-studies/) — 案例中的 Team Mode 应用
-- → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 在 Team 中的集成
+- → [自定义 Agent 与 **Plugin（插件）**](../06-advanced/custom-agents.md) — 自定义 Agent 在 Team 中的集成

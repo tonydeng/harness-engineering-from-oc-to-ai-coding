@@ -18,7 +18,7 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 | `/init` | — | 扫描项目结构，生成 AGENTS.md 项目知识库 | 新项目首次打开 |
 | `/help` | — | 显示可用命令和快捷键列表 | 不确定命令时查看帮助 |
 
-**`/init`** 是 OpenCode 工程化的起点。执行后，它会扫描项目目录结构、识别技术栈、生成包含项目概述的 AGENTS.md 文件，让 Agent "认识"你的项目。
+**`/init`** 是 OpenCode 工程化的起点。执行后，它会扫描项目目录结构、识别技术栈、生成包含项目概述的 AGENTS.md 文件，让 **Agent（智能体）** "认识"你的项目。
 
 → [AGENTS.md 约定系统](../../06-advanced/agents-dot-md.md) 讲解生成的文件结构和如何手动扩展。
 
@@ -46,7 +46,7 @@ OpenCode 提供了两大类命令：**核心内置命令**（Core Commands）由
 | `/models` | 列出可用模型，切换当前模型 | 需要更强推理能力时切换到旗舰模型 |
 | `/connect` | 添加新的 LLM Provider | 接入新的模型供应商（如国产模型） |
 | `/themes` | 切换界面主题 | 个性化界面风格 |
-| `/editor` | 打开编辑器，编辑当前对话内容 | 精确修改长 Prompt |
+| `/editor` | 打开编辑器，编辑当前对话内容 | 精确修改长 **Prompt（提示词）** |
 | `/details` | 显示最近一次工具调用的详细信息 | 排查工具执行结果 |
 | `/thinking` | 切换推理过程的显示状态 | 查看 Agent 的思考链路 |
 | `/exit` | 退出 OpenCode | 结束工作 |
@@ -337,12 +337,12 @@ model: claude-opus-4
 - 入门开发者 — 适合快速上手 OpenCode 的基础能力，了解核心概念和常用命令
 - 智能体开发工程师 — 需要设计、调试、进化 AI 编码智能体，建立系统化的 Agent 工程体系
 - 效率开发者 — 已用 AI 工具，想掌握 Agent 编排和工作流模式，提升日常开发效率 2x+
-- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 Harness Engineering 体系
-- Skill 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
+- 技术负责人 — 团队技术决策者，关注标准化，建立团队级 **Harness Engineering（驾驭工程）** 体系
+- **Skill（技能）** 作者 — 有 AI 使用经验，想开发高质量、可复用的 Skill
 - 工程经理 — 评估团队工具选型，判断 OpenCode 的投资回报率
 - 需求分析师/产品经理 — 验证需求覆盖完整性，评估内容价值主张
 - 系统架构师/技术顾问 — 评估 OpenCode 的技术可行性、架构集成与安全合规
-- 后端开发者/API 工程师 — 将 AI Agent 嵌入后端开发工作流，掌握 MCP 服务端集成
+- 后端开发者/API 工程师 — 将 AI Agent 嵌入后端开发工作流，掌握 **MCP（模型上下文协议）** 服务端集成
 - 前端开发者/UI 工程师 — 将 Agent 编排应用到前端场景，类比理解 Skill 系统
 - 文档 UX 专家 — 确保文档可读性、Mermaid 规范、移动端/无障碍体验
 - 技术审校/QA 编辑 — 建立质量门禁，验证代码示例可运行性、术语一致性
@@ -411,4 +411,4 @@ opencode /hyperplan
 
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
-- → [OpenCode Plugin 系统参考](./plugins.md) — 了解 Plugin 系统的完整参考
+- → [OpenCode **Plugin（插件）** 系统参考](./plugins.md) — 了解 Plugin 系统的完整参考

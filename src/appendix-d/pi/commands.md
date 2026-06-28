@@ -92,7 +92,7 @@ Pi 的交互模式编辑器提供丰富的输入能力：
 
 ### 消息队列
 
-在 Agent 工作时可以排队提交消息：
+在 **Agent（智能体）** 工作时可以排队提交消息：
 
 | 操作 | 说明 |
 |------|------|
@@ -142,7 +142,7 @@ Pi 的 Slash 命令以 `/` 开头，在编辑器中输入即可触发。
 |------|------|
 | `/settings` | 修改 Thinking Level、主题、消息交付、传输协议等 |
 | `/trust` | 保存项目信任决策（重启后生效） |
-| `/reload` | 重新加载快捷键、扩展、Skills、Prompts 和 Context Files |
+| `/reload` | 重新加载快捷键、扩展、Skills、Prompts 和 **Context（上下文）** Files |
 | `/hotkeys` | 显示所有键盘快捷键 |
 | `/changelog` | 显示版本历史 |
 | `/quit` | 退出 Pi |
@@ -216,7 +216,7 @@ Pi 的配置分全局和项目两层：
 - 智能体开发工程师 — Extension API 为深度定制提供 TypeScript 支持
 - 效率开发者 — 丰富的 Slash 命令和编辑器特性提升工作效率
 - 技术负责人 — 容器化方案（Gondolin/Docker/OpenShell）满足企业安全要求
-- Skill 作者 — Skills 系统遵循标准化，易于创建和分享
+- **Skill（技能）** 作者 — Skills 系统遵循标准化，易于创建和分享
 - 系统架构师 — 明确的安全边界和信任机制，便于架构评估
 - 安全工程师 — 安全模型透明，易于威胁建模和合规评估
 

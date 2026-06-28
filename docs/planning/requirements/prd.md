@@ -199,7 +199,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径 + 快速体验）
 ### 3.5 版本要求
 
 - OpenCode: v1.16.x（基于 2026-06 最新稳定版）
-- oh-my-openagent: v4.7.x（基于 2026-06 最新版本）
+- oh-my-openagent: v4.13.x（基于 2026-06 最新版本）
 - 书中标注版本号，以便读者识别过时内容
 - 重大版本更新后 2 周内更新对应章节
 
@@ -554,7 +554,7 @@ Ch0: 读者导航（读者决策页 + 阅读路径 + 快速体验）
 ---
 
 > **版本**: v3.0 | 最后更新：2026-06-27 | 第七次更新：新增附录 C（Claude Code）和附录 D（Pi Agent），全书结构扩展为 8 章 + 4 附录，~88 个 .md 文件，总计 ~51,000+ 行
-> 来源材料：OpenCode v1.16.x + oh-my-openagent v4.7.x | Claude Code SDK / Pi Agent SDK
+> 来源材料：OpenCode v1.16.x + oh-my-openagent v4.13.x | Claude Code SDK / Pi Agent SDK
 
 ---
 

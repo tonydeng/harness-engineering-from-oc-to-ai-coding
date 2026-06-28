@@ -1,14 +1,14 @@
 # 性能调优与成本管理
 
-> **OMO 扩展说明**：本文中的 `tokenBudget`、`compaction`、`hashline` 配置字段、54+ Event Hooks 体系及类别自动降级 (Category-based Auto-downgrade) 模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不含这些字段。`.opencodeignore` 排除策略、`ripgrep` 本地搜索、Context7 MCP 优化及 Session 日志分析命令是通用实践，可独立于 OMO 使用。OpenCode 版本 v1.16.x，OMO 版本 v4.7.x。
+> **OMO 扩展说明**：本文中的 `tokenBudget`、`compaction`、`hashline` 配置字段、54+ Event Hooks 体系及类别自动降级 (Category-based Auto-downgrade) 模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 的扩展增强。原生 OpenCode 不含这些字段。`.opencodeignore` 排除策略、`ripgrep` 本地搜索、Context7 **MCP（模型上下文协议）** 优化及 Session 日志分析命令是通用实践，可独立于 OMO 使用。OpenCode 版本 v1.17.x，OMO 版本 v4.13.x。
 >
 > 响应慢？Token 消耗大？错误率高？从性能瓶颈识别到成本管控策略，系统性优化 AI 编程工作流。
 > **适合读者**: 效率开发者 · 工程经理
 
 > **前置条件**
-> - 已完成 [可观测性](observability.md)
-> - 已完成 [Token 预算策略](context-compression.md)
-> - 已完成 [上下文压缩与Token 预算](context-compression.md)
+> - 已完成 [可观测性](../observability.md)
+> - 已完成 [Token 预算策略](../context-compression.md)
+> - 已完成 [上下文压缩与Token 预算](../context-compression.md)
 
 ## 文章概述
 
@@ -28,7 +28,7 @@
 
 **响应慢**：200K 上下文窗口的请求，模型自注意力计算 O(n²)。窗口从 50K 膨胀到 200K，推理耗时增约 16 倍（引用自 GPT-4 技术报告）。
 
-**Token 消耗大**：Agent 可能在不知情下调用大量工具——一次 `glob` 返回 500 个文件、一次 `grep` 结果 50K Token。每个工具调用都产生输入输出 Token。
+**Token 消耗大**：**Agent（智能体）** 可能在不知情下调用大量工具——一次 `glob` 返回 500 个文件、一次 `grep` 结果 50K Token。每个工具调用都产生输入输出 Token。
 
 **错误率高**：错误率与成本正反馈循环——错误越多，重试越多，Token 消耗越大。错误率从 5% 降到 1%，成本可降 15-20%（实测）。
 
@@ -84,7 +84,7 @@ flowchart TB
     style C1 fill:#FF9F43,color:#fff
 ```
 
-**Type-level（任务类型层）** — 节约贡献 50-70%：按任务类型选模型，单价差可达 100 倍（Flash $0.15 vs Opus $15/M Token）。
+**Type-level（任务类型层）** — 节约贡献 50-70%：按任务类型选模型，单价差可达 100 倍（Flash $0.15 vs Opus $5/$25/M Token）。Opus 4.8 fast 模式约 2 倍标准价格，但速度快 2.5 倍。
 
 **Session-level（会话层）** — 节约贡献 15-25%：每个会话设定预算上限，超限触发三级降级。
 
@@ -333,13 +333,13 @@ flowchart TB
 | 任务类型 | 模型 | 平均输入 Token | 平均输出 Token | 单次成本 | 延迟 |
 |---------|------|---------------|---------------|---------|------|
 | 代码审查 | Claude Sonnet | 45K | 2.5K | ~$0.04 | 18s |
-| 代码审查 | GPT-4o Flash | 45K | 2.5K | ~$0.01 | 8s |
+| 代码审查 | GPT-5.4-nano | 45K | 2.5K | ~$0.01 | 8s |
 | 代码生成 | Claude Sonnet | 28K | 8K | ~$0.05 | 25s |
-| 代码生成 | DeepSeek V3 | 28K | 8K | ~$0.002 | 12s |
+| 代码生成 | DeepSeek V4-Flash | 28K | 8K | ~$0.002 | 12s |
 | 文档编写 | Claude Haiku | 12K | 3K | ~$0.003 | 5s |
-| 文档编写 | GPT-4o Mini | 12K | 3K | ~$0.001 | 3s |
+| 文档编写 | GPT-5.4-mini | 12K | 3K | ~$0.001 | 3s |
 | 文件编辑 | Claude Sonnet | 35K | 1.5K | ~$0.03 | 15s |
-| SQL 查询 | GPT-4o Flash | 10K | 1K | ~$0.002 | 4s |
+| SQL 查询 | GPT-5.4-nano | 10K | 1K | ~$0.002 | 4s |
 
 > 以上数据基于 2026 Q1 定价，以 100 次调用为样本取中位数。实际成本因模型定价波动和 Token 压缩率而异。
 
@@ -359,7 +359,7 @@ flowchart TB
 
 | 项目规模 | 代码行数 | 典型上下文窗口 | 单 Session Token | 推荐模型 |
 |---------|---------|--------------|----------------|---------|
-| 小型 | < 10K | 50-80K | 30-60K | GPT-4o Flash / Haiku |
+| 小型 | < 10K | 50-80K | 30-60K | GPT-5.4-nano / Haiku |
 | 中型 | 10-100K | 80-150K | 60-200K | Claude Sonnet |
 | 大型 | 100-500K | 150-200K | 100-500K | Claude Sonnet + Flash 降级 |
 | 巨型 | > 500K | 200K（需压缩） | 300K-1M+ | Sonnet + Flash 降级 + Aggressive 压缩 |
@@ -368,9 +368,9 @@ flowchart TB
 
 ## 关联章节
 
-- ← [可观测性](observability.md)
-- ← [Token 预算策略](context-compression.md)
-- ← [上下文压缩与Token 预算](context-compression.md)
+- ← [可观测性](../observability.md)
+- ← [Token 预算策略](../context-compression.md)
+- ← [上下文压缩与Token 预算](../context-compression.md)
 - → [案例研究](../07-case-studies/)
 
 ## 验证标准

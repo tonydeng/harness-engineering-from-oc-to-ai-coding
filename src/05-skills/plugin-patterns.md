@@ -1,4 +1,4 @@
-# Skill 插件化模式
+# **Skill（技能）** 插件化模式
 
 > 从独立 Skill 到可组合的插件生态，理解 Skill 架构的演进路径与市场化的设计模式。
 
@@ -318,7 +318,7 @@ dependencies:
 ```mermaid
 flowchart LR
     subgraph Pipeline[数据处理管道]
-        direction LR
+        direction TB
         P1[数据采集<br/>data-collector] --> |"原始数据"| P2[数据清洗<br/>data-cleaner]
         P2 --> |"清洗后数据"| P3[数据转换<br/>data-transformer]
         P3 --> |"转换后数据"| P4[数据验证<br/>data-validator]
@@ -816,6 +816,6 @@ Skill 插件化模式是 OpenCode 生态从"工具"演进为"平台"的关键一
 
 ## 关联章节
 
-- ← [Skill-MCP 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
+- ← [Skill-**MCP（模型上下文协议）** 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
 - → [案例：团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md)（企业级 Skill 市场的真实落地）
 - ← [Skill 系统](../02-core-concepts/skills-system.md)（Skill 作为可组合组件的基础抽象）

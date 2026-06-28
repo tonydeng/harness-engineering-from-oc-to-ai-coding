@@ -1,8 +1,8 @@
 # 术语表
 
-本术语表收录全书核心术语,按拼音字母排序,方便读者快速查阅。
+本术语表收录全书使用的专业术语，按拼音字母排序，方便读者快速查阅。每个术语包含三部分信息：英文原名、中文翻译、一句话定义。遇到不熟悉的概念时，可以在这里快速查找对应的解释和首次出现的章节。
 
-> **⏱ 时间有限？先读这些：** Agent → AGENTS.md → Build Agent → Command → Feature Flag → Skill → Ultrawork → Workflow
+> **⏱ 时间有限？先读这些：** **Agent（智能体）** → AGENTS.md → Build Agent → Command → Feature Flag → **Skill（技能）** → Ultrawork → **Workflow（工作流）**
 
 ## A
 
@@ -58,7 +58,7 @@
 
 **首次出现**:[上下文工程核心](../02-core-concepts/context-engineering-core.md)
 
-### Context Engineering(上下文工程)
+### **Context Engineering（上下文工程）**(上下文工程)
 
 **定义**:管理 AI Agent 有限 Token 空间的方法论,包含三个核心维度:压缩(缩减信息量)、缓存(重用已有信息)、预算(分配有限空间)。
 
@@ -72,7 +72,7 @@
 
 > **人话**: 根据任务类型自动选模型的调度器
 
-**首次出现**:[自定义 Agent 与 Plugin](../06-advanced/custom-agents.md)
+**首次出现**:[自定义 Agent 与 **Plugin（插件）**](../06-advanced/custom-agents.md)
 
 ## F
 
@@ -83,6 +83,24 @@
 > **人话**: 不用改代码就能开关功能的开关
 
 **首次出现**:[Feature Flags 路线图](../06-advanced/feature-flags.md)
+
+### 反馈循环（Feedback Loop）
+
+**定义**:Agent 行为质量控制的闭环验证机制。每次 Agent 执行后，通过独立的验证步骤检查输出质量，将验证结果反馈回系统，驱动下一次执行的改进。反馈循环是 L3 驾驭工程到 L4 循环工程的关键桥梁。
+
+> **人话**: 做完一步就检查一步，把检查结果用来改进下一步
+
+**首次出现**:[性能调优](../06-advanced/context/performance-tuning.md)
+
+## G
+
+### Generator-Evaluator 模式
+
+**定义**:将"生成"与"验证"职责分离给不同 Agent 的架构决策模式。生成 Agent（Generator）负责输出代码或内容，验证 Agent（Evaluator）独立评估输出质量。这是 Agent 工程中最有影响力的架构决策。
+
+> **人话**: 写代码的 Agent 和检查代码的 Agent 分开，避免自己检查自己
+
+**首次出现**:[Ultrawork 模式](../04-workflows/ultrawork-mode.md)
 
 ## H
 
@@ -98,7 +116,7 @@
 
 **首次出现**:[多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务机制)
 
-### Harness Engineering
+### **Harness Engineering（驾驭工程）**
 
 **定义**:设计和管理 AI 工程流水线的方法论,核心是让 AI 的输出可靠、可复现、有价值。三大原则:可复现(Reproducible)、可审计(Auditable)、可改进(Improveable)。
 
@@ -116,11 +134,27 @@
 
 ## M
 
-### MCP (Model Context Protocol)
+### **MCP（模型上下文协议）** (Model Context Protocol)
 
 **定义**:模型上下文协议,一种标准化的外部工具接入协议,让 Agent 能够访问外部数据源和工具能力。
 
 > **人话**: Agent 连接外部工具的标准化接口
+
+**首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
+
+### March of Nines / 九个九的征程
+
+**定义**:AI 系统可靠性提升的成本曲线规律——每提升一个"9"的可靠性（从 90% 到 99%、99% 到 99.9%，以此类推），所需投入的成本等于之前所有"9"的总和。这一规律决定了 Agent 自主度的演进是渐进的，也解释了为什么 L4 完全自主在当前仍是长期目标。
+
+> **人话**: 可靠性爬坡越往后越贵——从 99% 到 99.9% 花的钱，和从 0% 到 99% 一样多
+
+**首次出现**:[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)
+
+### 模型路由（Model Routing）
+
+**定义**:根据任务类型（代码生成、调试、重构、文件读取等）智能选择最合适的 AI 模型和配置的策略机制。与供应商路由（Provider Routing）在供应商级别容错不同，模型路由在任务级别做最优匹配，是成本管控和效率优化的核心手段。
+
+> **人话**: 根据任务类型自动选最合适的模型，不浪费钱也不委屈任务
 
 **首次出现**:[Agent 编排](../02-core-concepts/agent-orchestration.md)
 
@@ -176,7 +210,7 @@
 
 **首次出现**:[自定义 Agent 与 Plugin](../06-advanced/custom-agents.md)
 
-### Prompt(提示词)
+### **Prompt（提示词）**(提示词)
 
 **定义**:用户输入给 AI 模型的自然语言指令。Prompt Engineer 关注"怎么写好的提示词",是战术层面的技巧。
 
@@ -280,6 +314,16 @@
 
 **首次出现**:[工作流模式](../02-core-concepts/workflow-patterns.md)
 
+## X
+
+### 循环工程（**Loop Engineering（循环工程）**）
+
+**定义**:AI 编码智能体的第四层进化阶段（L4），关注自动化循环的设计与管控。核心要素包括：Generator-Evaluator 模式（执行器与验证器分离）、Worktree 隔离（任务并行空间）、看门狗超时（防止无限循环）、Token 预算控制（成本管控）。循环工程是驾驭工程的再上层，解决"我不在时工作如何继续"的问题。
+
+> **人话**: 让 Agent 自己循环干活还能管住它——设置好规则后让它自动跑
+
+**首次出现**:[读者导航 - 智能体开发工程师](../00-guide/reading-paths.md#智能体开发工程师)
+
 ## Y
 
 ### 风险分类器 (Risk Classifier)
@@ -335,9 +379,13 @@
 | 命令 | Command | [工作流模式](../02-core-concepts/workflow-patterns.md) |
 | 上下文压缩 | Compaction | [上下文工程核心](../02-core-concepts/context-engineering-core.md) |
 | 上下文工程 | Context Engineering | [上下文工程核心](../02-core-concepts/context-engineering-core.md) |
+| 反馈循环 | Feedback Loop | [性能调优](../06-advanced/context/performance-tuning.md) |
+| Generator-Evaluator 模式 | Generator-Evaluator Pattern | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) |
 | Harness Engineering | Harness Engineering | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
 | 驾驭工程师 | Harness Engineer | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
 | MCP | Model Context Protocol | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
+| March of Nines / 九个九的征程 | March of Nines | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) |
+| 模型路由 | Model Routing | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
 | opencode.json | opencode.json | [工作流模式](../02-core-concepts/workflow-patterns.md) |
 | 权限模型 | Permission Model | [约束系统解析](../02-core-concepts/constraints-system.md) |
 | Plan Agent | Plan Agent | [Agent 编排](../02-core-concepts/agent-orchestration.md) |
@@ -354,5 +402,31 @@
 | 后台任务 | Background Task | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务机制) |
 | 后台任务 ID | bg_xxx | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务id体系) |
 | 延续会话 ID | ses_xxx | [多 Agent 协作](../04-workflows/multi-agent-collab.md#后台任务id体系) |
+| 循环工程 | Loop Engineering | [读者导航 - 智能体开发工程师](../00-guide/reading-paths.md#智能体开发工程师) |
 | 风险分类器 (Risk Classifier) | Risk Classifier | [验证护栏体系](../02-core-concepts/validation-harness.md) |
 | 约束系统 | Constraints System | [约束系统解析](../02-core-concepts/constraints-system.md) |
+
+---
+
+## AI 编程工具决策对比
+
+管理者在选型 AI 编程工具时，可参考以下对比框架。数据截至 2026 年 6 月，各工具仍在快速迭代。
+
+| 维度 | OpenCode | Claude Code | Cursor | Codex CLI |
+|------|----------|-------------|--------|-----------|
+| 定位 | 开源 AI 编码平台 | CLI 编码助手 | IDE 集成 | 代码生成 CLI |
+| 核心优势 | 灵活配置、多模型支持、插件生态 | 安全沙箱、Anthropic 模型深度集成 | 无缝 IDE 体验、实时补全 | 轻量级、快速启动 |
+| 适用团队 | 中大型团队 | 个人 / 小团队 | 前端团队 | 后端团队 |
+| 成本模型 | 开源 + 模型费用 | 订阅制（$20/月起） | 订阅制（$20/月起） | API 按量计费 |
+| 学习曲线 | 中等（需配置） | 低（开箱即用） | 低（IDE 原生） | 低（CLI 工具） |
+| 企业级特性 | 强（权限 / 审计 / 合规） | 中 | 弱 | 弱 |
+| 自定义能力 | 高（Agent / Skill / Plugin） | 低 | 中 | 低 |
+| 模型选择 | 多模型切换 | 仅 Claude | 多模型 | 仅 OpenAI |
+
+### 选择建议
+
+- **5 人以下团队**：优先考虑 Claude Code 或 Cursor。开箱即用，学习成本低，适合快速验证 AI 编程价值。
+- **10-50 人团队**：推荐 OpenCode + 自定义配置。灵活的 Agent 编排和权限管理满足团队协作需求，多模型支持降低单一供应商风险。
+- **50 人以上团队**：OpenCode + 企业级部署 + 安全合规配置。权限审计、Agent 行为日志、合规报告是刚需，开源方案也便于内部二次开发。
+
+> **注意**：工具选型应结合团队技术栈、安全要求和预算综合评估，不存在"最优解"。建议从一个试点项目开始，用 2-4 周验证后再做决策。

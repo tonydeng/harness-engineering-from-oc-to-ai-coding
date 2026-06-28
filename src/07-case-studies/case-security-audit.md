@@ -516,7 +516,7 @@ docker run --rm aquasec/trivy:latest \
 }
 ```
 
-### 5.2 Agent 工作流编排
+### 5.2 **Agent（智能体）** 工作流编排
 
 流水线六步执行顺序：
 

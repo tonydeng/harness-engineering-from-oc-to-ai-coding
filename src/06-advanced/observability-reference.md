@@ -245,9 +245,9 @@ setup.kibana:
 }
 ```
 
-### MCP 链路传播配置
+### **MCP（模型上下文协议）** 链路传播配置
 
-OpenCode 的追踪系统支持 W3C Trace Context 标准，允许在 MCP 服务器之间传递追踪上下文：
+OpenCode 的追踪系统支持 W3C Trace **Context（上下文）** 标准，允许在 MCP 服务器之间传递追踪上下文：
 
 ```yaml:/etc/opencode/opencode-tracing.yaml
 tracing:
@@ -878,7 +878,7 @@ cat /var/log/opencode/opencode.log | \
   jq 'select(.type == "model_request")' | \
   jq -s '{total_input_tokens: map(.payload.tokens_in) | add, total_output_tokens: map(.payload.tokens_out) | add, estimated_cost_usd: ((map(.payload.tokens_in) | add) * 0.000003 + (map(.payload.tokens_out) | add) * 0.000015)}'
 
-# 按 Agent 估算成本占比
+# 按 **Agent（智能体）** 估算成本占比
 cat /var/log/opencode/opencode.log | \
   jq 'select(.type == "model_request")' | \
   jq -s 'group_by(.agentId) | map({agent: .[0].agentId, cost_usd: ((map(.payload.tokens_in) | add) * 0.000003 + (map(.payload.tokens_out) | add) * 0.000015)}) | sort_by(.cost_usd) | reverse'

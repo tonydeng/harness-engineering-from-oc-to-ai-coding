@@ -169,7 +169,7 @@
 - Lines 336-341: Trust Boundary 图更新
 - Lines 511-515: 权限隔离图更新
 - Line 566: `opencode.yml` → `opencode.json`
-- Line 568: 保留 v1.16.x/v4.7.x
+- Line 568: 保留 v1.16.x/v4.13.x
 - Line 672: `.opencode/oh-my-openagent.jsonc`
 - Line 674: v1.15.x → v1.16.x
 - Line 776: "马书第 4 章" → "马书第 3 章"

@@ -1,6 +1,6 @@
 # 上下文质量度量与可观测性
 
-> **上下文质量从来不是一个"够不够用"的问题，而是一个"好不好的问题"。** 压缩比 3:1 不代表上下文好，缓存命中率 80% 也不代表上下文好。本文教你如何量化评估上下文质量，把"感觉 Agent 变笨了"变成"上下文利用率从 85% 降到 62%，信息密度低于健康阈值"。
+> **上下文质量从来不是一个"够不够用"的问题，而是一个"好不好的问题"。** 压缩比 3:1 不代表上下文好，缓存命中率 80% 也不代表上下文好。本文教你如何量化评估上下文质量，把"感觉 **Agent（智能体）** 变笨了"变成"上下文利用率从 85% 降到 62%，信息密度低于健康阈值"。
 > **适合读者**: 效率开发者 · 架构师 · 工程经理
 
 ## 文章概述
@@ -92,7 +92,7 @@ IBM 在企业级 AI 系统中使用的上下文质量指标体系，侧重可量
 
 | 指标 | 定义 | 计算公式 |
 |------|------|----------|
-| Context Precision | 上下文中的相关内容比例 | 相关 Token ÷ 总 Token |
+| **Context（上下文）** Precision | 上下文中的相关内容比例 | 相关 Token ÷ 总 Token |
 | Context Recall | 任务所需信息在上下文中的覆盖率 | 已覆盖信息 ÷ 全部所需信息 |
 | Signal-to-Noise Ratio | 有用信号与干扰噪音的比例 | 有用 Token ÷ 噪音 Token（对数刻度） |
 | Context Freshness | 上下文中信息的平均年龄 | 加权平均的信息最后更新时间 |
@@ -157,7 +157,7 @@ IBM 在企业级 AI 系统中使用的上下文质量指标体系，侧重可量
 
 ### 3. 压缩比 (Compression Ratio)
 
-Compaction 压缩前后的 Token 比例。这个指标在[上下文压缩与Token 预算](context-compression.md)中有详细说明，此处聚焦它的质量度量角色。
+Compaction 压缩前后的 Token 比例。这个指标在[上下文压缩与Token 预算](../context-compression.md)中有详细说明，此处聚焦它的质量度量角色。
 
 ```text:terminal
 压缩比 = 压缩前 Token ÷ 压缩后 Token
@@ -347,8 +347,8 @@ flowchart TB
 
 1. **先看利用率**——这是最直接的信号。利用率过低或过高，优先处理。
 2. **再看信息密度**——利用率正常但密度低，说明上下文被低价值内容填充。启用选择性保留或减少无关文件加载。
-3. **然后看压缩比**——密度正常但压缩比异常，说明 Compaction 配置需要调整。详见 → [上下文压缩与Token 预算](context-compression.md)。
-4. **接着看缓存命中率**——L1 命中率低，检查 Session 是否频繁中断。详见 → [提示词缓存机制](context/prompt-caching.md)。
+3. **然后看压缩比**——密度正常但压缩比异常，说明 Compaction 配置需要调整。详见 → [上下文压缩与Token 预算](../context-compression.md)。
+4. **接着看缓存命中率**——L1 命中率低，检查 Session 是否频繁中断。详见 → [提示词缓存机制](prompt-caching.md)。
 5. **最后看任务完成率**——前四个指标都正常但完成率低，问题可能在内容本身（准确性和一致性）。
 
 ## opencode.json 监控配置
@@ -416,14 +416,14 @@ flowchart TB
 
 | 指标异常 | 很可能的原因 | 推荐行动 | 参考文章 |
 |---------|-------------|---------|---------|
-| 利用率 > 90% 且持续上升 | 任务超复杂度 / Compaction 未触发 | 降低 compaction.threshold 到 0.75 | → [上下文压缩与Token 预算](context-compression.md) |
-| 利用率 < 40% 且任务复杂度高 | 窗口配置过大 / 推理预算不足 | 增加 thinking.budgetTokens | → [上下文压缩与Token 预算](context-compression.md) |
-| 信息密度 < 40% | 低价值内容过多 / 选择性保留未启用 | 启用 Selective Compaction，增加 protect 规则 | → [上下文压缩与Token 预算](context-compression.md) |
-| 压缩比 > 8:1 | 压缩力度过大，保真度受损 | 降低压缩比，增加 protect 规则 | → [上下文压缩与Token 预算](context-compression.md) |
-| L1 缓存命中率 < 85% | Session 频繁中断 / 网络不稳 | 检查网络连接，减少手动重启 | → [提示词缓存机制](context/prompt-caching.md) |
-| L2 缓存命中率 < 60% | 项目缓存配置错误 / 内容变化太快 | 调整 cache.patterns，延长 maxAge | → [提示词缓存机制](context/prompt-caching.md) |
-| 任务完成率 < 75% 且其他指标正常 | 上下文内容准确性或一致性问题 | 审查记忆系统注入内容，检查 AGENTS.md | → [记忆系统设计](memory-system.md) |
-| 多个指标同时恶化 | 系统性变化（模型切换 / 配置变更） | 回滚最近的配置变更 | → [可观测性](observability.md) |
+| 利用率 > 90% 且持续上升 | 任务超复杂度 / Compaction 未触发 | 降低 compaction.threshold 到 0.75 | → [上下文压缩与Token 预算](../context-compression.md) |
+| 利用率 < 40% 且任务复杂度高 | 窗口配置过大 / 推理预算不足 | 增加 thinking.budgetTokens | → [上下文压缩与Token 预算](../context-compression.md) |
+| 信息密度 < 40% | 低价值内容过多 / 选择性保留未启用 | 启用 Selective Compaction，增加 protect 规则 | → [上下文压缩与Token 预算](../context-compression.md) |
+| 压缩比 > 8:1 | 压缩力度过大，保真度受损 | 降低压缩比，增加 protect 规则 | → [上下文压缩与Token 预算](../context-compression.md) |
+| L1 缓存命中率 < 85% | Session 频繁中断 / 网络不稳 | 检查网络连接，减少手动重启 | → [提示词缓存机制](prompt-caching.md) |
+| L2 缓存命中率 < 60% | 项目缓存配置错误 / 内容变化太快 | 调整 cache.patterns，延长 maxAge | → [提示词缓存机制](prompt-caching.md) |
+| 任务完成率 < 75% 且其他指标正常 | 上下文内容准确性或一致性问题 | 审查记忆系统注入内容，检查 AGENTS.md | → [记忆系统设计](../memory-system.md) |
+| 多个指标同时恶化 | 系统性变化（模型切换 / 配置变更） | 回滚最近的配置变更 | → [可观测性](../observability.md) |
 
 **日常巡检建议**：
 
@@ -436,13 +436,13 @@ flowchart TB
 
 ## 关联章节
 
-- ← [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程基础知识）
-- ← [上下文压缩与Token 预算](context-compression.md)（压缩比是核心指标，如何在质量和节省之间平衡）
-- ← [上下文压缩与Token 预算](context-compression.md)（利用率指标直接关联预算配置）
-- ← [提示词缓存机制](context/prompt-caching.md)（缓存命中率是质量度量的一部分）
-- ← [记忆系统设计](memory-system.md)（记忆系统影响信息密度和一致性）
-- → [可观测性](observability.md)（质量指标需要嵌入可观测性体系）
-- → [可观测性参考](observability-reference.md)（PromQL 查询和日志聚合的具体命令）
+- ← [上下文工程核心](../../02-core-concepts/context-engineering-core.md)（上下文工程基础知识）
+- ← [上下文压缩与Token 预算](../context-compression.md)（压缩比是核心指标，如何在质量和节省之间平衡）
+- ← [上下文压缩与Token 预算](../context-compression.md)（利用率指标直接关联预算配置）
+- ← [提示词缓存机制](prompt-caching.md)（缓存命中率是质量度量的一部分）
+- ← [记忆系统设计](../memory-system.md)（记忆系统影响信息密度和一致性）
+- → [可观测性](../observability.md)（质量指标需要嵌入可观测性体系）
+- → [可观测性参考](../observability-reference.md)（PromQL 查询和日志聚合的具体命令）
 
 ## 验证标准
 

@@ -11,16 +11,16 @@ Claude Code 的"SDK"由三个层次组成：
 | 层次 | 方式 | 灵活度 | 配置方式 | 适用场景 |
 |------|------|--------|----------|---------|
 | **MCP 服务器** | JSON-RPC 外部进程协议 | ⭐⭐⭐⭐ | `.claude/settings.json` | 外部工具集成、API 调用 |
-| **Hooks** | Shell/LLM/Agent 脚本 | ⭐⭐⭐ | `.claude/settings.json` | 事件驱动自动化 |
+| **Hooks** | Shell/LLM/**Agent（智能体）** 脚本 | ⭐⭐⭐ | `.claude/settings.json` | 事件驱动自动化 |
 | **CLI 程序化** | 子进程执行 | ⭐⭐ | Shell 脚本/CI | CI/CD 流水线 |
 
-> **与 OpenCode 的区别**：Claude Code 没有代码级 Plugin API（如 `definePlugin`），所有扩展通过配置文件和外部进程实现。但 MCP 协议是 Anhtropic 主导的开放标准，生态最为成熟。
+> **与 OpenCode 的区别**：Claude Code 没有代码级 **Plugin（插件）** API（如 `definePlugin`），所有扩展通过配置文件和外部进程实现。但 **MCP（模型上下文协议）** 协议是 Anhtropic 主导的开放标准，生态最为成熟。
 
 ---
 
 ## 方式一：MCP 服务器集成
 
-MCP（Model Context Protocol）是 Claude Code 推荐的程序化扩展方式。通过编写 MCP 服务器，你可以为 Claude Code 添加任意自定义工具。
+MCP（Model **Context（上下文）** Protocol）是 Claude Code 推荐的程序化扩展方式。通过编写 MCP 服务器，你可以为 Claude Code 添加任意自定义工具。
 
 ### MCP 服务器基本结构
 
@@ -537,8 +537,8 @@ Claude: 正在通过天气 MCP 服务器查询三个城市...
 - 入门开发者 — 需要快速上手 Claude Code 的 Agent 体系
 - 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
 - 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
-- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
-- Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 **Harness Engineering（驾驭工程）** 体系
+- **Skill（技能）**作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
 
 ### 典型使用场景
 - 需要编程式驱动 Agent 引擎

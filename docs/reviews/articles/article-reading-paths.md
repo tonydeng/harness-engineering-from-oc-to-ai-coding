@@ -24,7 +24,7 @@
 | 实际文件计数 | ~43 篇非 README 文件 | ✅ 已验证 |
 | "45 个用户故事" | **47 个用户故事** | ❌ 已修正 |
 | OpenCode v1.15.x | v1.15.x | ✅ |
-| oh-my-openagent v4.5.x | v4.5.x（部分文档为 v4.7.5） | ⚠️ 不一致 |
+| oh-my-openagent v4.5.x | v4.5.x（部分文档为 v4.13.0） | ⚠️ 不一致 |
 | 链接总数 | 46 | ✅ 全部有效 |
 | 损坏链接 | 0 | ✅ |
 
@@ -36,7 +36,7 @@
 **推荐后续行动：**
 - [ ] 验证实际文章计数（42+8 vs 32+18）
 - [ ] 处理 `observability-reference.md`（加入 SUMMARY.md 或删除）
-- [ ] 统一 oh-my-openagent 版本引用（v4.5.x vs v4.7.5）
+- [ ] 统一 oh-my-openagent 版本引用（v4.5.x vs v4.13.0）
 - [ ] 添加文章计数一致性 CI 检查
 - [ ] 创建 `src/scripts/validate-content.sh`
 
@@ -51,7 +51,7 @@
 
 **版本验证：**
 - OpenCode: v1.15.x ✅
-- oh-my-openagent: v4.5.x（多处），v4.7.5（why-opencode.md）⚠️ 不一致
+- oh-my-openagent: v4.5.x（多处），v4.13.0（why-opencode.md）⚠️ 不一致
 
 **用户故事数量：**
 - 声明："45 个用户故事"
@@ -91,7 +91,7 @@
 **Karpathy 风格技术评分：**
 ```
 1. 用户故事计数: D-    -- "45" vs 47, 这是 storytelling 而非 engineering
-2. 版本一致性: C+      -- v1.15.x 一致但 v4.7.5 出现在 why-opencode.md
+2. 版本一致性: C+      -- v1.15.x 一致但 v4.13.0 出现在 why-opencode.md
 3. 文档一致性: B+      -- 所有链接有效，时间格式已统一
 ```
 
@@ -154,7 +154,7 @@
 | 2 | 时间格式混用 (`Nmin` → `N 分钟`) | 全部 5 视角 | MEDIUM | ✅ 已修正 |
 | 3 | 缺少版本声明 | 综合审查、Karpathy | MEDIUM | ✅ 已添加 |
 | 4 | 文章计数不一致 (42+8 vs 32+18) | 综合审查、Karpathy、Munger | MEDIUM | ⚠️ 待验证 |
-| 5 | oh-my-openagent 版本不一致 (v4.5.x vs v4.7.5) | 综合审查、数据调研 | MEDIUM | ⚠️ 待处理 |
+| 5 | oh-my-openagent 版本不一致 (v4.5.x vs v4.13.0) | 综合审查、数据调研 | MEDIUM | ⚠️ 待处理 |
 | 6 | `observability-reference.md` 孤立文件 | 综合审查、TechLead | LOW | ⚠️ 待处理 |
 | 7 | Mermaid 图中 G6_N 与实际文件数不匹配 (12→14) | 数据调研 | LOW | ⚠️ 待更新 |
 

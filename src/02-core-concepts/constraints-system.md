@@ -1,6 +1,6 @@
 # 约束系统解析
 
-> 为 Agent 构建"牢笼"——通过权限、架构与规范三层约束实现可控的 AI 行为。
+> 为 **Agent（智能体）** 构建"牢笼"——通过权限、架构与规范三层约束实现可控的 AI 行为。
 
 > **前置条件**
 > - 已完成 [上下文工程核心](context-engineering-core.md)，理解上下文管理的基本原理
@@ -9,7 +9,7 @@
 
 ## 文章概述
 
-Agent 需要牢笼才能自由发挥。约束系统是 Harness Engineering 中确保 Agent 行为可控的核心机制。没有约束的 Agent 就像没有围栏的施工现场——效率再高也无法让人放心。本章节详解约束系统的三大支柱：权限模型（能不能做）、架构护栏（怎么做）、Lint 规范（做得对）。读者将理解 OpenCode 的 3 种权限动作与三级策略（allow/ask/deny）的实际含义，掌握工具级与文件级权限控制的配置方法。
+Agent 需要牢笼才能自由发挥。约束系统是 **Harness Engineering（驾驭工程）** 中确保 Agent 行为可控的核心机制。没有约束的 Agent 就像没有围栏的施工现场——效率再高也无法让人放心。本章节详解约束系统的三大支柱：权限模型（能不能做）、架构护栏（怎么做）、Lint 规范（做得对）。读者将理解 OpenCode 的 3 种权限动作与三级策略（allow/ask/deny）的实际含义，掌握工具级与文件级权限控制的配置方法。
 
 在架构护栏部分，我们讲解 AGENTS.md 如何作为架构决策的约束载体，以及如何通过规范文档约束 Agent 的代码生成方向。Lint 规则约束利用 LSP 诊断和 AST-grep 模式匹配在输出阶段进行自动校验。本章还包含威胁建模分析，涵盖越权访问、配置篡改、权限升级等典型攻击场景及其防御策略。学完本节，读者应能理解"好的约束让 Agent 更高效而不是更慢"的设计哲学，并构建适配项目需求的约束体系。
 
@@ -239,7 +239,7 @@ flowchart TB
 **三级策略的配置示例**：
 
 ```json:examples/opencode-configs/permissions.jsonc
-// Requires OpenCode >= v1.16.x
+// Requires OpenCode >= v1.17.x
 {
   "permission": {
     "read": "allow",
@@ -671,7 +671,7 @@ graph TB
 |------|---------|---------|---------|
 | **全局约束** | 整个项目 | 项目加载时 | opencode.json、AGENTS.md |
 | **会话约束** | 当前会话 | 会话启动时 | 会话参数、环境变量 |
-| **任务约束** | 单次任务 | 任务执行时 | Skill 配置、命令参数 |
+| **任务约束** | 单次任务 | 任务执行时 | **Skill（技能）** 配置、命令参数 |
 
 ### 5.2 冲突检测与优先级裁定
 
@@ -728,7 +728,7 @@ flowchart TB
 只授予 Agent 完成任务所需的最小权限，不多给一分。
 
 ```json:examples/opencode-configs/least-privilege.jsonc
-// Requires OpenCode >= v1.16.x
+// Requires OpenCode >= v1.17.x
 {
   "permission": {
     "read": "allow",

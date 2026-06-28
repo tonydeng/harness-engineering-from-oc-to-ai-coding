@@ -1,8 +1,8 @@
 # 沙箱与 Hook 系统
 
-> **OMO 扩展说明**：本文中的 `sandbox` 配置块（`platform.macos`/`platform.linux`）、53+ Hook 点体系、Hook Pipeline 配置（`hooks.pipelines`）、自定义脚本 Hook（`hooks.custom`）以及沙箱逃逸威胁模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 沙箱与 Hook 系统的扩展。原生 OpenCode 的沙箱通过插件（如 `opencode-sandbox` npm 包）实现，而非内置的 `sandbox` 配置键；原生 Hook 点约 20+ 个（如 `session:start`、`tool:before`、`permission:check` 等），不包含 Workflow 级 Hook（`onWorkflowStart` 等）。Permission 模型（allow/ask/deny）是原生 OpenCode 功能。OpenCode 版本 v1.16.x，OMO 版本 v4.7.x。
+> **OMO 扩展说明**：本文中的 `sandbox` 配置块（`platform.macos`/`platform.linux`）、53+ Hook 点体系、Hook Pipeline 配置（`hooks.pipelines`）、自定义脚本 Hook（`hooks.custom`）以及沙箱逃逸威胁模型配置是 **oh-my-openagent (OMO)** 对 OpenCode 沙箱与 Hook 系统的扩展。原生 OpenCode 的沙箱通过插件（如 `opencode-sandbox` npm 包）实现，而非内置的 `sandbox` 配置键；原生 Hook 点约 20+ 个（如 `session:start`、`tool:before`、`permission:check` 等），不包含 **Workflow（工作流）** 级 Hook（`onWorkflowStart` 等）。Permission 模型（allow/ask/deny）是原生 OpenCode 功能。OpenCode 版本 v1.17.x，OMO 版本 v4.13.x。
 >
-> 沙箱是 Agent 执行的"隔离区"，Hook 系统是安全策略的"传感器"。两者协同工作，构建 Agent 行为的可观测、可控制、可拦截能力。
+> 沙箱是 **Agent（智能体）** 执行的"隔离区"，Hook 系统是安全策略的"传感器"。两者协同工作，构建 Agent 行为的可观测、可控制、可拦截能力。
 > **适合读者**: 安全工程师 · 红队
 
 ## 文章概述
@@ -359,7 +359,7 @@ exit 0
 ```mermaid
 flowchart TB
     subgraph Pipeline["Hook Pipeline"]
-        direction LR
+        direction TB
         H1[Priority 5<br/>audit-log]
         H2[Priority 20<br/>secret-scanner]
         H3[Priority 50<br/>yolo-classify]
@@ -547,7 +547,7 @@ exit 1
 ## 关联章节
 
 - ← [安全总览](security-overview.md)（安全的执行层）
-- → [自定义 Agent 与 Plugin](custom-agents.md)（Plugin 开发中的 Hook 使用）
+- → [自定义 Agent 与 **Plugin（插件）**](custom-agents.md)（Plugin 开发中的 Hook 使用）
 - → [案例研究](../07-case-studies/)（案例中的安全配置）
 
 ## 验证标准

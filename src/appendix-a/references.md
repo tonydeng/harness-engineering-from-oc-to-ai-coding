@@ -6,7 +6,7 @@
 
 ## GitHub 仓库
 
-**OpenCode** ([anomalyco/opencode](https://github.com/anomalyco/opencode)) 是本书的核心研究对象，一个基于 AI 的编程引擎，提供 Agent 编排、Skill 系统、MCP 集成等能力。本书围绕 OpenCode 的架构和最佳实践展开，在[读者导航](../00-guide/README.md)等多个章节中被引用。
+**OpenCode** ([anomalyco/opencode](https://github.com/anomalyco/opencode)) 是本书的核心研究对象，一个基于 AI 的编程引擎，提供 **Agent（智能体）** 编排、**Skill（技能）** 系统、**MCP（模型上下文协议）** 集成等能力。本书围绕 OpenCode 的架构和最佳实践展开，在[读者导航](../00-guide/README.md)等多个章节中被引用。
 
 **oh-my-openagent** ([code-yeongyu/oh-my-openagent](https://github.com/code-yeongyu/oh-my-openagent)) 是一个 Agent 编排套件（简称 OMO），为 OpenCode 提供多 Agent 协作能力。在[读者导航](../00-guide/README.md)和[oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md)中被引用。
 
@@ -70,7 +70,7 @@
 
 **Mitchell Hashimoto, "My AI Adoption Journey"** ([mitchellh.com](https://mitchellh.com/writing/ai-adoption-journey)) 是 HashiCorp 联合创始人 Mitchell Hashimoto 于 2026 年 2 月发布的博客文章，分享了他采用 AI 编程工具的经验和思考。在[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)中被引用。
 
-**Harrison Chase, "Harness Engineering: The Missing Piece in AI Development"** 是 LangChain 创始人 Harrison Chase 在 VentureBeat 播客（2026 年 3 月 7 日）中的访谈，讨论了 Harness Engineering 在 AI 开发中的重要性。在[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)中被引用。
+**Harrison Chase, "Harness Engineering: The Missing Piece in AI Development"** 是 LangChain 创始人 Harrison Chase 在 VentureBeat 播客（2026 年 3 月 7 日）中的访谈，讨论了 **Harness Engineering（驾驭工程）** 在 AI 开发中的重要性。在[什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md)中被引用。
 
 **《驾驭工程：从 Claude Code 源码到 AI 编码最佳实践》**（简称《马书》）是一本技术书籍，深入分析了 Claude Code 的源码架构和 AI 编程的最佳实践。在[Agent 编排](../02-core-concepts/agent-orchestration.md)和[记忆系统设计](../06-advanced/memory-system.md)中被引用。
 
@@ -88,9 +88,9 @@
 
 ## 开源工具与框架
 
-**OpenCode** (v1.16.x) 是一个 AI 编程引擎，提供 Agent 编排、Skill 系统、MCP 集成等能力。在[读者导航](../00-guide/README.md)中被引用。
+**OpenCode** (v1.17.x) 是一个 AI 编程引擎，提供 Agent 编排、Skill 系统、MCP 集成等能力。在[读者导航](../00-guide/README.md)中被引用。
 
-**oh-my-openagent (OMO)** (v4.7.x) 是一个 Agent 编排套件，为 OpenCode 提供多 Agent 协作能力。在[读者导航](../00-guide/README.md)中被引用。
+**oh-my-openagent (OMO)** (v4.13.x) 是一个 Agent 编排套件，为 OpenCode 提供多 Agent 协作能力。在[读者导航](../00-guide/README.md)中被引用。
 
 **mdBook** (v0.5.x) ([rust-lang/mdBook](https://github.com/rust-lang/mdBook)) 是一个基于 Markdown 的书籍渲染工具。在[读者导航](../00-guide/README.md)中被引用。
 
@@ -186,11 +186,11 @@
 
 ## 数据来源与基准测试
 
-**SWE-bench** ([swebench.com](https://www.swebench.com/)) 是一个用于评估 AI 编程能力的基准测试，测试 AI 解决真实 GitHub Issue 的能力。书中引用了 Claude Code 80.9%+ 和 Opus 4.7 at 87.6% 的数据。SWE-bench 已成为评估 AI 编程工具能力的事实标准，被广泛用于比较不同 AI 模型的代码生成能力。在[为什么选择 OpenCode](../01-introduction/why-opencode.md)中被引用。
+**SWE-bench** ([swebench.com](https://www.swebench.com/)) 是一个用于评估 AI 编程能力的基准测试，测试 AI 解决真实 GitHub Issue 的能力。书中引用了 Claude Code 80.9%+ 和 Opus 4.8 at 88.6% 的数据。SWE-bench 已成为评估 AI 编程工具能力的事实标准，被广泛用于比较不同 AI 模型的代码生成能力。在[为什么选择 OpenCode](../01-introduction/why-opencode.md)中被引用。
 
 **Codeforces** ([codeforces.com](https://codeforces.com/)) 是全球最知名的在线编程竞赛平台之一，其评分系统被广泛用于评估编程能力。书中引用了 DeepSeek-V4 的评分数据（2386 standard, 2701 Speciale），表明该模型已达到世界级编程竞赛选手水平。在[国产模型供应商配置](../03-setup/chinese-providers.md)中被引用。
 
-**LMSYS Chatbot Arena** ([lmarena.ai](https://lmarena.ai/)) 是一个 AI 聊天机器人竞技场，通过 Elo 评分系统评估模型能力。用户可以与两个匿名模型对话并投票选择更好的回答，从而生成客观的模型排名。书中引用了 GPT-4o ~1287 Elo 和 DeepSeek-V3 ~1243 Elo 的数据。在[国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)中被引用。
+**LMSYS Chatbot Arena** ([lmarena.ai](https://lmarena.ai/)) 是一个 AI 聊天机器人竞技场，通过 Elo 评分系统评估模型能力。用户可以与两个匿名模型对话并投票选择更好的回答，从而生成客观的模型排名。书中引用了 GPT-5.5-high 约 1506 Elo 和 DeepSeek-V4 Pro 约 1462 Elo 的数据。在[国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)中被引用。
 
 **IDC MarketScape: China AI Code Assistants 2025** ([idc.com](https://www.idc.com/)) 是 IDC 发布的 2025 年中国 AI 代码助手市场评估报告。该报告对中国市场的主要 AI 编程工具进行了全面评估，书中引用了 Trae 41.2% 市场份额和文心快码 8 项满分的数据，反映了中国 AI 编程工具市场的竞争格局。在[国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)中被引用。
 
@@ -200,7 +200,7 @@
 
 **GPT-4 Technical Report** ([cdn.openai.com](https://cdn.openai.com/papers/gpt-4.pdf)) 是 OpenAI 于 2023 年 3 月发布的 GPT-4 技术报告，详细介绍了 GPT-4 的架构、训练方法和性能评估。书中引用了 Self-attention O(n²) 复杂度和 50K→200K 上下文窗口导致 ~16x 推理时间的数据，说明了长上下文处理的性能挑战。在[性能调优与成本管理](../06-advanced/context/performance-tuning.md)中被引用。
 
-**Context7** ([context7.dev](https://context7.dev/)) 是一个上下文管理工具，帮助 AI 编程工具更好地理解项目上下文。书中引用了使用 Context7 可以减少 30-50% 试错工具调用的数据，说明了上下文管理对 AI 编程效率的重要性。在[性能调优与成本管理](../06-advanced/context/performance-tuning.md)中被引用。
+**Context7** ([context7.dev](https://context7.dev/)) 是一个上下文管理工具，帮助 AI 编程工具更好地理解项目上下文。书中引用了使用 **Context（上下文）**7 可以减少 30-50% 试错工具调用的数据，说明了上下文管理对 AI 编程效率的重要性。在[性能调优与成本管理](../06-advanced/context/performance-tuning.md)中被引用。
 
 **Prisma Case Studies** ([prisma.io/case-studies](https://www.prisma.io/case-studies)) 是 Prisma ORM 的官方案例研究集合，展示了不同规模项目使用 Prisma 的经验和成果。书中引用了使用 Prisma 可以减少 30-40% 运行时错误的数据，说明了类型安全 ORM 对代码质量的提升。在[案例一：从零搭建微服务](../07-case-studies/real-world-01.md)中被引用。
 
@@ -228,7 +228,7 @@
 
 **LSP (Language Server Protocol)** ([microsoft.github.io](https://microsoft.github.io/language-server-protocol/)) 是微软提出的语言服务器协议，用于编辑器与语言服务器之间的标准化通信。在[验证护栏体系](../02-core-concepts/validation-harness.md)中被引用。
 
-**OpenAPI 3.x** ([spec.openapis.org](https://spec.openapis.org/oas/latest.html)) 是 API 规范标准，用于描述 RESTful API。在[自定义 Agent 与 Plugin](../06-advanced/custom-agents.md)中被引用。
+**OpenAPI 3.x** ([spec.openapis.org](https://spec.openapis.org/oas/latest.html)) 是 API 规范标准，用于描述 RESTful API。在[自定义 Agent 与 **Plugin（插件）**](../06-advanced/custom-agents.md)中被引用。
 
 **STRIDE** ([Microsoft Learn](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-threats)) 是微软提出的威胁分类模型，用于安全威胁建模。在[MCP 服务器](../06-advanced/mcp-servers.md)中被引用。
 
@@ -298,7 +298,7 @@
 
 **Microsoft AutoGen** ([github.com/microsoft/autogen](https://github.com/microsoft/autogen)) 是微软发布的多 Agent 对话框架。
 
-**DeepSeek-V3** ([github.com/deepseek-ai/DeepSeek-V3](https://github.com/deepseek-ai/DeepSeek-V3)) 是 DeepSeek 发布的 V3 模型。
+**DeepSeek-V4** ([github.com/deepseek-ai/DeepSeek-V4](https://github.com/deepseek-ai/DeepSeek-V4)) 是 DeepSeek 发布的 V3 模型。
 
 **Qwen** ([github.com/QwenLM/Qwen](https://github.com/QwenLM/Qwen)) 是阿里云发布的通义千问模型。
 

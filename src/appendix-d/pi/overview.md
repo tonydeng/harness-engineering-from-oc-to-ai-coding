@@ -1,4 +1,4 @@
-# Pi Agent 概述与核心概念
+# Pi **Agent（智能体）** 概述与核心概念
 
 ## 什么是 Pi？
 
@@ -23,14 +23,14 @@ Pi 是"可编程的编码智能体"——它不给用户强加工作流，而是
 
 ---
 
-## 与 Harness Engineering 四层进化的映射
+## 与 **Harness Engineering（驾驭工程）** 四层进化的映射
 
 Pi 的架构设计与 Harness Engineering 的 L1-L4 进化路径高度吻合：
 
 | Harness Engineering 层级 | Pi 的对应能力 |
 |-------------------------|--------------|
 | **L1 提示词工程** | AGENTS.md / SYSTEM.md / APPEND_SYSTEM.md 多层提示词定制 |
-| **L2 上下文工程** | 自动/手动压缩、Session Tree 分支管理、Context Files 多级加载 |
+| **L2 上下文工程** | 自动/手动压缩、Session Tree 分支管理、**Context（上下文）** Files 多级加载 |
 | **L3 驾驭工程** | Extension API（自定义工具/命令/事件处理）、Project Trust 系统 |
 | **L4 循环工程** | SDK 嵌入、RPC 模式、Pi Packages 自动化扩展部署 |
 
@@ -90,7 +90,7 @@ Agent 运行时层，管理完整的 LLM 交互循环：
 - 4 种运行模式（见下文）
 - 编辑器特性（@文件引用、!bash 执行、多行输入、图片粘贴）
 - Session 管理（JSONL 存储、Tree 分支、Fork/Clone）
-- 扩展加载器（Extensions / Skills / Prompt Templates / Themes）
+- 扩展加载器（Extensions / Skills / **Prompt（提示词）** Templates / Themes）
 - Project Trust 安全机制
 - 自动/手动上下文压缩
 
@@ -147,7 +147,7 @@ agentLoop() → AgentEvent 流
 | 组件 | 职责 |
 |------|------|
 | System Prompt 构造 | 从 Skills + Prompt Templates + Context Files 动态拼接 |
-| Skill 加载 | 遍历目录解析 SKILL.md，支持忽略文件和诊断 |
+| **Skill（技能）** 加载 | 遍历目录解析 SKILL.md，支持忽略文件和诊断 |
 | Prompt Template 管理 | 加载命名模板供 `/name` 快捷调用 |
 | 上下文压缩 | Token 预算计算、Cut Point 搜索、LLM 摘要生成 |
 | Session 管理 | JSONL 存储、分支导航、Fork/Clone |
@@ -269,7 +269,7 @@ Pi 与其他 AI 编码工具有一个根本性差异：它主动**不做**某些
 
 | 功能 | Pi 的立场 | 替代方案 |
 |------|----------|---------|
-| MCP 支持 | 不内置 MCP | 通过 Extension 添加，或直接用 CLI 工具 + Skills |
+| **MCP（模型上下文协议）** 支持 | 不内置 MCP | 通过 Extension 添加，或直接用 CLI 工具 + Skills |
 | 子智能体 | 不内置 | 通过 tmux 启动多个 Pi 实例，或用 Extension 构建 |
 | 权限弹窗 | 不内置 | 容器化运行，或用 Extension 构建自定义确认流 |
 | Plan 模式 | 不内置 | 写 Plan 到文件，或用 Extension 构建 |
@@ -295,7 +295,7 @@ Pi 的核心论点是：**不同的团队、不同的项目、不同的安全需
 
 | 维度 | Pi Agent | OpenCode | Claude Code |
 |------|----------|----------|-------------|
-| 设计哲学 | 极简核心 + 扩展驱动 | 功能全面 + Plugin 体系 | Claude 深度集成 |
+| 设计哲学 | 极简核心 + 扩展驱动 | 功能全面 + **Plugin（插件）** 体系 | Claude 深度集成 |
 | 默认工具 | 4 个（read/write/edit/bash） | 丰富工具链（LSP/AST/CodeGraph） | 基础工具（文件/命令/搜索） |
 | 扩展机制 | Extensions/Skills/Packages | Plugin/Skill/MCP/Agent | CLAUDE.md + 自定义命令 |
 | 模型支持 | 20+ Provider | 75+ Provider | 仅 Claude |

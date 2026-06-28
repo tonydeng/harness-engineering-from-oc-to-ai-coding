@@ -1,4 +1,4 @@
-# Pi Agent SDK 与程序化集成
+# Pi **Agent（智能体）** SDK 与程序化集成
 
 Pi 提供最完善的原生 SDK——`@earendil-works/pi-coding-agent` 包不仅是 CLI 工具，也是一个完整的 TypeScript 库。你可以在 Node.js 应用中直接调用 Pi 的 Agent 能力，无需经过 CLI 子进程。
 
@@ -612,8 +612,8 @@ app.get("/api/weather/:city", async (req, res) => {
 - 入门开发者 — Pi 的 SDK 提供简单的 API，让新手无需面对复杂配置即可上手
 - 智能体开发工程师 — SDK 为深度定制提供 TypeScript 支持，实现高级 Agent 编排
 - 效率开发者 — SDK 嵌入支持，实现自动化工作流，提升 2x+ 效率
-- 技术负责人 — SDK 集成支持，实现团队级 Harness Engineering 体系
-- Skill 作者 — SDK 支持 Skill 开发，实现高质量 Skill 的创建
+- 技术负责人 — SDK 集成支持，实现团队级 **Harness Engineering（驾驭工程）** 体系
+- **Skill（技能）** 作者 — SDK 支持 Skill 开发，实现高质量 Skill 的创建
 - 系统架构师 — SDK 集成支持，实现架构评估和安全合规
 - 安全工程师 — SDK 集成支持，实现安全基线建立和威胁建模
 

@@ -1,4 +1,4 @@
-# Skill 最佳实践
+# **Skill（技能）** 最佳实践
 
 > 从真实项目中提炼的 Skill 设计原则、反模式清单和调试方法，避免踩坑，写出高质量的 Skill。
 
@@ -86,7 +86,7 @@ allowed-tools:
 
 ### 原则 2：可组合
 
-**定义**：Skill 之间能通过 Agent 编排串联，形成更强大的工作流。
+**定义**：Skill 之间能通过 **Agent（智能体）** 编排串联，形成更强大的工作流。
 
 **架构顾问视角**：可组合性是架构设计的核心价值。当每个 Skill 都很"小"且专注时，Agent 可以灵活组合它们完成复杂任务。这就像 Unix 哲学：每个程序只做一件事，但可以通过管道组合。
 
@@ -95,7 +95,7 @@ allowed-tools:
 ```mermaid
 graph LR
     subgraph Workflow[技术选型工作流]
-        direction LR
+        direction TB
         S1[deep-research<br/>调研竞品] --> S2[architecture-consultant<br/>设计方案] --> S3[requesting-code-review<br/>评审方案]
     end
     
@@ -157,7 +157,7 @@ description: |
 
 **定义**：只给完成任务必需的工具，不多给一个。
 
-**安全架构师视角**：权限边界即攻击面。给 Skill 超过需要的工具，就像给实习生 root 权限——短期方便但长期危险。这是 Harness Engineering "可控"原则的核心体现。
+**安全架构师视角**：权限边界即攻击面。给 Skill 超过需要的工具，就像给实习生 root 权限——短期方便但长期危险。这是 **Harness Engineering（驾驭工程）** "可控"原则的核心体现。
 
 > ⚠️ **重要提醒**：`allowed-tools` 的限制**不是** OpenCode 原生强制执行的安全边界。真正的权限控制发生在 `opencode.json` 的 `"permission"` 配置中。在原生 OpenCode 中，SKILL.md 的 `allowed-tools` 仅作为意图声明，不会被强制执行。
 
@@ -1256,6 +1256,72 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 | [ ] 检查 Agent 间的 Skill 冲突 | 避免误触发 |
 | [ ] 配置审计日志 | 追踪 Skill 调用 |
 | [ ] 定期审查 Overrides 配置 | 确保符合安全策略 |
+
+### AGENTS.md 作为 Skill 清单
+
+在 Team Mode 中，AGENTS.md 不仅是 Agent 的定义文件，也是团队的 **Skill 清单**——它集中记录了哪些 Skill 可用、分配给哪个 Agent、当前版本和依赖关系。这种设计将分散在不同 SKILL.md 中的元信息汇聚到一处，便于团队管理和审计。
+
+**AGENTS.md 管理示例**：
+
+```markdown:.opencode/AGENTS.md
+# 项目 Agent 与 Skill 清单
+
+## Agent 定义
+
+### build
+- Skills:
+  - frontend-architect@^2.0.0: 前端组件设计（团队标准）
+  - backend-architect@^1.5.0: API 设计（继承自开源模板）
+
+### plan
+- Skills:
+  - requirements-analyst@^1.2.0: 需求分析（自研）
+  - architecture-consultant@^2.1.0: 架构评审（自研）
+
+### security-audit
+- Skills:
+  - security-scanner@^1.0.0: 漏洞扫描（安全团队维护）
+```
+
+#### Skill 版本跟踪与锁定
+
+将 Skill 版本记录在 AGENTS.md 中有助于团队追踪变更：
+
+| 管理方式 | 做法 | 适用场景 |
+|---------|------|----------|
+| 版本范围 | 使用 semver 范围（如 `^1.0.0`） | 希望自动获取修订版更新 |
+| 版本锁定 | 使用精确版本（如 `1.2.3`） | 生产环境，需要可复现 |
+| 分支引用 | 引用 GitHub 分支 | 开发测试阶段 |
+| 无约束 | 不指定版本 | 个人项目或快速原型 |
+
+**版本冲突处理**：当多个 Skill 依赖同一基础 Skill 的不同版本时，AGENTS.md 是最早发现冲突的地方。建议在 AGENTS.md 中为每个 Skill 标注来源和维护者，方便冲突时快速联系责任人。
+
+#### 在 AGENTS.md 中记录 Skill 依赖与接口
+
+技能间的依赖关系如果只写在 SKILL.md 的 `dependencies` 字段中，分散且难以全局审视。AGENTS.md 提供了一个更好的视角：
+
+```markdown:.opencode/AGENTS.md
+## Skill 依赖关系
+
+### 显式依赖
+- security-scanner@1.0.0 → vulnerability-database@^2.0.0
+- frontend-architect@2.0.0 → component-templates@^1.0.0
+
+### 接口约定
+每个 Skill 通过以下接口与 Agent 交互：
+- **输入**：用户任务描述（自然语言）
+- **输出**：按 SKILL.md 输出规范生成的文本
+- **工具调用**：受 allowed-tools 约束
+
+### 跨 Skill 数据流
+- architecture-consultant 的输出（架构设计文档）
+  → frontend-architect 的参考输入
+  → requesting-code-review 的审查对象
+```
+
+这种记录方式不仅帮助新成员快速理解团队的 Skill 体系，也为后续的自动化工具（如依赖检查、版本提示）提供了可解析的结构化数据。
+
+> 关于 AGENTS.md 的完整语法和团队配置模式，参见[第 2 章 Agent 编排](../02-core-concepts/agent-orchestration.md)和[第 3 章 OpenCode 配置详解](../03-setup/opencode-config.md)。
 
 ## 小结
 

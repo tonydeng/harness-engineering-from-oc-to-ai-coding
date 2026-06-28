@@ -567,7 +567,7 @@ Qwen3-Max 支持思考模式（Thinking Mode），通过参数控制：
 %%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#4A90D9', 'secondaryColor':'#50C878', 'tertiaryColor':'#FF9F43'}}}%%
 xychart-beta
     title "主流模型 API 价格对比（每百万输入 tokens）"
-    x-axis ["GPT-4o", "Claude Sonnet 4", "DeepSeek-V4-Flash", "Kimi K2.6", "Qwen3-Max"]
+    x-axis ["GPT-5.4", "Claude Sonnet 4.6", "DeepSeek-V4-Flash", "Kimi K2.6", "Qwen3-Max"]
     y-axis "价格 (USD)" 0 --> 15
     bar [2.50, 3.00, 0.14, 0.95, 1.20]
     line [2.50, 3.00, 0.14, 0.95, 1.20]
@@ -577,8 +577,8 @@ xychart-beta
 
 | 模型 | 输入价格 ($/百万) | 输出价格 ($/百万) | 上下文窗口 | 缓存折扣 |
 |------|------------------|------------------|-----------|---------|
-| **GPT-4o** | 2.50 | 10.00 | 128K | 无 |
-| **Claude Sonnet 4** | 3.00 | 15.00 | 200K | 有 |
+| **GPT-5.4** | 2.50 | 15.00 | 128K | 无 |
+| **Claude Sonnet 4.6** | 3.00 | 15.00 | 200K | 有 |
 | **DeepSeek-V4-Flash** | 0.14 | 0.28 | 1M | 98% |
 | **Kimi K2.6** | 0.95 | 4.00 | 256K | 83% |
 | **Qwen3-Max (International)** | 1.20 | 6.00 | 256K | 80% |
@@ -594,13 +594,13 @@ xychart-beta
 
 | 模型 | 日成本 | 月成本 | 年成本 |
 |------|--------|--------|--------|
-| GPT-4o | $6.25 | $187.50 | $2,281.25 |
-| Claude Sonnet 4 | $9.00 | $270.00 | $3,285.00 |
+| GPT-5.4 | $6.25 | $187.50 | $2,281.25 |
+| Claude Sonnet 4.6 | $9.00 | $270.00 | $3,285.00 |
 | **DeepSeek-V4-Flash** | **$0.21** | **$6.30** | **$76.65** |
 | Kimi K2.6 | $2.48 | $74.40 | $905.70 |
 | Qwen3.5-Plus | $0.52 | $15.60 | $190.20 |
 
-**结论：** DeepSeek-V4-Flash 的年成本为 GPT-4o 的 3.4%，为 Claude 的 2.3%。对于成本敏感的项目，国产模型是极具吸引力的选择。
+**结论：** DeepSeek-V4-Flash 的年成本为 GPT-5.4 的 3.4%，为 Claude 的 2.3%。对于成本敏感的项目，国产模型是极具吸引力的选择。
 
 ## 注意事项和常见问题
 

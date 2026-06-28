@@ -23,13 +23,13 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 | `/resume` | `/continue` | 按 ID 或名称恢复历史会话 | 中断工作后继续 |
 | `/rename` | — | 重命名当前会话 | 方便后续通过名称恢复 |
 | `/branch` | — | 在当前节点创建对话分支 | 尝试不同方向，不丢失原有路径 |
-| `/fork` | — | 生成后台子 Agent 继承当前会话 | 并行处理独立子任务 |
+| `/fork` | — | 生成后台子 **Agent（智能体）** 继承当前会话 | 并行处理独立子任务 |
 | `/rewind` | — | 回滚代码和对话到上一个检查点 | 发现方向错误时快速回退 |
 | `/export` | — | 将会话导出为纯文本 | 保存调试记录或分享排查过程 |
 | `/copy` | — | 复制最近一次助手回复到剪贴板 | 快速提取生成结果 |
 | `/exit` | `/quit` | 退出 CLI | 结束工作 |
 | `/btw` | — | 快速旁路提问，不加入对话历史 | 临时查询不打断主任务 |
-| `/cd` | — | 切换会话工作目录，保留 Prompt 缓存 | 多项目目录切换 |
+| `/cd` | — | 切换会话工作目录，保留 **Prompt（提示词）** 缓存 | 多项目目录切换 |
 | `/add-dir` | — | 添加额外工作目录用于文件访问 | 跨项目文件引用 |
 | `/goal` | — | 设置完成条件，Claude 持续工作直到达标 | 长时间自主执行任务 |
 
@@ -86,7 +86,7 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 | `/status` | 查看会话信息：模型、版本、账户、连接状态 | 确认当前环境配置 |
 | `/insights` | 查看会话模式和瓶颈报告 | 优化工作流程 |
 
-### MCP 与扩展管理
+### **MCP（模型上下文协议）** 与扩展管理
 
 | 命令 | 功能 | 典型场景 |
 |------|------|----------|
@@ -265,7 +265,7 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 
 | 类别 | 数量 | 说明 |
 |------|------|------|
-| Slash 命令 | ~70+ | 含内置命令和捆绑 Skill |
+| Slash 命令 | ~70+ | 含内置命令和捆绑 **Skill（技能）** |
 | CLI 命令 | ~25+ | Shell 级别管理命令 |
 | CLI 标志 | ~40+ | 启动选项和配置参数 |
 | 键盘快捷键 | ~15+ | 交互式操作快捷键 |
@@ -276,7 +276,7 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
 - → [Claude Code 扩展机制](./extensions.md) — Skills、Subagent、Hook、MCP 等扩展体系
 - → [Claude Code 生态参考](./ecosystem.md) — 社区项目、最佳实践和集成工作流
-- → [OpenCode 内置命令参考](../opencode/commands.md) — OpenCode 命令系统对比参考
+- → [OpenCode 内置命令参考](../../appendix-b/opencode/commands.md) — OpenCode 命令系统对比参考
 
 ---
 
@@ -286,7 +286,7 @@ Claude Code 提供了两大类命令：**Slash 命令**（内置命令 + 捆绑 
 - 入门开发者 — 需要快速上手 Claude Code 的内置命令和工具集
 - 智能体开发工程师 — 需要设计、调试、进化 Claude Code 中的自定义 Agent 和 Subagent
 - 效率开发者 — 已有 AI 工具经验，想通过 Claude Code 提升 2x+ 效率
-- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 Harness Engineering 体系
+- 技术负责人 — 需要评估 Claude Code 的技术可行性和团队级 **Harness Engineering（驾驭工程）** 体系
 - Skill作者 — 需要开发自定义 Skill 和 MCP 桥接，实现团队最佳实践复用
 
 ### 典型使用场景
