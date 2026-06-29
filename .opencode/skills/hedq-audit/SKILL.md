@@ -82,6 +82,7 @@ flowchart TB
 | Fix | 修复引入新违规 | `git diff` 回退单文件修改 | `git checkout HEAD -- <file>` 丢弃整文件修改 |
 | Verify | 修复后分数未提升 | 撤销该次修改，尝试替代修复方案 | 标记该维度为"阻塞"，进入下一维度 |
 | Verify | 连续 3 次修复同一维度无提升 | 🛑 **停止该维度修复** | 报告阻塞原因，建议人工审查 |
+| Analyze | `--json` 输出无法被解析 (JSON parse failure) | 回退到纯文本输出模式 `python scripts/qa/run-hedq.py --no-save`，提取文本报告中的总分信息 | 打印原始输出，建议人工审查 |
 
 ---
 
