@@ -56,7 +56,33 @@ jobs:
         run: mdbook build
 
       - name: HEDQ quick quality check
-        run: python scripts/qa/run-hedq.py --quick --no-save || echo "HEDQ check completed (non-blocking)"
+        env:
+          HEDQ_THRESHOLD_WARN: ${{ vars.HEDQ_THRESHOLD_WARN || '60' }}
+        run: |
+          echo "Running HEDQ --quick quality check (threshold: ${HEDQ_THRESHOLD_WARN}%)..."
+          RAW=$(python scripts/qa/run-hedq.py --quick --json --no-save 2>&1) || {
+            echo "::warning title=HEDQ Check::Python script failed or not available"
+            echo "${RAW}"
+            exit 0
+          }
+          JSON=$(echo "${RAW}" | sed -n '/^{/,$p') || JSON=""
+          if [ -z "${JSON}" ]; then
+            echo "::warning title=HEDQ Check::Could not extract JSON from output"
+            echo "${RAW}"
+            exit 0
+          fi
+          SCORE=$(echo "${JSON}" | python3 -c "import sys,json; print(json.load(sys.stdin)['total_score'])" 2>/dev/null) || {
+            echo "::warning title=HEDQ Check::Could not parse JSON score"
+            exit 0
+          }
+          PERCENTAGE=$(echo "${JSON}" | python3 -c "import sys,json; print(json.load(sys.stdin)['percentage'])" 2>/dev/null)
+          GRADE=$(echo "${JSON}" | python3 -c "import sys,json; print(json.load(sys.stdin)['grade'])" 2>/dev/null)
+          echo "HEDQ Score: ${SCORE}/26 (${PERCENTAGE}%) → ${GRADE}"
+          if [ "$(echo "${PERCENTAGE} < ${HEDQ_THRESHOLD_WARN}" | python3 -c "print(eval(input()))" 2>/dev/null)" = "True" ]; then
+            echo "::warning title=HEDQ Check::Quality score ${PERCENTAGE}% is below threshold ${HEDQ_THRESHOLD_WARN}% — consider reviewing D6/D7 issues"
+          else
+            echo "✅ HEDQ score ${PERCENTAGE}% meets threshold ${HEDQ_THRESHOLD_WARN}%"
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

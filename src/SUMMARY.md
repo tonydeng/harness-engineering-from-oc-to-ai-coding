@@ -48,6 +48,7 @@
     - [DCP 与高级上下文管理插件实战](06-advanced/context/dcp-advanced-plugins.md)
     - [性能调优与成本管理](06-advanced/context/performance-tuning.md)
     - [上下文质量度量与可观测性](06-advanced/context/context-quality-metrics.md)
+  - [缓存机制深度对比](06-advanced/caching-comparison.md)
   - [记忆系统设计](06-advanced/memory-system.md)
   - [安全总览](06-advanced/security-overview.md)
   - [沙箱与 Hook 系统](06-advanced/sandbox-hooks.md)
