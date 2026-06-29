@@ -1052,7 +1052,7 @@ expect(result.reject).toBe(true);
 | → [Skill 系统](../../02-core-concepts/skills-system.md) | Plugin 与 Skill 的对比 |
 | → [MCP 服务器](../../06-advanced/mcp-servers.md) | 外部工具接入方式 |
 | → [Skill 插件化模式](../../05-skills/plugin-patterns.md) | Skill 的插件化扩展 |
-| → [OpenCode 配置详解](../../03-setup/opencode-config.md) | opencode.json 完整配置 |
+| → [OpenCode 配置深度解析](../../03-setup/opencode-config.md) | opencode.json 完整配置 |
 
 ---
 

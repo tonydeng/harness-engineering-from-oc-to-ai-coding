@@ -321,7 +321,7 @@ Skills 作为可复用指令集，在 Harness Engineering 中扮演"质量门禁
 ## 相关章节
 
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具、配置方式的完整参考
-- → [OpenCode 生态参考](../opencode/ecosystem.md) — OpenCode 开源生态对比
+- → [OpenCode 生态参考](../../appendix-b/opencode/ecosystem.md) — OpenCode 开源生态对比
 - → [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践
 - → [生态对比](../../01-introduction/ecosystem-comparison.md) — AI 编程工具生态全景
 
@@ -406,4 +406,4 @@ claude
 
 ### 与前/后文章的衔接
 - ← [Claude Code 内置能力](./capabilities.md) — 命令、工具、配置方式的完整参考
-- → [OpenCode 生态参考](../opencode/ecosystem.md) — OpenCode 开源生态对比
+- → [OpenCode 生态参考](../../appendix-b/opencode/ecosystem.md) — OpenCode 开源生态对比

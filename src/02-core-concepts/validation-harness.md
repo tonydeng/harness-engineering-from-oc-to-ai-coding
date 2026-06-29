@@ -291,7 +291,7 @@ flowchart TB
     style F fill:#FF6B6B,color:#fff
 ```
 
-> → 上下文窗口膨胀导致的 Agent 输出退化是循环工程中的常见陷阱，详见 [上下文窗口与 Token 管理](../06-advanced/context/performance-tuning.md)。
+> → 上下文窗口膨胀导致的 Agent 输出退化是循环工程中的常见陷阱，详见 [性能调优与成本管理](../06-advanced/context/performance-tuning.md)。
 
 ## 架构建议（设计模式）
 

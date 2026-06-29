@@ -890,7 +890,7 @@ Team Mode 下，不同团队的权限需要按职责隔离：
 ## 关联章节
 
 - ← [约束系统解析](../02-core-concepts/constraints-system.md)（约束系统基础）
-- ← [OpenCode 配置详解](../03-setup/opencode-config.md)（配置中的安全设置）
+- ← [OpenCode 配置深度解析](../03-setup/opencode-config.md)（配置中的安全设置）
 - → [沙箱与 Hook 系统](sandbox-hooks.md)（沙箱是安全隔离的执行层）
 - → [可观测性](observability.md)（监控指标与告警）
 - → [环境搭建：多环境部署方案](../03-setup/multi-env-setup.md)（Secret 管理在环境部署中的应用）

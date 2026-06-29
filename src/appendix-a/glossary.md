@@ -284,7 +284,7 @@
 
 > **人话**: 一次任务最多花多少钱
 
-**首次出现**:[Token 预算策略](../06-advanced/context-compression.md)
+**首次出现**:[上下文压缩与Token 预算](../06-advanced/context-compression.md)
 
 ### Tool(工具)
 

@@ -7,7 +7,7 @@
 
 > **前置条件**
 > - 已完成 [可观测性](../observability.md)
-> - 已完成 [Token 预算策略](../context-compression.md)
+> - 已完成 [上下文压缩与Token 预算](../context-compression.md)
 > - 已完成 [上下文压缩与Token 预算](../context-compression.md)
 
 ## 文章概述
@@ -369,7 +369,7 @@ flowchart TB
 ## 关联章节
 
 - ← [可观测性](../observability.md)
-- ← [Token 预算策略](../context-compression.md)
+- ← [上下文压缩与Token 预算](../context-compression.md)
 - ← [上下文压缩与Token 预算](../context-compression.md)
 - → [案例研究](../07-case-studies/)
 

@@ -27,7 +27,7 @@
 
 ## 关联章节
 
-- ← [Token 预算策略](../context-compression.md)（缓存是预算策略的一部分）
+- ← [上下文压缩与Token 预算](../context-compression.md)（缓存是预算策略的一部分）
 - ← [上下文工程核心](../../02-core-concepts/context-engineering-core.md)（上下文工程基础）
 - → [记忆系统设计](../memory-system.md)（记忆系统与缓存的关系）
 

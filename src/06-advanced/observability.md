@@ -1172,7 +1172,7 @@ groups:
 - ← [性能调优与成本管理](context/performance-tuning.md)（基于可观测性做性能调优和成本优化）
 - ← [安全总览](security-overview.md)（监控与告警的安全集成）
 - → [案例研究](../07-case-studies/)（案例中的监控配置和生产实践）
-- → [全流程自动化案例](../07-case-studies/case-full-pipeline.md)（可观测性数据驱动的工作流优化实例，展示 Token 趋势分析如何指导路由策略调整）
+- → [案例：全流程自动化](../07-case-studies/case-full-pipeline.md)（可观测性数据驱动的工作流优化实例，展示 Token 趋势分析如何指导路由策略调整）
 
 ## 验证标准
 

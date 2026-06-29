@@ -607,7 +607,7 @@ jobs:
 - → [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
 - → [Claude Code 命令参考](./commands.md) — 内置命令和捆绑 Skill 的详细用法
 - → [Claude Code 生态参考](./ecosystem.md) — 社区项目、最佳实践和集成工作流
-- → [OpenCode Plugin 系统参考](../opencode/plugins.md) — OpenCode 插件系统对比参考
+- → [OpenCode Plugin 系统参考](../../appendix-b/opencode/plugins.md) — OpenCode 插件系统对比参考
 - → [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践
 
 > 数据来源：Anthropic 官方文档 code.claude.com/docs，社区项目 awesome-claude-code。基于 Claude Code v2.1.x（2026 年 6 月）。Claude Code 生态发展迅速，建议参考官方文档获取最新信息。

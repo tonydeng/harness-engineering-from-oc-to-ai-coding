@@ -683,6 +683,6 @@ OpenCode 默认对以下情况采用保守策略：
 
 ### 下一步
 
-- → [OpenCode 配置详解](opencode-config.md) — 深入了解配置文件结构和高级选项
+- → [OpenCode 配置深度解析](opencode-config.md) — 深入了解配置文件结构和高级选项
 - → [oh-my-openagent 集成](oh-my-openagent-setup.md) — 扩展 OpenCode 的能力
 - ← [核心概念](../02-core-concepts/) — 回顾 Agent、**Skill（技能）**、**Workflow（工作流）** 基础

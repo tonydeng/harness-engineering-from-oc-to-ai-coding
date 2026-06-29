@@ -6,7 +6,7 @@
 
 > **前置条件**
 > - 已完成 [快速上手](quickstart.md) 的基础配置，OpenCode 可正常运行
-> - 已了解 [OpenCode 配置详解](opencode-config.md) 中 `opencode.json` 的基本结构
+> - 已了解 [OpenCode 配置深度解析](opencode-config.md) 中 `opencode.json` 的基本结构
 > - 本节目标：为开发、CI/CD、生产三套环境配置独立的 Agent 和权限策略
 
 ## 文章概述
@@ -435,7 +435,7 @@ opencode
 
 ## 关联章节
 
-- ← [OpenCode 配置详解](opencode-config.md) — Agent 配置基础
+- ← [OpenCode 配置深度解析](opencode-config.md) — Agent 配置基础
 - → [性能调优与成本管理](../06-advanced/context/performance-tuning.md) — 环境相关的成本管控配置
 - → [工作流实战](../04-workflows/) — 不同环境使用不同的工作流模式
 

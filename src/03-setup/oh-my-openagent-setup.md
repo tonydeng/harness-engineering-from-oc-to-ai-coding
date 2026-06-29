@@ -720,7 +720,7 @@ bunx oh-my-openagent refresh-model-capabilities
 
 ## 关联章节
 
-- ← [OpenCode 配置详解](opencode-config.md) — 需要在 opencode.json 中配置 OMO 插件
+- ← [OpenCode 配置深度解析](opencode-config.md) — 需要在 opencode.json 中配置 OMO 插件
 - → [工作流实战](../04-workflows/) — OMO 的工作流模式在 Ch4 深入展开
 - → [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md) — OMO 与 MCP 的协同
 - → [自定义 Agent 与 Plugin](../06-advanced/custom-agents.md) — 自定义 Agent 依赖 OMO 的扩展能力

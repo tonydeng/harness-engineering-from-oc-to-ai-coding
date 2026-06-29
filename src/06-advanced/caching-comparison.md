@@ -193,7 +193,7 @@ Find Cut Point → Extract Messages → Generate Summary → Append Entry → Re
 
 Pi Agent 的 Provider 模型定义中可指定缓存成本字段：
 
-```typescript
+```typescript:src/06-advanced/caching-comparison.md
 // Provider 定义中的缓存字段
 {
   "model": "claude-sonnet-4",
@@ -241,7 +241,7 @@ Pi Agent 的 Provider 模型定义中可指定缓存成本字段：
 
 ### 自定义压缩 Extension 示例
 
-```typescript
+```typescript:src/06-advanced/caching-comparison.md
 // custom-compaction.ts — 替换默认压缩，使用更便宜的模型
 import { Extension, AgentSession } from '@earendil-works/pi-coding-agent'
 
@@ -323,6 +323,6 @@ export default {
 
 - → [提示词缓存机制](context/prompt-caching.md)（OpenCode 三级缓存架构详解）
 - → [上下文压缩与Token 预算](context-compression.md)（OpenCode Compaction 完整技术栈与实测数据）
-- ← [上下文工程核心](../../02-core-concepts/context-engineering-core.md)（上下文工程在 L2 中的定位）
+- ← [上下文工程核心](../02-core-concepts/context-engineering-core.md)（上下文工程在 L2 中的定位）
 - → [记忆系统设计](memory-system.md)（记忆系统与缓存的协同工作）
 - → [性能调优与成本管理](context/performance-tuning.md)（各 Provider 的 Token 定价策略）

@@ -1129,7 +1129,7 @@ for await (const msg of query({
 - → [Claude Code 扩展机制](./extensions.md) — 六层扩展体系
 - → [Claude Code 命令参考](./commands.md) — CLI 命令参考
 - → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
-- → [OpenCode SDK](../opencode/agent-sdk.md) — 对应功能的对比参考
+- → [OpenCode SDK](../../appendix-b/opencode/agent-sdk.md) — 对应功能的对比参考
 - → [Agent SDK 官方文档](https://code.claude.com/docs/en/agent-sdk/overview) — Anthropic 官方 SDK 文档
 
 ---

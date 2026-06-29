@@ -686,5 +686,5 @@ await session.close();
    ```
 
 ### 与前/后文章的衔接
-- ← [Pi Agent 概述与核心概念](../overview.md) — 提供 Pi 的设计哲学和核心架构
+- ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
 - → [生态与集成场景](./ecosystem.md) — 学习 Pi 的生态和集成场景

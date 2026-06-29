@@ -289,5 +289,5 @@ pi --mode rpc
    ```
 
 ### 与前/后文章的衔接
-- ← [Pi Agent 概述与核心概念](../overview.md) — 提供 Pi 的设计哲学和核心架构
+- ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
 - → [扩展体系详解](./customization.md) — 学习 Pi 的四层扩展体系

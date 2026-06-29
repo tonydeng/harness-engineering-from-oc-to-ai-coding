@@ -633,7 +633,7 @@ color: green
 - ← [Claude Code 扩展机制](./extensions.md) — Subagent、Hooks、Plugins 完整参考
 - ← [Claude Code 命令参考](./commands.md) — `/fork`、`/background`、`/agents` 命令详解
 - ← [Claude Code 生态参考](./ecosystem.md) — 社区 Subagent、Skills 推荐
-- → [oh-my-openagent Agent 设计指南](../opencode/agent-architecture.md) — OMO 三层编排体系对比参考
+- → [oh-my-openagent Agent 设计指南](../../appendix-b/opencode/agent-architecture.md) — OMO 三层编排体系对比参考
 - → [自定义工作流](../../04-workflows/custom-workflows.md) — Team Mode 多 Agent 协作
 - → [Agent 派生模式](../../04-workflows/agent-derivation.md) — Agent 动态生成模式
 

@@ -1321,7 +1321,7 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 
 这种记录方式不仅帮助新成员快速理解团队的 Skill 体系，也为后续的自动化工具（如依赖检查、版本提示）提供了可解析的结构化数据。
 
-> 关于 AGENTS.md 的完整语法和团队配置模式，参见[第 2 章 Agent 编排](../02-core-concepts/agent-orchestration.md)和[第 3 章 OpenCode 配置详解](../03-setup/opencode-config.md)。
+> 关于 AGENTS.md 的完整语法和团队配置模式，参见[第 2 章 Agent 编排](../02-core-concepts/agent-orchestration.md)和[第 3 章 OpenCode 配置深度解析](../03-setup/opencode-config.md)。
 
 ## 小结
 
@@ -1353,5 +1353,5 @@ OMO 配置可以覆盖 SKILL.md 的默认值。以下是最佳使用场景：
 - ← [创建 Skill](creating-skills.md)（基础格式和加载机制）
 - ← [Skill 模板](skill-templates.md)（原则和反模式在模板中的体现）
 - ← [Skill 系统](../02-core-concepts/skills-system.md)（理论基础）
-- → [Teams 多进程协作](../04-workflows/teams-collaboration.md)（Skill 在团队协作中的应用）
+- → [Teams 并行 Agent 协作](../04-workflows/teams-collaboration.md)（Skill 在团队协作中的应用）
 - → [安全总览](../06-advanced/security-overview.md)（权限控制的深度分析）

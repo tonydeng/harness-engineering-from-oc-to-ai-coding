@@ -273,7 +273,7 @@ npx buyskills install <skill-name>                 # 通过 BuySkills CLI
 - **CLAUDE.md → AGENTS.md**：Claude Code 的 `CLAUDE.md` 项目指令在 OpenCode 中对应 `AGENTS.md`，格式兼容但语法扩展更多（AGENTS.md 支持 Mermaid 图表、Role 定义、条件指令）。在项目根运行 `/init` 自动生成 AGENTS.md
 - **Subagent → Category 系统**：Claude Code 的 Markdown Subagent 在 OpenCode 中对应 OMO Category 系统。`CLAUDE.md` 中 `@agent` 块需重写为 OMO 的 `category` 配置或 `agent.json` 文件
 - **Plugin → Skill + Plugin**：Claude Code 的 Plugin（JavaScript 文件）在 OpenCode 中对应 Skill（Markdown 指令文件）和 Plugin（TypeScript API）两层。简单行为用 Skill，深度定制用 Plugin
-- **命令习惯**：Claude Code 的 `/init`、`/add` 等命令在 OpenCode 中存在对应版本，但参数和快捷键不同。参见 [OpenCode 命令参考](./commands.md) 对照
+- **命令习惯**：Claude Code 的 `/init`、`/add` 等命令在 OpenCode 中存在对应版本，但参数和快捷键不同。参见 [OpenCode 内置命令参考](./commands.md) 对照
 
 ### 从 Pi Agent 迁移
 

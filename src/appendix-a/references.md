@@ -26,11 +26,11 @@
 
 **true-mem** ([rizal72/true-mem](https://github.com/rizal72/true-mem)) 是另一个记忆插件实现。在[记忆系统设计](../06-advanced/memory-system.md)中被引用。
 
-**DCP Plugin** ([Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning)) 是一个动态上下文裁剪插件，用于优化 Token 使用。在[Token 预算策略](../06-advanced/context-compression.md)中被引用。
+**DCP Plugin** ([Opencode-DCP/opencode-dynamic-context-pruning](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning)) 是一个动态上下文裁剪插件，用于优化 Token 使用。在[上下文压缩与Token 预算](../06-advanced/context-compression.md)中被引用。
 
 **OpenCode Issue #18100** ([anomalyco/opencode#18100](https://github.com/anomalyco/opencode/issues/18100)) 是 OpenCode 项目的一个 Issue，讨论了 Agent 派生模式的相关问题。在[Agent 派生模式](../04-workflows/agent-derivation.md)中被引用。
 
-**Book Repository** ([tonydeng/harness-engineering-from-oc-to-ai-coding](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding)) 是本书的源码仓库。在[README](../README.md)和[如何使用本书](../00-guide/how-to-read.md)中被引用。
+**Book Repository** ([tonydeng/harness-engineering-from-oc-to-ai-coding](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding)) 是本书的源码仓库。在[Harness Engineering](../README.md)和[如何使用本书](../00-guide/how-to-read.md)中被引用。
 
 **Skill example** ([opencode/skills/frontend-architect](https://github.com/opencode/skills/frontend-architect)) 是一个 Skill 示例，展示了如何创建前端架构师 Skill。在[创建 Skill](../05-skills/creating-skills.md)中被引用。
 
@@ -124,7 +124,7 @@
 
 **ESLint** ([eslint.org](https://eslint.org/)) 是一个 JavaScript/TypeScript 代码检查工具。在[案例二：遗留系统现代化](../07-case-studies/real-world-02.md)中被引用。
 
-**Prettier** ([prettier.io](https://prettier.io/)) 是一个代码格式化工具。在[OpenCode 配置详解](../03-setup/opencode-config.md)中被引用。
+**Prettier** ([prettier.io](https://prettier.io/)) 是一个代码格式化工具。在[OpenCode 配置深度解析](../03-setup/opencode-config.md)中被引用。
 
 **AST-grep** ([ast-grep.github.io](https://ast-grep.github.io/)) 是一个基于 AST 的代码搜索和替换工具。在[约束系统解析](../02-core-concepts/constraints-system.md)中被引用。
 
@@ -154,9 +154,9 @@
 
 **opencode-ai** ([npmjs.com](https://www.npmjs.com/package/opencode-ai)) 是 OpenCode 的 npm 包，提供 CLI 工具。在[快速上手](../03-setup/quickstart.md)中被引用。
 
-**@modelcontextprotocol/server-filesystem** ([npmjs.com](https://www.npmjs.com/package/@modelcontextprotocol/server-filesystem)) 是 MCP 的文件系统服务器，允许 AI 访问本地文件。在[OpenCode 配置详解](../03-setup/opencode-config.md)中被引用。
+**@modelcontextprotocol/server-filesystem** ([npmjs.com](https://www.npmjs.com/package/@modelcontextprotocol/server-filesystem)) 是 MCP 的文件系统服务器，允许 AI 访问本地文件。在[OpenCode 配置深度解析](../03-setup/opencode-config.md)中被引用。
 
-**@modelcontextprotocol/server-postgres** ([npmjs.com](https://www.npmjs.com/package/@modelcontextprotocol/server-postgres)) 是 MCP 的 PostgreSQL 服务器，允许 AI 查询数据库。在[OpenCode 配置详解](../03-setup/opencode-config.md)中被引用。
+**@modelcontextprotocol/server-postgres** ([npmjs.com](https://www.npmjs.com/package/@modelcontextprotocol/server-postgres)) 是 MCP 的 PostgreSQL 服务器，允许 AI 查询数据库。在[OpenCode 配置深度解析](../03-setup/opencode-config.md)中被引用。
 
 **@modelcontextprotocol/sdk** ([npmjs.com](https://www.npmjs.com/package/@modelcontextprotocol/sdk)) 是 MCP 的 Node.js SDK，用于开发 MCP 服务器。在[MCP 服务器](../06-advanced/mcp-servers.md)中被引用。
 
@@ -238,7 +238,7 @@
 
 **OAuth 2.0** ([oauth.net/2](https://oauth.net/2/)) 是一个开放标准的授权协议。在[MCP 服务器](../06-advanced/mcp-servers.md)中被引用。
 
-**JSON Schema** ([json-schema.org](https://json-schema.org/)) 是 JSON 数据的模式定义语言，用于验证 JSON 数据。在[OpenCode 配置详解](../03-setup/opencode-config.md)中被引用。
+**JSON Schema** ([json-schema.org](https://json-schema.org/)) 是 JSON 数据的模式定义语言，用于验证 JSON 数据。在[OpenCode 配置深度解析](../03-setup/opencode-config.md)中被引用。
 
 ---
 

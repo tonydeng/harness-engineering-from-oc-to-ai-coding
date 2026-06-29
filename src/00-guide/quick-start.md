@@ -289,12 +289,12 @@ EOF
 |---------|--------|
 | **入门开发者** | → [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) — 理解核心理念 |
 | **效率开发者** | → [**Agent（智能体）** 编排](../02-core-concepts/agent-orchestration.md) — 掌握高级工作流 |
-| **技术负责人** | → [OpenCode 配置详解](../03-setup/opencode-config.md) — 深入配置和安全策略 |
+| **技术负责人** | → [OpenCode 配置深度解析](../03-setup/opencode-config.md) — 深入配置和安全策略 |
 | **Skill 作者** | → [Skill 系统](../02-core-concepts/skills-system.md) — 开始 Skill 开发 |
 
 ### 深入学习
 
-- **配置详解**：[OpenCode 配置详解](../03-setup/opencode-config.md) — Provider、权限、模型高级配置
+- **配置详解**：[OpenCode 配置深度解析](../03-setup/opencode-config.md) — Provider、权限、模型高级配置
 - **安全实践**：[安全总览](../06-advanced/security-overview.md) — 企业级安全策略
 - **案例研究**：[从零搭建微服务](../07-case-studies/real-world-01.md) — 真实项目实战
 
