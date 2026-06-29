@@ -99,10 +99,10 @@ OpenCode 采用两层压缩：
 
 | 项目/插件 | 说明 | 链接 |
 |----------|------|------|
-| **DCP 插件** | 内置插件，AI 驱动的深度上下文剪枝，与 Compaction 互补 | OpenCode 内置 |
-| **opencode-contrib** | 社区贡献的配置模板和缓存策略示例 | GitHub: anomalyco/opencode-contrib |
-| **TokenPilot**（学术） | Cache-Efficient Context Management for LLM Agents，arXiv 2606.17016 | arXiv, 2026-06 |
-| **opencode-cache-monitor** | 社区脚本，监控缓存命中率和 Token 消耗趋势 | GitHub 社区 |
+| **DCP 插件** | OpenCode 插件，AI 驱动的深度上下文剪枝，与 Compaction 互补 | [Dynamic Context Pruning Plugin](https://github.com/Opencode-DCP/opencode-dynamic-context-pruning) |
+| **opencode** | 主仓库文档含缓存配置指南和性能指标 | [GitHub: anomalyco/opencode](https://github.com/anomalyco/opencode) |
+| **TokenPilot**（学术） | Cache-Efficient Context Management for LLM Agents，arXiv 2606.17016 | [arXiv:2606.17016](https://arxiv.org/abs/2606.17016) |
+| **opencode-cache-hit** | 社区 TUI 侧边栏插件，实时监控缓存命中率和 Token 趋势 | [opencode-cache-hit](https://github.com/zhumengzhu/opencode-cache-hit) |
 
 ---
 
@@ -160,12 +160,12 @@ Claude Code 通过 `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` 将一个 `__boundary__` 哨
 
 | 项目/插件 | 说明 | 链接 |
 |----------|------|------|
-| **claude-code** | 官方 CLI（闭源），缓存机制通过 Anthropic API 原生实现 | GitHub: anthropics/claude-code |
-| **anthropic-caching-examples** | Anthropic 官方的 Prompt Caching 示例代码 | GitHub: anthropics/anthropic-cookbook |
-| **TokenPilot** | 缓存优先的 Agent 上下文管理器（学术研究） | arXiv 2606.17016 |
-| **Don't Break the Cache**（论文） | 长周期 Agent 任务中 Prompt Caching 的实证评估 | arXiv 2601.06007 |
-| **@anthropic-ai/sdk** | Anthropic SDK，`cache_control` 参数支持自定义缓存断点 | npm |
-| **claude-code-extensions** | 社区扩展集合，包括 PreCompact Hook 示例 | GitHub 社区 |
+| **claude-code** | 官方 CLI（闭源），缓存机制通过 Anthropic API 原生实现 | [GitHub: anthropics/claude-code](https://github.com/anthropics/claude-code) |
+| **anthropic-caching-examples** | Anthropic 官方的 Prompt Caching 示例代码 | [GitHub: anthropics/anthropic-cookbook](https://github.com/anthropics/anthropic-cookbook) |
+| **TokenPilot** | 缓存优先的 Agent 上下文管理器（学术研究） | [arXiv 2606.17016](https://arxiv.org/abs/2606.17016) |
+| **Don't Break the Cache**（论文） | 长周期 Agent 任务中 Prompt Caching 的实证评估 | [arXiv 2601.06007](https://arxiv.org/abs/2601.06007) |
+| **@anthropic-ai/sdk** | Anthropic SDK，`cache_control` 参数支持自定义缓存断点 | [Claude SDK for TypeScript](https://github.com/anthropics/anthropic-sdk-typescript) |
+| **claude-code-extensions** | 社区扩展集合，包括 PreCompact Hook 示例 | [GitHub: nodnarbnitram/claude-code-extensions](https://github.com/nodnarbnitram/claude-code-extensions) |
 
 ---
 
@@ -265,10 +265,10 @@ export default {
 
 | 项目/插件 | 说明 | 链接 |
 |----------|------|------|
-| **pi** | Pi Agent 本体（MIT 开源），核心在 `packages/coding-agent/harness/compaction/` | GitHub: earendil-works/pi |
-| **pi-extension-examples** | 官方 Extension 示例，含自定义 Compaction 实现 | pi Agent 仓库 `examples/extensions/` |
-| **custom-provider-template** | 自定义 Provider 模板，包含 cacheRead/cacheWrite 成本字段 | pi Agent 仓库 |
-| **gondolin** | Pi 的沙箱隔离方案（可选），不影响缓存但保护上下文 | GitHub: earendil-works/gondolin |
+| **pi** | Pi Agent 本体（MIT 开源），核心在 `packages/coding-agent/harness/compaction/` | [GitHub: earendil-works/pi](https://github.com/earendil-works/pi) |
+| **pi-extension-examples** | 官方 Extension 示例，含自定义 Compaction 实现 | [pi Agent 仓库 `examples/extensions/`](https://github.com/earendil-works/pi/tree/main/packages/coding-agent/examples/extensions) |
+| **custom-provider-template** | 自定义 Provider 模板，包含 cacheRead/cacheWrite 成本字段 | [pi Agent 仓库的custom-provider.md](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/custom-provider.md) |
+| **gondolin** | Pi 的沙箱隔离方案（可选），不影响缓存但保护上下文 | [GitHub: earendil-works/gondolin](https://github.com/earendil-works/gondolin) |
 
 ---
 
