@@ -97,16 +97,6 @@ flowchart TB
 | Analyze | 子 agent 执行超时/不可用 | 回退到主 agent 干跑验证，在报告中标注 `dry_run` | 记录不可用原因，进入降级路径 |
 | Any | 子 agent 输出明显不符合预期（路径不存在/命令语法错） | 终止子 agent 结果，改用主 agent 兜底流程并记录异常 | 报告"子 agent 结果不可信"，人工介入 |
 
-### 子 agent 强制启用规则
-
-以下阶段**必须 spawn 独立子 agent** 执行，不得由主 agent 在同一上下文内自评（SkillLens 实证 LLM-as-judge 准确率仅 46.4%，同上下文自评产生乐观偏误）：
-
-| 阶段 | 强制规则 | 失败兜底 |
-|------|---------|---------|
-| **Analyze 低分复核** | 当总分 < 60%（DRAFT）时，必须 spawn 子 agent 独立运行 HEDQ 复核 | 子 agent 不可用时，人工确认后方可继续 |
-| **Diagnose 根因确认** | grep 定位到疑似违规行后，必须 spawn 子 agent 验证该行是否确为违规 | 子 agent 与主 agent 判断不一致时，以子 agent 为准 |
-| **Verify 分数验证** | 每次修复后，必须 spawn 子 agent 独立重新评分，禁止主 agent 自评 | 子 agent 评分与主 agent 自评差异 >15% 时，使用子 agent 分数 |
-
 ---
 
 ## 第一步：Analyze（评分）
