@@ -81,8 +81,8 @@ quadrantChart
     title 读者角色分布：技术深度 vs 管理职责
     x-axis "管理职责低" --> "管理职责高"
     y-axis "技术深度低" --> "技术深度高"
-    quadrant-1 "深度技术专家"
-    quadrant-2 "技术管理者"
+    quadrant-1 "技术管理者"
+    quadrant-2 "深度技术专家"
     quadrant-3 "入门学习者"
     quadrant-4 "业务决策者"
     "入门": [0.15, 0.20]
