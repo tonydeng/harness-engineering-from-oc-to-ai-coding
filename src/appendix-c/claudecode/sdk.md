@@ -524,7 +524,7 @@ Claude: 正在通过天气 MCP 服务器查询三个城市...
 
 ## 相关资源
 
-- [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考（生产级配置、上下文管理、错误重试）
+- [Claude **Agent（智能体）** SDK：编程式 Agent 开发](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考（生产级配置、上下文管理、错误重试）
 - [扩展机制参考](./plugins.md) — Claude Code 六层扩展体系详解
 - [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践（跨工具参考）
 - [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
@@ -606,5 +606,5 @@ claude
    ```
 
 ### 与前/后文章的衔接
-- ← [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考
+- ← [Claude **Agent（智能体）** SDK：编程式 Agent 开发](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考
 - → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践

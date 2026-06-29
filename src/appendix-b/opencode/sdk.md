@@ -2,7 +2,7 @@
 
 OpenCode 提供多种程序化集成方式，允许开发者将 **Agent（智能体）** 能力嵌入到自己的应用和流水线中。本章涵盖 OpenCode 的 **Plugin（插件）** SDK、npm 包 SDK、以及命令行程序化调用。
 
-> **SDK 深入参考**：如果你只关心 `@opencode-ai/sdk` npm 包的深入使用（生产级配置、上下文管理、错误重试等），见 [OpenCode Agent SDK 编程](./agent-sdk.md)。
+> **SDK 深入参考**：如果你只关心 `@opencode-ai/sdk` npm 包的深入使用（生产级配置、上下文管理、错误重试等），见 [OpenCode SDK：编程式 **Agent（智能体）** 开发](./agent-sdk.md)。
 
 ---
 

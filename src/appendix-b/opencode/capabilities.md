@@ -18,7 +18,7 @@ OpenCode 的命令以 `/` 开头，在输入框中直接输入即可执行。命
 
 → 完整命令列表、参数说明和示例见 [OpenCode 内置命令参考](./commands.md)。
 → 完整工具列表和用法见 [OpenCode 内置命令参考](./commands.md)。
-→ OMO 完整 Agent 架构（含 11 个 Agent 详解、Category 系统、配置管道）见 [OpenCode Agent 架构参考](./agent-architecture.md)。
+→ OMO 完整 Agent 架构（含 11 个 Agent 详解、Category 系统、配置管道）见 [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md)。
 → Agent 设计哲学和基础类型体系见 [Agent 编排](../../02-core-concepts/agent-orchestration.md)。
 
 ## 工具集
@@ -32,7 +32,7 @@ OpenCode 内置了一套完整的工具集，涵盖文件操作（Read / Write /
 
 OpenCode 采用多 Agent 架构：**Build**（默认主 Agent，完整权限）、**Plan**（只读主 Agent）、**General**（通用子 Agent）、**Explore**（只读探索子 Agent）、**Scout**（Web 检索子 Agent），以及若干系统级 Hidden Agent（Compaction / Title / Summary）。
 
-→ OMO 完整 Agent 架构（含 11 个 Agent 详解、Category 系统、配置管道）见 [OpenCode Agent 架构参考](./agent-architecture.md)。
+→ OMO 完整 Agent 架构（含 11 个 Agent 详解、Category 系统、配置管道）见 [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md)。
 → Agent 设计哲学和基础类型体系见 [Agent 编排](../../02-core-concepts/agent-orchestration.md)。
 
 ## **Plugin（插件）** 系统
@@ -61,7 +61,7 @@ Plugin 通过 `opencode.json` 的 `plugins` 字段或文件系统加载，支持
 | LSP Symbols | 文档/工作区符号 | 大纲视图和全局搜索 |
 | CodeGraph ¹ | 代码图谱 | 调用链分析、影响范围、上下文构建 |
 
-→ SDK 安装、API 参考和完整示例见 [OpenCode SDK 编程参考](./agent-sdk.md)。
+→ SDK 安装、API 参考和完整示例见 [OpenCode SDK：编程式 **Agent（智能体）** 开发](./agent-sdk.md)。
 
 ## **Skill（技能）** 系统
 
@@ -253,6 +253,32 @@ opencode /hyperplan
    ```bash
    opencode skills add myorg/my-skill
    ```
+
+## 常见反模式
+
+使用 OpenCode 内置能力时，以下反模式会导致效率不升反降：
+
+**万能 Agent 幻觉**：认为一个 Agent 可以同时处理编程、写作、数据分析、设计等所有任务。OpenCode 的 Category 系统和子 Agent 机制正是为专业化分工设计的。正确的做法是定义多个专用 Agent（代码审查 Agent、架构设计 Agent、测试 Agent 等），每个只专注一个领域，通过编排实现复杂流程。
+
+**配置过载**：在 `opencode.json` 中堆砌所有可用配置项，包括从不需要的功能。例如同时配置 5 个 MCP 服务器、加载 10 个 Skill、定义 15 个 Hook。这不仅降低启动速度，还增加 Agent 决策噪音。应以最小必要原则配置：只加载当前项目真正需要的扩展。
+
+**Hook 链过深**：在一个事件上注册多个 Hook，且 Hook 之间互相触发形成依赖链。例如 `PostToolUse` Hook 触发检查、检查触发日志、日志触发告警，中间任何一个环节失败都可能导致整条链断裂。Hook 应设计为独立、幂等的处理单元，避免级联依赖。
+
+## 常见错误与陷阱
+
+**Skill 与 Plugin 混淆**：不清楚 Skill 是声明式指令（Markdown 写"做什么"），而 Plugin 是编程式扩展（TypeScript 写"怎么做"）。错误地将需要编程逻辑的扩展写成 Skill（结果无法满足），或者将纯配置指令写成 Plugin（过度工程）。选型原则：能靠规则说清楚的用 Skill，需要代码逻辑的用 Plugin。
+
+**MCP 服务器配置不当**：为每一项数据需求都单独配置一个 MCP 服务器，忽略 OpenCode 内置的文件读取（Read/Glob/Grep）工具。内置工具已经提供高效的本地文件访问，只有需要外部 API 或数据库访问时才需要 MCP。
+
+**tignore 滥用**：在 `opencode.json` 的 `ignore` 列表中排除过多目录，导致 Agent 无法看到项目全貌。常见错误是排除 `node_modules` 以外的所有生成目录，结果 Agent 无法读取 `dist/` 下的构建产物或 `coverage/` 下的测试报告。应只排除确实不需要 Agent 接触的目录（如敏感配置、凭据文件）。
+
+## 适用场景与限制
+
+**适用场景**：OpenCode 最适合需要高度定制化 AI 编码体验的工程团队。多模型支持让团队可以根据任务选择最合适的 LLM（大模型做架构、小模型做格式化）；Plugin + Skill + MCP 三层扩展体系覆盖从配置规则到全功能扩展的所有需求；Category 子 Agent 系统适合需要专业化分工的复杂项目。
+
+**不适用场景**：如果团队只需要一个开箱即用的 AI 编码助手、不需要定制扩展，OpenCode 的灵活性和复杂度反而成为负担。此时 Claude Code 的简洁设计可能更合适。同理，如果项目只有单一模型需求、不需要多模型混排，OMO 的 Category 编排优势不能充分发挥。
+
+**限制说明**：OpenCode 的终端原生 UI 对偏好图形化 IDE 的开发者有学习曲线。Plugin 开发需要 TypeScript 能力，Skill 编写需要了解 Markdown 模板和指令语法。多模型切换虽然灵活，但不同模型的行为差异可能导致结果不一致，需要额外的 prompt 适配工作。
 
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力

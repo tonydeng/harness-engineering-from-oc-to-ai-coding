@@ -41,7 +41,7 @@ tools: Read Write Edit Bash Grep Glob
 
 Claude Code 会创建一个后台子 Agent 独立执行，完成后将摘要返回主会话。
 
-> `/fork` 命令（v2.1.161+ 引入）生成一个隔离的子 Agent 会话，继承当前会话的上下文，在后台独立运行。简单来说——你把一件事交给一个 Agent，它干完回来告诉你结果，你继续做自己的事。
+> `/fork` 命令（v2.1.161+ 引入）生成一个隔离的子 Agent 会话，继承当前会话的上下文，在后台独立运行。你可以把一件事交给一个 Agent，它干完回来告诉你结果，你继续做自己的事。
 
 ---
 
@@ -633,7 +633,7 @@ color: green
 - ← [Claude Code 扩展机制](./extensions.md) — Subagent、Hooks、Plugins 完整参考
 - ← [Claude Code 命令参考](./commands.md) — `/fork`、`/background`、`/agents` 命令详解
 - ← [Claude Code 生态参考](./ecosystem.md) — 社区 Subagent、Skills 推荐
-- → [oh-my-openagent Agent 设计指南](../../appendix-b/opencode/agent-architecture.md) — OMO 三层编排体系对比参考
+- → [oh-my-openagent **Agent（智能体）** 设计与开发指南](../../appendix-b/opencode/agent-architecture.md) — OMO 三层编排体系对比参考
 - → [自定义工作流](../../04-workflows/custom-workflows.md) — Team Mode 多 Agent 协作
 - → [Agent 派生模式](../../04-workflows/agent-derivation.md) — Agent 动态生成模式
 
@@ -737,6 +737,34 @@ color: green
      }
    }
    ```
+
+## 常见反模式
+
+设计 Claude Code Agent 时，以下反模式会限制 Agent 系统的可维护性和扩展性：
+
+**CLAUDE.md 膨胀**：把所有规则、约束、备忘都塞进一个 `CLAUDE.md` 文件，导致文件超过 500 行。Agent 需要在每一次工具调用前扫描整个文件，token 消耗和决策延迟线性增长。正确的做法是利用 Claude Code 的多层 CLAUDE.md 体系（项目级、目录级、文件级），按作用域分层放置规则：全局规则放根目录，模块规则放对应子目录。
+
+**过度依赖 Hook**：用 Shell Hook 处理应该在 Agent 内部完成的事情。Hook 是外部事件触发器，它的调用开销（进程启动、上下文切换）远高于 Agent 内部逻辑。例如在 `PostToolUse` Hook 中运行一个完整的 TypeScript 编译检查，不如让 Agent 在代码修改后自行执行编译验证。
+
+**Subagent 通信链过长**：设计 A→B→C→D 的链式 Subagent 调用，中间任何一个 Agent 的输出偏差都会被下游放大。Claude Code 缺乏 OMO 那样的主 Agent 汇聚机制，链式调用的结果一致性难以保证。应优先选择星型或扇出（fan-out）模式，主 Agent 直接分发独立任务给多个 Subagent 并单独收集结果。
+
+## 常见错误与陷阱
+
+**MCP 服务器选择错误**：为内置工具已经能胜任的任务引入 MCP 服务器。例如使用 MCP 文件系统服务器来做文件的增删改查，而 Claude Code 的 File Tools（Read/Write/Edit）已经优化了文件操作并内置了差异分析和冲突检测。MCP 应留给外部 API 调用和数据库访问。
+
+**Skill 命名冲突**：安装多个社区 Skill 时忽略命名空间，导致两个 Skill 定义了相同名称的命令或规则。Claude Code 的 Skill 加载顺序决定了冲突胜出方，但结果往往不是预期的。应检查 Skill 的 `name` 字段，在安装时通过别名机制避免冲突。
+
+**忽略 CLAUDE.md 的目录层级**：将所有配置写在一个 `CLAUDE.md` 中，不知道 Claude Code 支持目录级 `CLAUDE.md`。实际上，`src/api/CLAUDE.md` 中的规则只对 `src/api/` 下的文件生效，这比在根 CLAUDE.md 中写条件规则更精确、更高效。
+
+**Agent 记忆失效**：依赖 Agent 的长期记忆功能时没有检查记忆存储的状态。Claude Code 的记忆基于向量检索，如果知识库内容发生变化未及时重建索引，Agent 会检索到过期或冲突的信息。
+
+## 适用场景与限制
+
+**适用场景**：Claude Code 最适合**个人开发者和小团队**的日常编码。简洁的内置能力让"打开即用"成为可能；CLAUDE.md 的分层配置对单体应用和中小型项目匹配度极高；六层扩展体系（CLAUDE.md → Skills → MCP → Subagent → Hook → Plugin）让渐进式深入成为可能——项目从简单开始，随需求增长逐步叠加扩展层。
+
+**不适用场景**：当团队需要跨项目、跨团队的标准化 Agent 配置时，Claude Code 的文件级 CLAUDE.md 缺乏集中管理机制。每个开发者本地维护自己的 AGENTS.md，配置漂移不可避免。此时 OpenCode + OMO 的集中配置和 Skill 分发体系更适合团队标准化。
+
+**限制说明**：Claude Code 仅支持 Anthropic Claude 系列模型，无法利用 GPT-4o、Gemini 或本地模型的能力差异。这意味着对于某些任务（如结构化输出或数学推理），无法切换到可能更合适的模型。六层扩展体系虽然灵活，但各层之间的交互优先级和冲突解决规则需要人工排查，缺乏统一的调试工具。
 
 ### 与前/后文章的衔接
 - ← [Claude Code 扩展机制](./extensions.md) — Subagent、Hooks、Plugins 完整参考

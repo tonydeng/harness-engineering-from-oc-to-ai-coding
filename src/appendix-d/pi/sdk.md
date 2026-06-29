@@ -601,7 +601,7 @@ app.get("/api/weather/:city", async (req, res) => {
 ## 相关资源
 
 - [扩展体系详解](./customization.md) — Pi Extensions 的完整开发指南
-- [生态与集成场景](./ecosystem.md) — Provider、容器化、社区生态
+- [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — Provider、容器化、社区生态
 - Pi SDK 官方文档：[pi.dev/docs/latest/sdk](https://pi.dev/docs/latest/sdk)
 
 ---
@@ -687,4 +687,4 @@ await session.close();
 
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
-- → [生态与集成场景](./ecosystem.md) — 学习 Pi 的生态和集成场景
+- → [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — 学习 Pi 的生态和集成场景

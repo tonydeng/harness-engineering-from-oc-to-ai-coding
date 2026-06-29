@@ -718,6 +718,50 @@ bunx oh-my-openagent refresh-model-capabilities
 - [ ] oh-my-openagent.jsonc 语法正确
 - [ ] ultrawork.enabled = true
 
+## 常见反模式
+
+### 所有 Agent 使用同一个模型
+
+**现象**：在 OMO 配置中为所有 Agent 类型指定了同一个模型（如全部使用 GPT-4），导致成本高、响应慢、且不适合需要专门能力的场景。
+
+**原因**：配置时图省事，未区分不同 Agent 的任务特性。审查 Agent 可能不需要最强模型，但编码 Agent 需要。
+
+**对策**：为不同 Agent 类型分配适合的模型——Sisyphus（协调）用最强模型，Atlas（执行类）用性价比模型，探索 Agent 用轻量模型。OMO 的类别路由机制天然支持这种分层。
+
+### 任务分解粒度过细
+
+**现象**：将简单任务拆分为大量子 Agent，调度和通信开销超过任务本身的价值。
+
+**原因**：过度追求"单一职责原则"，忽略了 Agent 启动和上下文加载的固定成本。
+
+**对策**：子 Agent 粒度的判断标准：子任务是否需要独立的上下文窗口、不同的 Skill 组合、或特定的权限范围。如果三者都不需要，直接用父 Agent 处理即可。
+
+## 常见错误与陷阱
+
+### 子 Agent SDK 版本不兼容
+
+**场景**：OpenCode 版本升级后，`delegate_task()` 或 `load_skills` 参数行为发生变化，子 Agent 执行异常。
+
+**后果**：派生模式下的子 Agent 调用失败，错误信息有时指向不明确的方向。
+
+**预防**：升级 OMO 前查阅 CHANGELOG 中关于 `task()` API 和 `delegate_task()` 的变更。保持 OMO 与 OpenCode 主版本同步，避免跨大版本跳级升级。
+
+### Ultrawork 循环不停止
+
+**场景**：Ultrawork 启动后，Agent 在探索和实现之间反复循环，始终不输出 ` DONE ` 标签。
+
+**后果**：Token 持续消耗，Agent 陷入局部最优循环，无法完成任务。
+
+**预防**：设置合理的 `max_iterations`（默认 20）作为电路断路器。在 AGENTS.md 中明确任务的完成标准，帮助 Agent 判断何时停止。
+
+## 适用场景与限制
+
+oh-my-openagent 是解锁 OpenCode 高级功能的关键扩展。适合需要多 Agent 编排、工作流自动化、派生模式的开发团队。入门用户可以从 Ultrawork 模式开始，逐步过渡到自定义工作流。
+
+以下情况 OMO 不是必需的：仅使用单个 Agent 完成简单任务的传统 Prompt 模式；项目规模小（<1000 行代码），不需要工作流编排；使用 Claude Code 等内置工作流完备的工具。
+
+OMO 依赖 OpenCode 版本，部分新功能（如 Team Mode）需要 OMO v4.0+ 和 OpenCode v1.14+。安装前请检查版本兼容性。OMO 的运行时文件占用约 50MB 磁盘空间，运行时会缓存模型能力数据，首次启动较慢属于正常现象。
+
 ## 关联章节
 
 - ← [OpenCode 配置深度解析](opencode-config.md) — 需要在 opencode.json 中配置 OMO 插件

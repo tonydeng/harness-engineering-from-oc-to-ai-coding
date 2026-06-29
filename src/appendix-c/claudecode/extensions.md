@@ -699,6 +699,34 @@ claude plugin validate ./my-plugin --strict
    }
    ```
 
+## 常见反模式
+
+Claude Code 六层扩展体系虽然灵活，但使用不当会引入额外复杂度：
+
+**Layer Skip（跳过层次）**：越过低复杂度层次直接跳到高层次。例如遇到需要自定义行为时，跳过 CLAUDE.md（声明式规则）直接编写 Plugin（编程式扩展）。结果是一个简单的文件排除规则写了一整段 TypeScript 代码。正确路径是从最简方案开始：CLAUDE.md → Skills → MCP → Subagent → Hook → Plugin，逐层升级，每层满足需求了就不再往上。
+
+**配置碎片化**：将相关规则分散到多个 CLAUDE.md 文件中，没有层次结构。例如在 root CLAUDE.md 中写 API 规则，在 src/api/CLAUDE.md 中又写了一遍，当两个规则冲突时 Agent 行为不可预测。应遵循"父层通用、子层专精"原则：根目录放全局规则，子目录放该目录独有的增量规则。
+
+**MCP 服务器当作万能胶**：为每个小任务都启动一个 MCP 服务器。MCP 服务器的启动和维护开销远超直接使用内置工具。应区分：内置工具（Read/Write/Edit/Grep）能解决的不建 MCP；只有需要外部 API 或数据库访问时才引入 MCP 服务器。
+
+## 常见错误与陷阱
+
+**CLAUDE.md 位置错误**：把单个文件规则放在根 CLAUDE.md 中。Claude Code 支持目录级 CLAUDE.md，用于覆盖特定子目录的行为。常见错误是在根 CLAUDE.md 中用条件语句区分不同模块，这比目录级 CLAUDE.md 更难维护且更容易出错。
+
+**Skill 依赖关系未声明**：安装了依赖其他 Skill 的 Skill，但没有在 `dependencies` 字段中声明。例如 "code-review" Skill 依赖 "testing-standards" Skill 中的命名约定，当两个 Skill 独立加载时，code-review 可能引用到不存在的约束条件。
+
+**Hook 执行时序依赖**：注册了多个 Hook 依赖彼此的执行结果。例如 `PreToolUse` Hook 修改工具参数，`PostToolUse` Hook 期望 `PreToolUse` 已经修改了参数。如果 Hook 执行顺序不符合预期（注册顺序变更或异步问题），结果不可控。Hook 应该是幂等的——即使被多次调用或跳过，状态也应一致。
+
+**忽略扩展兼容性**：同时使用 OMO Plugin 和 Claude Code Hook 时，没有检查两者的交互。例如 OMO 的 `PostAgentResponse` Hook 和 Claude Code 的 `PostToolUse` Shell Hook 可能修改同一个数据，导致覆盖。
+
+## 适用场景与限制
+
+**适用场景**：Claude Code 的六层扩展体系最适合**渐进式深度定制**。小团队从 CLAUDE.md 和 Skills 开始，随项目复杂度增长逐步引入 MCP 服务器和 Subagent，最后再考虑 Hook 和 Plugin。这种渐进式路径的学习曲线平缓，每个层次的引入都有明确的价值信号。
+
+**不适用场景**：如果项目需要开箱即用的完整扩展方案（例如内置的自动代码审查流水线），Claude Code 的六层体系需要从零搭建，不如 OMO 的 Plugin + Skill 体系来得直接。此外，需要跨团队标准化扩展配置的场景下，Claude Code 缺乏集中分发机制。
+
+**限制说明**：Claude Code 的扩展体系缺乏统一的调试和可视化工具。当六层扩展同时生效时，排查某条规则来自哪个层次需要逐层检查。此外，Hook 的执行性能不如 OMO 的进程内 Plugin——每次 Shell Hook 调用都会启动子进程，高频事件（如每次工具调用）的场景下性能影响明显。
+
 ### 与前/后文章的衔接
 - ← [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
 - → [Claude Code 命令参考](./commands.md) — 内置命令和捆绑 Skill 的详细用法

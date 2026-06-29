@@ -2,7 +2,7 @@
 
 > 通过 `@anthropic-ai/claude-agent-sdk` 将 Claude Code 的 Agent 引擎嵌入你的应用——用代码驱动工具调用、子 Agent 调度和 **MCP（模型上下文协议）** 集成。
 
-Claude Agent SDK 把 Claude Code 的 Agent 循环（工具执行、上下文管理、自动压缩）作为库暴露出来。和 [Agent 设计指南](./agent-architecture.md) 中介绍的 filesystem Subagent（`.claude/agents/*.md`）不同，SDK 面向的是**在代码中创建和管理 Agent**的场景——CI/CD 流水线、自定义 Web 应用、后台服务。
+Claude Agent SDK 把 Claude Code 的 Agent 循环（工具执行、上下文管理、自动压缩）作为库暴露出来。和 [Claude Code **Agent（智能体）** 设计与开发指南](./agent-architecture.md) 中介绍的 filesystem Subagent（`.claude/agents/*.md`）不同，SDK 面向的是**在代码中创建和管理 Agent**的场景——CI/CD 流水线、自定义 Web 应用、后台服务。
 
 ---
 
@@ -1124,8 +1124,8 @@ for await (const msg of query({
 
 ## 相关章节
 
-- → [Claude Code SDK 参考](./sdk.md) — 三层次 SDK 总览（MCP / Hooks / CLI / 天气 Agent 案例）
-- → [Claude Code Agent 设计指南](./agent-architecture.md) — Filesystem Subagent 方式（配置文件比）
+- → [Claude Code SDK 与程序化集成](./sdk.md) — 三层次 SDK 总览（MCP / Hooks / CLI / 天气 Agent 案例）
+- → [Claude Code **Agent（智能体）** 设计与开发指南](./agent-architecture.md) — Filesystem Subagent 方式（配置文件比）
 - → [Claude Code 扩展机制](./extensions.md) — 六层扩展体系
 - → [Claude Code 命令参考](./commands.md) — CLI 命令参考
 - → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
@@ -1211,5 +1211,5 @@ main()
    ```
 
 ### 与前/后文章的衔接
-- ← [Claude Code Agent 设计指南](./agent-architecture.md) — Subagent 配置方式对比参考
-- → [Claude Code SDK 参考](./sdk.md) — 三层次 SDK 总览
+- ← [Claude Code **Agent（智能体）** 设计与开发指南](./agent-architecture.md) — Subagent 配置方式对比参考
+- → [Claude Code SDK 与程序化集成](./sdk.md) — 三层次 SDK 总览
