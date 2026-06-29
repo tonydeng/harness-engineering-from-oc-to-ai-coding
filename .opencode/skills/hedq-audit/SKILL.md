@@ -1,6 +1,6 @@
 ---
 name: hedq-audit
-description: "HEDQ 书籍质量审计专家。提供：8 维度自动化评估 + 问题诊断 + 定向修复建议 + 验证闭环。适用：[书籍质量检查、发布前审计、持续改进]。不适用：[代码质量审查、运行时测试]"
+description: "HEDQ 书籍质量审计专家。提供：8 维度自动化评估 + 子 agent 强制验证 + 问题诊断 + 定向修复 + 验证闭环。适用：[书籍质量检查、发布前审计、持续改进]。不适用：[代码质量审查、运行时测试]"
 triggers:
   - hedq
   - quality audit
@@ -9,6 +9,8 @@ triggers:
   - run-hedq
   - quality score
   - quality check
+  - subagent verify
+  - subagent audit
 triggers_zh:
   - 质量审计
   - 质量检查
@@ -18,6 +20,8 @@ triggers_zh:
   - 质量门禁
   - HEDQ
   - 发布前审计
+  - 子 agent 验证
+  - 子智能体审计
 allowed-tools:
   - read
   - grep
