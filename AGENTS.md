@@ -150,6 +150,30 @@ python scripts/qa/run-hedq.py --json --no-save
 
 评级标准：≥90% READY · 75-89% CONDITIONAL · 60-74% NEEDS WORK · <60% DRAFT。报告自动保存到 `scripts/qa/reports/`（含 JSON 快照 + results.tsv 趋势记录）。
 
+### HEDQ Skill 工作流（Agent 使用）
+
+当 AI 智能体需要对书籍进行质量审计和修复时，加载 `hedq-audit` Skill 并遵循 Analyze → Diagnose → Fix → Verify 四步闭环：
+
+```
+1. Analyze  — 运行 python scripts/qa/run-hedq.py 获取 8 维评分报告
+2. Diagnose — 解读报告，定位最低分维度的根因（断链/品牌名/代码块path等）
+3. Fix      — 按 P0 > P1 > P2 优先级定向修复，每次只修一个维度
+4. Verify   — 重新运行 HEDQ，确认分数提升且未引入新问题
+```
+
+**适用场景**：
+- 发布前全面质量审计 → 完整模式 `run-hedq.py`
+- 日常 PR 质量门禁 → 快速模式 `run-hedq.py --quick`
+- 新章节编写中的持续改进 → 单维度定向检查
+
+**自动触发条件**：当 Agent 检测到以下信号时，应自动加载 `hedq-audit` Skill：
+- 用户说"检查质量"、"跑一下 HEDQ"、"审计"、"质量评分"
+- CI 中 HEDQ 任务失败
+- 发布 / 提 PR 前的自检环节
+- 新文章或章节完成后需要质量验证
+
+Skill 定义文件位于 `.opencode/skills/hedq-audit/SKILL.md`。
+
 ## 经验总结（来自 9 轮 Sprint 实践）
 
 ### 编排原则

@@ -1,0 +1,181 @@
+{
+  "timestamp": "2026-06-29 11:16:38",
+  "commit": "cedf2d4",
+  "mode": "full",
+  "total_score": 44.6,
+  "total_max": 58.5,
+  "percentage": 76.2,
+  "grade": "CONDITIONAL",
+  "grade_emoji": "🟡",
+  "dimensions": [
+    {
+      "dimension": "D1",
+      "name": "结构与元数据规范性",
+      "score": 12.6,
+      "max": 14
+    },
+    {
+      "dimension": "D2",
+      "name": "内容准确性与时效性",
+      "score": 6.0,
+      "max": 6
+    },
+    {
+      "dimension": "D3",
+      "name": "读者角色覆盖与导航",
+      "score": 3.4,
+      "max": 6
+    },
+    {
+      "dimension": "D4",
+      "name": "代码块格式",
+      "score": 3.7,
+      "max": 4
+    },
+    {
+      "dimension": "D5",
+      "name": "反面案例与边界条件",
+      "score": 3.4,
+      "max": 13
+    },
+    {
+      "dimension": "D6",
+      "name": "文风与可读性",
+      "score": 2.0,
+      "max": 2
+    },
+    {
+      "dimension": "D7",
+      "name": "术语与品牌一致性",
+      "score": 10.0,
+      "max": 10
+    },
+    {
+      "dimension": "D8",
+      "name": "图表与可视化质量",
+      "score": 3.5,
+      "max": 3.5
+    }
+  ],
+  "details": [
+    {
+      "dim": "D1",
+      "subitem": "D1.1",
+      "score": 3,
+      "max": 3,
+      "details": "SUMMARY.md：90 条路径正常，0 条断裂"
+    },
+    {
+      "dim": "D1",
+      "subitem": "D1.2",
+      "score": 4.0,
+      "max": 4,
+      "details": "内部链接：共 1109 条，11 条断裂 — ../06-advanced/mcp-servers.md (位于 src\\appendix-b\\opencode\\capabilities.md); ../opencode/agent-architecture.md (位于 src\\appendix-c\\claudecode\\agent-architecture.md); ../opencode/agent-sdk.md (位于 src\\appendix-c\\claudecode\\agent-sdk.md); ../opencode/ecosystem.md (位于 src\\appendix-c\\claudecode\\ecosystem.md); ../opencode/ecosystem.md (位于 src\\appendix-c\\claudecode\\ecosystem.md) (+6 more)"
+    },
+    {
+      "dim": "D1",
+      "subitem": "D1.4",
+      "score": 4.0,
+      "max": 4,
+      "details": "品牌名错误：0 处"
+    },
+    {
+      "dim": "D1",
+      "subitem": "D1.5",
+      "score": 1.6,
+      "max": 3,
+      "details": "交叉引用标题一致性：1096 处检查，499 处不匹配 — '5 分钟快速体验' → '5分钟快速体验' (src\\00-guide\\how-to-read.md); 'OpenCode 配置详解' → 'OpenCode 配置深度解析' (src\\00-guide\\quick-start.md); 'Skill 系统' → '**Skill（技能）** 系统' (src\\00-guide\\quick-start.md); 'OpenCode 配置详解' → 'OpenCode 配置深度解析' (src\\00-guide\\quick-start.md); '从零搭建微服务' → '案例一：从零搭建微服务' (src\\00-guide\\quick-start.md) (+494 more)"
+    },
+    {
+      "dim": "D2",
+      "subitem": "D2.2",
+      "score": 6,
+      "max": 6,
+      "details": "过期版本引用：0 处"
+    },
+    {
+      "dim": "D3",
+      "subitem": "D3.1",
+      "score": 3.4,
+      "max": 6,
+      "details": "追溯矩阵：完整=29 部分=28 缺失=4 （覆盖率=57%）"
+    },
+    {
+      "dim": "D4",
+      "subitem": "D4.1",
+      "score": 3.7,
+      "max": 4,
+      "details": "代码块：共 1441 个，1 个缺 :path（-0.3），93 个自引用（仅报告），428 个约定路径(:terminal)，527 个白名单示意路径（仅报告） — 缺:path: src\\00-guide\\how-to-read.md:L402（`） | 自引用: src\\00-guide\\how-to-read.md:L396（src/00-guide/how-to-read.md）; src\\06-advanced\\security-overview.md:L642（src/06-advanced/security-overview.md）; src\\06-advanced\\security-overview.md:L656（src/06-advanced/security-overview.md）; src\\appendix-b\\opencode\\agent-architecture.md:L17（src/appendix-b/opencode/agent-architecture.md）（+89 more） | 白名单示意路径: src\\00-guide\\how-to-read.md:L397（json:opencode.json）; src\\00-guide\\quick-start.md:L251（json:opencode.json）; src\\01-introduction\\ai-native-development.md:L81（text:agentsmd:AGENTS.md）; src\\01-introduction\\ai-native-development.md:L108（text:agentsmd:AGENTS.md）（+523 more）"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.1",
+      "score": 0.3,
+      "max": 4,
+      "details": "反模式章节：5/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.2",
+      "score": 0.8,
+      "max": 3,
+      "details": "失败场景章节：18/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.3",
+      "score": 1.1,
+      "max": 3,
+      "details": "边界条件章节：24/67"
+    },
+    {
+      "dim": "D5",
+      "subitem": "D5.4",
+      "score": 1.2,
+      "max": 3,
+      "details": "内容厚度：28/47 个章节浅层（段落<3） — 边界条件浅层:src\\02-core-concepts\\constraints-system.md:L75; 边界条件浅层:src\\02-core-concepts\\constraints-system.md:L514; 边界条件浅层:src\\02-core-concepts\\constraints-system.md:L645; 边界条件浅层:src\\02-core-concepts\\constraints-system.md:L724; 边界条件浅层:src\\02-core-concepts\\constraints-system.md:L836 (+23 more)"
+    },
+    {
+      "dim": "D6",
+      "subitem": "D6.3",
+      "score": 2.0,
+      "max": 2,
+      "details": "AI 腔命中：0 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.1",
+      "score": 4.0,
+      "max": 4,
+      "details": "品牌名错误：0 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.2",
+      "score": 3.0,
+      "max": 3,
+      "details": "术语大小写错误：0 处"
+    },
+    {
+      "dim": "D7",
+      "subitem": "D7.3",
+      "score": 3.0,
+      "max": 3,
+      "details": "交叉引用格式：317/317 正确"
+    },
+    {
+      "dim": "D8",
+      "subitem": "D8.1",
+      "score": 2,
+      "max": 2,
+      "details": "Mermaid 块：共 5125 行，语法错误 0 处"
+    },
+    {
+      "dim": "D8",
+      "subitem": "D8.2",
+      "score": 1.5,
+      "max": 1.5,
+      "details": "配色合规：35/35 正确"
+    }
+  ]
+}

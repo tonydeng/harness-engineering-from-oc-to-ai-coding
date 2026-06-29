@@ -143,19 +143,21 @@ skills/
     }
   ]
 }
-```markdown:terminal
+```
 
 ### 三级质量门禁
 
 每个 Skill 在发布前必须通过三道关卡：
 
 **第一关：格式检查（自动化，阻塞式）**
+
 - SKILL.md 是否存在
 - frontmatter 必填字段是否完整（name, description, template）
 - allowed-tools 的声明的工具是否全部是已知工具名
 - YAML frontmatter 能否正确解析
 
 **第二关：权限审计（自动化 + 人工复核）**
+
 - allowed-tools 是否遵循最小权限——对比 Skill 的 template 内容，检测未使用的工具声明
 - 敏感工具（Write, RunCommand）必须有维护者的书面审批记录
 - 权限变更 diff review（对比上一版本）
@@ -264,7 +266,7 @@ allowed-tools:
   - RunCommand
 # 写了却没有声明 Write——"权限不足"的报错迟早会来，然后被迫改配置
 # 不如一开始就诚实声明实际需要的权限
-```text:terminal
+```
 
 权限审计标准：
 - 如果 SKILL.md 中从未出现"生成"、"创建"、"写入"等字段，不应当声明 Write
@@ -311,7 +313,7 @@ graph LR
     style R2 fill:#A66CFF,color:#fff
     style R3 fill:#50C878,color:#000
     style IDX fill:#4A90D9,color:#fff
-```markdown:terminal
+```
 
 ### 角色职责
 
@@ -352,6 +354,7 @@ graph LR
 ```
 
 四条反馈渠道：
+
 1. **自动埋点**：每次 Skill 加载和执行，自动记录使用频率和成功率
 2. **内联评分**：Skill 执行完成后弹出 1-5 分评分（非阻塞，可选填写）
 3. **季度调研**：每季度发一次简短的 Skill 市场满意度问卷（3 个问题，2 分钟填完）
@@ -370,7 +373,7 @@ deprecation:
   deprecation_date: "2025-06-01"
   removal_date: "2025-07-01"    # 保留 30 天迁移窗口
   migration_path: "请使用 deploy-v2 Skill，迁移指南见 docs/migration-deploy.md"
-```text:terminal
+```
 
 ```yaml:examples/skills/deprecation-workflow.yaml {2}
 # 阶段二：冻结 (FROZEN)  
@@ -387,7 +390,7 @@ deprecation:
 # 阶段三：移除 (REMOVED)
 # 从市场索引中删除，保留在 git 历史中
 # 最后一位使用者被通知："您使用的 old-deployment-skill 已移除，当前使用 deploy-v2"
-```text:terminal
+```
 
 废弃通知必须发送给：
 - Skill 的当前维护者
@@ -491,7 +494,7 @@ v1 进入废弃 → 冻结 → 移除（参照废弃机制）
 
 ## 回滚
 将 version 约束改回 `>= 1.0.0 < 2.0.0` 即可回退到 v1.x
-```text:terminal
+```
 
 **关键原则**：Breaking Change 不意味着用户必须立即升级。市场同时提供旧版维护和新版开发，给用户至少 2 周的迁移窗口。实际数据显示，一个 50 人团队从 MAJOR 发布到全量迁移平均需要 3-4 周。
 
@@ -577,7 +580,7 @@ jobs:
           curl -X POST -H "Content-type: application/json" \
             --data "{\"text\":\"新 Skill 已发布到内部市场\"}" \
             ${{ secrets.SLACK_WEBHOOK_URL }}
-```markdown:terminal
+```
 
 ### 发布前 Checklist（人工）
 

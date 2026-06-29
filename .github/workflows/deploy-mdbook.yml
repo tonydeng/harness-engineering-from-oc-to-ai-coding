@@ -55,6 +55,9 @@ jobs:
       - name: Build mdBook
         run: mdbook build
 
+      - name: HEDQ quick quality check
+        run: python scripts/qa/run-hedq.py --quick --no-save || echo "HEDQ check completed (non-blocking)"
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:

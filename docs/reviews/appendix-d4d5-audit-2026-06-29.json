@@ -1,0 +1,250 @@
+{
+  "audit_meta": {
+    "date": "2026-06-29",
+    "type": "D4 (Code Block Practicality) + D5 (Anti-Pattern Content Depth)",
+    "d4_max": 4,
+    "d5_max": 13,
+    "total_articles": 22,
+    "appendices_covered": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "records": [
+    {
+      "article_path": "src/appendix-a/glossary.md",
+      "d4_score": 0,
+      "d4_rationale": "Pure glossary, no code blocks",
+      "d5_score": 0,
+      "d5_rationale": "No anti-pattern content",
+      "code_block_count": 0,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-a/references.md",
+      "d4_score": 0,
+      "d4_rationale": "Pure references, no code blocks",
+      "d5_score": 0,
+      "d5_rationale": "No anti-pattern content",
+      "code_block_count": 0,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-b/opencode/capabilities.md",
+      "d4_score": 1,
+      "d4_rationale": "Two markdown capability tables, not executable code",
+      "d5_score": 0,
+      "d5_rationale": "No anti-pattern discussion",
+      "code_block_count": 2,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-b/opencode/commands.md",
+      "d4_score": 2,
+      "d4_rationale": "Four illustrative CLI usage blocks without :path or dep info",
+      "d5_score": 0,
+      "d5_rationale": "Pure command reference, no anti-pattern content",
+      "code_block_count": 4,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-b/opencode/plugins.md",
+      "d4_score": 3,
+      "d4_rationale": "TypeScript definePlugin with :path but ... placeholders and no install steps",
+      "d5_score": 1,
+      "d5_rationale": "Comparison table hints at when not to use Plugin, no failure stories",
+      "code_block_count": 10,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-b/opencode/sdk.md",
+      "d4_score": 3,
+      "d4_rationale": "TypeScript/CLI with :path and npm install but ... placeholders",
+      "d5_score": 1,
+      "d5_rationale": "SDK-vs-config table hints at trade-offs, no concrete failures",
+      "code_block_count": 6,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-b/opencode/agent-architecture.md",
+      "d4_score": 3,
+      "d4_rationale": "JSONC/TS with :path but truncated with ... and no dep declarations",
+      "d5_score": 2,
+      "d5_rationale": "Category/Agent tables describe anti-pattern trade-offs without narratives",
+      "code_block_count": 18,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-b/opencode/agent-sdk.md",
+      "d4_score": 3,
+      "d4_rationale": "query() examples with :path but ... placeholders and missing dep context",
+      "d5_score": 2,
+      "d5_rationale": "SDK-vs-config table describes anti-patterns without failure narratives",
+      "code_block_count": 12,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-b/opencode/ecosystem.md",
+      "d4_score": 2,
+      "d4_rationale": "AGENTS.md template illustrative without :path; rest are tables",
+      "d5_score": 2,
+      "d5_rationale": "Implied anti-pattern warnings in template recommendations",
+      "code_block_count": 4,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/capabilities.md",
+      "d4_score": 1,
+      "d4_rationale": "Two capability tables, no executable code or :path",
+      "d5_score": 0,
+      "d5_rationale": "Pure capability index, no anti-pattern discussion",
+      "code_block_count": 2,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/commands.md",
+      "d4_score": 2,
+      "d4_rationale": "CLI usage descriptions, no :path or dep info",
+      "d5_score": 0,
+      "d5_rationale": "Pure command reference, no anti-pattern content",
+      "code_block_count": 4,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/plugins.md",
+      "d4_score": 3,
+      "d4_rationale": "MCP TypeScript with :path and config JSON but ... placeholders",
+      "d5_score": 3,
+      "d5_rationale": "Explicit anti-pattern list in writing principles + comparison table",
+      "code_block_count": 8,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/extensions.md",
+      "d4_score": 3,
+      "d4_rationale": "Config blocks with :path but no install steps; many lack :path",
+      "d5_score": 3,
+      "d5_rationale": "Should-include/should-not-include lists + common pitfalls table",
+      "code_block_count": 15,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/sdk.md",
+      "d4_score": 3,
+      "d4_rationale": "MCP TypeScript with :path and npm install but many blocks lack :path",
+      "d5_score": 2,
+      "d5_rationale": "Trade-off comparison tables without explicit failure narratives",
+      "code_block_count": 18,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/agent-architecture.md",
+      "d4_score": 3,
+      "d4_rationale": "Subagent YAML frontmatter with :path but no dep/install context",
+      "d5_score": 3,
+      "d5_rationale": "Troubleshooting table + V1-V3 iteration + best-practice examples",
+      "code_block_count": 25,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/agent-sdk.md",
+      "d4_score": 3,
+      "d4_rationale": "SDK TypeScript with :path and npm install but ... truncation",
+      "d5_score": 3,
+      "d5_rationale": "Security fail scenarios + permission warnings + deployment checklist",
+      "code_block_count": 30,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-c/claudecode/ecosystem.md",
+      "d4_score": 2,
+      "d4_rationale": "GitHub Actions yaml has :path; most CLI blocks lack :path",
+      "d5_score": 2,
+      "d5_rationale": "Writing principles lists + migration guide differences",
+      "code_block_count": 7,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-d/pi/overview.md",
+      "d4_score": 2,
+      "d4_rationale": "Two TypeScript TypeBox blocks have :path to article file itself",
+      "d5_score": 2,
+      "d5_rationale": "Proactively does not do table + Harness Engineering mapping",
+      "code_block_count": 8,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-d/pi/commands.md",
+      "d4_score": 1,
+      "d4_rationale": "All bash CLI examples without :path or dep info",
+      "d5_score": 0,
+      "d5_rationale": "No anti-pattern discussion or failure stories",
+      "code_block_count": 10,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    },
+    {
+      "article_path": "src/appendix-d/pi/customization.md",
+      "d4_score": 3,
+      "d4_rationale": "Extension TypeScript with :path and npm install but config-heavy",
+      "d5_score": 3,
+      "d5_rationale": "Pitfalls table + security considerations + error boundaries",
+      "code_block_count": 22,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-d/pi/sdk.md",
+      "d4_score": 3,
+      "d4_rationale": "SDK createAgentSession with :path but path self-references article",
+      "d5_score": 2,
+      "d5_rationale": "Trade-off tables across 3 integration modes without failure stories",
+      "code_block_count": 16,
+      "has_runnable_blocks": true,
+      "has_placeholder_issues": true
+    },
+    {
+      "article_path": "src/appendix-d/pi/ecosystem.md",
+      "d4_score": 2,
+      "d4_rationale": "One typescript block has :path; Dockerfile and CLI blocks lack :path",
+      "d5_score": 2,
+      "d5_rationale": "Trust-boundary discussion + migration guide watch-out items",
+      "code_block_count": 12,
+      "has_runnable_blocks": false,
+      "has_placeholder_issues": false
+    }
+  ],
+  "summary": {
+    "avg_d4": 2.18,
+    "avg_d5": 1.5,
+    "articles_with_runnable_blocks": 11,
+    "articles_with_placeholder_issues": 10,
+    "d5_standout_articles": [
+      "appendix-c/claudecode/plugins.md",
+      "appendix-c/claudecode/extensions.md",
+      "appendix-c/claudecode/agent-architecture.md",
+      "appendix-c/claudecode/agent-sdk.md",
+      "appendix-d/pi/customization.md"
+    ]
+  }
+}

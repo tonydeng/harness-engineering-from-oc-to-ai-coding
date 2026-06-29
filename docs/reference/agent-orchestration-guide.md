@@ -38,7 +38,7 @@ graph TB
     end
 
     U --> S
-    S -->|@plan| P
+    S -->|"@plan"| P
     S -->|ulw| A
     S -->|GPT任务| H
     P --> M --> Mo
