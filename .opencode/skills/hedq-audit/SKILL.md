@@ -64,10 +64,19 @@ metadata:
 
 ```mermaid
 flowchart TB
-    A["🎯 Analyze<br/>运行 HEDQ 评分"] --> B["🔍 Diagnose<br/>解读报告定位根因"]
-    B --> C["🛠 Fix<br/>按优先级修复"]
-    C --> D["✅ Verify<br/>重新评分验证"]
-    D --> A
+    A["🎯 Analyze<br/>运行 HEDQ 评分"] --> A1{"总分 < 60%?"}
+    A1 -- 是 --> A2["🤖 子 agent 复核<br/>独立重新评分"]
+    A2 --> B["🔍 Diagnose<br/>解读报告定位根因"]
+    A1 -- 否 --> B
+    B --> B1{"grep 结果<br/>存疑?"}
+    B1 -- 是 --> B2["🤖 子 agent 交叉诊断<br/>输出置信度排名"]
+    B2 --> C["🛠 Fix<br/>按优先级修复"]
+    B1 -- 否 --> C
+    C --> D["✅ Verify<br/>子 agent 独立评分"]
+    D --> D1{"偏差 > 15%?"}
+    D1 -- 是 --> D2["⚠️ 以子 agent 为准"]
+    D2 --> A
+    D1 -- 否 --> A
 ```
 
 ## 异常处理
@@ -101,6 +110,10 @@ flowchart TB
 ---
 
 ## 第一步：Analyze（评分）
+
+**输入**：HEDQ CLI + `src/` 目录中的 Markdown 文件
+**输出**：8 维度评分报告（JSON 或纯文本）+ 各维度分数明细
+**子 agent 规则**：当总分 < 60%（DRAFT）时，必须 spawn 独立子 agent 复核评分（防主 agent 评分偏误）
 
 ### 运行 HEDQ CLI
 
@@ -141,7 +154,9 @@ python ./scripts/qa/run-hedq.py --json --no-save
 
 ## 第二步：Diagnose（诊断）
 
-读取 HEDQ 报告后，确定当前最低分维度，按以下逻辑定位根因：
+**输入**：Analyze 阶段输出的评分报告（最低分维度信号）
+**输出**：已确认根因 + 选定的修复维度 + 置信度评估
+**子 agent 规则**：grep 存疑或多结果时必须 spawn 子 agent 交叉诊断；子 agent 置信度 >70% 则采纳，否则等待用户确认
 
 ### D1 — 结构与元数据
 
@@ -226,6 +241,10 @@ elif grep 返回空:
 
 ## 第三步：Fix（修复）
 
+**输入**：Diagnose 输出的根因 + 选定维度
+**输出**：原子性 git commit（仅修改目标维度文件）
+**子 agent 规则**：修复后必须 spawn 独立子 agent 验证分数；禁止主 agent 自评。若子 agent 不可用则标注 `dry_run`，分数打 ⚠️ 标记
+
 ### 修复优先级
 
 | 优先级 | 条件 | 处理策略 |
@@ -296,6 +315,10 @@ grep -rn ']([^)]*\.md' src/ --include="*.md" | grep -v 'SUMMARY.md'
 
 ## 第四步：Verify（验证）
 
+**输入**：Fix 阶段的 git commit + 修复前评分记录
+**输出**：修复后评分报告（子 agent 独立执行）+ 与修复前分数对比明细
+**子 agent 规则**：**必须** spawn 独立子 agent 执行评分；子 agent 偏差 >15% 时以子 agent 为准；偏差 <15% 且方向一致时视为验证通过
+
 ### 子 agent 强制评分（避免自评偏误）
 
 每次修复后**必须 spawn 独立子 agent 执行评分**，禁止主 agent 在同一上下文内自评。SkillLens 实证 LLM-as-judge 自评准确率仅 46.4%，同上下文评分产生乐观偏误。
@@ -350,6 +373,15 @@ D6 Writing Style: 2.0/2   (100%)   Δ+0.0
 D7 Terminology:   9.0/10  (90.0%)  Δ+0.2
 D8 Diagrams:      3.7/3.5 (100%)   Δ+0.0
 ```
+
+## 子 agent 启用速查
+
+| 阶段 | 触发条件 | 子 agent 行为 | 偏差处理 |
+|------|---------|--------------|---------|
+| **Analyze** | 总分 < 60% | 独立重新评分 | 不可用时人工确认 |
+| **Diagnose** | grep 多结果/空结果 | 交叉诊断输出置信度 | >70% 采纳，否则人工 |
+| **Fix** | 修复完成后 | 验证分数并对比前后 | 不可用时标注 `dry_run` |
+| **Verify** | 每次评分时 | **强制**独立评分 | >15% 以子 agent 为准 |
 
 ## 快速参考：维度满分速查
 
