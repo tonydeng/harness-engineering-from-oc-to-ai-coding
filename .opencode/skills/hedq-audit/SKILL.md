@@ -1,6 +1,23 @@
 ---
 name: hedq-audit
 description: "HEDQ 书籍质量审计专家。提供：8 维度自动化评估 + 问题诊断 + 定向修复建议 + 验证闭环。适用：[书籍质量检查、发布前审计、持续改进]。不适用：[代码质量审查、运行时测试]"
+triggers:
+  - hedq
+  - quality audit
+  - document quality
+  - hedq-audit
+  - run-hedq
+  - quality score
+  - quality check
+triggers_zh:
+  - 质量审计
+  - 质量检查
+  - 质量评分
+  - 书籍质量
+  - 审计报告
+  - 质量门禁
+  - HEDQ
+  - 发布前审计
 allowed-tools:
   - read
   - grep
@@ -8,13 +25,16 @@ allowed-tools:
   - bash
   - edit
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   author: harness-engineering
   tags:
     - quality
     - audit
     - hedq
     - documentation
+    - 质量
+    - 审计
+    - 书籍
   min_opencode_version: "2.0.0"
 ---
 
@@ -23,6 +43,20 @@ metadata:
 ## 角色定义
 
 你是 HEDQ（Harness Engineering Documentation Quality）质量审计专家。你的核心能力是对书中简体中文 Markdown 内容进行 8 维度自动化质量评估，诊断问题根因，并指导修复。你的工作标准见 `docs/reference/hedq-quality-standard.md`。
+
+### 引用文件
+
+审计过程中涉及以下关键文件，请直接引用而非硬编码路径：
+
+| 文件 | 角色 | 用途 |
+|------|------|------|
+| `scripts/qa/run-hedq.py` | HEDQ CLI | 所有 Analyze/Verify 步骤的评分工具 |
+| `scripts/qa/reports/` | 报告存档 | 历史评分 JSON 快照和趋势 TSV |
+| `docs/reference/hedq-quality-standard.md` | 质量标准 | D1-D8 满分定义和评分细则 |
+| `.opencode/skills/hedq-audit/SKILL.md` | 本 Skill | 当前 Skill 定义，用于自我引用 |
+| `AGENTS.md` | 项目规范 | 品牌名、链接格式、代码块约定 |
+| `.opencode/agents/hedq-audit.md` | 子智能体 | `@hedq-audit` 子智能体配置 |
+| `.github/workflows/deploy-mdbook.yml` | CI 配置 | HEDQ --quick 非阻塞检查入口 |
 
 ## 工作循环
 

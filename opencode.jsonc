@@ -117,17 +117,18 @@
   },
 
   // ================================================================
-  // 工作 Profile（专项配置）
-  // review-hedq: 质量审计专用 Profile，加载 HEDQ 审计 Skill
-  // 使用方式: opencode --profile review-hedq
+  // HEDQ 质量审计 Skill（已在 .opencode/skills/hedq-audit/SKILL.md 中定义）
+  //
+  // OpenCode 会自动发现 .opencode/skills/<name>/SKILL.md 中的 Skill。
+  // Agent 无需额外配置即可通过 skill(name="hedq-audit") 按需加载。
+  //
+  // 另已创建 @hedq-audit 子智能体，可在对话中直接 @ 调用：
+  //   @hedq-audit 对全书进行 HEDQ 质量审计
+  // 定义文件: .opencode/agents/hedq-audit.md
+  //
+  // 注意: 官方 Schema 不支持 "profiles" / "--profile" 配置，
+  //       上述自定义 Agent + Skill 自动发现是实现 P2 的正确方式。
   // ================================================================
-  "profiles": {
-    "review-hedq": {
-      "description": "HEDQ 质量审计：对全书进行 8 维度质量评估和修复",
-      "instructions": ["AGENTS.md"],
-      "skills": ["hedq-audit"]
-    }
-  },
 
   // ================================================================
   // 文件观察器
