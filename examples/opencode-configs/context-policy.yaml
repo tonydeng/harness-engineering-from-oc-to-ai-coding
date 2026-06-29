@@ -1,0 +1,13 @@
+# 上下文管理策略
+context_policy:
+  user_input:
+    scan_sensitive: true
+    auto_mask: true
+  
+  file_write:
+    scan_sensitive: true
+    block_if_detected: true
+  
+  git_commit:
+    pre_commit_scan: true
+    block_sensitive: true

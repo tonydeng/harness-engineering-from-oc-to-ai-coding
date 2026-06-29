@@ -1,0 +1,16 @@
+quality_gates:
+  - name: test-coverage
+    condition: coverage >= 80%
+    action: block_if_failed
+  
+  - name: lint-check
+    condition: no-errors
+    action: warn_if_failed
+  
+  - name: security-scan
+    condition: no-critical-vulnerabilities
+    action: block_if_failed
+  
+  - name: code-review
+    condition: approved-by-review-agent
+    action: block_if_failed

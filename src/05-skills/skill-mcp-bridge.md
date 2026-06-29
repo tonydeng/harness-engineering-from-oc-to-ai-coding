@@ -1,12 +1,14 @@
-# Skill-MCP 桥接
+# **Skill（技能）**-**MCP（模型上下文协议）** 桥接
 
-> 打通 Skill 的方法论与 MCP 的工具能力，让 Agent 既知道"怎么做"也有"用什么做"。
+> 打通 Skill 的方法论与 MCP 的工具能力，让 **Agent（智能体）** 既知道"怎么做"也有"用什么做"。
 
 ## 文章概述
 
-Skill 擅长流程和方法论，MCP 擅长外部工具集成和数据访问。但实际开发中，一个完整的自动化任务往往同时需要两者——Skill 定义思考步骤，MCP 提供执行手段。Skill-MCP 桥接模式正是为了解决这个分工问题而设计的。
+Skill 擅长流程和方法论，MCP 擅长外部工具集成和数据访问。但实际开发中，一个完整的自动化任务往往同时需要两者——Skill 定义思考步骤，MCP 提供执行手段。Skill-MCP 桥接模式正是为了解决这个分工问题而设计的。读完本文，你将能够将 MCP 工具无缝集成到 Skill 工作流中，根据不同场景选择合适的桥接配置，并理解如何让 Skill 突破 Agent 内置能力的边界。
 
 本文讲解 Skill 如何在内部工作流中调用 MCP 工具，以及如何将 MCP Server 注册为 Skill 的外部依赖。通过调查研究+WebSearch、代码审查+Git、数据查询+Database 等实战示例，展示桥接模式在不同场景下的具体配置。理解这个模式，相当于为 Skill 装上了"机械臂"——不再局限于 Agent 内置能力，可以触达任何外部系统。
+
+> **⏱ 时间有限？先读这些：** 为什么需要 Skill-MCP 桥接 → 桥接模式的设计 → 桥接实战示例 → 最佳实践与反模式
 
 ## 为什么需要 Skill-MCP 桥接
 
@@ -88,7 +90,7 @@ flowchart TB
 
 在 Skill 中引用 MCP Tool，核心机制是 `allowed-tools` 字段。MCP Tool 的命名遵循 `mcp_{server}_{tool}` 格式：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: deep-research
 description: |
@@ -96,8 +98,8 @@ description: |
   提供：系统化的多角度研究方法论。
   适用：当用户询问"什么是 X"、"比较 X 和 Y"。
 allowed-tools:
-  - Read
-  - Grep
+  - read
+  - grep
   - mcp_websearch_search    # MCP Tool：websearch 服务器的 search 工具
   - mcp_websearch_fetch     # MCP Tool：websearch 服务器的 fetch 工具
 ---
@@ -109,6 +111,8 @@ allowed-tools:
 |------|------|------|
 | `mcp_{server}_{tool}` | `mcp_github_create_issue` | 标准 MCP Tool 命名 |
 | `mcp_{server}` | `mcp_postgres` | 引用整个 MCP Server（所有工具） |
+
+> ⚠️ `mcp_{server}_{tool}` 命名规范是本书建议的约定，目前未被 OpenCode 或 OMO 强制要求。实际 MCP 工具名以 MCP 服务器配置为准。
 
 ### MCP Server 作为外部能力层
 
@@ -150,13 +154,13 @@ flowchart LR
 
 Skill-MCP 桥接的权限设计遵循**最小权限原则**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: security-audit
 description: 安全漏洞扫描和审计
 allowed-tools:
-  - Read                    # 读取代码
-  - Grep                    # 搜索模式
+  - read                    # 读取代码
+  - grep                    # 搜索模式
   - mcp_nmap_scan          # 端口扫描（只读操作）
   # 注意：没有 mcp_nmap_exploit —— 禁止攻击性操作
   # 注意：没有 Write —— 禁止修改代码
@@ -179,7 +183,7 @@ allowed-tools:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: deep-research
 description: |
@@ -188,8 +192,8 @@ description: |
   适用：当用户询问"什么是 X"、"解释 X"、"比较 X 和 Y"、"研究 X"。
   不适用：简单的代码修改任务。
 allowed-tools:
-  - Read
-  - Grep
+  - read
+  - grep
   - mcp_websearch_search
   - mcp_websearch_fetch
 ---
@@ -239,7 +243,7 @@ allowed-tools:
 
 **MCP 配置**（opencode.json）：
 
-```json
+```json:opencode.json
 {
   "mcp": {
     "websearch": {
@@ -257,7 +261,7 @@ allowed-tools:
 
 **执行流程**：
 
-```
+```text:terminal
 用户: "帮我研究 React Server Components 和 Next.js App Router 的关系"
 
 Agent:
@@ -273,7 +277,7 @@ Agent:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: git-code-review
 description: |
@@ -281,9 +285,9 @@ description: |
   提供：变更影响分析、历史上下文、审查清单。
   适用：PR 审查、代码质量检查、变更影响评估。
 allowed-tools:
-  - Read
-  - Grep
-  - Glob
+  - read
+  - grep
+  - glob
   - mcp_git_diff
   - mcp_git_log
   - mcp_git_blame
@@ -329,7 +333,7 @@ allowed-tools:
 
 审查报告格式：
 
-```markdown
+```markdown:terminal
 ## 审查摘要
 [一句话总结变更的主要目的和风险]
 
@@ -354,12 +358,12 @@ allowed-tools:
 
 ## 建议
 [下一步行动]
-```
+```text:terminal
 ```
 
 **MCP 配置**：
 
-```json
+```json:opencode.json
 {
   "mcp": {
     "git": {
@@ -387,7 +391,7 @@ allowed-tools:
 
 **Skill 定义**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: safe-data-query
 description: |
@@ -395,7 +399,7 @@ description: |
   提供：参数验证、SQL 最佳实践、查询结果格式化。
   适用：数据库查询、数据分析、报表生成。
 allowed-tools:
-  - Read
+  - read
   - mcp_postgres_query
   - mcp_postgres_schema
 ---
@@ -438,11 +442,11 @@ allowed-tools:
 2. 构建安全的参数化查询
 3. 使用 mcp_postgres_query 执行查询
 4. 格式化输出结果
-```
+```markdown:terminal
 
 ## 输出格式
 
-```markdown
+```markdown:terminal
 ## 查询结果
 
 **执行时间**：Xms
@@ -453,10 +457,10 @@ allowed-tools:
 | ... | ... | ... |
 
 ## 查询语句
-```sql
+```sql:terminal
 [实际执行的 SQL]
 ```
-```
+```text:terminal
 ```
 
 ## Skill-embedded MCP 配置
@@ -465,7 +469,7 @@ allowed-tools:
 
 Skill 可以在 SKILL.md 中声明其依赖的 MCP Server，实现"即插即用"的体验：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: github-operations
 description: |
@@ -509,9 +513,9 @@ mcp:
 ## 使用前提
 
 确保已设置环境变量：
-```bash
+```bash:terminal
 export GITHUB_TOKEN="your-token-here"
-```
+```text:terminal
 ```
 
 ### MCP 配置合并规则
@@ -526,7 +530,7 @@ export GITHUB_TOKEN="your-token-here"
 
 **合并示例**：
 
-```json
+```json:opencode.json
 // opencode.json 中的配置
 {
   "mcp": {
@@ -544,13 +548,13 @@ export GITHUB_TOKEN="your-token-here"
 
 复杂 Skill 可能依赖多个 MCP Server：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-audit
 description: 全栈代码审计，包含安全扫描和依赖检查
 allowed-tools:
-  - Read
-  - Grep
+  - read
+  - grep
   - mcp_snyk_check        # 依赖漏洞检查
   - mcp_sonarqube_scan    # 代码质量扫描
   - mcp_github_get_pr     # PR 上下文
@@ -574,7 +578,7 @@ mcp:
 
 **1. 明确声明 MCP 依赖**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # ✅ 好的做法：明确声明需要的 MCP Tool
 allowed-tools:
   - mcp_github_create_issue
@@ -587,7 +591,7 @@ allowed-tools:
 
 **2. 提供降级策略**
 
-```markdown
+```markdown:terminal
 ## 执行策略
 
 1. 优先使用 MCP Tool（如果可用）
@@ -597,7 +601,7 @@ allowed-tools:
 
 **3. 环境变量管理**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # ✅ 使用环境变量占位符
 environment:
   API_KEY: "{env:MY_API_KEY}"

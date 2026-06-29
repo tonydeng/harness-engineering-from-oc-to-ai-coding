@@ -1,4 +1,4 @@
-# Skill 插件化模式
+# **Skill（技能）** 插件化模式
 
 > 从独立 Skill 到可组合的插件生态，理解 Skill 架构的演进路径与市场化的设计模式。
 
@@ -7,6 +7,8 @@
 单个 Skill 解决单个问题，但当团队积累了十个、几十个 Skill 后，如何组织和管理它们就成了新的挑战。Skill 插件化模式正是为了解决规模化的问题——将 Skill 视为可插拔的组件，通过标准化的接口和依赖管理，让 Skill 之间能够灵活组合、按需加载。
 
 本文从 Skill 架构的三个演进阶段（独立 Skill、组合 Skill、Skill 市场）讲起，分析编排模式、管道模式和集市模式三种组合方式，并介绍 Skills Marketplace 的发布和发现机制。读完本文后，读者应该能够从"写 Skill"升级到"设计 Skill 体系"——以组件化的思维构建团队的 Skill 生态。
+
+> **⏱ 时间有限？先读这些：** Skill 架构的演进三阶段 → 组合 Skill 的三种协作模式 → Skills Marketplace 发布与管理 → 插件化设计原则
 
 ## Skill 架构的演进三阶段
 
@@ -25,14 +27,14 @@
 
 **典型示例**：
 
-```yaml
+```markdown:examples/skills/deep-research/SKILL.md
 ---
 name: deep-research
 description: |
   用于需要网络研究的任何问题。
   提供：系统化的多角度研究方法论。
   适用：当用户询问"什么是 X"、"比较 X 和 Y"。
-allowed-tools: [WebSearch, WebFetch, Read, Grep]
+allowed-tools: [websearch, webfetch, read, grep]
 ---
 
 # Deep Research Skill
@@ -89,7 +91,7 @@ flowchart TB
 
 **组合示例**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-dev
 description: |
@@ -103,7 +105,7 @@ dependencies:
     version: ">=1.0.0"
   - name: qa-engineer
     version: ">=1.0.0"
-allowed-tools: [Read, Write, Glob, Grep, RunCommand]
+allowed-tools: [read, edit, glob, grep, bash]
 ---
 
 # Full Stack Dev Skill
@@ -144,6 +146,8 @@ allowed-tools: [Read, Write, Glob, Grep, RunCommand]
 - 实现代码
 - 测试报告
 ```
+
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
 
 ### 阶段三：Skills Marketplace
 
@@ -235,7 +239,7 @@ sequenceDiagram
 
 **配置示例**：
 
-```yaml
+```markdown:examples/skills/release-workflow/SKILL.md
 ---
 name: release-workflow
 description: |
@@ -303,16 +307,18 @@ dependencies:
 | 版本管理 | 版本号有效 | 阻止继续 |
 ```
 
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
+
 ### 管道模式（Pipeline）
 
-管道模式将多个 Skill 串联成处理流水线，每个 Skill 处理一部分工作，输出传递给下一个 Skill。这类似于**后端的数据处理管道**（如 ETL 流程）——数据流经多个处理节点，每个节点完成特定转换。
+管道模式将多个 Skill 串联成处理链路，每个 Skill 处理一部分工作，输出传递给下一个 Skill。这类似于**后端的数据处理管道**（如 ETL 流程）——数据流经多个处理节点，每个节点完成特定转换。
 
 **架构特点**：
 
 ```mermaid
 flowchart LR
     subgraph Pipeline[数据处理管道]
-        direction LR
+        direction TB
         P1[数据采集<br/>data-collector] --> |"原始数据"| P2[数据清洗<br/>data-cleaner]
         P2 --> |"清洗后数据"| P3[数据转换<br/>data-transformer]
         P3 --> |"转换后数据"| P4[数据验证<br/>data-validator]
@@ -333,7 +339,7 @@ flowchart LR
 
 **配置示例**：
 
-```yaml
+```markdown:examples/skills/data-pipeline/SKILL.md
 ---
 name: data-pipeline
 description: |
@@ -373,7 +379,7 @@ pipeline:
 
 每个阶段的输入输出格式：
 
-```json
+```json:terminal
 {
   "stage": "collect",
   "input": {
@@ -387,7 +393,7 @@ pipeline:
     "schema": ["id", "name", "email", "created_at"]
   }
 }
-```
+```markdown:terminal
 
 ### 数据流转
 
@@ -406,9 +412,9 @@ pipeline:
 1. **快速失败（Fail Fast）**：任何阶段失败，立即终止管道
 2. **容错继续（Continue on Error）**：记录错误，继续执行后续阶段
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 error_handling: fail_fast  # 或 continue_on_error
-```
+```markdown:terminal
 
 ## 性能优化
 
@@ -416,6 +422,8 @@ error_handling: fail_fast  # 或 continue_on_error
 - 流式处理大数据集
 - 缓存中间结果
 ```
+
+> ⚠️ `dependencies`（或 `pipeline`）是 oh-my-openagent 扩展字段，OpenCode 原生 SKILL.md 不识别。
 
 ### 集市模式（Marketplace）
 
@@ -458,7 +466,7 @@ flowchart TB
 
 **动态选择机制**：
 
-```yaml
+```markdown:examples/skills/adaptive-assistant/SKILL.md
 ---
 name: adaptive-assistant
 description: |
@@ -583,7 +591,7 @@ Skills Marketplace 使用语义化版本（SemVer）管理 Skill 版本：
 
 **依赖版本约束**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 dependencies:
   - name: frontend-architect
     version: ">=1.0.0 <2.0.0"  # 允许 1.x 的任何版本
@@ -622,7 +630,9 @@ Skills Marketplace 提供多维度的评分和发现机制：
 
 **部署方案**：
 
-```yaml
+> ⚠️ 以下企业私有 Skill 市场方案是前瞻性概念设计，并非 OpenCode 或 OMO 的现有功能。实际搭建此类系统需要完整的后端基础设施（云存储、身份认证、审批工作流等）。
+
+```yaml:examples/skills/enterprise-marketplace.yaml
 # enterprise-marketplace.yaml
 marketplace:
   type: private
@@ -659,7 +669,7 @@ Skill 作为可插拔组件，必须定义清晰的接口契约：
 
 **输入契约**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 input_schema:
   type: object
   properties:
@@ -683,7 +693,7 @@ input_schema:
 
 **输出契约**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 output_schema:
   type: object
   properties:
@@ -720,7 +730,7 @@ output_schema:
 
 **兼容性声明**：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: full-stack-dev
 version: "2.0.0"
@@ -741,7 +751,7 @@ Skill 的依赖管理需要解决以下问题：
 
 **依赖解析**：
 
-```
+```text:terminal
 full-stack-dev@2.0.0
 ├── frontend-architect@2.1.0
 │   └── ui-designer@1.0.0
@@ -761,7 +771,7 @@ full-stack-dev@2.0.0
 
 **依赖锁定**：
 
-```yaml
+```yaml:examples/skills/skill-lock.yaml
 # skill-lock.yaml
 lock_version: 1
 skills:
@@ -806,6 +816,6 @@ Skill 插件化模式是 OpenCode 生态从"工具"演进为"平台"的关键一
 
 ## 关联章节
 
-- ← [Skill-MCP 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
+- ← [Skill-**MCP（模型上下文协议）** 桥接](skill-mcp-bridge.md)（桥接为插件化提供工具层基础）
 - → [案例：团队级 Skill 市场](../07-case-studies/case-skills-marketplace.md)（企业级 Skill 市场的真实落地）
 - ← [Skill 系统](../02-core-concepts/skills-system.md)（Skill 作为可组合组件的基础抽象）

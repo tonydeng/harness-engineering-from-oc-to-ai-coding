@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-03-15T10:23:45Z",
+  "session_id": "sess-xyz789",
+  "action": "database_flush",
+  "target": "production_db",
+  "risk_level": "critical",
+  "blocked": true,
+  "reason": "生产环境保护策略"
+}

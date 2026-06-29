@@ -6,35 +6,41 @@
 
 Prometheus 规划模式（`@plan`）是 oh-my-openagent 提供的"先计划后执行"工作流。当需求不明确、需要每一步都有操作记录、或涉及多方利益时，Prometheus 模式通过访谈式需求收集与结构化计划，帮你从模糊到清晰，再由 Atlas 指挥官精准执行。
 
+读完本文，你将能够运用 Prometheus 模式将模糊需求转化为可执行的结构化计划，理解 Atlas 执行指挥官的协调机制，以及在 Ultrawork、Prometheus 和传统 **Prompt（提示词）** 之间做出合理选择。
+
 本文深入讲解 Prometheus 模式的工作原理、Atlas 执行指挥官的角色、`/start-work` 命令的集成方式，并通过三路对比帮助你在 Ultrawork、Prometheus 和传统 Prompt 之间做出合理选择。
+
+> **⏱ 时间有限？先读这些：** 什么是 Prometheus 模式 → 如何启动 → 访谈式需求收集 → Atlas 执行
 
 ### 什么是 Prometheus 模式
 
-Ultrawork 模式擅长"先干再说"，Agent 自主探索、即时实现。但有些场景需要"先说清楚再干"：需求不明确、涉及多方利益、需要审计轨迹。这就是 Prometheus 模式的用武之地。
+Ultrawork 模式擅长"先干再说"，**Agent（智能体）** 自主探索、即时实现。但有些场景需要"先说清楚再干"：需求不明确、涉及多方利益、需要审计轨迹。这就是 Prometheus 模式的用武之地。
 
 Prometheus 模式（`@plan`）采用**访谈式需求收集**的工作方式。与 Ultrawork 的"你说目标我干活"不同，Prometheus 会主动向你提问，逐步澄清需求，直到形成一份结构化的执行计划。这份计划经过你的确认后，才交由执行指挥官 Atlas 去执行。
 
 **核心流程**：
 
-```
+```text:terminal
 访谈阶段：Prometheus 提问 → 你回答 → 需求逐渐清晰
 规划阶段：Prometheus 分析需求 → 生成结构化计划 → 你确认
 执行阶段：Atlas 接手计划 → 按步骤执行 → 验证结果 → 汇报完成
 ```
 
-### @plan 与 @general 命令区分
+### 如何启动 Prometheus 模式
 
-Prometheus 模式通过两条命令区分"规划"和"对话"两种状态：
+有两种方式进入 Prometheus 规划模式：
 
-| 命令 | 触发模式 | 适用阶段 | 行为 |
-|------|---------|---------|------|
-| `@plan` | 规划模式 | 需求收集与计划生成 | Prometheus 启动访谈，主动提问澄清需求，输出结构化计划 |
-| `@general` | 对话模式 | 日常对话、快速问答 | 普通对话模式，不触发规划流程 |
+| 方式 | 说明 |
+|------|------|
+| **Tab 切换** | 在当前会话中按 Tab 切换到 Prometheus Agent |
+| **`@plan` 快捷指令** | 在 Sisyphus 会话中输入 `@plan` 触发规划流程 |
+
+> `@plan` 是 Prometheus 规划模式的快捷触发命令，对应第 2 章工作流模式中提到的 `prometheus` 命令，两者功能相同，`@plan` 为更直观的别名。
 
 **使用示例**：
 
-```bash
-# 启动规划模式
+```bash:terminal
+# 在 Sisyphus 中启动规划模式
 @plan 为订单系统添加批量导出功能
 
 # Prometheus 会开始提问：
@@ -43,13 +49,7 @@ Prometheus 模式通过两条命令区分"规划"和"对话"两种状态：
 # "导出文件的最大行数限制是多少？"
 ```
 
-> 注：`@plan` 是 Prometheus 规划模式的触发命令，对应第 2 章工作流模式中提到的 `prometheus` 命令，两者功能相同，`@plan` 为更直观的别名。
-
-`@plan` 和 `@general` 可以在同一会话中切换。当你通过 `@plan` 生成计划后，可以切换到 `@general` 进行细节讨论：
-
-```bash
-@general 刚才的计划中，导出性能要求提到"不超过 30 秒"，这个要求是基于什么场景？
-```
+> Prometheus 模式仅使用 `@plan` 作为快捷入口，或通过 Agent 切换（Tab 键）直接进入。`@plan` 是 oh-my-openagent 提供的规划模式命令，对应第 2 章工作流模式中提到的 `prometheus` 命令。
 
 ### Atlas 执行指挥官角色
 
@@ -73,66 +73,94 @@ Prometheus 模式通过两条命令区分"规划"和"对话"两种状态：
 2. **审计轨迹**：计划是执行前的明确约定，完成后可以逐条对照检查
 3. **可中断恢复**：Atlas 执行过程中可以随时暂停，检查进度后继续
 
-> 默认最大访谈轮数为 10 轮，超过此轮数后 Prometheus 将基于已有信息输出部分计划并提示用户手动补充。可通过 `max_interview_rounds` 配置项调整。
+> **License Check 机制**：每轮访谈结束后，Prometheus 自动执行 6 项条件检查。只有当全部条件满足时，才会自动进入计划生成阶段：
+>
+> | # | 条件 | 说明 |
+> |---|------|------|
+> | 1 | **核心目标清晰** | 能够用一句话说清要做什么 |
+> | 2 | **范围边界确定** | 明确了"做什么"和"不做什么" |
+> | 3 | **无严重歧义** | 关键术语和技术方案没有二义性 |
+> | 4 | **技术路径确定** | 确定了主要技术选型和实现方式 |
+> | 5 | **测试策略确认** | 明确了测试覆盖范围和验收方式 |
+> | 6 | **无阻塞性问题** | 没有影响执行的未解决依赖或风险 |
+>
+> 如果 License Check 未通过，Prometheus 继续提问，直到条件全部满足。
 
 ### /start-work 命令集成
 
-`/start-work` 是 Prometheus 模式的启动命令，用于将 Prometheus 生成的计划正式移交给执行阶段。
+`/start-work` 是 Prometheus 模式的启动命令，用于将 Prometheus 生成的计划正式移交给执行阶段。它基于 `.sisyphus/boulder.json` 实现会话连续性：
 
-```bash
+**三种运行模式**：
+
+| 模式 | 条件 | 行为 |
+|------|------|------|
+| **Check（检测）** | 执行时检查 `.sisyphus/boulder.json` 是否存在 | 判断当前状态：有新计划则执行，无计划则提示 |
+| **Resume（恢复）** | `boulder.json` 存在且有未完成任务 | 读取状态快照 → 计算完成进度 → 注入延续提示 → 从中断处继续 |
+| **Init（初始化）** | `boulder.json` 不存在 | 查找最新计划 → 创建新 `boulder.json` → 将会话 Agent 切换为 Atlas → 开始执行 |
+
+```bash:terminal
 # 在 Prometheus 完成规划后，使用 /start-work 开始执行
 /start-work
+
+# 指定计划执行（可选）
+/start-work my-plan-name
 ```
 
 **执行流程**：
 
 ```mermaid
 flowchart TB
-    E[用户确认计划]
+    START([用户输入目标])
 
     subgraph 规划阶段（Prometheus）
         A[用户输入目标] --> B[Prometheus 提问澄清]
-        B --> C{需求足够清晰?}
+        B --> C{License Check<br/>6 条件通过?}
         C -->|否| B
-        C -->|是| D[生成结构化计划]
-        D --> E
+        C -->|是| D[Metis 差距分析<br/>查漏补缺]
+        D --> E[生成结构化计划]
+        E --> F{用户选择<br/>高精度审查?}
+        F -->|否| G[用户确认计划]
+        F -->|是| H[Momus 审查计划<br/>4 维度评估]
+        H --> I{所有标准通过?}
+        I -->|否| J[Prometheus 修复计划]
+        J --> E
+        I -->|是| G
     end
 
     subgraph 执行阶段（Atlas）
-        E --> F["/start-work 启动执行"]
-        F --> G[拆解子任务]
-        G --> H[分配子任务给 Agent]
-        H --> I[执行实现]
-        I --> J[验证结果]
-        J --> K{验证通过?}
-        K -->|否| L[分析失败原因]
-        L --> H
-        K -->|是| M[汇总执行结果]
+        G --> K["/start-work 启动执行"]
+        K --> L[拆解子任务]
+        L --> M[分配子任务给 Agent]
+        M --> N[执行实现]
+        N --> O[验证结果]
+        O --> P{验证通过?}
+        P -->|否| Q[分析失败原因]
+        Q --> M
+        P -->|是| R[汇总执行结果]
     end
 
     subgraph 完成阶段
-        M --> N[输出完成报告]
-        N --> O[更新计划状态]
+        R --> S[输出完成报告]
+        S --> T[更新计划状态]
     end
 
     style A fill:#4A90D9,color:#fff
-    style D fill:#FF9F43,color:#fff
-    style F fill:#A66CFF,color:#fff
-    style G fill:#50C878,color:#fff
-    style M fill:#50C878,color:#fff
-    style N fill:#4A90D9,color:#fff
+    style E fill:#FF9F43,color:#fff
+    style H fill:#A66CFF,color:#fff
+    style K fill:#A66CFF,color:#fff
+    style L fill:#50C878,color:#fff
+    style R fill:#50C878,color:#fff
+    style S fill:#4A90D9,color:#fff
 ```
 
 **参数配置**：
 
-`/start-work` 支持可选参数，用于控制执行行为：
+`/start-work` 接受一个可选参数指定计划名称。会话连续性基于 `boulder.json` 自动判断：
 
 | 参数 | 说明 | 示例 |
 |------|------|------|
-| `--step` | 从指定步骤开始执行 | `/start-work --step 3` |
-| `--dry-run` | 仅展示执行计划，不实际执行 | `/start-work --dry-run` |
-| `--interactive` | 每步执行前请求确认 | `/start-work --interactive` |
-| `--resume` | 从中断处恢复执行 | `/start-work --resume` |
+| `[plan-name]` | 可选，指定要执行的计划名称 | `/start-work my-plan` |
+| *无参数* | 自动检测：有 `boulder.json` 则恢复，否则初始化最新计划 | `/start-work` |
 
 ### Prometheus vs Ultrawork vs 传统 Prompt
 
@@ -140,7 +168,7 @@ flowchart TB
 
 **快速选择指南**：
 
-```
+```text:terminal
 需求明确 + 需要精确控制 → 传统 Prompt
 需求模糊 + 需要审计轨迹 → Prometheus 模式
 需求模糊 + 追求效率 → Ultrawork 模式
@@ -152,10 +180,11 @@ Prometheus 的完整流程分为两个大阶段：
 
 **Plan 阶段（由 Prometheus 负责）**：
 
-1. **Interview（访谈）**：Prometheus 通过提问收集需求，类似分析师与客户的对话。每个问题都有目的，帮助你发现自己没想清楚的地方
-2. **Analyze（分析）**：将收集到的需求整理和分类，识别依赖关系、技术约束和潜在风险
+1. **Interview（访谈）**：Prometheus 通过提问收集需求，类似分析师与客户的对话。每个问题都有目的，帮助你发现自己没想清楚的地方。每轮访谈后自动执行 License Check（见上文）
+2. **Metis 差距分析（强制性）**：License Check 通过后，Metis 作为独立审查者介入，对已收集的需求进行差距分析。Metis 的视角不同于 Prometheus——它专注于发现被忽略的边界条件、隐式假设和缺失的非功能需求。Metis 发现的问题会被**静默集成**到 Prometheus 的后续提问中，对用户透明
 3. **Structure（结构化）**：生成包含任务分解、时序安排、验收标准的执行计划，每项任务包含具体文件和预期结果
 4. **Review（审查）**：将计划呈现给你审查，确认任务分解是否合理、验收标准是否完整
+5. **Momus 高精度审查（可选）**：如果你选择"高精度审查"，Momus 以 4 项标准评估计划质量——**清晰度**（每项任务描述是否无歧义）、**可验证性**（每项验收标准是否对应具体文件引用）、**上下文完整度**（是否有足够的背景信息让执行者理解意图）、**大局观**（是否与整体架构一致）。仅在 Momus 返回 **OKAY** 且满足以下条件时才通过：100% 文件引用路径可验证、≥80% 任务包含参考来源、≥90% 任务有具体的验收标准、零业务逻辑假设。不通过时，Prometheus 修复计划并重新提交给 Momus（无最大重试限制）
 
 **Execute 阶段（由 Atlas 负责）**：
 
@@ -168,16 +197,23 @@ Prometheus 的完整流程分为两个大阶段：
 
 ```mermaid
 flowchart TB
-    P4[✅ 用户审查确认]
+    P5[✅ 用户审查确认]
 
     subgraph Plan[规划阶段 / Prometheus]
         direction TB
-        P1[📋 访谈需求收集] --> P2[🔍 分析依赖关系]
-        P2 --> P3[📝 结构化任务分解]
-        P3 --> P4
+        P1[📋 访谈需求收集] --> P2[✅ License Check<br/>6 条件通过]
+        P2 --> P3[🔍 Metis 差距分析]
+        P3 --> P4[📝 结构化任务分解]
+        P4 --> P4a{选择高精度审查?}
+        P4a -->|否| P5
+        P4a -->|是| P4b[Momus 审查评估]
+        P4b --> P4c{通过?}
+        P4c -->|否| P4d[Prometheus 修复]
+        P4d --> P4
+        P4c -->|是| P5
     end
 
-    P4 --> E1[🤝 任务交接]
+    P5 --> E1[🤝 任务交接]
 
     subgraph Execute[执行阶段 / Atlas]
         direction TB
@@ -193,23 +229,71 @@ flowchart TB
     end
 
     style P1 fill:#4A90D9,color:#fff
-    style P4 fill:#50C878,color:#fff
+    style P5 fill:#50C878,color:#fff
+    style P4b fill:#A66CFF,color:#fff
     style E1 fill:#A66CFF,color:#fff
     style E5 fill:#FF9F43,color:#fff
     style E8 fill:#50C878,color:#fff
 ```
 
+> **重要约束**：Prometheus **从不写代码**。它只在 `.sisyphus/` 目录中创建和修改 Markdown 文件（计划、笔记、状态记录）。所有代码编写由 Atlas 指挥官委派给子代理执行。这种角色分离确保了"规划者不执行"的原则，避免了规划阶段引入实现细节的干扰。
+
+### .sisyphus/ 目录约定
+
+Prometheus 模式的所有产物都存储在 `.sisyphus/` 目录中，遵循以下结构：
+
+| 路径 | 用途 | 说明 |
+|------|------|------|
+| `.sisyphus/drafts/{topic-slug}.md` | 访谈草稿 | 访谈阶段的原始需求记录，按主题 slug 命名 |
+| `.sisyphus/plans/{name}.md` | 执行计划 | 经过 License Check 和 Metis 审查的正式计划 |
+| `.sisyphus/boulder.json` | 状态跟踪 | 当前执行进度的 JSON 快照，支持中断恢复 |
+| `.sisyphus/notepads/{plan-name}/` | 知识笔记 | 按计划名组织的知识库，存储执行过程中的发现和决策 |
+
+> `.sisyphus/boulder.json` 是会话连续性的核心——它记录了当前执行状态、已完成任务列表、未完成任务列表和上下文摘要。`/start-work` 依赖它来判断是初始化新计划还是恢复已有执行。
+
+### 错误恢复机制
+
+Prometheus 模式内置了多层错误恢复：
+
+| 错误场景 | 恢复行为 |
+|----------|----------|
+| **License Check 未通过** | 继续访谈，Prometheus 针对未满足的条件提问，直到全部通过 |
+| **Metis 发现严重问题** | Metis 发现的差距被**静默集成**到后续访谈中，对用户完全透明 |
+| **Momus 拒绝计划** | Prometheus 修复不通过的项目并重新提交给 Momus。**无最大重试限制**，直到计划通过所有标准 |
+| **boulder.json 损坏** | `/start-work` 显示"未找到活跃计划"错误。解决方案：手动清理或使用有效计划重新初始化 |
+| **Atlas 不可用** | 回退链检查：Atlas → Sisyphus → 当前会话 Agent。逐级降级，至少保证基本执行能力 |
+
+### Agent 依赖链
+
+```text:terminal
+Prometheus → License Check → Metis（强制性差距分析）
+                         → Plan Generation → 用户确认
+                                           → Momus（可选高精度审查）
+                                                         → Atlas → 子 Agent（执行）
+```
+
+各角色职责：
+
+| Agent | 职责 | 阶段 |
+|-------|------|------|
+| **Prometheus** | 访谈式需求收集、License Check、计划生成 | 规划 |
+| **Metis** | 强制性差距分析，发现被忽略的隐式假设和边界条件 | 规划审查 |
+| **Momus** | 可选高精度审查，按 4 维度评估计划质量 | 规划审查 |
+| **用户** | 确认计划、选择是否启用 Momus 审查 | 规划决策 |
+| **Atlas** | 接收计划、委派执行、监控进度、质量验证 | 执行 |
+| **子 Agent** | 执行具体的代码编写任务 | 执行实现 |
+
 ### 实际应用示例
 
 假设你要为一个旧项目添加用户权限管理功能，但需求不太明确：
 
-```bash
+```bash:terminal
 @plan 为用户管理添加基于角色的权限控制
 ```
 
 Prometheus 的访谈过程：
 
-```
+```text:terminal
 Prometheus: "你提到基于角色的权限控制，具体有哪些角色？"
 你: "管理员和普通用户"
 Prometheus: "管理员有哪些特殊权限？"
@@ -222,7 +306,7 @@ Prometheus: "权限是和用户绑定还是和角色绑定？"
 
 访谈完成后，Prometheus 生成结构化计划：
 
-```markdown
+```markdown:terminal
 ## 执行计划：用户权限管理
 
 ### 任务分解
@@ -252,7 +336,7 @@ Prometheus: "权限是和用户绑定还是和角色绑定？"
 
 Prometheus 模式的一个关键优势是在执行过程中处理需求变更。假设权限管理功能执行到一半时，你意识到需要添加"超级管理员"角色：
 
-```
+```text:terminal
 你: "等等，还需要一个超级管理员角色，拥有所有权限"
 
 Atlas: "收到需求变更请求。正在评估影响范围..."
@@ -282,7 +366,7 @@ Atlas: "计划已更新。继续执行：
 
 Prometheus 模式对每一步都有完整记录。以下是一个典型的审计轨迹输出：
 
-```markdown
+```markdown:terminal
 # Prometheus 审计报告
 ## 会话信息
 - 会话 ID: prom-20260602-001
@@ -356,7 +440,7 @@ Prometheus 模式的 Token 消耗分为两个阶段：
 完成本章学习后，请确认你能够：
 
 - [ ] 理解 Prometheus 规划模式的访谈式需求收集流程
-- [ ] 区分 `@plan` 和 `@general` 命令的使用场景
+- [ ] 理解两种启动 Prometheus 模式的方式（Tab 切换 / `@plan` 快捷指令）
 - [ ] 了解 Atlas 执行指挥官的职责和角色分离的好处
 - [ ] 使用 `/start-work` 命令启动 Prometheus 计划执行
 - [ ] 比较 Prometheus、Ultrawork 和传统 Prompt 三种模式的差异

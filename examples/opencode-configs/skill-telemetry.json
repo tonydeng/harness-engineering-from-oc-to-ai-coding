@@ -1,0 +1,24 @@
+{
+  "skill_telemetry": {
+    "enabled": true,
+    "events": [
+      {
+        "event": "skill_loaded",
+        "fields": ["skill_name", "version", "agent", "timestamp"]
+      },
+      {
+        "event": "skill_executed",
+        "fields": ["skill_name", "version", "duration_ms", "success"]
+      },
+      {
+        "event": "skill_rated",
+        "fields": ["skill_name", "version", "rating_1to5", "comment"]
+      }
+    ],
+    "reporting": {
+      "frequency": "weekly",
+      "channels": ["slack", "dashboard"],
+      "top_n": 10
+    }
+  }
+}

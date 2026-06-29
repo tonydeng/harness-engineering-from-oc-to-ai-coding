@@ -1,0 +1,13 @@
+# 敏感信息检测规则
+sensitive_patterns:
+  - name: API Key
+    pattern: "sk-[a-zA-Z0-9]{20,}"
+    action: mask
+  
+  - name: Database URL
+    pattern: "postgres://[^\\s]+:[^\\s]+@"
+    action: mask
+  
+  - name: AWS Secret
+    pattern: "AKIA[0-9A-Z]{16}"
+    action: mask_and_warn

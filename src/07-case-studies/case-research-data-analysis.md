@@ -1,0 +1,426 @@
+# 案例：学术数据分析辅助
+
+> 研究人员使用 OpenCode 辅助完成从数据清洗到论文图表的全流程，将分析周期从 1 周压缩到 2 天。
+
+## 案例概述
+
+学术研究中数据分析是最耗时的环节：清洗数据、编写统计检验代码、生成论文级图表、撰写方法论描述。本案例使用 OpenCode + Python（Pandas、SciPy、Matplotlib）对 500 份问卷数据完成描述统计、差异检验、回归分析和调节效应分析，将 5 天工作压缩到 2 天。
+
+关键约束：AI 生成的统计代码必须经过假设条件验证，引用格式必须符合目标期刊要求。流程中设置了两个核心检查点，防止统计误用。
+
+## 1. 项目背景
+
+### 研究场景
+
+一项关于远程办公效率的调查研究，包含 500 份问卷数据：
+
+| 维度 | 说明 |
+|------|------|
+| 数据规模 | 500 行 × 32 列 |
+| 变量类型 | 连续变量 12 个、分类变量 8 个、量表变量 12 个 |
+| 分析目标 | 描述统计、差异检验、回归分析、调节效应 |
+| 输出要求 | 学术论文格式图表 + 可复现代码仓库 |
+
+### 痛点
+
+| 任务 | 手动耗时 | 难度 |
+|------|----------|------|
+| 数据清洗（缺失值、异常值） | 1 天 | 中 |
+| 正态性检验 + 统计方法选择 | 0.5 天 | 高 |
+| 回归分析代码编写 | 1 天 | 中 |
+| 图表生成与美化 | 1.5 天 | 中 |
+| 方法论描述撰写 | 1 天 | 中 |
+
+## 2. OpenCode 配置
+
+### AGENTS.md 研究模板
+
+在项目根目录创建 `AGENTS.md`，定义数据分析角色的约束和行为规范。完整的模板比基础配置更详细，包含统计方法选择指南、输出格式规范和学术诚信约束：
+
+```markdown:AGENTS.md
+# 数据分析项目 — AGENTS.md
+
+## 角色定义
+
+你是数据分析助手，负责协助完成学术研究的数据处理和统计分析。
+
+## 核心约束
+
+1. **工具栈锁定**：使用 pandas + scipy + statsmodels + matplotlib，不引入 sklearn 等机器学习库
+2. **统计严谨性**：所有假设检验必须先验证前提条件（正态性、方差齐性）
+3. **引用格式**：APA 第 7 版，统计符号用斜体（*p* < .05）
+4. **代码可复现**：设置随机种子（random_state=42），版本锁定依赖
+
+## 统计方法选择指南
+
+根据数据特征选择合适的统计方法：
+
+| 数据特征 | 比较两组 | 比较多组 | 关联分析 |
+|----------|----------|----------|----------|
+| 正态 + 方差齐 | 独立样本 t 检验 | 单因素 ANOVA | Pearson 相关 |
+| 正态 + 方差不齐 | Welch t 检验 | Welch ANOVA | Pearson 相关 |
+| 非正态 | Mann-Whitney U | Kruskal-Wallis | Spearman 相关 |
+| 配对设计 | 配对 t 检验 / Wilcoxon | 重复测量 ANOVA | — |
+
+## 代码规范
+
+- 每个分析步骤生成独立函数，便于单元测试
+- 输出文件统一放在 `output/` 目录
+- 图表保存时使用 `bbox_inches='tight'`
+- 所有统计函数必须包含假设验证步骤
+
+## 输出要求
+
+- 中文注释，英文变量名
+- 统计结果保留 3 位小数
+- 生成分析日志到 `analysis_log.md`
+- 每个分析步骤输出假设验证结果（正态性、方差齐性、效应量）
+```
+
+### 学术诚信约束（追加到 AGENTS.md）
+
+```markdown:AGENTS.md (追加)
+## 学术诚信约束
+
+1. **引用验证**：生成任何统计方法描述时，必须标注原始文献来源（作者、年份、期刊）
+2. **禁止虚构**：不得生成不存在的文献引用、虚假的 p 值、或伪造的统计量
+3. **数据溯源**：每步分析必须记录输入文件名、行数、使用的随机种子
+4. **版本锁定**：统计软件版本号必须与实际环境一致（如 scipy==1.11.0）
+5. **可复现声明**：输出文件开头添加 `# 复现方法：pip install -r requirements.txt && python analysis.py`
+```
+
+### opencode.json 环境配置
+
+```json:opencode.json
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-4-20250514",
+  "env": {
+    "VIRTUAL_ENV": ".venv",
+    "PATH": ".venv/bin:${PATH}"
+  },
+  "context": {
+    "files": ["AGENTS.md", "analysis_plan.md"]
+  }
+}
+```
+
+执行前先激活虚拟环境并安装依赖：
+
+```bash:setup-commands
+python -m venv .venv && source .venv/bin/activate
+pip install pandas scipy statsmodels matplotlib seaborn
+```
+
+## 3. 工作流程
+
+### 数据清洗
+
+用精确的数据描述触发 OpenCode 生成完整的清洗脚本：
+
+```text:prompt-data-cleaning
+User: "读取 survey_results.csv，数据有 500 行 32 列。
+请：
+1. 生成缺失值报告（按列统计缺失率）
+2. 用 IQR 方法检测异常值
+3. 量表变量逻辑一致性检查（反向计分题项）
+4. 输出清洗后的数据到 clean_survey.csv"
+
+OpenCode: [生成 data_cleaning.py，包含缺失值报告、IQR 过滤、反向题项验证逻辑]
+```
+
+OpenCode 生成的脚本会自动处理缺失值策略（量表用中位数、分类用众数）、标记异常值行号、验证反向题项的一致性。关键验证点：检查缺失值处理策略是否合理（删除 vs 插补），确认 IQR 阈值是否符合领域惯例。
+
+### 统计分析
+
+用多轮对话驱动 OpenCode 逐步完成分析，确保每步都经过假设验证：
+
+```text:prompt-statistical-analysis
+User: "对 clean_survey.csv 做以下分析：
+- 按 department 分组做描述统计
+- 比较 remote vs on-site 的 productivity 差异（先检验正态性）
+- 多元回归：productivity ~ experience + satisfaction + flexibility
+- 调节效应：flexibility 在 satisfaction→productivity 中的调节作用"
+
+OpenCode: [生成 analysis.py，包含 Shapiro-Wilk 正态性检验、t 检验、OLS 回归、
+分层回归 + 交互项，每步输出假设验证结果]
+
+User: "回归结果 VIF > 5 的变量需要处理"
+
+OpenCode: [添加 VIF 检查，自动移除高共线性变量并重新拟合]
+```
+
+| 分析任务 | OpenCode 生成的代码 | 人工验证点 |
+|----------|---------------------|-----------|
+| 描述统计 | `df.groupby('department').describe()` + 频率表 | 确认分组变量正确 |
+| 正态性检验 | `scipy.stats.shapiro()` | 确认样本量适用性（n > 50 时 Shapiro-Wilk 可能过于敏感） |
+| 组间差异 | 独立样本 t 检验 / Mann-Whitney U | 确认方差齐性假设（Levene 检验） |
+| 回归分析 | `statsmodels` OLM + `variance_inflation_factor()` | 确认共线性处理 |
+| 调节效应 | 分层回归 + 中心化交互项 | 确认变量已中心化 |
+
+关键提示：OpenCode 默认不检查样本量对 Shapiro-Wilk 的影响。当 n > 50 时，建议改用 Kolmogorov-Smirnov 检验或观察 Q-Q 图。多轮对话让 AI 补充这些验证，比一次性生成更可靠。
+
+### 多种统计方法的 **Prompt（提示词）** 示例
+
+实际项目中，不同统计方法需要不同的 Prompt 策略。以下是几种常用方法的具体 Prompt 示例。
+
+#### 独立样本 t 检验
+
+```text:prompt-t-test
+User: "比较远程办公组（remote=1）和现场办公组（remote=0）的 productivity 差异。
+要求：
+1. 先做 Levene 方差齐性检验
+2. 根据 Levene 结果选择 Student t 或 Welch t
+3. 计算 Cohen's d 效应量
+4. 输出 APA 格式的结果报告
+5. 生成两组的箱线图，标注均值和显著性星号"
+
+OpenCode: [生成独立的 t 检验脚本，包含 Levene 检验、条件分支、效应量计算、
+APA 格式输出和 matplotlib 箱线图]
+```
+
+人工验证点：检查 p 值是否合理（不要直接信任 AI 输出的 p 值，用 `scipy.stats` 重新计算验证），确认效应量报告的是 Cohen's d 而非 Hedge's g。
+
+#### 单因素 ANOVA
+
+```text:prompt-anova
+User: "比较不同部门（department）的 productivity 差异。
+要求：
+1. 先做 Shapiro-Wilk 正态性检验（按组）
+2. 做 Levene 方差齐性检验
+3. 如果满足假设，用单因素 ANOVA；不满足用 Kruskal-Wallis
+4. ANOVA 显著后做 Tukey HSD 事后比较
+5. 输出 F 值、p 值、偏 eta 方（效应量）
+6. 生成分组柱状图，标注事后比较结果"
+
+OpenCode: [生成 ANOVA 脚本，包含假设验证、条件分支、Tukey HSD、
+效应量计算和分组柱状图]
+```
+
+人工验证点：确认 Tukey HSD 的配对比较结果是否正确，检查偏 eta 方的计算公式（η²p = SS_between / (SS_between + SS_within)）。
+
+#### 多元回归分析
+
+```text:prompt-regression
+User: "做多元线性回归：productivity ~ experience + satisfaction + flexibility + autonomy。
+要求：
+1. 检查多重共线性（VIF），VIF > 5 的变量标记并讨论
+2. 检查残差正态性（Shapiro-Wilk）和 homoscedasticity（Breusch-Pagan）
+3. 输出标准化和非标准化回归系数
+4. 计算调整后 R² 和 AIC
+5. 生成残差诊断图（4 合 1：残差 vs 拟合值、Q-Q 图、尺度-位置图、残差 vs 杠杆图）
+6. 用 APA 格式输出回归结果表"
+
+OpenCode: [生成回归分析脚本，包含 VIF 检查、残差诊断、标准化系数、
+4 合 1 诊断图和 APA 格式输出]
+```
+
+人工验证点：检查残差图是否显示异方差或非线性模式，确认标准化系数的方向是否符合理论预期，VIF 值是否合理。
+
+#### 调节效应分析
+
+```text:prompt-moderation
+User: "分析 flexibility 在 satisfaction→productivity 关系中的调节效应。
+要求：
+1. 对 satisfaction 和 flexibility 做中心化处理（减去均值）
+2. 计算交互项：satisfaction_centered × flexibility_centered
+3. 分层回归：第一步放主效应，第二步加交互项
+4. 检查交互项的 ΔR² 和显著性
+5. 如果显著，画简单斜率图（flexibility 高/低各一条线）
+6. 输出 Johnson-Neyman 技术的显著性区间"
+
+OpenCode: [生成调节效应分析脚本，包含中心化处理、分层回归、简单斜率图、
+Johnson-Neyman 区间输出]
+```
+
+人工验证点：确认中心化处理是否正确（只中心化连续变量，分类变量不做中心化），简单斜率图的高低分组是否合理（通常取均值 ± 1SD）。
+
+### 可视化
+
+用精确的图表规格触发 OpenCode 生成出版级图表代码：
+
+```text:prompt-visualization
+User: "生成论文图表：
+- Figure 1: 分组柱状图（各部门满意度对比）
+- Figure 2: 回归系数森林图
+- Figure 3: 调节效应交互图
+使用 viridis 配色，300 DPI，tight bbox"
+
+OpenCode: [生成 figures.py，包含 matplotlib 子图布局、viridis 色板、
+论文尺寸（6×4 英寸）、英文轴标签]
+```
+
+OpenCode 生成的图表默认使用 `figsize=(6, 4)` 的论文标准尺寸。如果目标期刊要求双栏排版（3.5 英寸宽），需要手动调整 `figsize=(3.5, 2.5)`。AI 默认的轴标签是英文，中文论文需要额外指定 `fontproperties` 参数。
+
+### 图表生成的 **MCP（模型上下文协议）** 工具配置
+
+为了更灵活地生成图表，可以在 opencode.json 中配置数据可视化 MCP 工具：
+
+```json:opencode.json (图表配置)
+{
+  "provider": "anthropic",
+  "model": "claude-sonnet-4-20250514",
+  "mcp": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./src", "./output"]
+    }
+  },
+  "context": {
+    "files": ["AGENTS.md", "analysis_plan.md", "style_guide.md"]
+  }
+}
+```
+
+其中 `style_guide.md` 定义图表的视觉规范：
+
+```markdown:style_guide.md
+# 图表视觉规范
+
+## 配色方案
+- 主色：viridis（色盲友好）
+- 备选：colorblind 调色板
+- 禁止使用：jet、rainbow 等非色盲友好色板
+
+## 字体规范
+- 轴标签：10pt，Arial 或 Helvetica
+- 刻度标签：8pt
+- 标题：12pt，加粗
+- 图例：8pt，放在图表内部右上角
+
+## 尺寸规范
+- 单栏图表：3.5 × 2.5 英寸
+- 双栏图表：7 × 4 英寸
+- DPI：300（印刷质量）
+
+## 标注规范
+- 显著性标注：*p < .05, **p < .01, ***p < .001
+- 误差线：95% 置信区间
+- 均值标注：圆点 + 数值
+```
+
+### 方法论描述
+
+AI 基于分析流程生成论文方法论章节草稿，包含统计方法说明、软件版本信息和分析步骤描述。
+
+以下是具体的方法论写作 Prompt 示例：
+
+```text:prompt-methods-writing
+User: "基于 analysis.py 的分析流程，生成论文的方法论章节（英文）。
+要求：
+1. 按分析顺序描述每个统计方法
+2. 每个方法标注引用来源（如 t 检验引用 Student, 1908）
+3. 报告软件版本（Python 3.11, scipy 1.11.0, statsmodels 0.14.0）
+4. 说明数据清洗步骤和排除标准
+5. 使用 APA 第 7 版格式
+
+生成到 output/methods_section.md"
+
+OpenCode: [生成方法论章节草稿，包含分析流程描述、统计引用、
+软件版本信息和 APA 格式]
+```
+
+生成后需要人工检查的要点：
+
+- 引用是否指向正确的原始文献（不要信任 AI 生成的引用）
+- 统计符号格式是否符合 APA 规范（斜体 p、斜体 M、斜体 SD）
+- 软件版本号是否与 requirements.txt 一致
+- 分析步骤的描述是否完整，有无遗漏
+
+### 学术写作辅助工作流
+
+除了方法论章节，AI 还能辅助生成结果报告、讨论框架和参考文献管理。以下是完整的学术写作工作流。
+
+#### 结果报告生成
+
+```text:prompt-results-writing
+User: "基于 analysis.py 的输出结果，生成论文的结果章节。
+要求：
+1. 描述统计用表格呈现（均值、标准差、样本量）
+2. t 检验结果报告 t 值、df、p 值、Cohen's d
+3. 回归结果用标准表格（β、SE、t、p、95% CI）
+4. 每个结果配一段文字描述，解读统计意义
+5. 所有 p 值用 APA 格式（p = .003 而非 p = 0.003）
+
+生成到 output/results_section.md"
+```
+
+#### 讨论框架生成
+
+```text:prompt-discussion-writing
+User: "基于结果章节，生成讨论章节的框架。
+要求：
+1. 第一段：总结主要发现
+2. 第二段：与现有文献对比（引用 3-5 篇相关研究）
+3. 第三段：理论贡献和实践意义
+4. 第四段：局限性（至少 3 点）
+5. 第五段：未来研究方向
+
+注意：引用的文献必须是真实存在的，不要虚构。
+生成到 output/discussion_framework.md"
+```
+
+人工验证点：AI 生成的文献引用经常不准确，需要逐条在 Google Scholar 或 PubMed 上验证。建议让 AI 先列出引用清单，验证后再生成正文。
+
+#### 参考文献管理
+
+```text:prompt-reference-management
+User: "整理方法论和讨论章节中引用的所有文献。
+要求：
+1. 生成 APA 第 7 版格式的参考文献列表
+2. 按字母顺序排列
+3. 标注哪些引用需要人工验证（AI 不确定的）
+4. 输出到 output/references.md"
+```
+
+### 学术诚信检查
+
+在 AGENTS.md 中添加学术诚信约束，防止 AI 生成虚假引用或伪造数据：
+
+```markdown:AGENTS.md (追加)
+## 学术诚信约束
+
+1. **引用验证**：生成任何统计方法描述时，必须标注原始文献来源（作者、年份、期刊）
+2. **禁止虚构**：不得生成不存在的文献引用、虚假的 p 值、或伪造的统计量
+3. **数据溯源**：每步分析必须记录输入文件名、行数、使用的随机种子
+4. **版本锁定**：统计软件版本号必须与实际环境一致（如 scipy==1.11.0）
+5. **可复现声明**：输出文件开头添加 `# 复现方法：pip install -r requirements.txt && python analysis.py`
+```
+
+用以下 prompt 触发 OpenCode 检查引用完整性：
+
+```text:prompt-citation-check
+User: "检查方法论描述中的所有统计引用：
+1. t 检验的引用是否指向 Student (1908) 或 Welch (1947)
+2. APA 格式的 p 值写法是否规范（p < .05 而非 p < 0.05）
+3. 软件版本号是否与 requirements.txt 一致
+4. 输出修正后的 methods_section.md"
+
+OpenCode: [扫描方法论文本，标记不规范引用，生成修正版本]
+```
+
+## 4. 效果数据
+
+| 指标 | 手动完成 | AI 辅助 | 变化 |
+|------|----------|---------|------|
+| 数据分析总耗时 | 5 天 | 2 天 | -60% |
+| 代码编写量 | 800 行 | 250 行（手动修改） | -69% |
+| 图表生成时间 | 1.5 天 | 0.5 天 | -67% |
+| 方法论撰写时间 | 1 天 | 0.3 天 | -70% |
+| 代码可复现性 | 手动维护 | 自动生成 | 提升 |
+
+## 5. 经验教训
+
+1. **统计代码必须验证假设条件**。AI 生成的 t 检验代码默认不检查正态性和方差齐性，需要在调用检验前添加 shapiro() 和 levene() 检验。
+
+2. **引用格式需要手动检查**。AI 生成的方法论描述中，APA 格式的引用和统计符号格式（如 p < .05）经常不规范，需要按目标期刊要求逐项核对。
+
+3. **图表配色要符合学术规范**。AI 默认使用彩虹色系，学术论文通常要求色盲友好的配色方案（如 viridis 或 colorblind 调色板）。
+
+4. **代码版本控制很重要**。AI 生成的代码应纳入 Git 管理，确保分析流程可追溯、可复现。
+
+## 关联章节
+
+- → [全流程自动化](case-full-pipeline.md)（端到端自动化思路）
+- → [**Skill（技能）** 开发](../05-skills/)（自定义数据分析 Skill）
+- → [环境搭建](../03-setup/)（Python 环境配置）

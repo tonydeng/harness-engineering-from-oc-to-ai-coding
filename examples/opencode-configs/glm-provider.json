@@ -1,0 +1,33 @@
+{
+  "providers": {
+    "zhipu": {
+      "name": "智谱 GLM",
+      "base_url": "https://open.bigmodel.cn/api/paas/v4",
+      "api_key": "${ZHIPUAI_API_KEY}",
+      "models": {
+        "glm-4": {
+          "name": "GLM-4",
+          "context_window": 128000,
+          "max_output": 4096,
+          "description": "代码翻译、中文注释",
+          "pricing": {
+            "input": 0.001,
+            "output": 0.001,
+            "unit": "USD per 1K tokens"
+          }
+        },
+        "glm-4-flash": {
+          "name": "GLM-4-Flash",
+          "context_window": 128000,
+          "max_output": 4096,
+          "description": "轻量快速，高性价比",
+          "pricing": {
+            "input": 0.0001,
+            "output": 0.0001,
+            "unit": "USD per 1K tokens"
+          }
+        }
+      }
+    }
+  }
+}

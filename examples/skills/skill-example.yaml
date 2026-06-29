@@ -1,0 +1,162 @@
+---
+# ============================================================
+# Skill 示例文件 — 涵盖全书各章节展示的所有字段
+# 本文件是全书中引用最多的示例文件（60+ 处引用）
+# 展示完整的 frontmatter、模板指令、权限控制、插件化等特性
+# ============================================================
+
+# === 基础字段（creating-skills.md / skill-best-practices.md）===
+name: full-stack-dev         # 1-64字符，小写连字符
+description: "全栈开发综合 Skill，覆盖前端、后端和数据库设计。提供：[架构模板 + 最佳实践]。适用：[全栈开发、技术选型]。不适用：[纯研究任务]"
+
+# === 权限控制（creating-skills.md）===
+allowed-tools:
+  - read       # 读取代码文件
+  - glob       # 搜索文件
+  - grep       # 搜索内容
+  - edit       # 修改代码
+  - bash       # 执行命令
+  # 注意：根据最小权限原则，只授予完成任务所需的最小权限集
+
+# === 模板骨架（skill-templates.md）===
+template: |
+  # 骨架：模板提供的结构
+  工作流程:
+    - 阶段1: [模板定义的步骤]
+    - 阶段2: [模板定义的步骤]
+    - 阶段3: [模板定义的步骤]
+
+  # 血肉：用户填充的内容
+  具体规范:
+    - 项目特定的编码规范
+    - 团队约定的审查标准
+    - 组织定义的安全策略
+
+# === 插件化接口契约（plugin-patterns.md）===
+input_schema:
+  type: object
+  properties:
+    task_description:
+      type: string
+      description: 任务描述
+    constraints:
+      type: object
+      description: 约束条件
+      properties:
+        tech_stack:
+          type: array
+          items:
+            type: string
+        deadline:
+          type: string
+          format: date
+  required:
+    - task_description
+
+output_schema:
+  type: object
+  properties:
+    status:
+      type: string
+      enum: [success, failure, partial]
+    artifacts:
+      type: array
+      items:
+        type: object
+        properties:
+          type:
+            type: string
+          path:
+            type: string
+    report:
+      type: string
+  required:
+    - status
+
+# === 兼容性声明（plugin-patterns.md）===
+compatibility:
+  min_opencode_version: "2.0.0"
+  dependencies:
+    - name: frontend-architect
+      version: ">=2.0.0 <3.0.0"
+      compatibility_notes: "2.0 重构了输出格式"
+    - name: backend-architect
+      version: ">=1.5.0 <2.0.0"
+
+# === 元数据（creating-skills.md）===
+version: "2.1.0"
+license: MIT
+metadata:
+  version: "2.1.0"
+  author: opencode-community
+  tags:
+    - fullstack
+    - frontend
+    - backend
+    - development
+  min_opencode_version: "2.0.0"
+
+# === 目标 Agent 作用域（creating-skills.md — Team Mode）===
+target_agent: build     # 只有 build Agent 可以加载（oh-my-openagent Team Mode）
+
+# === 示例 I/O（skill-best-practices.md）===
+examples:
+  - input:
+      question: "为新的微服务项目设计技术架构"
+    output:
+      answer: "提供完整的技术选型报告，包含前端框架、后端服务、数据库选择和部署方案"
+---
+# ============================================================
+# 以下是内嵌代码块中展示的独立示例片段
+# 这些片段被 inline 引用，展示具体字段的用法
+# ============================================================
+
+# 正确命名示例（creating-skills.md）
+name: deep-research
+name: frontend-architect
+name: code-reviewer
+
+# 错误命名示例（creating-skills.md）
+# name: FrontendArchitect    # 大写字母
+# name: frontend_architect   # 下划线
+# name: frontend-architect-  # 连字符结尾
+# name: 123-skill            # 数字开头
+
+# 描述字段反例（creating-skills.md）
+# description: "帮助开发"                                             # 过于宽泛
+# description: "在 React 18.2.0 使用 TypeScript 4.9 时优化 useEffect" # 过于狭窄
+
+# 描述字段正例（creating-skills.md）
+description: "用于需要网络研究的任何问题。提供系统化的多角度研究方法论，而非单一浅层搜索。适用：回答'什么是 X'、'解释 X'、'比较 X 和 Y'。不适用：简单的代码修改任务"
+
+# 描述写作模板（creating-skills.md）
+description: "[一句话说明核心能力]。提供：[该 Skill 包含的资源]。适用：[触发场景]。不适用：[边界场景]"
+
+# 权限控制 — 只读审查 Skill（creating-skills.md）
+name: code-reviewer
+description: 代码审查专家，识别代码异味和安全漏洞
+allowed-tools:
+  - read      # 读取代码文件
+  - glob      # 搜索文件
+  - grep      # 搜索内容
+  # 注意：没有 edit，禁止修改代码
+  # 注意：没有 bash，禁止执行命令
+
+# 作用域控制（creating-skills.md）
+name: security-scanner
+description: 安全漏洞扫描专家
+target_agent: security-audit  # 只有 security-audit Agent 可见
+allowed-tools:
+  - read
+  - grep
+  - bash
+
+# 完整元数据（creating-skills.md）
+name: frontend-architect
+description: 前端架构设计专家
+license: MIT
+metadata:
+  version: "2.1.0"
+  author: opencode-community
+  tags:
+    - frontend

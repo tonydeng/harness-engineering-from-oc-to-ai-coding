@@ -8,6 +8,45 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Python virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Python testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Python packaging
+Pipfile.lock
+
 # IDE
 .idea/
 .vscode/
@@ -30,8 +69,17 @@ temp/
 .obsidian/
 
 # OpenCode
-.opencode/
 .omo/
 
 # Trae
 .trae/
+
+#Claude Code
+.claude/
+
+# playwright
+.playwright-mcp/
+
+# log
+logs/
+*.log

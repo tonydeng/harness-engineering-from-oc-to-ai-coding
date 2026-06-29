@@ -1,0 +1,15 @@
+# 正确配置示例
+agent_permissions:
+  mode: explicit_allowlist
+  allowed_commands:
+    - npm install
+    - npm test
+    - npm run build
+  allowed_files:
+    - "src/**"
+    - "tests/**"
+  denied_paths:
+    - ".git/**"
+    - ".env*"
+    - "*.key"
+    - "*.pem"

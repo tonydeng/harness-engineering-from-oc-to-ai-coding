@@ -1,0 +1,26 @@
+{
+  "data_security": {
+    "transit_encryption": {
+      "min_tls_version": "1.3",
+      "cert_pinning": true
+    },
+    "sensitive_data_filter": {
+      "patterns": [
+        "sk-[a-zA-Z0-9]{20,}",
+        "AKIA[0-9A-Z]{16}",
+        " -----BEGIN (RSA |EC )?PRIVATE KEY-----"
+      ],
+      "action": "block_and_log"
+    },
+    "data_classification": {
+      "internal_only": {
+        "models": ["deepseek/deepseek-chat"],
+        "rule": "data_must_stay_in_china"
+      },
+      "global": {
+        "models": ["openai/gpt-4o", "anthropic/claude-sonnet-4"],
+        "rule": "no_pii_in_prompt"
+      }
+    }
+  }
+}

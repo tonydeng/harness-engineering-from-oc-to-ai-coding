@@ -1,32 +1,37 @@
 # 上下文工程核心
 
-> 管理 Agent 的"工作记忆"——在有限的 Token 空间内实现信息优先级的精准编排。
+> 管理 **Agent（智能体）** 的"工作记忆"——在有限的 Token 空间内实现信息优先级的精准编排。
 
 > **前置条件**
-> - 已完成 [简介](../01-introduction/)，理解 Harness Engineering 基本概念
+> - 已完成 [简介](../01-introduction/)，理解 **Harness Engineering（驾驭工程）** 基本概念
 > - 已安装 OpenCode CLI 并完成基础配置
 > - 已了解 LLM 上下文窗口和 Token 计数的基本概念
 
 ## 文章概述
 
-每个 Agent 的上下文窗口（Context Window）容量有限，装不下所有信息。上下文工程就是管理这个有限空间的技术——决定哪些信息保留、哪些丢弃、如何预留空间，直接影响 Agent 的决策准确度。本章围绕三个核心维度展开：**压缩**（缩减信息量）、**缓存**（重用已有信息）、**预算**（分配有限空间），讲解每个维度的实现原理。你会理解 Compaction 自动压缩机制如何选择性保留关键信息、Session 级与跨 Session 缓存的差异、以及 Token 预算在系统指令/用户输入/工具输出之间的分配策略与超限处理机制。
+每个 Agent 的上下文窗口（**Context（上下文）** Window）容量有限，装不下所有信息。上下文工程就是管理这个有限空间的技术——决定哪些信息保留、哪些丢弃、如何预留空间，直接影响 Agent 的决策准确度。本章围绕三个核心维度展开：**压缩**（缩减信息量）、**缓存**（重用已有信息）、**预算**（分配有限空间），讲解每个维度的实现原理。你会理解 Compaction 自动压缩机制如何选择性保留关键信息、Session 级与跨 Session 缓存的差异、以及 Token 预算在系统指令/用户输入/工具输出之间的分配策略与超限处理机制。
 
 上下文工程与约束系统配合使用：上下文工程确保 Agent "看得到"需要的信息，约束系统确保 Agent "不做"不该做的事。验证护栏则在输出阶段验证结果正确性。学完本节，你应能根据任务特征配置上下文管理参数，理解压缩后信息保真度与性能的权衡关系，并掌握跨会话上下文保持的基本方法。
+
+读完本文，你将能够合理分配 Token 预算以优化上下文利用，理解 Compaction 压缩与缓存机制的工作原理，以及根据任务复杂度调整上下文管理策略。
+
+> **⏱ 时间有限？先读这些：** 上下文压缩原理 → 上下文缓存策略 → Token 预算管理 → 三层协作的决策流程
 
 ### 最小示例
 
 用一个最简单的配置来理解上下文工程：
 
-```json
+```json:opencode.json
 {
-  "tokenBudget": {
-    "total": 200000,
-    "reserved": 0.25
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
   }
 }
 ```
 
-这短短两行配置说的是：Agent 的"工作记忆"最多 200K Token，其中 25% 要预留出来供 Agent 思考。就像你写代码时要给大脑留缓存空间一样——不设预留，Agent 可能在关键时刻"失忆"。
+这三行配置说的是：开启自动压缩（`auto: true`），不裁剪旧工具输出（`prune: false`），预留 10K Token 的缓冲空间避免压缩过程溢出。`reserved` 就像一个安全缓冲区——当上下文接近模型窗口上限时，这段预留空间确保压缩过程中不会因超限而失败。
 
 ### 操作系统类比：Context = 工作记忆
 
@@ -58,7 +63,7 @@
 - 一个中型项目可能有数十万行代码
 - 完整的 API 文档可能超过 10 万字
 - 一次长会话的对话历史可能积累数万 Token
-- MCP 工具返回的查询结果可能非常庞大
+- **MCP（模型上下文协议）** 工具返回的查询结果可能非常庞大
 
 **核心矛盾**：有限的工作记忆 vs 无限的信息需求。上下文工程就是为了解决这个矛盾而诞生的方法论。
 
@@ -66,7 +71,7 @@
 
 Agent 的每一次决策都依赖于当前上下文。上下文不完整，决策就会出错：
 
-```
+```text:terminal
 用户：修复登录模块的 bug
 
 上下文缺失场景：
@@ -113,6 +118,8 @@ graph TB
 
 三层之间存在依赖关系：**缓存优先**（能复用就不重传），**预算控制**（分配各部分空间），**压缩兜底**（超限时智能缩减）。
 
+> **配置映射速查**：压缩层对应 `compaction` 字段（如 `compaction.auto`、`compaction.reserved`）；缓存层对应 `caching` 字段（如 `caching.crossSession`）；预算层通过 `compaction.reserved` 控制整体预留空间，推理预算通过 `provider.*.models.*.options.thinking.budgetTokens` 设置。部分高级配置（如微压缩规则）需要 OpenCode >= v1.17.x 和 OMO >= v4.13.x。没有直接对应配置的概念（如上下文注入），通过 AGENTS.md 或 **Skill（技能）** 配置实现。
+
 ## 上下文压缩原理
 
 ### 自动压缩机制（Compaction）
@@ -150,8 +157,8 @@ sequenceDiagram
 
 除了自动压缩，OpenCode 还支持细粒度的微压缩配置：
 
-```json
-// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
+```json:opencode.json
+// Requires OpenCode >= v1.17.x, OMO >= v4.13.x
 {
   "compaction": {
     "strategy": "selective",
@@ -190,7 +197,7 @@ sequenceDiagram
 
 压缩是有损的，但损失可控。关键在于区分"必须保留"和"可以压缩"：
 
-```
+```text:terminal
 必须保留（保真度 100%）：
 ├── 用户明确的指令
 ├── Agent 的关键决策
@@ -239,7 +246,7 @@ graph LR
 
 **Session 级缓存的内容**：
 
-- 系统指令（System Prompt）— 每个 Session 固定
+- 系统指令（System **Prompt（提示词）**）— 每个 Session 固定
 - 工具定义（Tool Definitions）— MCP 工具的 JSON Schema
 - 项目上下文（Project Context）— README、CLAUDE.md 等
 
@@ -247,8 +254,8 @@ graph LR
 
 跨 Session 缓存需要显式配置，适用于长期项目：
 
-```json
-// Requires OpenCode >= v1.15.x, OMO >= v4.5.x
+```json:opencode.json
+// Requires OpenCode >= v1.17.x, OMO >= v4.13.x
 {
   "caching": {
     "crossSession": {
@@ -282,7 +289,7 @@ graph LR
 
 缓存命中率是衡量缓存效果的关键指标：
 
-```
+```text:terminal
 缓存命中率 = 命中缓存的 Token 数 / 总请求 Token 数
 
 优化目标：命中率通常可达 60% 以上（取决于使用模式）
@@ -320,17 +327,12 @@ graph TB
 
 **预算配置示例**：
 
-```json
+```json:opencode.json
 {
-  "tokenBudget": {
-    "total": 200000,
-    "allocation": {
-      "system": 4000,
-      "user": 50000,
-      "tools": 80000,
-      "reserved": 66000
-    },
-    "enforcement": "strict"
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
   }
 }
 ```
@@ -342,14 +344,16 @@ graph TB
 | 系统消息 | 2-5% | System Prompt、工具定义 | 固定，通过缓存优化 |
 | 用户输入 | 25-30% | 任务描述、代码上下文 | 按需加载，智能截断 |
 | 工具输出 | 40-50% | MCP 返回、文件内容 | 结果压缩、分页返回 |
-| 预留空间 | 20-30% | Agent 推理、生成响应 | 必须保留，不可侵占 |
+| 预留空间 | 10-20% | Agent 推理、生成响应 | 必须保留，不可侵占 |
+
+> **注意**：OpenCode 不提供精确到类别的预算分配配置，上表是概念性的预算分配原则。实际控制通过 `compaction.reserved` 设置整体预留空间，以及 Provider 层的 `thinking.budgetTokens` 控制推理预算。
 
 ### 预算超限的处理机制
 
 当 Token 使用接近上限时，系统依次触发三级响应：
 
 ```mermaid
-flowchart TD
+flowchart TB
     A[Token 使用 > 80%] --> B{触发压缩}
     B --> |成功| C[继续执行]
     B --> |仍超限| D{模型降级}
@@ -377,23 +381,31 @@ flowchart TD
 
 **配置超限响应**：
 
-```json
+```json:opencode.json
 {
-  "tokenBudget": {
-    "overrunHandling": {
-      "compression": {
-        "threshold": 0.8,
-        "priority": 1
-      },
-      "modelDowngrade": {
-        "threshold": 0.9,
-        "fallbackModel": "claude-haiku",
-        "priority": 2
-      },
-      "truncation": {
-        "threshold": 0.95,
-        "strategy": "fifo",
-        "priority": 3
+  "compaction": {
+    "auto": true,
+    "prune": false,
+    "reserved": 10000
+  }
+}
+```
+
+OpenCode 的 Compaction 机制在上下文接近窗口上限时自动触发。当 Token 使用量达到模型上下文限制的约 80% 时，系统会启动一个专门的 `compaction` Agent，对历史消息进行智能摘要压缩，替换掉原始冗长的对话记录。`reserved` 参数确保压缩过程中有足够的缓冲空间不会溢出。此外，还可以通过 Provider 的 `thinking.budgetTokens` 控制推理 Token 预算：
+
+```json:opencode.json
+{
+  "provider": {
+    "anthropic": {
+      "models": {
+        "claude-sonnet-4-20250514": {
+          "options": {
+            "thinking": {
+              "type": "enabled",
+              "budgetTokens": 16000
+            }
+          }
+        }
       }
     }
   }
@@ -481,7 +493,7 @@ graph TB
 
 ### 基础上下文管理配置
 
-```json
+```json:opencode.json
 {
   "context": {
     "compaction": {
@@ -503,7 +515,7 @@ graph TB
 
 ### 高级上下文管理配置
 
-```json
+```json:opencode.json
 {
   "context": {
     "compaction": {
@@ -573,178 +585,13 @@ graph TB
 
 ## 上下文工程安全风险分析
 
-上下文工程管理 Agent 的"工作记忆"，其安全性直接影响 Agent 的决策质量和数据安全。以下分析上下文工程的主要安全风险及防御策略。
+上下文工程管理 Agent 的"工作记忆"，安全性直接影响决策质量和数据安全。主要风险包括上下文注入攻击、压缩导致安全信息丢失、缓存污染/泄露、以及 Token 预算不足导致安全检查被跳过。
 
-### 上下文注入攻击
-
-**威胁描述**：攻击者可能通过精心构造的输入污染上下文，诱导 Agent 执行危险操作。
-
-```mermaid
-flowchart TB
-    A[用户输入] --> B{上下文处理}
-    B --> C[正常内容]
-    B --> D[恶意注入]
-
-    C --> E[安全压缩]
-    D --> F{注入检测}
-
-    F -->|检测到注入| G[❌ 拒绝处理]
-    F -->|绕过检测| H[⚠️ 上下文污染]
-
-    E --> I[安全执行]
-    H --> J[潜在安全风险]
-
-    style G fill:#ccffcc
-    style H fill:#ffcccc
-    style J fill:#ff6666,color:#fff
-```
-
-**典型攻击向量**：
-
-| 攻击类型 | 描述 | 风险等级 |
-|---------|------|---------|
-| Prompt 注入 | 在用户输入中嵌入恶意指令 | 高 |
-| 上下文投毒 | 通过历史对话污染上下文 | 高 |
-| 工具输出伪造 | MCP 工具返回恶意内容 | 中 |
-| 文件内容注入 | 通过 `@file` 引入恶意内容 | 中 |
-
-**防御策略**：
-
-1. **输入内容扫描**：检测并标记可疑的 Prompt 注入模式
-2. **上下文隔离**：区分用户输入和系统指令的信任边界
-3. **工具输出校验**：验证 MCP 工具返回内容的完整性
-4. **敏感信息过滤**：压缩时自动脱敏敏感数据
-
-### 压缩机制安全风险
-
-**威胁描述**：压缩过程可能丢失关键安全信息或保留恶意内容。
-
-```mermaid
-graph TB
-    subgraph 压缩安全风险
-        A[关键安全信息丢失] --> A1[安全决策失误]
-        B[恶意内容保留] --> B1[攻击载荷持久化]
-        C[压缩比过高] --> C1[上下文完整性破坏]
-    end
-
-    A1 --> D{安全影响}
-    B1 --> D
-    C1 --> D
-
-    D -->|高| E[安全事件]
-    D -->|中| F[功能异常]
-    D -->|低| G[性能下降]
-
-    style A1 fill:#ffcccc
-    style B1 fill:#ffcccc
-    style E fill:#ff6666,color:#fff
-```
-
-**压缩安全配置**：
-
-```json
-{
-  "compaction": {
-    "securityRules": [
-      {
-        "type": "security_events",
-        "action": "protect",
-        "reason": "安全事件必须完整保留"
-      },
-      {
-        "type": "user_permissions",
-        "action": "protect",
-        "reason": "权限变更记录不可丢失"
-      },
-      {
-        "type": "error_messages",
-        "action": "protect",
-        "reason": "错误信息用于问题排查"
-      },
-      {
-        "type": "malicious_patterns",
-        "action": "alert",
-        "reason": "检测到恶意模式时告警"
-      }
-    ]
-  }
-}
-```
-
-### 缓存安全风险
-
-**威胁描述**：缓存可能被污染或泄露敏感信息。
-
-| 风险类型 | 描述 | 防御措施 |
-|---------|------|---------|
-| 缓存投毒 | 攻击者污染缓存内容 | 缓存内容签名验证 |
-| 敏感信息泄露 | 缓存中存储敏感数据 | 敏感数据不缓存或加密存储 |
-| 缓存篡改 | 本地缓存文件被修改 | 文件完整性校验 |
-| 跨会话污染 | 缓存在会话间传播恶意内容 | 会话隔离 + 缓存清理策略 |
-
-**缓存安全配置**：
-
-```json
-{
-  "caching": {
-    "security": {
-      "sensitivePatterns": [
-        "password", "secret", "token", "api_key", "private_key"
-      ],
-      "action": "exclude",
-      "encryption": {
-        "enabled": true,
-        "algorithm": "AES-256-GCM"
-      },
-      "integrityCheck": true,
-      "maxAge": "24h"
-    }
-  }
-}
-```
-
-### Token 预算安全影响
-
-**威胁描述**：不当的预算分配可能导致安全检查被跳过。
-
-```mermaid
-graph TB
-    A[Token 预算分配] --> B[系统消息]
-    A --> C[用户输入]
-    A --> D[工具输出]
-    A --> E[预留空间]
-
-    B --> B1[安全指令]
-    C --> C1[任务描述]
-    D --> D1[执行结果]
-    E --> E1[推理缓冲]
-
-    B1 --> F{预算不足?}
-    F -->|是| G[⚠️ 安全指令被压缩]
-    F -->|否| H[✅ 安全检查完整]
-
-    G --> I[安全风险增加]
-
-    style G fill:#ffcccc
-    style I fill:#ff6666,color:#fff
-    style H fill:#ccffcc
-```
-
-**预算安全原则**：
-
-1. **系统消息优先**：安全指令属于系统消息，享有最高优先级
-2. **保护安全上下文**：安全相关内容标记为 `protect`
-3. **预留安全缓冲**：为安全检查预留足够的 Token 空间
-4. **降级安全策略**：预算紧张时优先保留安全相关内容
+更详细的风险分析、配置示例和安全检查 → [安全总览](../06-advanced/security-overview.md)。
 
 ### 安全检查清单
 
-- [ ] 用户输入经过 Prompt 注入检测
-- [ ] 压缩规则保护安全相关内容
-- [ ] 缓存不存储敏感信息或已加密
-- [ ] Token 预算优先保障安全指令
-- [ ] 工具输出经过完整性校验
-- [ ] 上下文变更记录审计日志
+上下文工程的安全检查（Prompt 注入检测、缓存加密、Token 预算安全预留）与完整安全策略 → [安全总览](../06-advanced/security-overview.md)。
 
 ## 小结
 
@@ -774,6 +621,6 @@ graph TB
 - → [验证护栏体系](validation-harness.md)：验证护栏与上下文的交互，确保基于上下文的输出正确
 - ← [简介](../01-introduction/)：Harness Engineering 理论框架为上下文工程提供方法论基础
 - → [高级话题](../06-advanced/)：上下文工程的深入实现与调优
-- → [上下文压缩技术](../06-advanced/context-compression.md)：压缩机制的深入原理与调优
-- → [Token 预算策略](../06-advanced/token-budget.md)：预算分配的详细策略
-- → [提示词缓存机制](../06-advanced/prompt-caching.md)：缓存机制的完整实现
+- → [上下文压缩与Token 预算](../06-advanced/context-compression.md)：压缩机制的深入原理与调优
+- → [上下文压缩与Token 预算](../06-advanced/context-compression.md)：预算分配的详细策略
+- → [提示词缓存机制](../06-advanced/context/prompt-caching.md)：缓存机制的完整实现

@@ -1,0 +1,32 @@
+.mermaid svg {
+    cursor: zoom-in;
+}
+
+#mermaid-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+}
+
+#mermaid-lightbox.show {
+    display: flex;
+}
+
+#mermaid-lightbox svg {
+    max-width: 95vw;
+    max-height: 95vh;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 0 40px rgba(0,0,0,.5);
+}
+
+html[class*="navy"] #mermaid-lightbox svg,
+html[class*="coal"] #mermaid-lightbox svg,
+html[class*="ayu"] #mermaid-lightbox svg {
+    background: #1e1e1e;
+}

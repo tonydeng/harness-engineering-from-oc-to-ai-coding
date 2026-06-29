@@ -26,17 +26,17 @@
       "description": "决策顾问，提供技术选型和最佳实践建议"
     },
     "librarian": {
-      "model": "google/gemini-3-flash",
+      "model": "google/gemini-3.5-flash",
       "description": "知识管理者，快速检索和整理信息"
     },
     "explore": {
-      "model": "github-copilot/grok-code-fast-1",
+      "model": "xai/grok-4.3",
       "description": "快速探索者，用于代码搜索和轻量级分析"
     }
   },
   "categories": {
     "quick": {
-      "model": "opencode/gpt-5-nano",
+      "model": "openai/gpt-4o-mini",
       "description": "快速响应任务，如简单问答、格式化"
     },
     "unspecified-low": {
@@ -49,7 +49,7 @@
       "description": "未指定复杂度的高优先级任务"
     },
     "writing": {
-      "model": "kimi-for-coding/k2p5",
+      "model": "moonshot/kimi-k2.6",
       "description": "文档写作、注释生成、README 编写"
     },
     "visual-engineering": {

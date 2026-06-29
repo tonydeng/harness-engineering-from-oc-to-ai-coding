@@ -1,0 +1,41 @@
+{
+  "providers": {
+    "qwen": {
+      "name": "Alibaba Qwen",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "api_key": "${DASHSCOPE_API_KEY}",
+      "models": {
+        "qwen-max": {
+          "name": "Qwen-Max",
+          "context_window": 32000,
+          "max_output": 8000,
+          "pricing": {
+            "input": 0.0075,
+            "output": 0.0293,
+            "unit": "USD per 1K tokens"
+          }
+        },
+        "qwen-plus": {
+          "name": "Qwen-Plus",
+          "context_window": 131072,
+          "max_output": 8000,
+          "pricing": {
+            "input": 0.0028,
+            "output": 0.0086,
+            "unit": "USD per 1K tokens"
+          }
+        },
+        "qwen-turbo": {
+          "name": "Qwen-Turbo",
+          "context_window": 131072,
+          "max_output": 8000,
+          "pricing": {
+            "input": 0.00036,
+            "output": 0.00144,
+            "unit": "USD per 1K tokens"
+          }
+        }
+      }
+    }
+  }
+}

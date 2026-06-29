@@ -1,0 +1,16 @@
+{
+  "plugin": [
+    [
+      "opencode-visual-cache@latest",
+      {
+        "enabled": true
+      }
+    ],
+    [
+      "opencode-subagent-magazine@latest",
+      {
+        "enabled": true
+      }
+    ]
+  ]
+}

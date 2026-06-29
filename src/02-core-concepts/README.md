@@ -1,4 +1,4 @@
-# 第2章：核心概念 — Agent、Skill、Workflow 的抽象世界
+# 第2章：核心概念 — **Agent（智能体）**、**Skill（技能）**、**Workflow（工作流）** 的抽象世界
 
 > 本章是全书的理论基石，深入理解 OpenCode 生态的三个核心抽象——Agent、Skill 和 Workflow，以及支撑它们高效运转的上下文工程、约束系统和验证护栏。
 
@@ -8,13 +8,22 @@
 
 本章包含以下文章：
 
+## 价值声明
+
+| 维度 | 内容 |
+|------|------|
+| **目标读者** | 准备在项目中落地 AI Agent 的开发者和技术负责人，需要理解 OpenCode 生态核心抽象的设计者。 |
+| **前驱知识** | 已完成第 1 章的阅读，对 AI 编程有基本认知，了解 LLM 和 **Prompt（提示词）** 的概念。 |
+| **读完能做什么** | 能设计 Agent 的任务分配策略、选择合适的 Skill 组织方式、配置约束系统精确控制 Agent 行为，并搭建验证护栏确保输出质量。 |
+| **业务指标关联** | 掌握约束和验证体系后，AI 辅助开发的代码返工率可降低 40% 以上，Agent 行为的可预测性显著提升。 |
+
 | 文章 | 说明 |
 |------|------|
 | [Agent 编排](agent-orchestration.md) | Agent 的生命周期、任务分配策略、多 Agent 通信机制 |
 | [Skill 系统](skills-system.md) | Skill 的定义、加载机制、版本管理和权限模型 |
-| [工作流模式](workflow-patterns.md) | 常见工作流模式：顺序执行、并行分派、审核循环、迭代优化 |
+| [工作流模式](workflow-patterns.md) | Command 系统、Profile 切换、AGENTS.md 项目知识库、Ultrawork 与 Prometheus 两种高级工作流模式 |
 | [上下文工程核心](context-engineering-core.md) | 如何构建和管理 Agent 的上下文窗口，确保信息不丢失、不冗余 |
 | [约束系统解析](constraints-system.md) | 约束的层级结构（全局/会话/任务级）、冲突检测与优先级规则 |
-| [验证护栏体系](validation-harness.md) | 输出验证机制、自动修复循环、质量门禁的工程实现 |
+| [验证护栏体系](validation-harness.md) | 权限控制机制、LSP 验证链、第三方工具集成的质量门禁及验证架构设计 |
 
 > [上一页：简介](../01-introduction/) | [下一页：环境搭建 →](../03-setup/)

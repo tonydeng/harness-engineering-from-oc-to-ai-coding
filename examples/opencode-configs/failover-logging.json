@@ -1,0 +1,33 @@
+{
+  "logging": {
+    "failover_events": {
+      "enabled": true,
+      "log_file": "~/.opencode/logs/failover.log",
+      "fields": [
+        "timestamp",
+        "original_model",
+        "fallback_model",
+        "trigger_reason",
+        "task_category",
+        "duration_ms"
+      ]
+    },
+    "alerts": {
+      "channels": ["slack", "email"],
+      "conditions": [
+        {
+          "metric": "failover_rate",
+          "threshold": 0.1,
+          "window_minutes": 60,
+          "severity": "warning"
+        },
+        {
+          "metric": "failover_rate",
+          "threshold": 0.3,
+          "window_minutes": 60,
+          "severity": "critical"
+        }
+      ]
+    }
+  }
+}

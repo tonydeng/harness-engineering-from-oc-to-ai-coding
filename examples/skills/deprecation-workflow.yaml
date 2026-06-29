@@ -1,0 +1,21 @@
+# 阶段一：标记废弃 (DEPRECATED)
+name: old-deployment-skill
+status: deprecated
+deprecation:
+  reason: "已被 deploy-v2 替代"
+  deprecation_date: "2025-06-01"
+  removal_date: "2025-07-01"    # 保留 30 天迁移窗口
+  migration_path: "请使用 deploy-v2 Skill，迁移指南见 docs/migration-deploy.md"
+---
+# 阶段二：冻结 (FROZEN)  
+name: old-deployment-skill
+status: frozen
+deprecation:
+  reason: "迁移窗口已关闭"
+  frozen_date: "2025-07-01"
+  removal_date: "2025-08-01"
+# 冻结期：Skill 在市场中可见但不可用，提示"已冻结，请迁移"
+---
+# 阶段三：移除 (REMOVED)
+# 从市场索引中删除，保留在 git 历史中
+# 最后一位使用者被通知："您使用的 old-deployment-skill 已移除，当前使用 deploy-v2"

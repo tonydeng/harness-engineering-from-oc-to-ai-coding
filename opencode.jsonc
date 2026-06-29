@@ -1,0 +1,146 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // ===================================================================
+  // Harness Engineering 从 OpenCode 到 AI 编程 — 书籍项目配置
+  //
+  // 本配置为中文 Markdown 书籍（mdBook）优化，涵盖：
+  //   - references: 为 Agent 提供全书 10 章 + 附录的结构化内容索引
+  //   - plugin: oh-my-openagent 扩展 Agent 编排能力
+  //   - instructions: AGENTS.md 作为项目规则（写作规范、品牌名、链接格式）
+  //   - compaction: 长会话上下文优化（书籍写作常有 50+ 轮对话）
+  //   - experimental.openTelemetry: AI SDK 遥测（与 Ch6 可观测性对应）
+  //   - watcher: 忽略构建产物（_book/）
+  //
+  // 参考资料：
+  //   - 官方 Schema: https://opencode.ai/config.json
+  //   - Ch6 可观测性: src/06-advanced/observability.md
+  //   - 用户级配置: ~/.config/opencode/opencode.jsonc（Provider 定义，不在此重复）
+  // ===================================================================
+
+  // ================================================================
+  // 书籍内容引用（Agent 通过 @reference 直接访问）
+  // 命名规则：book:<chapter> 或 book:<chapter>:<sub>
+  // 同步自：docs/reference/ 的目录结构映射
+  // ================================================================
+  "references": {
+    "book": { "path": "./src", "description": "Book source content: 10 chapters, ~53 articles in zh-CN Markdown" },
+    "book:guide": { "path": "./src/00-guide", "description": "Reader navigation: 13 reader roles, reading paths matrix" },
+    "book:intro": { "path": "./src/01-introduction", "description": "Ch1 Introduction: 6 articles on AI coding paradigm" },
+    "book:concepts": { "path": "./src/02-core-concepts", "description": "Ch2 Core Concepts: AGENTS.md, constraints, context engineering" },
+    "book:setup": { "path": "./src/03-setup", "description": "Ch3 Setup: 5 articles on environment and configuration" },
+    "book:workflows": { "path": "./src/04-workflows", "description": "Ch4 Workflows: 6 articles on production AI coding flows" },
+    "book:skills": { "path": "./src/05-skills", "description": "Ch5 Skills: 5 articles on Skill development" },
+    "book:advanced": { "path": "./src/06-advanced", "description": "Ch6 Advanced Topics: 13 articles on context, security, observability" },
+    "book:advanced:context": { "path": "./src/06-advanced/context", "description": "Ch6 context sub-directory: 5 articles (injection, caching, tuning, metrics, DCP)" },
+    "book:cases": { "path": "./src/07-case-studies", "description": "Ch7 Case Studies: 6 production case studies" },
+    "book:appendix-a": { "path": "./src/appendix-a", "description": "Appendix A: Glossary and references" },
+    "book:appendix-b": { "path": "./src/appendix-b", "description": "Appendix B: OpenCode & Claude Code built-in capabilities" },
+    "docs": { "path": "./docs", "description": "All planning, review, and reference documents" },
+    "docs:plans": { "path": "./docs/planning", "description": "Planning docs: requirements, plans, specs, sprints" },
+    "docs:plans:specs": { "path": "./docs/planning/specs", "description": "Chapter specs: detailed article outlines per chapter" },
+    "docs:reviews": { "path": "./docs/reviews", "description": "Review artifacts: articles, chapters, deep-research, overall reviews" },
+    "docs:reference": { "path": "./docs/reference", "description": "Reference docs: style guides, terminology, branding checklists" },
+    "examples:configs": { "path": "./examples/opencode-configs", "description": "OpenCode configuration examples" },
+    "examples:skills": { "path": "./examples/skills", "description": "Example Skill implementations" },
+    "assets": { "path": "./assets", "description": "Static assets: images, diagrams, media" }
+  },
+
+  // ================================================================
+  // 插件
+  // oh-my-openagent: Agent 编排系统，提供 Sisyphus/Hephaestus/Oracle 等高级 Agent
+  // opencode-dcp: 上下文压缩持久化插件
+  // Provider 定义在用户级 ~/.config/opencode/opencode.jsonc，不在项目中重复
+  // ================================================================
+  "plugin": [
+    "oh-my-openagent",
+    "@tarquinen/opencode-dcp@latest"
+  ],
+
+  // ================================================================
+  // Agent 规则（项目级指令）
+  // AGENTS.md 定义了本书的写作规范：品牌名（OpenCode）、链接格式、代码块约定、
+  // Mermaid 颜色规范、预提交检查清单等。Agent 每次启动时自动加载。
+  // ================================================================
+  "instructions": ["AGENTS.md"],
+
+  // ================================================================
+  // 自动更新
+  // 书籍项目需要稳定环境，关闭自动更新避免意外行为变化。
+  // ================================================================
+  "autoupdate": false,
+
+  // ================================================================
+  // 上下文压缩（compaction）
+  //
+  // 书籍写作工作流通常产生长会话（50+ 轮对话，涉及多篇文章）。
+  // 合理的压缩策略确保持续可用上下文窗口。
+  //
+  // - auto: 上下文满时自动压缩（默认开启）
+  // - prune: 裁剪旧工具输出以节省 Token
+  // - tail_turns: 保留最近 3 轮用户对话不压缩，确保短期记忆完整
+  // - reserved: 保留 8K Token 缓冲，避免压缩时溢出
+  // ================================================================
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "tail_turns": 3,
+    "reserved": 8192
+  },
+
+  // ================================================================
+  // 日志级别
+  // INFO 级别包含会话开始/结束、工具调用、模型请求等关键事件。
+  // DEBUG 级别产生大量输出，仅在调试 Agent 行为时开启。
+  // ================================================================
+  "logLevel": "INFO",
+
+  // ================================================================
+  // 实验性功能：OpenTelemetry（AI SDK 遥测）
+  //
+  // 对应 Ch6 可观测性章节的讨论。此标志启用 AI SDK 调用的
+  // OpenTelemetry span 追踪（通过 'experimental_telemetry' 标志）。
+  // 与 observability.md 中描述的/metrics 端点、Prometheus 指标不同——
+  // 那些是开放架构设计，当前 Schema 尚未原生支持。
+  //
+  // 当前实际能力：
+  //   ✅ experimental.openTelemetry = true → AI SDK 调用使用 OTel span
+  //   ❌ telemetry.metrics.port         → Schema 中不存在（书中描述为理想设计）
+  //   ❌ telemetry.logging.output       → Schema 中不存在（用 logLevel 替代）
+  //   ❌ telemetry.tracing.samplingRate → Schema 中不存在
+  //
+  // 本书的可观测性示例展示的是 OpenCode 开源项目未来的理想架构，
+  // 当前可通过 experimental.openTelemetry + logLevel + 外部监控工具实现。
+  // ================================================================
+  "experimental": {
+    "openTelemetry": true
+  },
+
+  // ================================================================
+  // HEDQ 质量审计 Skill（已在 .opencode/skills/hedq-audit/SKILL.md 中定义）
+  //
+  // OpenCode 会自动发现 .opencode/skills/<name>/SKILL.md 中的 Skill。
+  // Agent 无需额外配置即可通过 skill(name="hedq-audit") 按需加载。
+  //
+  // 另已创建 @hedq-audit 子智能体，可在对话中直接 @ 调用：
+  //   @hedq-audit 对全书进行 HEDQ 质量审计
+  // 定义文件: .opencode/agents/hedq-audit.md
+  //
+  // 注意: 官方 Schema 不支持 "profiles" / "--profile" 配置，
+  //       上述自定义 Agent + Skill 自动发现是实现 P2 的正确方式。
+  // ================================================================
+
+  // ================================================================
+  // 文件观察器
+  // 避免 Agent 对构建产物和依赖目录进行不必要的文件监控。
+  // ================================================================
+  "watcher": {
+    "ignore": [
+      "_book/**",
+      "node_modules/**",
+      "target/**",
+      ".git/**",
+      "**/*.log"
+    ]
+  }
+}

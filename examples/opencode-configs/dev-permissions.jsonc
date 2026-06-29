@@ -1,0 +1,11 @@
+{
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": {
+      "npm *": "allow",
+      "git *": "ask",
+      "docker *": "ask"
+    }
+  }
+}

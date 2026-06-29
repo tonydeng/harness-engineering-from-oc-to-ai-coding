@@ -1,32 +1,57 @@
-# Skill 系统
+# **Skill（技能）** 系统
 
 > 理解 Skill 的结构规范、发现路径与加载机制——从定义领域知识包到实现精确权限控制。
 
 > **前置条件**
-> - 已完成 [Agent 编排](agent-orchestration.md)，理解 Agent 的加载和执行机制
+> - 已完成 [**Agent（智能体）** 编排](agent-orchestration.md)，理解 Agent 的加载和执行机制
 > - 已安装 OpenCode CLI 并完成基础配置
 > - 已了解 YAML frontmatter 和 Markdown 格式
 
 ## 文章概述
 
-Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每次从零学习，而是像加载驱动程序一样按需获取专业技能。本章节详细讲解 SKILL.md 的完整格式规范，包括 frontmatter 元数据字段（name、description、allowed-tools、target_agent）、正文结构（工作流 + 指令 + 输出规范）以及捆绑资源目录（scripts/、templates/、reference/）。读者将理解 Skill 与普通 Prompt 的核心差异——权限控制、工具绑定和元数据索引——这是 Skill 能够工程化复用的根基。
+Skill 是 OpenCode 中封装领域知识的核心载体，它让 Agent 不必每次从零学习，而是像加载驱动程序一样按需获取专业技能。本章节详细讲解 SKILL.md 的完整格式规范，包括 frontmatter 元数据字段（name、description、allowed-tools、target_agent）、正文结构（工作流 + 指令 + 输出规范）以及捆绑资源目录（scripts/、templates/、reference/）。读者将理解 Skill 与普通 **Prompt（提示词）** 的核心差异——权限控制、工具绑定和元数据索引——这是 Skill 能够工程化复用的根基。
 
 Skill 的发现路径（项目级→用户级→内置）和加载机制是整个 Skill 系统的工作流核心。我们深入分析语义匹配的设计权衡——降低认知负荷的同时可能带来不精确触发——以及渐进式披露策略如何实现按需加载。在 OMO 扩展部分，我们介绍 Skills Marketplace（社区共享与版本管理）、Scoped Skills（target_agent 限定可见性）和 Skill Overrides 机制。学完本节，读者应能独立创建 Skill 文件，并为团队搭建可共享的 Skill 体系。
+
+读完本文，你将能够编写符合规范的 SKILL.md 文件，掌握 Skill 的语义匹配与渐进式加载机制，以及利用 Scoped Skills 和 Overrides 实现精细的权限控制。
+
+> **⏱ 时间有限？先读这些：** SKILL.md 完整格式 → Skill 的发现与加载 → 权限控制 → OMO 扩展
+
+> **⚠️ 重要说明**：本节描述的 `allowed-tools`、`agent` 等字段是 **oh-my-openagent (OMO)** 扩展的功能，**不是** OpenCode 原生 SKILL.md 规范的一部分。OpenCode 原生 SKILL.md 仅识别 `name`、`description`、`license`、`compatibility`、`metadata` 字段，其他字段会被静默忽略。
 
 ### 最小示例
 
 用一个最简单的 SKILL.md 来理解 Skill：
 
-```yaml
+```yaml:examples/skills/hello-world/SKILL.md
 ---
 name: "hello-world"
 description: "向世界打招呼的简单 Skill"
-allowed-tools:
-  - Read
 ---
 ```
 
-这就是一个 Skill 的最小单元：`name` 是唯一标识，`description` 用于语义匹配，`allowed-tools` 定义权限边界。Agent 读到这份文件就知道："遇到打招呼的任务时，我可以加载这个 Skill 来处理。"
+这就是一个 Skill 的最小单元：`name` 是唯一标识，`description` 用于语义匹配。Agent 读到这份文件就知道："遇到打招呼的任务时，我可以加载这个 Skill 来处理。"
+
+**OMO 扩展的额外字段（非 OpenCode 原生）：**
+
+```yaml:examples/skills/hello-world/SKILL.md
+---
+name: "hello-world"
+description: "向世界打招呼的简单 Skill"
+
+# 以下是 OMO 扩展字段，OpenCode 原生不识别
+agent: "build"
+allowed-tools:
+  - read
+  - glob
+  - grep
+---
+```
+
+注意：
+- OpenCode 原生 SKILL.md **不识别** `allowed-tools`、`agent`（或 `target_agent`）等字段
+- 这些字段仅在 oh-my-openagent 插件中有效
+- OpenCode 原生权限控制通过 `opencode.json` 中的 `"permission"` 键实现
 
 ## Skill 的本质
 
@@ -114,7 +139,7 @@ graph TB
 
 **Composition = 编排**
 
-多个组件组合成页面，多个 Skill 组合成 Workflow：
+多个组件组合成页面，多个 Skill 组合成 **Workflow（工作流）**：
 
 ```mermaid
 graph LR
@@ -134,7 +159,10 @@ graph LR
     S1 --> S2 --> S3
     
     style Page fill:#4A90D9,stroke:#333,color:#fff
-    style Workflow fill:#50C878,stroke:#333,color:#fff
+    style Workflow fill:#FF9F43,stroke:#333,color:#fff
+    style S1 fill:#50C878,stroke:#333,color:#fff
+    style S2 fill:#50C878,stroke:#333,color:#fff
+    style S3 fill:#50C878,stroke:#333,color:#fff
 ```
 
 **单一职责原则**
@@ -161,31 +189,24 @@ graph LR
 
 SKILL.md 以 YAML frontmatter 开头，定义 Skill 的元数据。以下是完整的字段规范：
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
-# 必填字段
+# 必填字段（OpenCode 原生）
 name: "skill-name"              # Skill 的唯一标识符
 description: "简短描述，用于语义匹配"  # 触发匹配的关键描述
 
-# 权限控制
-allowed-tools:                  # 允许访问的工具列表
-  - Read
-  - Write
-  - Bash
+# OMO 扩展字段（非 OpenCode 原生）
+agent: "build"                  # 限定特定 Agent 可见（oh-my-openagent 扩展）
+allowed-tools:                  # 允许访问的工具列表（oh-my-openagent 扩展）
+  - read
+  - glob
+  - grep
 
-# 可见性控制
-target_agent: "build"           # 限定特定 Agent 可见（可选）
-
-# 元数据扩展
-license: "MIT"                  # 许可证（发布到 Marketplace 时重要）
+# 元数据扩展（OpenCode 原生，但 metadata 是字符串到字符串的映射）
+license: "MIT"
 metadata:
+  author: "your-name"           # 存储为字符串键值
   version: "1.0.0"
-  author: "your-name"
-  tags:
-    - frontend
-    - react
-  min_opencode_version: "2.0.0"
----
 ```
 
 **必填字段**
@@ -195,33 +216,47 @@ metadata:
 | `name` | string | Skill 的唯一标识符，用于日志和调试 | `frontend-architect` |
 | `description` | string | 简短描述，用于语义匹配触发 | `"React/Vue 组件架构设计专家"` |
 
-**权限控制字段**
+**OMI 扩展字段（非 OpenCode 原生）**
 
-| 字段 | 类型 | 说明 | 安全含义 |
-|------|------|------|----------|
-| `allowed-tools` | string[] | 允许该 Skill 调用的工具列表 | **权限边界即攻击面**，见后文详解 |
+> ⚠️ OpenCode 原生 SKILL.md 规范**不识别**以下字段，它们会被静默忽略：
+> - `allowed-tools`：工具列表声明（oh-my-openagent 扩展）
+> - `agent` / `target_agent`：Agent 限定（oh-my-openagent 扩展）
+> - `category`：分类字段（oh-my-openagent 扩展）
+> - `dependencies` / `pipeline`：依赖和工作流声明
 
-**可见性控制字段**
+**权限控制说明**
 
-| 字段 | 类型 | 说明 | 使用场景 |
-|------|------|------|----------|
-| `target_agent` | string | 限定只有特定 Agent 可以加载此 Skill | 专业 Skill 限定给专业 Agent |
+OpenCode 原生使用 **`opencode.json`** 中的 `"permission"`（单数，不是复数）键来控制工具访问：
 
-**元数据扩展字段**
+```json:opencode.json
+{
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git status": "allow",
+      "rm -rf*": "deny"
+    },
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny"
+    }
+  }
+}
+```
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `license` | string | 许可证类型，发布到 Marketplace 时必需 |
-| `metadata.version` | string | Skill 版本号，遵循语义化版本 |
-| `metadata.author` | string | 作者信息 |
-| `metadata.tags` | string[] | 标签，用于分类和搜索 |
-| `metadata.min_opencode_version` | string | 最低 OpenCode 版本要求 |
+关于 `allowed-tools` 的重要说明：
+- 该字段在 SKILL.md 中被解析但**不被 OpenCode 原生强制执行**
+- 工具权限由 `opencode.json` 中的 `"permission"` 配置管理
+- 这是 oh-my-openagent 扩展的设计，OpenCode 原生实现不同
+
+> ⚠️ **跨平台警告**：依赖 `allowed-tools` 或 `target_agent` 的 Skill 是 **oh-my-openagent 特定**，不是 OpenCode 原生功能。如果要在 OpenCode 和 oh-my-openagent 之间共享 Skill，请只使用 OpenCode 原生字段（`name`、`description`、`license`、`compatibility`、`metadata`）。
 
 ### 正文结构
 
 frontmatter 之后是 Skill 的正文，通常包含以下结构：
 
-```markdown
+```markdown:examples/skills/frontend-architect.md
 ---
 name: "frontend-architect"
 description: "前端架构设计专家，精通 React/Vue 组件设计"
@@ -275,7 +310,7 @@ allowed-tools:
 
 Skill 可以捆绑额外的资源文件，放在与 SKILL.md 同级的目录中：
 
-```
+```text:terminal
 my-skill/
 ├── SKILL.md              # Skill 定义文件
 ├── scripts/              # 可执行脚本
@@ -299,50 +334,59 @@ my-skill/
 
 ## Skill 的发现与加载
 
-### 三级搜索路径
+### 六路搜索路径
 
-OpenCode 按照以下优先级搜索 Skill：
+OpenCode 按照以下优先级搜索 Skill（按优先级降序排列）：
 
 ```mermaid
 graph TB
-    subgraph Search[Skill 搜索路径]
+    subgraph Search[Skill 搜索路径（6 个位置）]
         direction TB
-        P1[项目级 .opencode/skills/] --> |"未找到"| P2[用户级 ~/.opencode/skills/]
-        P2 --> |"未找到"| P3[内置 Skills]
-        P3 --> |"未找到"| P4[Skills Marketplace]
+        P1[.opencode/skills/] --> P2["~/.config/opencode/skills/"]
+        P2 --> P3["~/.claude/skills/"]
+        P3 --> P4["~/.claude/skills/"]
+        P4 --> P5["~/.agents/skills/"]
+        P5 --> P6["~/.agents/skills/"]
     end
     
-    P1 --> |"优先级最高"| R1[项目特定 Skill]
-    P2 --> |"用户共享"| R2[个人 Skill 库]
-    P3 --> |"开箱即用"| R3[官方 Skill]
-    P4 --> |"社区贡献"| R4[第三方 Skill]
+    P1 --> |"最高优先级"| R1[项目特定 Skill]
+    P2 --> |"全局配置"| R2[用户共享 Skill]
+    P3 --> |"Claude 兼容"| R3[Claude Code 兼容]
+    P4 --> |"全局 Claude 兼容"| R4[全局 Claude 兼容]
+    P5 --> |"通用代理兼容"| R5[通用代理兼容]
+    P6 --> |"全局通用兼容"| R6[全局通用兼容]
     
     style P1 fill:#50C878,stroke:#333,color:#fff
     style P2 fill:#4A90D9,stroke:#333,color:#fff
     style P3 fill:#FF9F43,stroke:#333,color:#fff
     style P4 fill:#A66CFF,stroke:#333,color:#fff
+    style P5 fill:#FF9F43,stroke:#333,color:#fff
+    style P6 fill:#A66CFF,stroke:#333,color:#fff
 ```
 
-**项目级 Skills（`.opencode/skills/`）**
+**项目级 Skills**
 
-- 位置：项目根目录下的 `.opencode/skills/` 目录
-- 优先级：最高
-- 用途：项目特定的 Skill，如项目代码规范、特定业务逻辑
-- 版本控制：建议纳入 Git 管理
+| 路径 | 描述 |
+|------|------|
+| `.opencode/skills/` | OpenCode 项目级（最高优先级） |
+| `.claude/skills/` | Claude Code 兼容项目级 |
+| `.agents/skills/` | 通用代理兼容项目级 |
 
-**用户级 Skills（`~/.opencode/skills/`）**
+**用户级 Skills**
 
-- 位置：用户主目录下的 `.opencode/skills/` 目录
-- 优先级：次高
-- 用途：个人积累的 Skill，跨项目共享
-- 版本控制：可选，适合个人知识沉淀
+| 路径 | 描述 |
+|------|------|
+| `~/.config/opencode/skills/` | OpenCode 全局用户级（推荐路径） |
+| `~/.opencode/skills/` | OpenCode 旧版用户级路径 |
+| `~/.claude/skills/` | Claude Code 兼容全局 |
+| `~/.agents/skills/` | 通用代理兼容全局 |
 
-**内置 Skills**
+> ℹ️ **跨平台兼容**：OpenCode 设计时考虑了与 Claude Code 和 `.agents` 生态系统的兼容性，因此会扫描多个来源以实现去重。
 
-- 位置：OpenCode 安装目录
-- 优先级：最低
-- 用途：官方提供的通用 Skill
-- 更新：随 OpenCode 版本更新
+**优先级规则**
+```text:terminal
+opencode-project > opencode-global > project (.claude + .agents) > user (.claude + .agents)
+```
 
 ### 渐进式披露机制
 
@@ -381,9 +425,15 @@ sequenceDiagram
 | 正文加载 | 读取完整 SKILL.md | description 匹配成功 | 中等，解析 Markdown |
 | 资源加载 | 读取捆绑目录 | Skill 执行需要时 | 按需，可能较高 |
 
-### 语义匹配的设计权衡
+### 语义匹配机制
 
-Skill 的发现依赖**语义匹配**——Agent 根据用户任务描述和 Skill 的 description 进行匹配。这种设计有利有弊：
+> ℹ️ **技术说明**：原生 OpenCode 使用**基于名称的技能查找**（通过 `skill({ name: "..." })` 工具调用）。**语义匹配**功能来自第三方插件 `opencode-agent-skills`，不是 OpenCode 核心功能。
+
+语义匹配插件的工作方式：
+- 使用 HuggingFace `all-MiniLM-L6-v2` 嵌入模型（本地，量化）
+- 计算用户消息和技能描述之间的余弦相似度
+- 阈值：0.35，Top-K: 5
+- 缓存嵌入在 `~/.cache/opencode-agent-skills/`
 
 **优势**
 
@@ -396,10 +446,12 @@ Skill 的发现依赖**语义匹配**——Agent 根据用户任务描述和 Ski
 - **匹配不精确**：相似描述可能导致错误触发
 - **调试困难**：难以预测哪个 Skill 会被激活
 - **版本冲突**：多个 Skill 匹配时的优先级问题
+- **非确定性**：同一输入在不同会话或 LLM 版本下可能触发不同 Skill
+- **冷启动不可见性**：新 Skill 需要用户知道正确的描述才能触发
 
 **最佳实践：编写精准的 description**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # 反例：描述过于宽泛
 description: "帮助开发"
 
@@ -411,7 +463,7 @@ description: "React 组件架构设计专家，精通状态管理、性能优化
 
 ### 三级策略：allow/ask/deny
 
-OpenCode 的权限系统采用三级策略模型：
+OpenCode 的权限系统采用三级策略模型，配置在 `opencode.json` 中：
 
 | 策略 | 行为 | 适用场景 |
 |------|------|----------|
@@ -419,44 +471,63 @@ OpenCode 的权限系统采用三级策略模型：
 | `ask` | 每次执行前询问用户 | 敏感操作，如写入文件、执行命令 |
 | `deny` | 禁止执行，直接拒绝 | 危险操作，如删除文件、访问敏感路径 |
 
-权限可以在不同层级配置：
+**OpenCode 原生权限配置**
 
-```json
-// opencode.json
+```json:opencode.json
 {
-  "permissions": {
-    // 全局默认策略
-    "default": "ask",
-    
-    // 工具级策略
-    "tools": {
-      "Read": "allow",
-      "Write": "ask",
-      "Bash": "ask",
-      "Delete": "deny"
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git status": "allow",
+      "rm -rf*": "deny"
     },
-    
-    // Skill 级策略
-    "skills": {
-      "frontend-architect": {
-        "tools": ["Read", "Write", "Glob", "Grep"]
-      }
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny",
+      "experimental-*": "ask"
     }
   }
 }
 ```
 
+> ⚠️ **配置说明**：
+> - 键是 **`"permission"`**（单数），不是 `"permissions"`（复数）
+> - 工具名使用**小写**：`edit`、`bash`、`read`、`glob`、`grep`
+> - 技能权限通过 `permission.skill` 使用通配符模式控制
+
+**oh-my-openagent 扩展的额外功能**
+
+oh-my-openagent 允许在 `opencode.json` 中配置更细粒度的权限：
+
+```json:opencode.json
+{
+  "permissions": {
+    "default": "ask",
+    "tools": {
+      "Read": "allow",
+      "Write": "ask",
+      "Bash": "ask"
+    }
+  }
+}
+```
+
+注意这是 **oh-my-openagent 特定** 配置格式，OpenCode 原生使用上面所示的 `"permission"` 格式。
+
 ### allowed-tools 安全含义
 
-**权限边界即攻击面**——这是安全架构师视角下 Skill 权限设计的核心原则。
+> ⚠️ **重要说明**：以下讨论基于 oh-my-openagent 扩展。OpenCode 原生 **不识别** `allowed-tools` 字段，该字段会被静默忽略。
+
+**权限边界即攻击面** — 这是安全架构师视角下技能权限设计的核心原则。
 
 ```mermaid
 graph TB
     subgraph Attack[攻击面分析]
-        S[Skill] --> |"allowed-tools"| T1[Read]
-        S --> T2[Write]
-        S --> T3[Bash]
-        S --> T4[WebFetch]
+        S[Skill] --> |"allowed-tools"| T1[read]
+        S --> T2[edit]
+        S --> T3[bash]
+        S --> T4[webfetch]
     end
     
     T1 --> |"信息泄露风险"| R1[读取敏感文件<br/>.env, credentials]
@@ -477,23 +548,23 @@ graph TB
 
 | Skill 类型 | 推荐 allowed-tools | 安全考量 |
 |------------|-------------------|----------|
-| 代码审查 | `Read`, `Glob`, `Grep` | 只读，无修改风险 |
-| 代码生成 | `Read`, `Write`, `Glob` | 需要写入，但禁止命令执行 |
-| 部署脚本 | `Read`, `Write`, `Bash` | 高风险，需严格审计 |
-| 安全审计 | `Read`, `Grep`, `Bash` | 需要执行扫描工具，但禁止写入 |
+| 代码审查 | `read`, `glob`, `grep` | 只读，无修改风险 |
+| 代码生成 | `read`, `edit`, `glob` | 需要写入，但禁止命令执行 |
+| 部署脚本 | `read`, `edit`, `bash` | 高风险，需严格审计 |
+| 安全审计 | `read`, `grep`, `bash` | 需要执行扫描工具，但禁止写入 |
 
 **allowed-tools 配置示例**
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 ---
 name: "code-reviewer"
 description: "代码审查专家，识别代码异味和安全漏洞"
 allowed-tools:
-  - Read      # 读取代码文件
-  - Glob      # 搜索文件
-  - Grep      # 搜索内容
-  # 注意：没有 Write，禁止修改代码
-  # 注意：没有 Bash，禁止执行命令
+  - read      # 读取代码文件
+  - glob      # 搜索文件
+  - grep      # 搜索内容
+  # 注意：没有 edit，禁止修改代码
+  # 注意：没有 bash，禁止执行命令
 ---
 ```
 
@@ -503,20 +574,24 @@ allowed-tools:
 
 | 攻击方式 | 防护措施 |
 |----------|----------|
-| 诱导用户执行命令 | `Bash` 工具默认 `ask` 策略 |
+| 诱导用户执行命令 | `bash` 工具默认 `ask` 策略 |
 | 修改配置文件获取权限 | 敏感路径 `deny` 策略 |
-| 链式调用其他 Skill | `target_agent` 限制可见性 |
+| 链式调用其他 Skill | `agent` 限制可见性 |
 | 通过 WebFetch 外泄数据 | 网络请求审计日志 |
 
-### Skill 权限审计
+> ⚠️ **重要提醒**：`allowed-tools` 的限制**不是** OpenCode 原生强制执行的安全边界。真正的权限控制发生在 `opencode.json` 的 `"permission"` 配置中。
 
-所有 Skill 的工具调用都会被记录到审计日志：
+### 技能审计日志
 
+所有工具调用都会被记录（通过 oh-my-openagent 插件）：
+
+```text:terminal
+[2025-06-01 10:23:45] [skill-resolver] Called read on src/App.tsx
+[2025-06-01 10:23:46] [skill-resolver] Called edit on src/components/Header.tsx
+[2025-06-01 10:23:47] [skill-resolver] DENIED: Bash not in allowed-tools
 ```
-[2025-06-01 10:23:45] [Skill: frontend-architect] Called Read on src/App.tsx
-[2025-06-01 10:23:46] [Skill: frontend-architect] Called Write on src/components/Header.tsx
-[2025-06-01 10:23:47] [Skill: frontend-architect] DENIED: Bash not in allowed-tools
-```
+
+> ⚠️ **技术说明**：上述日志格式来自 oh-my-openagent 插件。OpenCode 原生使用结构化 JSON 格式的审计日志，详见 [安全总览](../06-advanced/security-overview.md)。
 
 审计日志可用于：
 - 安全事件调查
@@ -526,91 +601,68 @@ allowed-tools:
 
 ## OMO 扩展
 
-### Skills Marketplace
+### 技能市场（Skills Marketplace）
 
-Skills Marketplace 是 OMO 生态的 Skill 共享平台：
+> ⚠️ **前瞻性说明**：Skills Marketplace 是 **oh-my-openagent 生态**的远景规划功能。下文提到的分发机制是社区替代方案，**不是** OpenCode 内置功能。
 
-```mermaid
-graph LR
-    subgraph Local[本地 Skill]
-        L1[项目级]
-        L2[用户级]
-    end
-    
-    subgraph Marketplace[Skills Marketplace]
-        M1[官方 Skill]
-        M2[社区 Skill]
-        M3[企业私有 Skill]
-    end
-    
-    L1 --> |"发布"| Marketplace
-    L2 --> |"发布"| Marketplace
-    Marketplace --> |"安装"| L1
-    Marketplace --> |"安装"| L2
-    
-    style Local fill:#4A90D9,stroke:#333,color:#fff
-    style Marketplace fill:#50C878,stroke:#333,color:#fff
-```
+社区提供的技能分发方式：
 
-**Marketplace 功能**
+1. **npm 包分发**：`opencode-skills-collection`（1000+ 技能）
+2. **Git 仓库同步**：`@jgordijn/opencode-remote-config`
+3. **CLI 注册表**：`skills` npm 包（支持 67 个平台）
 
-| 功能 | 说明 |
-|------|------|
-| 版本管理 | 每个 Skill 有独立的版本号和更新历史 |
-| 依赖声明 | Skill 可以声明对其他 Skill 的依赖 |
-| 评分系统 | 用户可以对 Skill 进行评分和评论 |
-| 安全扫描 | 上传的 Skill 经过安全检查 |
+** Marketplace 功能愿景**
 
-### Scoped Skills
+| 功能 | 说明 | 当前状态 |
+|------|------|----------|
+| 版本管理 | 每个 Skill 有独立的版本号和更新历史 | 社区方案提供 |
+| 依赖声明 | Skill 可以声明对其他 Skill 的依赖 | 社区方案提供 |
+| 评分系统 | 用户可以对 Skill 进行评分和评论 | 社区方案提供 |
+| 安全扫描 | 上传的 Skill 经过安全检查 | 社区方案提供 |
 
-`target_agent` 字段可以实现 Skill 的可见性控制：
+> ℹ️ OpenCode 核心本身**不包含**内置的技能市场 UI 或注册表。技能分发基于文件系统（复制/符号链接从 npm/Git）。
 
-```yaml
+### Scoped Skills（oh-my-openagent 扩展）
+
+> ⚠️ **重要说明**：以下功能来自 oh-my-openagent 扩展，**不是** OpenCode 原生功能。
+
+`agent` 字段可以实现 Skill 的可见性控制：
+
+```yaml:examples/skills/skill-example.yaml
 ---
 name: "security-scanner"
 description: "安全漏洞扫描专家"
-target_agent: "security-audit"  # 只有 security-audit Agent 可见
+agent: "security-audit"  # 只有 security-audit Agent 可见（oh-my-openagent 扩展）
 allowed-tools:
-  - Read
-  - Grep
-  - Bash
+  - read
+  - grep
+  - bash
 ---
 ```
 
 **使用场景**
 
-| 场景 | target_agent 设置 |
-|------|-------------------|
+| 场景 | agent 设置 |
+|------|------------|
 | 通用 Skill | 不设置，所有 Agent 可见 |
 | 专业 Skill | 设置为专业 Agent，如 `build`、`plan` |
 | 安全敏感 Skill | 设置为专用安全 Agent，限制传播 |
 
-### Skill Overrides
-
-OMO 配置可以覆盖 SKILL.md 中的默认值：
+**配置覆盖**（oh-my-openagent）
 
 ```json:opencode.json
 {
   "skills": {
     "frontend-architect": {
-      // 覆盖 allowed-tools
-      "allowed-tools": ["Read", "Glob", "Grep"],
-      // 覆盖 target_agent
-      "target_agent": "build",
-      // 禁用特定 Skill
+      "allowed-tools": ["read", "glob", "grep"],
+      "agent": "build",
       "disabled": false
     }
   }
 }
 ```
 
-**覆盖优先级**
-
-```
-OMO 配置 > 项目级 SKILL.md > 用户级 SKILL.md > 内置 SKILL.md
-```
-
-## Skill vs Plugin
+## Skill vs **Plugin（插件）**
 
 Skill 和 Plugin 是 OpenCode 生态中两个互补的概念：
 
@@ -638,7 +690,7 @@ graph TB
 |------|-------|--------|
 | 本质 | 指令包 | 能力扩展 |
 | 作用 | 教 Agent "怎么做" | 改 Agent "能做什么" |
-| 示例 | 代码审查流程、架构设计方法论 | MCP 服务器、自定义工具 |
+| 示例 | 代码审查流程、架构设计方法论 | **MCP（模型上下文协议）** 服务器、自定义工具 |
 | 配置 | SKILL.md | opencode.json plugins 字段 |
 | 权限 | allowed-tools | 工具注册 |
 
@@ -653,7 +705,7 @@ graph TB
 
 ### 编写精准的 description
 
-```yaml
+```yaml:examples/skills/skill-example.yaml
 # 反例：过于宽泛
 description: "帮助写代码"
 
@@ -669,18 +721,26 @@ description: "React Hooks 最佳实践专家，精通 useEffect/useMemo/useCallb
 
 ### 版本迭代维护
 
-```yaml
+```yaml:examples/skills/frontend-architect/SKILL.md
 ---
 name: "frontend-architect"
 description: "前端架构设计专家"
 metadata:
   version: "2.1.0"  # 语义化版本
-  changelog:
-    - "2.1.0: 新增 Server Components 支持"
-    - "2.0.0: 重构为 React 18 兼容"
-    - "1.0.0: 初始版本"
 ---
 ```
+
+在正文中维护变更日志：
+
+```markdown:examples/skills/skill-changelog.md
+## Changelog
+
+- **2.1.0**: 新增 Server Components 支持
+- **2.0.0**: 重构为 React 18 兼容
+- **1.0.0**: 初始版本
+```
+
+> ℹ️ OpenCode 原生 SKILL.md 没有内置 changelog 字段 — 变更日志应该在正文中维护。
 
 ### 团队共享规范
 

@@ -1,0 +1,8 @@
+// Requires OpenCode >= v1.16.x
+{
+  "permission": {
+    "read": "allow",
+    "edit": "ask",
+    "bash": "ask"
+  }
+}
