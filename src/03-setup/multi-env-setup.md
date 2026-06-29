@@ -433,6 +433,50 @@ export OPENCODE_CONFIG="./config/ci.json"
 opencode
 ```
 
+## 常见反模式
+
+### 在版本控制中提交 API Key
+
+**现象**：将 API Key、数据库凭证等敏感信息直接写在配置文件中，随代码一起提交到 Git 仓库。
+
+**原因**：配置文件中需要填写 Key 才能运行，开发者为了方便直接填入后忘了移除。`.env` 文件未加入 `.gitignore`。
+
+**对策**：所有敏感信息使用环境变量注入。OPencode 支持 `${VARIABLE_NAME}` 语法引用环境变量。使用 `.env.example` 模板文件，让团队成员自行配置自己的 Key。在 CI 中使用 `.github/workflows/secret-scanner.yml` 等工具扫描泄露。
+
+### 环境间配置不一致
+
+**现象**：开发环境能运行的功能，在 CI 或生产环境中失败，因为配置参数（如模型名称、权限策略）不同。
+
+**原因**：配置文件在各环境间复制粘贴，手工维护差异，缺乏统一的配置基线和变更管理。
+
+**对策**：使用 Profile 继承机制，公共配置写在一个 Base Profile 中，环境差异写在各自的 Profile 中。配置变更通过 PR 流程统一管理，而不是手动修改生产环境配置文件。
+
+## 常见错误与陷阱
+
+### 环境变量泄露
+
+**场景**：Agent 在日志输出中打印了环境变量值，或子 Agent 的 prompt 中包含了完整的 `.env` 内容。
+
+**后果**：API Key 泄露到日志文件或 Agent 的输出中，可能被无意中提交或转发。
+
+**预防**：配置 Agent 的日志级别，避免输出敏感信息。在 AGENTS.md 中明确要求 Agent 不得在输出中包含环境变量值。使用 Secret Store（如 Vault）代替环境变量管理生产环境的敏感配置。
+
+### `.env` 文件未加载
+
+**场景**：Agent 启动后提示 Provider 未认证，但 `.env` 文件明明存在。
+
+**后果**：OpenCode 不自动加载 `.env` 文件，需要通过 Provider 配置或 `--env-file` 参数显式加载。
+
+**预防**：在 `opencode.json` 的 Provider 配置中使用 `${VARIABLE_NAME}` 引用环境变量。运行 OpenCode 前执行 `source .env` 确保变量已加载。
+
+## 适用场景与限制
+
+多环境配置方案适合所有需要区分开发、测试、生产环境的项目。个人开发者可以简化到 Dev 和 CI 两个环境；团队建议设置 Dev → Staging → CI → Production 四个环境层级。
+
+以下情况可以简化配置管理：个人开发且只有本地环境，使用单一 Profile 即可；在 CI 中运行 OpenCode 时，建议使用 CI 专属的 Profile 避免不必要的交互式配置；生产环境禁止使用 OpenCode 的 `ask` 权限模式，所有操作必须自动化审批。
+
+Profile 继承链不宜超过 3 层，否则配置的来源难以追踪。环境变量的命名建议统一前缀（如 `OPENCODE_`），避免与系统环境变量冲突。
+
 ## 关联章节
 
 - ← [OpenCode 配置深度解析](opencode-config.md) — Agent 配置基础

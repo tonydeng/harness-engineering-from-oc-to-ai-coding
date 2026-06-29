@@ -552,8 +552,8 @@ Pi 官方推荐在 CI 中跑非 LLM 测试（`./test.sh` 或 `npm test`），验
 
 ---
 
-> → [生态与社区参考](./ecosystem.md) 涵盖 Provider 生态、程序化集成方式和容器化方案
-> → [Pi Agent SDK 参考](./sdk.md) 涵盖程序化集成、Agent Session API 和 RPC 模式
+> → [Pi **Agent（智能体）** 生态参考](./ecosystem.md) 涵盖 Provider 生态、程序化集成方式和容器化方案
+> → [Pi **Agent（智能体）** SDK 与程序化集成](./sdk.md) 涵盖程序化集成、Agent Session API 和 RPC 模式
 
 ---
 
@@ -655,4 +655,4 @@ description: 天气助手
 
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
-- → [Pi Agent SDK 参考](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用
+- → [Pi **Agent（智能体）** SDK 与程序化集成](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用

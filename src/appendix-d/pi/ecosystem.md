@@ -231,7 +231,7 @@ Extension 类型：
 - **事件处理**：监听 Agent 生命周期事件
 - **Hook 扩展**：工具调用前/后执行自定义逻辑
 
-详见 → [Extensions 详解](./customization.md)
+详见 → [Pi **Agent（智能体）** 扩展体系详解](./customization.md)
 
 ### 跨工具生态对比
 
@@ -256,12 +256,12 @@ Extension 类型：
 - **模型灵活性**：Claude Code 仅支持 Claude 系列模型，Pi 支持 20+ Provider/324 个模型。迁移后可通过 `/model` 命令随时切换模型，无需配置多套环境
 - **扩展机制**：Claude Code 的六层扩展体系（CLAUDE.md + Skills + **MCP（模型上下文协议）** + Subagent + Hook + Plugin）对应 Pi 的四层体系（Extensions/Skills/**Prompt（提示词）** Templates/Themes）。自定义工具需按 Pi 的 Extension API 用 TypeScript 重写，而非 Shell 脚本 Hook
 - **安全模型**：Claude Code 内置权限审批弹窗，Pi 无内置沙箱——如需安全隔离必须使用 Gondolin/Docker/OpenShell 容器化方案
-- **命令差异**：部分 Slash 命令名称不同，如 Pi 的 `/compact` 行为类似但参数不同，建议查阅 [CLI 命令参考](./commands.md) 逐一确认
+- **命令差异**：部分 Slash 命令名称不同，如 Pi 的 `/compact` 行为类似但参数不同，建议查阅 [CLI 命令与交互模式参考](./commands.md) 逐一确认
 
 ### 从 OpenCode 迁移
 
 - **SDK 差异**：OpenCode 使用 REST API（`@opencode-ai/sdk`）通信，Pi 使用原生 TypeScript API（`@earendil-works/pi-agent-core`）或 RPC JSONL 协议。需将 HTTP 调用模式替换为直接函数调用或 stdio 消息
-- **Plugin → Extension**：OpenCode 的 Plugin/Hook 机制在 Pi 中对应 Extension 体系，API 模式不同。已有 Plugin 需按 [Extensions 指南](./customization.md) 重写
+- **Plugin → Extension**：OpenCode 的 Plugin/Hook 机制在 Pi 中对应 Extension 体系，API 模式不同。已有 Plugin 需按 [Pi **Agent（智能体）** 扩展体系详解](./customization.md) 重写
 - **Provider 配置**：OpenCode 通过 `opencode.json` 管理 Provider；Pi 通过环境变量或 `~/.pi/config.yaml` 配置，迁移时需转换格式
 - **Session 模型**：OpenCode Session 通过 REST API 创建管理；Pi Session 存储在本地 JSONL 文件，支持 `fork`/`clone`/`tree` 等高级分支操作
 
@@ -305,7 +305,7 @@ Extension 类型：
 
 ## 相关章节
 
-- → [Extensions 详解](./customization.md) — 四层扩展体系详解
+- → [Pi **Agent（智能体）** 扩展体系详解](./customization.md) — 四层扩展体系详解
 - → [Pi Agent 概述](./overview.md) — 设计哲学和核心架构
 - → [生态对比](../../01-introduction/ecosystem-comparison.md) — AI 编程工具生态全景
 
@@ -396,4 +396,4 @@ pi packages install my-pi-package
 
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
-- → [Pi Agent SDK 参考](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用
+- → [Pi **Agent（智能体）** SDK 与程序化集成](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用

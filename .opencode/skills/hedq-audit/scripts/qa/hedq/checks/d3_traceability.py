@@ -20,6 +20,8 @@ class D3TraceabilityCheck(BaseCheck):
     COVERAGE_TERMS = r'完整|部分|缺失|延后'
     # 英文兼容（如果矩阵改用英文标注）
     COVERAGE_EN = r'COMPLETE|PARTIAL|MISSING'
+    # 用户故事 ID 模式 — 用于排除汇总表行的干扰
+    STORY_ID_PATTERN = r'\bUS-[A-Z]+-\d{2}\b'
 
     def run(self) -> List[CheckResult]:
         matrix = self._find_matrix()
@@ -34,6 +36,9 @@ class D3TraceabilityCheck(BaseCheck):
         with open(matrix, "r", encoding="utf-8") as f:
             for line in f:
                 if not line.startswith("|"):
+                    continue
+                # 只计数包含用户故事 ID 的有效数据行（排除汇总/统计表）
+                if not re.search(self.STORY_ID_PATTERN, line):
                     continue
                 if re.search(self.COVERAGE_TERMS, line):
                     total += 1

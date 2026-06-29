@@ -288,8 +288,8 @@ Pi 的核心论点是：**不同的团队、不同的项目、不同的安全需
 社区（Pi Packages npm 分发）→ 分享与复用
 ```
 
-→ [Extensions 详解](./customization.md) 涵盖四层扩展体系
-→ [生态与社区参考](./ecosystem.md) 涵盖 Provider 和集成方式
+→ [Pi **Agent（智能体）** 扩展体系详解](./customization.md) 涵盖四层扩展体系
+→ [Pi **Agent（智能体）** 生态参考](./ecosystem.md) 涵盖 Provider 和集成方式
 
 ## 与 OpenCode / Claude Code 的定位差异
 

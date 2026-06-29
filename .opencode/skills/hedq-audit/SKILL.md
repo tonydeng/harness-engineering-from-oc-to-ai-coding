@@ -1,6 +1,6 @@
 ---
 name: hedq-audit
-description: "HEDQ 书籍质量审计专家。提供：8 维度自动化评估 + 问题诊断 + 定向修复建议 + 验证闭环。适用：[书籍质量检查、发布前审计、持续改进]。不适用：[代码质量审查、运行时测试]"
+description: "HEDQ 书籍质量审计专家。提供：8 维度自动化评估 + 子 agent 强制验证 + 问题诊断 + 定向修复 + 验证闭环。适用：[书籍质量检查、发布前审计、持续改进]。不适用：[代码质量审查、运行时测试]"
 triggers:
   - hedq
   - quality audit
@@ -9,6 +9,8 @@ triggers:
   - run-hedq
   - quality score
   - quality check
+  - subagent verify
+  - subagent audit
 triggers_zh:
   - 质量审计
   - 质量检查
@@ -18,6 +20,8 @@ triggers_zh:
   - 质量门禁
   - HEDQ
   - 发布前审计
+  - 子 agent 验证
+  - 子智能体审计
 allowed-tools:
   - read
   - grep
@@ -64,10 +68,19 @@ metadata:
 
 ```mermaid
 flowchart TB
-    A["🎯 Analyze<br/>运行 HEDQ 评分"] --> B["🔍 Diagnose<br/>解读报告定位根因"]
-    B --> C["🛠 Fix<br/>按优先级修复"]
-    C --> D["✅ Verify<br/>重新评分验证"]
-    D --> A
+    A["🎯 Analyze<br/>运行 HEDQ 评分"] --> A1{"总分 < 60%?"}
+    A1 -- 是 --> A2["🤖 子 agent 复核<br/>独立重新评分"]
+    A2 --> B["🔍 Diagnose<br/>解读报告定位根因"]
+    A1 -- 否 --> B
+    B --> B1{"grep 结果<br/>存疑?"}
+    B1 -- 是 --> B2["🤖 子 agent 交叉诊断<br/>输出置信度排名"]
+    B2 --> C["🛠 Fix<br/>按优先级修复"]
+    B1 -- 否 --> C
+    C --> D["✅ Verify<br/>子 agent 独立评分"]
+    D --> D1{"偏差 > 15%?"}
+    D1 -- 是 --> D2["⚠️ 以子 agent 为准"]
+    D2 --> A
+    D1 -- 否 --> A
 ```
 
 ## 异常处理
@@ -83,10 +96,18 @@ flowchart TB
 | Verify | 修复后分数未提升 | 撤销该次修改，尝试替代修复方案 | 标记该维度为"阻塞"，进入下一维度 |
 | Verify | 连续 3 次修复同一维度无提升 | 🛑 **停止该维度修复** | 报告阻塞原因，建议人工审查 |
 | Analyze | `--json` 输出无法被解析 (JSON parse failure) | 回退到纯文本输出模式 `python ./scripts/qa/run-hedq.py --no-save`，提取文本报告中的总分信息 | 打印原始输出，建议人工审查 |
+| Verify | 子 agent 评分与主 agent 自评差异 >15% | 以子 agent 评分为准，记录偏差项；分析偏差方向（乐观/悲观偏误） | 报告偏差项，建议人工裁断哪组评分可信 |
+| Diagnose | grep 扫描多个疑似根因无法区分主次 | Spawn 独立子 agent 交叉分析可疑文件，输出置信度排名 | 报告"诊断阻塞"，建议人工审查 |
+| Analyze | 子 agent 执行超时/不可用 | 回退到主 agent 干跑验证，在报告中标注 `dry_run` | 记录不可用原因，进入降级路径 |
+| Any | 子 agent 输出明显不符合预期（路径不存在/命令语法错） | 终止子 agent 结果，改用主 agent 兜底流程并记录异常 | 报告"子 agent 结果不可信"，人工介入 |
 
 ---
 
 ## 第一步：Analyze（评分）
+
+**输入**：HEDQ CLI + `src/` 目录中的 Markdown 文件
+**输出**：8 维度评分报告（JSON 或纯文本）+ 各维度分数明细
+**子 agent 规则**：当总分 < 60%（DRAFT）时，必须 spawn 独立子 agent 复核评分（防主 agent 评分偏误）
 
 ### 运行 HEDQ CLI
 
@@ -127,7 +148,9 @@ python ./scripts/qa/run-hedq.py --json --no-save
 
 ## 第二步：Diagnose（诊断）
 
-读取 HEDQ 报告后，确定当前最低分维度，按以下逻辑定位根因：
+**输入**：Analyze 阶段输出的评分报告（最低分维度信号）
+**输出**：已确认根因 + 选定的修复维度 + 置信度评估
+**子 agent 规则**：grep 存疑或多结果时必须 spawn 子 agent 交叉诊断；子 agent 置信度 >70% 则采纳，否则等待用户确认
 
 ### D1 — 结构与元数据
 
@@ -169,6 +192,27 @@ python ./scripts/qa/run-hedq.py --json --no-save
 |---------|------|---------|
 | D8.1 低分 | Mermaid 语法错误 | `bash mdbook build` 定位渲染错误行，修正节点文本引号 |
 
+### 子 agent 交叉诊断
+
+当 grep 扫描无法定位根因，或存在多个疑似根因时：
+
+```
+if grep 直接命中违规行:
+    主 agent 确认 → 直接进入 Fix
+elif grep 返回多个疑似结果:
+    spawn 独立子 agent 分析每个可疑模式 → 输出置信度排名
+    if 子 agent 排名首位置信度 > 70%:
+        采纳子 agent 诊断进入 Fix
+    else:
+        报告"诊断置信度不足" → 等待用户确认方向
+elif grep 返回空:
+    spawn 独立子 agent 以不同角度 grep 同一维度
+    if 子 agent 仍为空:
+        标记该维度为"诊断阻塞" → 报告阻塞原因 → 建议人工审查
+    else:
+        以子 agent 发现为准进入 Fix
+```
+
 ### 自检：诊断完整性确认
 
 在进入 Fix 前进行元认知自检，避免以下常见诊断失误：
@@ -176,6 +220,7 @@ python ./scripts/qa/run-hedq.py --json --no-save
 - **确认修复可行性**：该维度的低分是否可通过单向修复提升？若为内容深度问题（D3/D5），1 轮内提升幅度有限
 - **确认范围边界**：修复范围是否局限在问题维度内？检查是否计划修改了无关文件
 - **存在 P0 违规时**：是否已优先修复 P0 而非优化低分维度？
+- **确认子 agent 独立评估**：当前诊断是否有主 agent 自评偏误风险？若涉及分数判断必须 spawn 子 agent
 
 ---
 
@@ -189,6 +234,10 @@ python ./scripts/qa/run-hedq.py --json --no-save
 ---
 
 ## 第三步：Fix（修复）
+
+**输入**：Diagnose 输出的根因 + 选定维度
+**输出**：原子性 git commit（仅修改目标维度文件）
+**子 agent 规则**：修复后必须 spawn 独立子 agent 验证分数；禁止主 agent 自评。若子 agent 不可用则标注 `dry_run`，分数打 ⚠️ 标记
 
 ### 修复优先级
 
@@ -204,7 +253,28 @@ python ./scripts/qa/run-hedq.py --json --no-save
 2. **模式一致**：修复时参照 AGENTS.md 规范（品牌名、链接格式、代码块约定）
 3. **可验证**：每次修复后应能通过对应维度的重新检测
 
-### 常见修复手法
+### 子 agent 验证模式
+
+修复后必须用独立子 agent 验证分数，禁止自评。子 agent spawn 模板：
+
+```
+# 在 Verify 阶段强制启用子 agent 重新评分
+场景: 已完成一轮 D4 代码块 path 修复
+
+# ❌ 禁止 — 主 agent 自评（同上下文乐观偏误）
+python ./scripts/qa/run-hedq.py --json --no-save
+# → 然后自己解读报告 → 自评分数变化
+
+# ✅ 强制 — spawn 独立子 agent 评分
+task(
+  subagent_type="build",
+  description="HEDQ Verify: D4 fix validation",
+  prompt="运行 python ./scripts/qa/run-hedq.py --json --no-save，解析 JSON 输出中的 D4 维度分数，与修复前分数 {old_score} 对比，报告是否提升。只评分不修改文件。"
+)
+# → 子 agent 返回独立分数 → 主 agent 对比决策
+```
+
+### 常见诊断/修复手法
 
 ```bash
 # 搜索品牌名错误
@@ -219,6 +289,9 @@ grep -n "说白了\|换句话说\|综上所述\|值得注意的是\|显而易见
 
 # 检查断链模式（.md 文件引用）
 grep -rn ']([^)]*\.md' src/ --include="*.md" | grep -v 'SUMMARY.md'
+
+# 诊断时 spawn 子 agent 交叉验证（当 grep 结果存疑时）
+# task(subagent_type="build", prompt="在 src/ 中搜索 X 模式，验证行 Y 是否确实违规，返回置信度")
 ```
 
 ---
@@ -230,12 +303,35 @@ grep -rn ']([^)]*\.md' src/ --include="*.md" | grep -v 'SUMMARY.md'
 - 修复范围不超过所选维度：若修改了其他维度内容，先回退再进入 Verify
 - 修复手法符合规范：代码块 path 格式、内部链接格式、品牌名大小写全部按 AGENTS.md 规范
 - 已完成元认知自检：当前修改有明确可验证的提升预期
+- **Verify 方式确认**：是否已准备 spawn 独立子 agent 执行评分？禁止主 agent 自评
 
 ---
 
 ## 第四步：Verify（验证）
 
-每次修复后必须重新运行 HEDQ 确认分数提升：
+**输入**：Fix 阶段的 git commit + 修复前评分记录
+**输出**：修复后评分报告（子 agent 独立执行）+ 与修复前分数对比明细
+**子 agent 规则**：**必须** spawn 独立子 agent 执行评分；子 agent 偏差 >15% 时以子 agent 为准；偏差 <15% 且方向一致时视为验证通过
+
+### 子 agent 强制评分（避免自评偏误）
+
+每次修复后**必须 spawn 独立子 agent 执行评分**，禁止主 agent 在同一上下文内自评。SkillLens 实证 LLM-as-judge 自评准确率仅 46.4%，同上下文评分产生乐观偏误。
+
+```bash
+# ❌ 禁止 — 主 agent 自评（自我验证偏误）
+python ./scripts/qa/run-hedq.py --json --no-save
+# 然后自己解读报告 → 分数虚高
+
+# ✅ 强制 — spawn 独立子 agent 执行 Verify
+# task(subagent_type="build", description="HEDQ Verify", prompt="
+#   运行 python ./scripts/qa/run-hedq.py --json --no-save，
+#   解析 JSON 输出中各维度分数，
+#   与修复前记录对比，报告提升/下降明细。
+#   只读不写，不修改任何文件。
+# ")
+```
+
+### 验证标准
 
 ```bash
 python ./scripts/qa/run-hedq.py --json --no-save
@@ -245,6 +341,7 @@ python ./scripts/qa/run-hedq.py --json --no-save
 - 无 P0 违规
 - 修复维度分数明显提升
 - 未引入新的 D1/D4/D7 违规
+- 子 agent 评分与预期一致（若偏差 >15% 则以子 agent 为准）
 
 ## 交付物规范
 
@@ -270,6 +367,15 @@ D6 Writing Style: 2.0/2   (100%)   Δ+0.0
 D7 Terminology:   9.0/10  (90.0%)  Δ+0.2
 D8 Diagrams:      3.7/3.5 (100%)   Δ+0.0
 ```
+
+## 子 agent 启用速查
+
+| 阶段 | 触发条件 | 子 agent 行为 | 偏差处理 |
+|------|---------|--------------|---------|
+| **Analyze** | 总分 < 60% | 独立重新评分 | 不可用时人工确认 |
+| **Diagnose** | grep 多结果/空结果 | 交叉诊断输出置信度 | >70% 采纳，否则人工 |
+| **Fix** | 修复完成后 | 验证分数并对比前后 | 不可用时标注 `dry_run` |
+| **Verify** | 每次评分时 | **强制**独立评分 | >15% 以子 agent 为准 |
 
 ## 快速参考：维度满分速查
 
@@ -307,3 +413,4 @@ D8 Diagrams:      3.7/3.5 (100%)   Δ+0.0
 | 4 | 跳过 `git commit` 直接连续修改 | 修改无法追溯和回滚 | 每次 fix 后 `git add + git commit` |
 | 5 | 修改基础设施文件（CI、gitignore 等） | 非质量审计范围，可能破坏流水线 | 除非被用户明确要求 |
 | 6 | 连续优化同一维度超过 3 轮 | 边际收益递减，过度调整引入新问题 | 🛑 停止该维度修复，报告阻塞原因 |
+| 7 | 主 agent 自评代替子 agent 验证 | 同上下文自评分产生乐观偏误，SkillLens 实证 LLM-as-judge 自评准确率仅 46.4% | 每次 Verify 必须 spawn 独立子 agent；子 agent 不可用时标注 `dry_run`，分数打 ⚠️ 标记 |

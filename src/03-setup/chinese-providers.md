@@ -689,6 +689,50 @@ export HTTPS_PROXY="http://127.0.0.1:7890"
 | `Fallback 未生效` | fallback 指向的 Provider 配置不完整或 Key 缺失 | 检查 fallback Provider 的 API Key 和模型定义是否正确 |
 | `Provider 未显示在 /models` | 配置后未重启 OpenCode，或 Provider/模型名称拼写错误 | 重启 OpenCode 使配置生效，对照官方文档检查名称 |
 
+## 常见反模式
+
+### 在生产环境使用未限流的 API Key
+
+**现象**：使用免费或低配额的 API Key 直接用于生产环境的 Agent 调用，遇到突发请求时出现 `429 Too Many Requests`。
+
+**原因**：国内模型服务商的免费 Key 通常有严格的 RPM/TPM 限制。未配置限流和降级策略时，高并发场景直接触发速率限制。
+
+**对策**：生产环境使用付费配额 Key，配置 fallback Provider 链，并启用 `max_concurrent_requests` 限制并发量。免费 Key 只用于开发和测试。
+
+### 忽略模型命名差异
+
+**现象**：配置文件中模型名称使用了非官方名称（如将 `deepseek-chat` 写成 `deepseek-v2`），Agent 启动时提示 `Model not found`。
+
+**原因**：国内模型服务商的模型命名频繁变更，且不同服务商使用的模型别名不同。
+
+**对策**：配置后运行 `/models` 确认可用模型列表。定期查阅模型服务商官方文档更新模型名称，使用文档中的标准名称。
+
+## 常见错误与陷阱
+
+### API Rate Limit 超过限额
+
+**场景**：多个 Agent 同时调用同一个 Provider 的 API，触发账户级别的速率限制。
+
+**后果**：API 返回 429 错误，Agent 任务失败或进入不可预测的回退行为。
+
+**预防**：配置 fallback 模型链，在 Provider 设置中使用 `max_concurrent_requests` 限制并发。国内模型建议备用一个不同服务商的 Provider 作为降级选项。
+
+### Token Endpoint 配置错误
+
+**场景**：使用 Azure OpenAI 或国内私有部署的模型时，baseURL 或 endpoint 路径配置错误。
+
+**后果**：Agent 反复重试连接直到超时，浪费时间。错误不提示具体原因，排查困难。
+
+**预防**：使用 `curl` 手动测试 API endpoint 的连通性后再配置。注意国内服务商的 endpoint 路径格式通常与国际版不同。
+
+## 适用场景与限制
+
+国产模型在某些场景下具有显著优势：中文理解和生成质量普遍优于同等参数规模的国际模型；DeepSeek 在代码生成和数学推理方面表现出色；Kimi 的 128K+ 长上下文窗口适合大型代码库分析。
+
+以下情况建议选用国际模型：需要处理大量英文术语和文档的场景（如 Spring Boot、Kubernetes）；涉及前沿 Agent 能力（如 Tool Use、Function Calling）且国产模型支持不完善的场景；需要严格遵守 OpenAI API 兼容性标准的第三方工具集成。
+
+国内模型服务商的 API 稳定性 和模型更新频率与国际厂商存在差距。建议在关键生产路径中配置多 Provider fallback 链，并定期测试各模型的准确率变化。
+
 ## 小结
 
 国产大模型已经具备了与国际一流模型竞争的实力，在成本、中文处理、长上下文等方面甚至具有独特优势。通过 OpenCode 的 Provider 抽象层，你可以无缝切换国产模型和国际模型，根据任务需求和成本预算灵活选择。

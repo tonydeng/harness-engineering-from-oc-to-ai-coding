@@ -2,7 +2,7 @@
 
 > 通过 `@opencode-ai/sdk` 用代码控制 OpenCode Server，实现 CI/CD 集成、自定义工作流和远程 Agent 调度。
 
-OpenCode SDK 提供了一套类型安全的 JavaScript/TypeScript 客户端，通过 REST API 与运行中的 OpenCode Server 通信。和 [Agent 架构参考](./agent-architecture.md) 中介绍的配置式自定义 Agent（Category/`task()`）不同，SDK 面向的是**将 OpenCode 嵌入到你的应用或流水线中**的场景。
+OpenCode SDK 提供了一套类型安全的 JavaScript/TypeScript 客户端，通过 REST API 与运行中的 OpenCode Server 通信。和 [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md) 中介绍的配置式自定义 Agent（Category/`task()`）不同，SDK 面向的是**将 OpenCode 嵌入到你的应用或流水线中**的场景。
 
 ---
 
@@ -971,7 +971,7 @@ const session: Session = await client.session.get({
 ## 相关章节
 
 - → [OpenCode SDK 与程序化集成](./sdk.md) — 三层次 SDK 总览（Plugin SDK / CLI 管道 / 天气 Agent 案例）
-- → [OpenCode Agent 架构参考](./agent-architecture.md) — 配置式自定义 Agent（Category + `task()`）
+- → [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md) — 配置式自定义 Agent（Category + `task()`）
 - → [OpenCode Plugin 系统参考](./plugins.md) — Plugin 方式的扩展机制
 - → [OpenCode 内置能力](./capabilities.md) — 整体能力索引
 - → [OpenCode 生态参考](./ecosystem.md) — 社区生态与 SDK 相关项目

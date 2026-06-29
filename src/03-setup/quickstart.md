@@ -661,6 +661,50 @@ OpenCode 默认对以下情况采用保守策略：
 - **Always**：本次会话中允许所有类似操作
 - **Reject**：拒绝操作
 
+## 常见反模式
+
+### 跳过安装前检查直接运行
+
+**现象**：跳过 OpenCode 的安装依赖检查（如 Node.js 版本、Git 配置），直接运行 `opencode` 后遇到底层错误。
+
+**原因**：OpenCode 依赖 Node.js 18+ 和 Git 2.23+ 等基础工具。高级功能（如 MCP 服务器）还需要 Python 环境。
+
+**对策**：安装后运行 `opencode --version` 确认版本，检查 `.env` 中的 API Key 配置，第一个 Session 中使用 `/init` 完成项目初始化。
+
+### 在单个 Session 中塞入过多上下文
+
+**现象**：在一个 Session 中不断追加任务，上下文窗口膨胀后 Agent 响应质量急剧下降。
+
+**原因**：每个 LLM 调用携带全部对话历史。上下文接近模型限制时，Agent 开始忽略早期指令，产生幻觉或重复回答。
+
+**对策**：复杂项目使用任务分解或多个 Session。当 Agent 反应迟钝时，使用 `/new-session` 或重启 OpenCode 清理上下文。
+
+## 常见错误与陷阱
+
+### 模型配置缺失（MODEL_CONFIG_MISSING）
+
+**场景**：首次启动 OpenCode，跳过 Provider 配置直接输入任务。
+
+**后果**：Agent 无法调用 LLM，Session 无法启动，错误类似 `No provider configured`。
+
+**预防**：启动前至少配置一个 Provider。OpenCode Zen 模式自动处理，自有 Key 用户需确保 `OPENCODE_API_KEY` 已设置。
+
+### MCP 服务器启动失败
+
+**场景**：配置 MCP 服务器后，工具调用返回 `Connection refused` 或 `Tool not found`。
+
+**后果**：依赖 MCP 的工作流（如数据库查询、文件操作）无法正常执行。
+
+**预防**：使用 `opencode mcp validate` 验证配置，检查 MCP 服务器路径和参数，确保可执行文件有运行权限。
+
+## 适用场景与限制
+
+OpenCode 适合从个人项目到中型团队的多种开发场景。个人开发者可用它替代传统 IDE 进行日常编码；团队可用它统一开发环境和工具链。
+
+以下情况 OpenCode 可能不是最佳选择：项目代码量超过 100 万行且上下文窗口无法覆盖关键模块时，建议配合外部知识库使用；对延迟极度敏感的生产环境变更，建议先用传统工具调试后再用 OpenCode 执行；需要细粒度权限控制的企业环境，需要额外配置 oh-my-openagent 的安全策略。
+
+OpenCode 的高级能力（如 Team Mode、7-Agent Pipeline）需要 OMO v4.0+ 配合。部分功能（如 MCP 桥接）需要 Python 环境。建议定期关注版本更新日志，了解功能变化。
+
 ## 小结
 
 恭喜你完成了 OpenCode 的快速上手！让我们回顾一下学到的内容：
