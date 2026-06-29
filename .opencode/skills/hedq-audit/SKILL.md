@@ -246,6 +246,31 @@ python scripts/qa/run-hedq.py --json --no-save
 - 修复维度分数明显提升
 - 未引入新的 D1/D4/D7 违规
 
+## 交付物规范
+
+### 输出格式
+
+每次审计完成后，交付以下输出：
+- **HEDQ 总分**（当次）：`{score}/{total_max} ({percentage}%) → {rating}`
+- **维度明细**：各维度分数 + 总分变化（用 `Δ±` 标注对比上一次审计）
+- **问题清单**：P0/P1/P2 分类，每项标注位置（文件:行号）
+- **评级记录**：追加到 `scripts/qa/reports/results.tsv`
+
+示例输出：
+```
+HEDQ Report — 2026-06-29
+Score: 48.2/58.5 (82.4%) → CONDITIONAL (Δ+3.2 from last audit)
+
+D1 Structure:    12.5/14  (89.3%)  Δ+1.0
+D2 Timeliness:    4.0/6   (66.7%)  Δ+0.0  ← P0: stale version ref at src/03-setup/install.md:42
+D3 Navigation:    4.5/6   (75.0%)  Δ+0.5
+D4 Code Blocks:   3.0/4   (75.0%)  Δ+1.0
+D5 Anti-patterns: 9.5/13  (73.1%)  Δ+0.5
+D6 Writing Style: 2.0/2   (100%)   Δ+0.0
+D7 Terminology:   9.0/10  (90.0%)  Δ+0.2
+D8 Diagrams:      3.7/3.5 (100%)   Δ+0.0
+```
+
 ## 快速参考：维度满分速查
 
 | 维度 | 自动检测满分 | 检查速度 |
