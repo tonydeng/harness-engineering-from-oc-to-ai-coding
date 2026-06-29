@@ -32,7 +32,7 @@
 
 ### 缓存架构
 
-OpenCode 拥有三大工具中最完整的多级缓存体系。缓存直接在 `opencode.json` 中配置：
+OpenCode 拥有三大工具中最完整的多级缓存体系。自 2026 年 5 月起，`cache: "auto"` 已成为 **默认** 行为（PR #26798），无需显式配置即可自动启用缓存。缓存直接在 `opencode.json` 中配置：
 
 ```json
 {
@@ -87,13 +87,17 @@ OpenCode 采用两层压缩：
 
 | 机制 | 激活方式 | 备注 |
 |------|---------|------|
-| 三级缓存 | `opencode.json` 配置 `cache` 块 | L2/L3 需主动配置，L1 默认开启 |
+| 三级缓存 | `opencode.json` 配置 `cache` 块 | **自 2026-05 起 `cache: "auto"` 为默认**；L1 无需配置 |
 | Compaction | `compaction.auto: true`（默认开启） | 可配置 `reserved` 缓冲区大小 |
+| **系统提示拆分** | `setCacheKey: true` + `splitSystemPrompt` Provider 选项 | S1（稳定块）/ S2（动态块）分离，跨仓库缓存命中率从 0% → 97.6%（PR #14743） |
+| **Cache Stabilization** | 环境变量 `OPENCODE_EXPERIMENTAL_CACHE_STABILIZATION=1` | 冻结日期 + 稳定指令，减少缓存抖动 |
+| **1h TTL** | 环境变量 `OPENCODE_EXPERIMENTAL_CACHE_1H_TTL=1` | 5min → 1h 缓存 TTL，适合间歇工作模式 |
 | **Prefix Preservation** | 环境变量 `OPENCODE_EXPERIMENTAL_COMPACTION_PRESERVE_PREFIX=true` | 实验性，复用 Agent 前缀缓存，实测 99% cache hit |
 | **Cache-Aligned Compaction** | 环境变量 `OPENCODE_EXPERIMENTAL_CACHE_ALIGNED=true` | 实验性，节省 ~90% Compaction 成本 |
 | 自定义 Compaction Prompt | 环境变量 `OPENCODE_EXPERIMENTAL_COMPACTION_PROMPT` | 自定义摘要格式指令 |
 | **Double-Buffer** | `compaction.checkpointThreshold` 和 `compaction.swapThreshold` | ~50% 时后台 Checkpoint，~75% 时 Swap |
 | 缓存断点 | Markdown 中 `#cache-breakpoint` 注释 | 手动标记可复用片段 |
+| **Cache Policy Object** | `cachePolicy` 配置项（2026-05） | 细粒度控制断点放置位置（tools/system/messages 边界） |
 
 ### 相关开源项目与插件
 
@@ -103,6 +107,8 @@ OpenCode 采用两层压缩：
 | **opencode** | 主仓库文档含缓存配置指南和性能指标 | [GitHub: anomalyco/opencode](https://github.com/anomalyco/opencode) |
 | **TokenPilot**（学术） | Cache-Efficient Context Management for LLM Agents，arXiv 2606.17016 | [arXiv:2606.17016](https://arxiv.org/abs/2606.17016) |
 | **opencode-cache-hit** | 社区 TUI 侧边栏插件，实时监控缓存命中率和 Token 趋势 | [opencode-cache-hit](https://github.com/zhumengzhu/opencode-cache-hit) |
+| **opencode-context-cache** | 社区插件，基于 SHA256 的稳定缓存键 + 粘性 Session | [opencode-context-cache](https://github.com/JackDrogon/opencode-context-cache) |
+| **prompt-cache-skills** | 跨 13 种编码工具的 Prompt Caching 审计 Skill 套件 | [prompt-cache-skills](https://github.com/OnlyTerp/prompt-cache-skills) |
 
 ---
 
@@ -111,6 +117,8 @@ OpenCode 采用两层压缩：
 ### 缓存架构
 
 Claude Code 的缓存哲学是"最便宜的先做，最贵的最后做"。与 OpenCode 不同，**它没有独立的多级缓存架构**——缓存完全依赖 Anthropic API 的 Prompt Caching，并在 Compaction 策略中深度集成 cache-aware 设计。
+
+> 官方在 2026 年 4 月的博文 [Prompt caching is everything](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything) 中详细阐述了这一设计理念，并介绍了 cache-safe forking 等技术细节。
 
 #### Anthropic Prompt Caching 机制
 
@@ -146,15 +154,17 @@ Claude Code 通过 `SYSTEM_PROMPT_DYNAMIC_BOUNDARY` 将一个 `__boundary__` 哨
 |------|---------|------|
 | 自动 Compaction | **默认开启**，无需配置 | 接近 200K 窗口上限自动触发 |
 | Manual Compaction | `/compact` 命令 | 可附带自定义压缩指令 |
-| Compaction 阈值 | `compact_20260112` API beta：最小 50K，默认 150K | 通过 API 配置 |
+| Compaction API | `compact_20260112` API beta header | 最小 50K，默认 150K；程序化压缩控制 |
 | 自定义摘要指令 | `/compact` 后加自然语言描述 | 例如 `/compact 重点保留架构决策和 API 设计` |
+| **/cd 命令**（2026-06） | `/cd <directory>` 切换目录 | 不重建 Prompt Cache，保持缓存前缀连续性 |
 | 推理 Token 预算 | `--effort` 参数：low/medium/high/xhigh/max/ultracode | `claude --effort high` |
 | 会话安全网 | `maxTurns`（最大交互轮次）| 通过 claude.json 配置 |
 | 美元上限 | `maxBudgetUsd` | 通过 claude.json 配置 |
 | 超时控制 | `API_TIMEOUT_MS` 等环境变量 | 自定义 API 超时 |
 | **CLAUDE.md** 持久规则 | 项目根目录创建 CLAUDE.md | 每轮请求重新注入，不因压缩丢失 |
 | 会话持久化 | `sessionId` 参数 | 跨多次 `query()` 保留上下文 |
-| **Agent checkpointing**（Beta） | Claude Code v2.1.128+ | 2026 年 6 月功能 |
+| **Agent checkpointing**（Beta） | Claude Code v2.1.128+ | 会话状态序列化与恢复 |
+| **自定义网关缓存修复** | Claude Code v2.1.181+ | 修复了自定义网关上 Prompt Caching 的兼容性问题 |
 
 ### 相关开源项目与插件
 
@@ -263,16 +273,39 @@ export default {
 
 ### 相关开源项目与插件
 
+2026 年上半年 Pi Agent 的 Compaction 扩展生态经历了爆发式增长，以下是主要的社区扩展：
+
 | 项目/插件 | 说明 | 链接 |
 |----------|------|------|
 | **pi** | Pi Agent 本体（MIT 开源），核心在 `packages/coding-agent/harness/compaction/` | [GitHub: earendil-works/pi](https://github.com/earendil-works/pi) |
 | **pi-extension-examples** | 官方 Extension 示例，含自定义 Compaction 实现 | [pi Agent 仓库 `examples/extensions/`](https://github.com/earendil-works/pi/tree/main/packages/coding-agent/examples/extensions) |
 | **custom-provider-template** | 自定义 Provider 模板，包含 cacheRead/cacheWrite 成本字段 | [pi Agent 仓库的custom-provider.md](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/custom-provider.md) |
+| **pi-better-compact** | 基于动态规划的缓存感知 Compaction，带经济学决策模型 | [GitHub: takltc/pi-better-compact](https://github.com/takltc/pi-better-compact) |
+| **pi-smart-compact** | 验证导向的智能压缩扩展（周下载 341+） | [GitHub: pipinit/pi-smart-compact](https://github.com/alpertarhan/pi-smart-compact) |
+| **pi-vcc** | 零 LLM 调用的算法化压缩（VCC 技术），压缩率 35-99% | [GitHub: anotherautomaton/pi-vcc](https://github.com/sting8k/pi-vcc) |
+| **pi-live-compaction** | 流式 Compaction 扩展，支持 Liquid 模板 | [GitHub: hyakuren/pi-live-compaction](https://github.com/victor-software-house/pi-live-compaction) |
+| **pi-slipstream-compact** | 带验证步骤的 Compaction 扩展，压缩后自动审查 | [GitHub: OrestesK/pi-slipstream-compact](https://github.com/OrestesK/pi-slipstream-compact) |
+| **pi-lcm** | 分层 DAG 压缩，SQLite 持久化压缩历史 | [GitHub: killian311/pi-lcm](https://github.com/codexstar69/pi-lcm) |
+| **pi-opencode-go-cache** | 将 OpenCode CLI 等效缓存引入 Pi Agent 的 Go Provider | [GitHub: dpwdec/pi-opencode-go-cache](https://github.com/nnocte/pi-opencode-go-cache) |
 | **gondolin** | Pi 的沙箱隔离方案（可选），不影响缓存但保护上下文 | [GitHub: earendil-works/gondolin](https://github.com/earendil-works/gondolin) |
 
 ---
 
 ## 成本对比与选型建议
+
+### Provider Prompt Caching 定价对比（2026）
+
+截至 2026 年中，主流 LLM Provider 的 Prompt Caching 定价已趋于标准化，但策略差异显著：
+
+| Provider | 缓存读折扣 | 缓存写成本 | 最小缓存大小 | TTL | 管理方式 |
+|----------|-----------|-----------|-------------|-----|---------|
+| **Anthropic** | 0.1x（90% 折扣） | 1.25x（5min）/ 2x（1h） | 1,024 tokens | 5min / 1h | 手动 `cache_control` 断点 |
+| **OpenAI** | 0.5x（50% 折扣） | 免费 | 1,024 tokens | 5min（自动刷新） | 自动，无需手动断点 |
+| **Google Gemini** | 0.75x（25% 折扣） | 存储费按量计 | 4,096 tokens | 可变（按上下文） | 显式缓存对象管理 |
+| **DeepSeek** | ~0.75x（25% 折扣） | 同基础价 | 64 tokens 粒度 | 磁盘持久化 | 自动，极细粒度 |
+| **Qwen** | 不支持 | 不支持 | N/A | N/A | 无 |
+
+> Anthropic 的高读写价差（0.1x vs 1.25x）意味着 **缓存命中率是成本控制的最大杠杆**。对比之下，OpenAI 的自动缓存策略虽然免去手动断点，但 5min TTL 短、无法手动管理，在大规模场景下方案不够灵活。
 
 ### 典型场景 Token 成本对比
 
@@ -312,8 +345,9 @@ export default {
 2026 年的重要趋势是，三大工具在缓存意识上趋于一致：
 
 - **OpenCode**（2026-04）实验性推出 Cache-Aligned Compaction（PR #25100），通过保持消息序列化与普通请求一致、仅在末尾追加摘要指令来复用缓存前缀
-- **Claude Code** 从设计之初就采用 cache-safe forking，Full Compaction 时复用父会话缓存 key
-- **Pi Agent** 的 Extension 架构允许社区自行实现 cache-aware 压缩策略
+- **OpenCode**（2026-05）进一步将 `cache: "auto"` 设为默认（PR #26798），并推出系统提示拆分（PR #14743），跨仓库缓存命中率从 0% 提升至 97.6%
+- **Claude Code** 从设计之初就采用 cache-safe forking，Full Compaction 时复用父会话缓存 key；2026 年 4 月正式发布 [Prompt caching is everything](https://claude.com/blog/lessons-from-building-claude-code-prompt-caching-is-everything) 设计文档
+- **Pi Agent** 的 Extension 架构允许社区自行实现 cache-aware 压缩策略，2026 年上半年已涌现 7+ 个专业 Compaction 扩展
 
 **底层原因**：随着 Anthropic/OpenAI/Google 等 Provider 的 Prompt Caching 定价逐步标准化（读 0.1x vs 写 1.25x），缓存命中率直接决定了 AI 编码工具的实际运营成本。不 cache-aware 的 Compaction 会破坏缓存前缀，导致每次压缩后都需重新缓存——成本从 0.1x 涨回 1x，差距可达 10 倍。
 

@@ -974,6 +974,77 @@
 
 ---
 
+### Article 6.13: 缓存机制深度对比（P0 — 跨工具比较）
+- **阅读时间**：20 min
+- **学习目标**：
+  - 理解三大 AI 编码工具（OpenCode / Claude Code / Pi Agent）的缓存架构差异
+  - 掌握每个工具的缓存激活和配置方法
+  - 理解 Cache 与 Compaction 的核心区别及 Cache-Aligned Compaction 趋势
+  - 能够根据场景选择最合适的工具和缓存策略
+- **前置知识**：Article 6.6（提示词缓存），Article 6.4（上下文压缩）
+- **源材料映射**：OpenCode `src/cache/` + Claude Code 源码分析（source map 还原）+ Pi Agent `packages/coding-agent/harness/compaction/compaction.ts` + Anthropic Prompt Caching 定价文档
+
+#### 大纲
+1. 缓存 ≠ 压缩：理解两套机制
+   - 缓存消除重复传输（零副作用），压缩精简必要内容（有损）
+   - 压缩是缓存前缀的天敌：Cache-Aligned Compaction 解决此问题
+2. OpenCode: 三级缓存 + 阶梯式治理
+   - L1 Session / L2 项目 / L3 全局三级缓存
+   - Breakpoints 语法 + Compaction（Prune + LLM 摘要）
+   - 环境变量控制：Prefix Preservation、Cache-Aligned、Double-Buffer
+3. Claude Code: 5 级渐进压缩 + Prompt Caching 原生集成
+   - T1 Microcompact → T2 API-Native → T3 Full Compaction → T4 Context Collapse → T5 Sub-agent
+   - cache-safe forking：不修改父会话，fork 新分支复用 cache key
+   - Anthropic Prompt Caching 定价（读 0.1x / 写 1.25x）
+4. Pi Agent: 极简 Compaction + Extension 自定义
+   - 无内置多级缓存，Compaction 完全通过 Extension API 自定义
+   - Provider 模型定义中可声明 cacheRead/cacheWrite 成本字段
+5. 成本对比与选型建议
+   - 短 Session / 长 Session / 跨项目 / 本地模型四种场景
+   - 选型决策矩阵
+6. 趋势：Cache-Aligned Compaction 成为共识
+
+#### 核心概念
+- **Cache ≠ Compaction**：缓存是"省钱"（零副作用），压缩是"省地方"（有损）。优化顺序：先缓存后压缩。
+- **Cache-Aligned Compaction**：保持消息序列化与普通请求一致，仅在末尾追加摘要指令来复用缓存前缀。三大工具正在趋向此设计。
+- **第 4 代缓存定价**：Anthropic 读 0.1x vs 写 1.25x，缓存命中率直接影响工具运营成本。
+
+#### 代码/配置示例
+- OpenCode `opencode.json` 三级缓存配置
+- Cache Breakpoints 注释语法
+- Claude Code 5 级渐进 Pipeline 表
+- Pi Agent `settings.json` Compaction + Provider 配置
+- Extension 自定义压缩 TypeScript 示例
+
+#### Mermaid 图表
+- 缓存 vs 压缩对比概念图
+- 三种工具的缓存架构对比图
+- Cache-Aligned Compaction 工作原理图
+
+#### 关联章节
+- ← Article 6.6（OpenCode 提示词缓存架构详解）
+- ← Article 6.4（上下文压缩完整技术栈）
+- ← Article 6.7（记忆系统与缓存的协同）
+- → Article 6.3（性能调优中的 Token 定价策略）
+
+#### 验证标准
+- [ ] 文章 ≥ 300 行有效内容
+- [ ] 覆盖三大工具的缓存架构
+- [ ] 包含缓存激活配置指南（每个工具至少一个配置示例）
+- [ ] 包含成本选型决策矩阵
+- [ ] 所有外部项目/论文链接可访问且真实
+- [ ] 包含至少 1 张 Mermaid 对比图
+
+### 团队角色评审补充（Article 6.13）
+
+- **架构顾问需求（P0）**：验证三大工具缓存架构描述的准确性——OpenCode 三级缓存 TTL 和配置项、Claude Code 5 级渐进管道触发阈值、Pi Agent Extension 接口签名和生命周期事件。检查 Cache-Aligned Compaction 趋势分析的技术基础是否扎实。
+- **智能体工程师需求（P0）**：验证各工具的缓存激活配置与 2026 年最新版本一致——OpenCode `cache: "auto"` 默认化后的配置兼容性、Claude Code `/cd` 命令的缓存前缀连续性、Pi Agent `session_before_compact` 事件的扩展点设计。确认 Provider 定价对比表数据来源可追溯。
+- **测试工程师需求（P0）**：验证所有外部链接（GitHub 仓库/arXiv 论文/官方文档）可访问且指向正确内容。所有配置示例需标注最低版本要求（OpenCode v1.15+、Claude Code v2.1.128+、Pi Agent v0.3+）。价格数据的截至日期需显式声明。
+- **后端架构师需求**：验证 Anthropic/OpenAI/Gemini/DeepSeek Provider 缓存定价模拟的基准单位（per 1M tokens）与实际 API 计费一致。Cross-tool 对比表在"本地模型"场景下的分析是否遗漏了 vLLM/SGLang 等自托管方案的缓存能力。
+- **渗透测试员需求**：各工具配置示例中是否存在安全风险（例如在示例代码中暴露 API Key、在公开文档中提及内部环境变量名）。
+
+---
+
 ## 团队协作工作流
 
 ### 团队分工
@@ -986,6 +1057,8 @@
 | **渗透测试员**（REDTEAM） | MCP 注入攻击面分析、沙箱逃逸场景、Plugin Hook 点威胁分析、Prompt 注入防御测试 | Article 6.1(攻击面), Article 6.9(逃逸), Article 6.2(威胁) |
 | **前端架构师**（FRONTEND） | Feature Flags 路线图可视化、可观测性监控面板布局、记忆系统 UI 设计 | Article 6.12, Article 6.11 |
 | **测试工程师**（QA） | 所有配置示例最低版本标注、验证标准细化、可观测性监控规则验证 | 全文(版本标注), Article 6.11 |
+| **架构顾问**（SYSA） | 跨工具缓存架构准确性验证、Cache-Aligned Compaction 趋势分析质量把控 | Article 6.13 |
+| **智能体工程师**（AGENT） | 各工具缓存机制与 2026 最新版本对齐、Provider 定价对比溯源、跨工具选型矩阵合理性 | Article 6.13 |
 | **UI设计师**（UX） | 监控仪表板布局图、Feature Flag 分类雷达图、15 篇文章图表一致性 | Article 6.11, Article 6.12, 全文图表 |
 
 ### 流程规范（Superpowers 工作流映射）
@@ -994,9 +1067,9 @@
 |------|-----------|--------|--------|
 | **头脑风暴** | 收集 15 篇文章的安全/架构/性能需求、确定 P0/P1/P2 分层写作优先级、识别文章间职责边界 | 分层写作计划、边界划分图 | 安全架构师 + 架构顾问 |
 | **计划** | 排序写作依赖：6.1/6.2/6.3(现有修改) → 6.4-6.7(上下文体系) → 6.8-6.10(安全体系) → 6.11/6.12(可观测性+路线图) | 写作计划、依赖关系图 | 敏捷教练 |
-| **实施** | 15 篇文章分 4 批写作，重点解决内容边界划分（6.1↔6.9 沙箱、6.8↔2.5 安全），每批完成后站会同步 | 15 篇文章初稿 | 各角色按分工 |
-| **评审** | 安全体系交叉审查（6.8 与 2.5 不重复）、MCP 技术深度审查、性能数据真实性审查 | 评审报告、边界检查记录 | 安全架构师 + 后端架构师 |
-| **验证** | 所有配置示例格式验证、Mermaid 安全图/架构图渲染验证、跨章节引用准确性、200 行门槛 | 验证报告 | 测试工程师 |
+| **实施** | 15 篇文章分 4 批写作，重点解决内容边界划分（6.1↔6.9 沙箱、6.8↔2.5 安全），每批完成后站会同步。6.13 缓存对比由架构顾问主导，与 6.4（压缩）/6.6（缓存）对齐 | 15 篇文章初稿 | 各角色按分工 |
+| **评审** | 安全体系交叉审查（6.8 与 2.5 不重复）、MCP 技术深度审查、性能数据真实性审查、**6.13 跨工具缓存数据准确性审查（Provider 定价、版本号、外部链接）** | 评审报告、边界检查记录 | 安全架构师 + 后端架构师 |
+| **验证** | 所有配置示例格式验证、Mermaid 安全图/架构图渲染验证、跨章节引用准确性、200 行门槛、**6.13 外部链接可访问性验证** | 验证报告 | 测试工程师 |
 | **交付** | 分批合并（P0 优先）、更新 _sidebar.md 确认 12 条路径、同步 PRD 第 3.5 节版本号 | 合入确认、版本同步 | 敏捷教练 |
 
 ### 评审要求
@@ -1014,6 +1087,13 @@
 **检查点 3：跨文章引用一致性**
 - 上下文压缩（6.4）→ Token 预算（6.5）→ 提示词缓存（6.6）→ 记忆系统（6.7）的依赖链引用正确
 - 安全总览（6.8）→ 沙箱 Hook（6.9）→ CLAUDE.md（6.10）的安全递进关系清晰
+- **Article 6.13（缓存对比）→ Article 6.4（压缩）↔ Article 6.6（缓存）的双向引用准确**
+
+**检查点 4：缓存对比数据真实性（P0 — Article 6.13 专用）**
+- Provider 定价对比表中的价格单位（per 1M tokens）与实际 API 计费一致
+- 各工具的缓存配置示例与 **2026 年最新版本**（OpenCode v1.15+，Claude Code v2.1.181+，Pi Agent v0.3+）一致
+- 所有外部链接（GitHub 仓库、arXiv 论文、官方文档）在 CI 中至少验证一次
+- 定价数据标注截止日期（建议标注"截至 2026-06"）
 
 ### 质量验收要求
 
@@ -1023,6 +1103,7 @@
 | 🔴 硬性 | Mermaid 渲染正确率 | 100%（12+ 张图表，章节规模最大） |
 | 🔴 硬性 | 内容边界划分 | 6.1↔6.9、6.8↔2.5 职责划分文档化 |
 | 🔴 硬性 | 威胁建模覆盖 | ≥ 4 篇文章包含 STRIDE 表（6.1/6.8/6.9/7.5） |
+| 🔴 硬性 | 缓存对比数据（6.13） | 外部链接可访问、定价数据标日期、版本号与实际一致 |
 | 🟡 质量 | 配置示例标注 | 所有示例标注最低 OpenCode/OMO 版本 |
 | 🟡 质量 | 安全体系完整性 | 权限/Sandbox/Hook/注入防御 4 层全覆盖 |
 | 🟡 质量 | 跨文章引用准确 | 无死链、无循环引用 |
@@ -1051,3 +1132,6 @@
 | 5 层遥测架构图 | `architecture` | Article 6.11 | Agent→Session→Tool→Network→System |
 | 监控面板布局图 | `infographic` | Article 6.11 | Dashboard 布局 |
 | Feature Flag 分类雷达图 | `chart-visualization` / `vega` | Article 6.12 | 多维度分类 |
+| 缓存 vs 压缩对比概念图 | `infographic` | Article 6.13 | Cache vs Compaction 对比 |
+| 三种工具缓存架构对比图 | `architecture` | Article 6.13 | OpenCode/Claude Code/Pi Agent 架构 |
+| Cache-Aligned Compaction 工作原理图 | `uml` | Article 6.13 | Cache-Aligned 消息序列 |

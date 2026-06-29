@@ -42,10 +42,24 @@ def main():
     )
     args = parser.parse_args()
 
-    # 定位项目根目录：本脚本位于 <root>/scripts/qa/run-hedq.py
-    # 因此 root = script_dir / ../../
+    # 定位项目根目录：从脚本所在目录向上查找 book.toml 或 src/SUMMARY.md
+    # 脚本可能位于 <root>/scripts/qa/ 或 <root>/.opencode/skills/hedq-audit/scripts/qa/
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent
+    project_root = script_dir
+    for _ in range(10):  # 最多向上 10 级
+        if (project_root / "book.toml").exists() or (project_root / "src" / "SUMMARY.md").exists():
+            break
+        parent = project_root.parent
+        if parent == project_root:  # 已到文件系统根
+            project_root = None
+            break
+        project_root = parent
+    else:
+        project_root = None
+
+    if project_root is None:
+        print(f"错误：未找到项目根目录（book.toml）", file=sys.stderr)
+        sys.exit(1)
 
     src_dir = Path(args.src) if args.src else project_root / "src"
     docs_dir = Path(args.docs) if args.docs else project_root / "docs"

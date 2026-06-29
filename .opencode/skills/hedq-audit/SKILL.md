@@ -42,7 +42,7 @@ metadata:
 
 ## 角色定义
 
-你是 HEDQ（Harness Engineering Documentation Quality）质量审计专家。你的核心能力是对书中简体中文 Markdown 内容进行 8 维度自动化质量评估，诊断问题根因，并指导修复。你的工作标准见 `docs/reference/hedq-quality-standard.md`。
+你是 HEDQ（Harness Engineering Documentation Quality）质量审计专家。你的核心能力是对书中简体中文 Markdown 内容进行 8 维度自动化质量评估，诊断问题根因，并指导修复。你的工作标准见 `./references/hedq-quality-standard.md`。
 
 ### 引用文件
 
@@ -50,9 +50,9 @@ metadata:
 
 | 文件 | 角色 | 用途 |
 |------|------|------|
-| `scripts/qa/run-hedq.py` | HEDQ CLI | 所有 Analyze/Verify 步骤的评分工具 |
-| `scripts/qa/reports/` | 报告存档 | 历史评分 JSON 快照和趋势 TSV |
-| `docs/reference/hedq-quality-standard.md` | 质量标准 | D1-D8 满分定义和评分细则 |
+| `./scripts/qa/run-hedq.py` | HEDQ CLI | 所有 Analyze/Verify 步骤的评分工具 |
+| `./scripts/qa/reports/` | 报告存档 | 历史评分 JSON 快照和趋势 TSV |
+| `./references/hedq-quality-standard.md` | 质量标准 | D1-D8 满分定义和评分细则 |
 | `.opencode/skills/hedq-audit/SKILL.md` | 本 Skill | 当前 Skill 定义，用于自我引用 |
 | `AGENTS.md` | 项目规范 | 品牌名、链接格式、代码块约定 |
 | `.opencode/agents/hedq-audit.md` | 子智能体 | `@hedq-audit` 子智能体配置 |
@@ -76,13 +76,13 @@ flowchart TB
 
 | 步骤 | 触发条件 | 一线处理 | 仍失败兜底 |
 |------|---------|---------|-----------|
-| Analyze | `python scripts/qa/run-hedq.py` 执行失败 | 检查 Python 环境：`python --version`、`pip list` | 回退到手动运行模式，直接读取上次报告 |
+| Analyze | `python ./scripts/qa/run-hedq.py` 执行失败 | 检查 Python 环境：`python --version`、`pip list` | 回退到手动运行模式，直接读取上次报告 |
 | Analyze | 报告输出为空 | 检查 `--json --no-save` 参数 | 不带 JSON 参数重跑获取纯文本输出 |
 | Diagnose | 诊断表无法匹配当前低分维度 | 使用 `grep -n` 手动扫描该维度对应的检查模式 | 报告"诊断失败"，建议人工介入该维度 |
 | Fix | 修复引入新违规 | `git diff` 回退单文件修改 | `git checkout HEAD -- <file>` 丢弃整文件修改 |
 | Verify | 修复后分数未提升 | 撤销该次修改，尝试替代修复方案 | 标记该维度为"阻塞"，进入下一维度 |
 | Verify | 连续 3 次修复同一维度无提升 | 🛑 **停止该维度修复** | 报告阻塞原因，建议人工审查 |
-| Analyze | `--json` 输出无法被解析 (JSON parse failure) | 回退到纯文本输出模式 `python scripts/qa/run-hedq.py --no-save`，提取文本报告中的总分信息 | 打印原始输出，建议人工审查 |
+| Analyze | `--json` 输出无法被解析 (JSON parse failure) | 回退到纯文本输出模式 `python ./scripts/qa/run-hedq.py --no-save`，提取文本报告中的总分信息 | 打印原始输出，建议人工审查 |
 
 ---
 
@@ -92,13 +92,13 @@ flowchart TB
 
 ```bash
 # 完整模式（全部 8 维度，~30 秒）
-python scripts/qa/run-hedq.py
+python ./scripts/qa/run-hedq.py
 
 # 快速模式（D1 结构 + D6 文风 + D7 术语，~10 秒）
-python scripts/qa/run-hedq.py --quick
+python ./scripts/qa/run-hedq.py --quick
 
 # JSON 输出（供脚本消费）
-python scripts/qa/run-hedq.py --json --no-save
+python ./scripts/qa/run-hedq.py --json --no-save
 ```
 
 ### 评分评级标准
@@ -238,7 +238,7 @@ grep -rn ']([^)]*\.md' src/ --include="*.md" | grep -v 'SUMMARY.md'
 每次修复后必须重新运行 HEDQ 确认分数提升：
 
 ```bash
-python scripts/qa/run-hedq.py --json --no-save
+python ./scripts/qa/run-hedq.py --json --no-save
 ```
 
 验证通过条件：

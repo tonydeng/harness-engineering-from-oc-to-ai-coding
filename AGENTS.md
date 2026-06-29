@@ -135,27 +135,27 @@ awk '/^```[a-z]/ && !/mermaid/ && !/:/ {count++} END {print count+0 " blocks wit
 
 ### HEDQ 质量审计
 
-8 维度内容质量评分（满分 52.5，自动检测口径）。标准详见 [docs/reference/hedq-quality-standard.md](docs/reference/hedq-quality-standard.md)。
+8 维度内容质量评分（满分 52.5，自动检测口径）。标准详见 [.opencode/skills/hedq-audit/references/hedq-quality-standard.md](.opencode/skills/hedq-audit/references/hedq-quality-standard.md)。
 
 ```bash
 # 快速模式：D1 结构 + D6 文风 + D7 术语（满分 23，约 10 秒）
-python scripts/qa/run-hedq.py --quick
+python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --quick
 
 # 完整模式：8 个维度全检（满分 52.5，约 30 秒）
-python scripts/qa/run-hedq.py
+python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py
 
 # JSON 输出（供 CI/脚本消费）
-python scripts/qa/run-hedq.py --json --no-save
+python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --json --no-save
 ```
 
-评级标准：≥90% READY · 75-89% CONDITIONAL · 60-74% NEEDS WORK · <60% DRAFT。报告自动保存到 `scripts/qa/reports/`（含 JSON 快照 + results.tsv 趋势记录）。
+评级标准：≥90% READY · 75-89% CONDITIONAL · 60-74% NEEDS WORK · <60% DRAFT。报告自动保存到 `.opencode/skills/hedq-audit/scripts/qa/reports/`（含 JSON 快照 + results.tsv 趋势记录）。
 
 ### HEDQ Skill 工作流（Agent 使用）
 
 当 AI 智能体需要对书籍进行质量审计和修复时，加载 `hedq-audit` Skill 并遵循 Analyze → Diagnose → Fix → Verify 四步闭环：
 
 ```
-1. Analyze  — 运行 python scripts/qa/run-hedq.py 获取 8 维评分报告
+1. Analyze  — 运行 python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py 获取 8 维评分报告
 2. Diagnose — 解读报告，定位最低分维度的根因（断链/品牌名/代码块path等）
 3. Fix      — 按 P0 > P1 > P2 优先级定向修复，每次只修一个维度
 4. Verify   — 重新运行 HEDQ，确认分数提升且未引入新问题
