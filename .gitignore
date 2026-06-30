@@ -71,6 +71,9 @@ temp/
 # OpenCode
 .omo/
 
+# Git Worktrees
+.worktrees/
+
 # Trae
 .trae/
 
