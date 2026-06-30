@@ -80,6 +80,9 @@ temp/
 # playwright
 .playwright-mcp/
 
+# Mermaid temp renders
+_mermaid_renders/
+
 # log
 logs/
 *.log

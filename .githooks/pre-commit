@@ -49,4 +49,25 @@ echo "=== Pre-commit Check: mdBook Build ==="
 mdbook build 2>&1 || { echo "❌ mdbook build failed"; exit 1; }
 echo "✅ mdbook build passed"
 
+echo "=== Pre-commit Check: HEDQ Quick Scan ==="
+HEDQ_SCRIPT=".opencode/skills/hedq-audit/scripts/qa/run-hedq.py"
+if [ -f "$HEDQ_SCRIPT" ]; then
+  if command -v python &> /dev/null; then
+    SCORE=$(python "$HEDQ_SCRIPT" --quick --json --no-save 2>/dev/null | grep -o '"percentage":[0-9.]*' | cut -d: -f2)
+    if [ -n "$SCORE" ]; then
+      if [ "$(echo "$SCORE < 75" | bc 2>/dev/null)" = "1" ]; then
+        echo "⚠️  HEDQ quick score ${SCORE}% is below 75% — review before push"
+      else
+        echo "✅ HEDQ quick score ${SCORE}% — acceptable"
+      fi
+    else
+      echo "⚠️  HEDQ JSON parse failed (non-blocking)"
+    fi
+  else
+    echo "⚠️  Python not available, skipping HEDQ (non-blocking)"
+  fi
+else
+  echo "⚠️  HEDQ script not found, skipping (non-blocking)"
+fi
+
 echo "=== All pre-commit checks passed ==="

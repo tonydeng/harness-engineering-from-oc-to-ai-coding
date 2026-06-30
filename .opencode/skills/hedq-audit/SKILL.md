@@ -60,7 +60,8 @@ metadata:
 | `.opencode/skills/hedq-audit/SKILL.md` | 本 Skill | 当前 Skill 定义，用于自我引用 |
 | `AGENTS.md` | 项目规范 | 品牌名、链接格式、代码块约定 |
 | `.opencode/agents/hedq-audit.md` | 子智能体 | `@hedq-audit` 子智能体配置 |
-| `.github/workflows/deploy-mdbook.yml` | CI 配置 | HEDQ --quick 非阻塞检查入口 |
+| `./scripts/qa/hedq/checks/d8_render.py` | Mermaid 渲染验证 | 通过 `npx mmdc` 批量/增量渲染检查，支持 `--files` 和 `--files-changed` 模式 |
+| `.github/workflows/deploy-mdbook.yml` | CI 配置 | HEDQ full mode 分级警告 + 增量 Mermaid 渲染检查, 皆非阻塞 |
 
 ## 工作循环
 
@@ -190,7 +191,15 @@ python ./scripts/qa/run-hedq.py --json --no-save
 
 | 低分信号 | 根因 | 修复动作 |
 |---------|------|---------|
-| D8.1 低分 | Mermaid 语法错误 | `bash mdbook build` 定位渲染错误行，修正节点文本引号 |
+| D8.1 低分 — 节点文本引号 | 节点含 `@`、`()`、中文括号等特殊字符未加双引号 | 修正为 `Node["text"]` |
+| D8.1 低分 — 子图不平衡 | `subgraph` / `end` 数量不匹配 | 确保每个 subgraph 有对应 end，子图标签用引号包裹 |
+| D8.1 低分 — 空节点标签 | `Node[]` 无文本内容 | 补全节点文本或用 `Node[" "]` 占位 |
+| D8.1 低分 — mindmap 缩进不齐 | mindmap 节点缩进深度不一致或增量非偶数 | 统一缩进，同一层级缩进量一致 |
+| D8.1 低分 — 括号不平衡 | flowchart 节点/边声明中括号不成对 | 检查 `[]`、`()`、`{}` 配对 |
+| D8.1 低分 — 方向声明 | 使用了 `TD` 等非标准方向 | 改为 `TB`（标准 Mermaid 方向） |
+| D8.2 低分 | Mermaid 配色与规范不符（Agent蓝/Skill绿/Workflow橙/MCP紫） | 修正节点填充色为 `#4A90D9`/`#50C878`/`#FF9F43`/`#A66CFF` |
+| D8.3 渲染失败 | mmdc 渲染异常（含 Chromium 错误） | 运行 `python scripts/qa/hedq/checks/d8_render.py` 定位失败块，检查未闭合引号/非标准语法/特殊字符转义 |
+| D8.3 渲染提示 — 节点引用 | 边缘引用了未声明的节点 ID | 补全节点声明或检查 ID 拼写 |
 
 ### 子 agent 交叉诊断
 

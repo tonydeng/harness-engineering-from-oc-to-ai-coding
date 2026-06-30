@@ -57,7 +57,7 @@ jobs:
 
       - name: HEDQ full quality check
         env:
-          HEDQ_THRESHOLD_WARN: ${{ vars.HEDQ_THRESHOLD_WARN || '60' }}
+          HEDQ_THRESHOLD_WARN: ${{ vars.HEDQ_THRESHOLD_WARN || '75' }}
         run: |
           echo "Running HEDQ full quality check (threshold: ${HEDQ_THRESHOLD_WARN}%)..."
           RAW=$(python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --json --no-save 2>&1) || {
@@ -84,6 +84,11 @@ jobs:
           else
             echo "✅ HEDQ score ${PERCENTAGE}% meets threshold ${HEDQ_THRESHOLD_WARN}%"
           fi
+
+      - name: Setup Node.js for Mermaid CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
       - name: Mermaid render check (changed files only)
         shell: bash
