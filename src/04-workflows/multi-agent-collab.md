@@ -644,9 +644,9 @@ graph TB
     F -->|有| G[异步（后台）]
     F -->|没有| H[同步即可]
     
-    C --> I[使用 task() 默认调用]
+    C --> I["使用 task() 默认调用"]
     E --> I
-    G --> J[使用 delegate_task()<br/>run_in_background: true]
+    G --> J["使用 delegate_task()<br/>run_in_background: true"]
     H --> I
     
     style C fill:#4A90D9,color:#fff

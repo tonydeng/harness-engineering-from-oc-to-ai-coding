@@ -634,9 +634,9 @@ flowchart TB
     
     B -->|规划类| C[Prometheus/Oracle]
     B -->|执行类| D[Atlas/Hephaestus]
-    B -->|探索类| E[@explore]
-    B -->|发现类| Scout[@scout]
-    B -->|通用类| F[@general]
+    B -->|探索类| E["@explore"]
+    B -->|发现类| Scout["@scout"]
+    B -->|通用类| F["@general"]
     
     C --> G{复杂度判断}
     D --> G
