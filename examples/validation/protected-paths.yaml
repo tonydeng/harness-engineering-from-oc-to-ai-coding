@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 关键目录保护规则
 protected_paths:
   - path: ".git/**"

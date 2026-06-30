@@ -287,3 +287,35 @@ None of the appendices has a dedicated section on **how an AE should apply these
 4. **P2 — Add Generator-Evaluator pattern** to App B and C agent-architecture.md design pattern sections
 5. **P2 — Add Ch4 workflow cross-references** to App D ecosystem.md
 6. **P3 — Create AE cross-tool configuration decision tree** in a single appendix (perhaps App B ecosystem.md)
+
+---
+
+## 修复计划与检查清单
+
+### 优先级矩阵
+
+| 优先级 | 项数 | 说明 |
+|--------|------|------|
+| **P0 🔴** | 1 | 附录 glossry 缺失 AE 术语（Loop Engineering 等 5 个） |
+| **P1 🟡** | 2 | 上下文工程交叉引用 + 停止条件参考表 |
+| **P2 🟢** | 3 | Generator-Evaluator 模式、Ch4 交叉引用、决策树 |
+
+### P0 修复项
+
+| # | 问题 | 目标文件 | 操作 | 验证 |
+|---|------|---------|------|------|
+| A-P0-1 | **Glossary 缺 5 个 AE 术语** | `src/appendix-a/glossary.md` | 添加 Loop Engineering, Model Routing, Feedback Loop, Generator-Evaluator, March of Nines | 术语存在且准确 |
+
+### P1 修复项
+
+| # | 问题 | 目标文件 | 操作 | 验证 |
+|---|------|---------|------|------|
+| A-P1-1 | **缺上下文工程交叉引用** | `src/appendix-*/ecosystem.md` | 从各附录 ecosystem.md 链接到 Ch6 上下文工程文章 | 3 个 ecosystem.md 均有交叉引用 |
+| A-P1-2 | **缺停止条件参考表** | `src/appendix-*/ecosystem.md` | 在 Loop Engineering 节补充停止条件对比表 | 3 个文件均有 |
+
+### 检查清单
+
+- [ ] A-P0-1: Glossary AE 术语补充完成
+- [ ] A-P1-1: 上下文工程交叉引用完成
+- [ ] A-P1-2: 停止条件参考表完成
+- [ ] ✅ 最终验证：AE 覆盖率重评

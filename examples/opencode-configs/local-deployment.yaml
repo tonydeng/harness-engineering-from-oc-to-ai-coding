@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 本地 vLLM 部署配置示例
 # 启动命令: vllm serve deepseek-ai/deepseek-v3 --port 8000
 

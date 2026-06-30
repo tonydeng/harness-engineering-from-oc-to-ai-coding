@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "timestamp": "2025-03-15T10:23:45Z",
   "session_id": "sess-xyz789",
   "action": "database_flush",

@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "profile": "debug-verbose",
   "$extends": "debug",
   "behavior": {

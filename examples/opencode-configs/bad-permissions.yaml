@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 错误配置示例
 agent_permissions:
   mode: trust_all  # 危险！

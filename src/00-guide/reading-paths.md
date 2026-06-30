@@ -1136,6 +1136,37 @@ graph TB
 
 ---
 
+## 用户故事追溯矩阵
+
+> 映射 55 个用户故事 → 14 个读者角色的覆盖文章。数据源：[traceability-matrix.md](/docs/planning/requirements/traceability-matrix.md) · [角色满意度审计](/docs/reviews/reader-role-satisfaction-audit-2026-06-28.md)
+
+| 状态 | 含义 | 角色数 |
+|------|------|--------|
+| ✅ | 完整：用户故事被实质性满足 | 8 |
+| ◐ | 大部分：映射存在但实质深度待加强 | 5 |
+| ○ | 部分：有明确缺失故事 | 1 |
+
+| 角色 | 用户故事 | 覆盖文章 | 状态 |
+|------|----------|----------|------|
+| **入门开发者** | US-BEGINNER-01~05 | 读者导航·快速体验, Ch1 简介(6篇), Ch2 Agent编排/Skill/工作流, Ch3 快速上手/配置, Ch4 Ultrawork, Ch7 从零搭建微服务 | ✅ |
+| **效率开发者** | US-POWER-01~06, US-CL-02~03, US-PI-01 | Ch2 Agent/工作流/上下文/约束, Ch3 oh-my-openagent, Ch4 工作流实战全部(6篇), Ch6 性能/上下文压缩/缓存/记忆, Ch7 微服务/遗留系统/全流程 | ✅ |
+| **技术负责人** | US-LEAD-01~04 | Ch1 简介(4篇), Ch2 Agent/Skill/工作流, Ch3 配置/多环境, Ch4 多Agent/Teams, Ch6 安全总览/沙箱, Ch7 微服务/Skill市场 | ✅ |
+| **Skill 作者** | US-SKILL-01~05 | Ch2 Skill/约束, Ch3 配置, Ch5 全部(5篇), Ch6 MCP服务器, Ch7 团队Skill市场 | ✅ |
+| **工程经理** | US-MANAGER-01~02, US-CL-01, US-PI-02 | Ch1 生态对比/Why, Ch2 Agent/Skill/工作流, Ch6 性能/上下文压缩, Ch7 微服务/遗留系统/全流程/混合架构 | ✅ |
+| **后端开发者** | US-BACKEND-01~04 | Ch2 Agent/Skill, Ch3 配置/国产模型, Ch4 多Agent, Ch5 Skill-MCP桥接, Ch6 MCP服务器/安全总览, Ch7 微服务/混合架构 | ✅ |
+| **安全工程师** | US-SECURITY-01~03 | Ch2 约束, Ch3 配置, Ch4 多Agent, Ch5 Skill最佳实践, Ch6 MCP/安全总览/沙箱/AGENTS.md/可观测性, Ch7 安全审计 | ✅ |
+| **红队成员** | US-REDTEAM-01~03 | Ch2 Agent/约束, Ch4 多Agent, Ch5 创建Skill/最佳实践, Ch6 MCP/安全总览/沙箱, Ch7 安全审计 | ✅ |
+| **智能体开发工程师** | US-AE-01~03 | Ch1 Harness理论, Ch2 Agent/上下文/约束/验证, Ch3 配置/多环境, Ch4 全部(6篇), Ch6 全部(12篇), Ch7 微服务 | ◐ |
+| **需求分析师** | US-ANALYST-01~03 | 读者导航全部, Ch1 简介(4篇), Ch2 Agent, Ch7 微服务 | ◐ |
+| **系统架构师** | US-SYSA-01~03 | Ch1 生态对比/Why, Ch2 Agent/Skill/约束, Ch3 配置/多环境, Ch4 多Agent/Teams, Ch5 Skill最佳实践, Ch6 MCP/安全总览/沙箱, Ch7 安全审计 | ◐ |
+| **前端开发者** | US-FRONTEND-01~03 | Ch2 Skill/工作流, Ch3 配置, Ch4 Ultrawork, Ch5 全部(5篇), Ch7 微服务/全流程 | ◐ |
+| **文档 UX 专家** | US-UX-01~03 | 读者导航全部, Ch1 Harness Engineer, Ch2 Agent, Ch7 微服务 | ◐ |
+| **技术审校/QA** | US-QA-01~03 | 读者导航全部, Ch1 Harness Engineer, Ch2 Agent, Ch3 快速上手, Ch4 Ultrawork, Ch5 创建Skill, Ch6 MCP服务器, Ch7 微服务 | ○ |
+
+> 注：QA 角色缺失 **US-QA-02**（内容一致性自动化检查——CI 缺少 Markdown lint/Mermaid 预渲染/术语一致性检查），计划 v1.1 补齐。其余 13 个角色覆盖率为 100%。
+
+---
+
 ## 关联章节
 
 - → [读者导航](./)

@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 正确配置示例
 agent_permissions:
   mode: explicit_allowlist

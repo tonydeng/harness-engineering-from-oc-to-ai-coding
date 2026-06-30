@@ -423,6 +423,67 @@ Agent 会持续迭代直到测试覆盖率达标：
 [完成] 覆盖率达标，任务完成
 ```
 
+### 前端组件开发工作流
+
+对于前端开发者，Agent 编排可以将组件开发从"手写 boilerplate"转变为"描述目标 → Agent 生成 → 人工微调"的高效模式。下图展示了从设计稿到可用组件的完整 Agent 编排流程：
+
+```mermaid
+flowchart TB
+    Input["设计稿 / 组件规格"] --> Step1
+
+    subgraph Step1["步骤 1：生成组件骨架"]
+        direction TB
+        A1["Agent 生成 Props 类型定义"] --> A2["Agent 生成组件 Shell"]
+        A2 --> A3["Agent 生成 Storybook 模板"]
+    end
+
+    Step1 --> Step2
+
+    subgraph Step2["步骤 2：实现组件逻辑"]
+        direction TB
+        B1["Agent 实现状态管理"] --> B2["Agent 实现事件处理"]
+        B2 --> B3["Agent 实现生命周期"]
+    end
+
+    Step2 --> Step3
+
+    subgraph Step3["步骤 3：添加样式"]
+        direction TB
+        C1["Agent 应用 CSS/Tailwind"] --> C2["Agent 处理响应式布局"]
+        C2 --> C3["Agent 适配暗色模式"]
+    end
+
+    Step3 --> Step4
+
+    subgraph Step4["步骤 4：编写测试"]
+        direction TB
+        D1["Agent 生成单元测试"] --> D2["Agent 生成集成测试"]
+        D2 --> D3["Agent 运行测试套件"]
+    end
+
+    Step4 --> Step5
+
+    subgraph Step5["步骤 5：审查与迭代"]
+        direction TB
+        E1["Oracle 验证代码质量"] --> E2{测试通过?}
+        E2 -->|否| E3["Agent 修复问题"]
+        E3 --> E1
+        E2 -->|是| E4["LSP 类型检查"]
+    end
+
+    Step5 --> Output["可用组件"]
+
+    style Input fill:#FF9F43,color:#fff
+    style Step1 fill:#4A90D9,color:#fff
+    style Step2 fill:#4A90D9,color:#fff
+    style Step3 fill:#50C878,color:#fff
+    style Step4 fill:#50C878,color:#fff
+    style Step5 fill:#FF9F43,color:#fff
+    style Output fill:#4A90D9,color:#fff
+```
+
+这个流程的核心优势在于：前端开发者只需提供设计稿或组件规格描述，Agent 会自动完成从类型定义到测试的全流程。步骤 1-3 对应组件的"结构-逻辑-样式"三层分离，步骤 4-5 通过自动化测试和验证确保质量。整个过程中，开发者专注于设计意图的传达和最终审查，而非逐行编写 boilerplate 代码。
+
 ---
 
 ## Ultrawork 的最佳实践
