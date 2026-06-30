@@ -215,6 +215,38 @@ def _check_mindmap_indent(lines: List[str]) -> int:
     return 0
 
 
+def _check_unquoted_subgraph_label(lines: List[str]) -> int:
+    """检查 subgraph 标签是否未引用包含特殊字符。
+    中文括号 (（）) 在没有引号的 subgraph 标签中会导致 Mermaid 词法解析失败。
+    有效的写法：
+      subgraph "规划阶段（Prometheus）"   ✅ 双引号
+      subgraph 阶段["阶段（Alias）"]      ✅ 方括号别名（特殊字符在 [] 内是安全的）
+    无效的写法：
+      subgraph 规划阶段（Prometheus）     ❌ 中文括号导致词法错误
+    """
+    count = 0
+    for line in lines:
+        if not line.strip():
+            continue
+        m = re.match(r'^\s*subgraph\s+(.*)$', line)
+        if not m:
+            continue
+        rest = m.group(1).strip()
+        # 双引号开头 → 已引用，安全
+        if rest.startswith('"'):
+            continue
+        # 方括号开头 → 别名引用，安全
+        if rest.startswith('['):
+            continue
+        # 提取引号/方括号前的标签文本（subgraph 标签名部分）
+        # 去掉末尾的 [...] 或 {...} 别名
+        label_only = re.sub(r'\s*[\[{].*$', '', rest).strip()
+        # 检查标签文本中是否包含中文括号
+        if '（' in label_only or '）' in label_only:
+            count += 1
+    return count
+
+
 def _check_bracket_balance(content: str, chart_type: str) -> int:
     """检查方括号/圆括号基本平衡（只针对 flowchart 类）。"""
     if chart_type not in {TYPE_FLOWCHART, TYPE_CLASS, TYPE_QUADRANT}:
@@ -248,6 +280,7 @@ def get_d81_syntax_score(blocks: List[dict]) -> Tuple[float, List[str]]:
     total_empty = 0
     total_mindmap = 0
     total_bracket = 0
+    total_subgraph_label = 0
 
     for idx, block in enumerate(blocks):
         lines = block["lines"]
@@ -264,6 +297,8 @@ def get_d81_syntax_score(blocks: List[dict]) -> Tuple[float, List[str]]:
             bad_blocks.add(idx); total_mindmap += 1
         if _check_bracket_balance(block["content"], ct):
             bad_blocks.add(idx); total_bracket += 1
+        if _check_unquoted_subgraph_label(lines):
+            bad_blocks.add(idx); total_subgraph_label += 1
 
     if total_tilde:
         issues.append(f"波浪号引用错误 {total_tilde} 处")
@@ -277,6 +312,8 @@ def get_d81_syntax_score(blocks: List[dict]) -> Tuple[float, List[str]]:
         issues.append(f"缩进问题 {total_mindmap} 个块")
     if total_bracket:
         issues.append(f"括号不平衡 {total_bracket} 个块")
+    if total_subgraph_label:
+        issues.append(f"subgraph 标签未引用特殊字符 {total_subgraph_label} 个块")
 
     num_bad = len(bad_blocks)
     score = round(2.0 * (total_blocks - num_bad) / total_blocks, 2) if total_blocks else 0.0
@@ -374,7 +411,7 @@ def get_d83_structural(blocks: List[dict]) -> str:
         content = block["content"]
         # 声明节点：Node[Label] 或 Node("Label") 或 Node{Label}
         declared = set()
-        for m in re.finditer(r'^([A-Za-z_]\w*)\s*[[({]', content, re.MULTILINE):
+        for m in re.finditer(r'^([A-Za-z_]\w*)\s*[\[({]', content, re.MULTILINE):
             declared.add(m.group(1))
         # 也收集子图标题
         for m in re.finditer(r'subgraph\s+(\w+)', content):
