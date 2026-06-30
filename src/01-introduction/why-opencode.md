@@ -124,6 +124,8 @@ OPTIONS
 
 ### 1.3 工具定位速览
 
+下图以思维导图形式展示了各 AI 编程工具在不同维度上的能力定位速览。
+
 ```mermaid
 mindmap
   root((AI 编程工具生态))
@@ -606,6 +608,8 @@ sequenceDiagram
 - 支持回滚和重试
 
 ### 3.4 选型决策树：原生 vs OMO
+
+下图展示了在 OpenCode 原生与 OMO 增强版之间做选型的决策树。
 
 ```mermaid
 graph TB

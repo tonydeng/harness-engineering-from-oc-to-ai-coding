@@ -64,6 +64,8 @@
 
 ### 插件生态概览
 
+下图展示了 OpenCode 生态中 4 款主流记忆插件及其与核心系统的关系。
+
 ```mermaid
 graph TB
     subgraph User["你的选择取决于"]
@@ -318,6 +320,8 @@ Session 中的原始记忆太多太杂。如果每次打开新 Session 都把前
 **一句话直觉**：Auto-Dream 就像你每天睡前回想今天发生了什么——你不会记得每顿午饭吃了什么，但你会记住"今天在代码评审时发现了一个关键 bug"。
 
 ### 通用 Auto-Dream 流程图
+
+下图以时序图形式展示了 Auto-Dream 记忆插件的工作流程，从会话创建到记忆持久化的完整交互过程。
 
 ```mermaid
 sequenceDiagram

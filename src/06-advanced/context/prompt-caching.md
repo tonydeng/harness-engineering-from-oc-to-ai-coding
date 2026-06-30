@@ -96,6 +96,8 @@ L3 是"你的个人 cheat sheet"——无论在哪个项目，这些知识都已
 
 ### 三级缓存架构图
 
+下图展示了 Prompt 缓存的三级架构，从 L1 会话级到 L3 用户级的层级关系。
+
 ```mermaid
 graph TB
     subgraph L1["L1: Session 内缓存"]
@@ -123,6 +125,8 @@ graph TB
 ```
 
 ### 缓存命中流程时序
+
+下图以时序图展示了缓存命中流程中 Agent 与各缓存层之间的交互顺序。
 
 ```mermaid
 sequenceDiagram

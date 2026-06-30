@@ -132,3 +132,20 @@
 | P0 修复 | 3 类（代码块格式、JSON 文件名、大段外移） |
 | P1 修复 | 6 类（标点、导航、内部引用） |
 | P2 改进 | 4 类（格式优化、标点、排版） |
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

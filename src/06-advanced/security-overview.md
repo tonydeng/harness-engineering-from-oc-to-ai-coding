@@ -511,6 +511,8 @@ flowchart LR
 
 ### 环境变量注入流程
 
+下图展示了环境变量从配置源到 Agent 运行环境的完整注入流程。
+
 ```mermaid
 flowchart LR
     A[opencode.json] -->|1. 声明 Secret 引用| B[Secret Store Client]

@@ -92,6 +92,8 @@ Qwen（阿里通义千问）是国产模型中生态最完整的选择。从 0.5
 
 ### 国产 Provider 配置流程
 
+下图展示了国产 Provider 的完整配置流程，从模型选择到参数设置的各步骤顺序。
+
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': {'primaryColor':'#4A90D9', 'secondaryColor':'#50C878', 'tertiaryColor':'#FF9F43'}}}%%
 flowchart TB

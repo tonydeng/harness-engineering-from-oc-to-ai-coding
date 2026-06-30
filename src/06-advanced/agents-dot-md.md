@@ -173,6 +173,8 @@ myapp/
 
 ### 指令覆盖架构
 
+下图展示了 AGENTS.md 指令的覆盖架构，呈现各配置文件的层级关系和优先级。
+
 ```mermaid
 flowchart TB
     subgraph GlobalOC["OpenCode 全局（首要）"]

@@ -134,3 +134,20 @@
 ---
 
 *合并自：Karpathy 技术审查、Munger 逻辑审计、TechLead 技术架构审查（2026-06-06 第 2 轮）*
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

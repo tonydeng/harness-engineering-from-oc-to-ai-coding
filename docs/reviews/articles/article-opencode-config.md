@@ -154,3 +154,20 @@
 **总体评价**：文章在概念层面（配置层级、合并行为、权限机制）的架构描述是合理的，但具体配置示例存在严重事实错误。成本管控章节和权限工具列表需要立即重写。最核心的问题是将 oh-my-openagent 的扩展功能（categories、fallbackChain、类别路由）混入 OpenCode 原生配置描述，且未做任何区分说明——这是系统性的归类错误，不是孤立的笔误。
 
 **建议**：立即修复高优先级错误（#1-#6），再将类别路由和成本管控策略重新定位到 oh-my-openagent 配置文中，或明确标注扩展来源。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

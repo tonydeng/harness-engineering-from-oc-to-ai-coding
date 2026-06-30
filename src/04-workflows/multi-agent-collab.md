@@ -446,6 +446,8 @@ function mergeTaskResults(results, strategy) {
 
 ### 执行模型
 
+下图展示了后台任务的执行模型，包括父 Agent 派发子任务和异步收集结果的流程。
+
 ```mermaid
 flowchart TB
     subgraph 同步["同步调用（默认）"]
@@ -632,6 +634,8 @@ background_cancel(taskId: "bg_abc123")
 
 ### 同步 vs 异步：选择决策树
 
+下图展示了在同步调用和异步调用之间做选择的决策树。
+
 ```mermaid
 graph TB
     A[选择执行模式] --> B{子任务是否需要<br/>结果才能继续?}
@@ -724,6 +728,8 @@ delegate_task(
 7-Agent Pipeline 是当前最成熟的多 Agent 协作方案，将软件开发流程拆分为七个独立角色，每个角色专注于单一职责。
 
 ### 七个角色的职责定义
+
+下图展示了 7-Agent Pipeline 中每个 Agent 角色的职责分工和执行顺序。
 
 ```mermaid
 flowchart TB
@@ -1103,6 +1109,8 @@ export async function login(req: Request, res: Response) {
 
 ### 状态流转图
 
+下图以状态机图展示了 Agent 在 Pipeline 中的状态流转，从就绪到完成的完整生命周期。
+
 ```mermaid
 stateDiagram-v2
     [*] --> planning: 启动 Pipeline
@@ -1137,6 +1145,8 @@ stateDiagram-v2
 前端开发有其独特的工作流需求：UI 设计、组件实现、响应式适配、视觉测试等环节需要紧密配合。以下是针对前端场景定制的 Agent 编排方案。
 
 ### AI 辅助组件生成工作流
+
+下图展示了前端 AI 辅助组件生成的工作流程，从设计稿分析到组件渲染的完整链路。
 
 ```mermaid
 flowchart TB
@@ -1327,6 +1337,8 @@ UI Reviewer Agent 在审查时会检查以下项目：
 | `manual` | 手动触发 | - | - |
 
 ### 失败处理策略
+
+下图展示了 Pipeline 中不同失败场景的处理策略和降级方案。
 
 ```mermaid
 flowchart TB

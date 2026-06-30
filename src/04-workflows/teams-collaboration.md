@@ -521,6 +521,8 @@ flowchart TB
 
 #### 扩容阶段
 
+下图展示了集群扩容阶段的执行流程，从负载检测到新 Worker 加入的完整步骤。
+
 ```mermaid
 flowchart TB
     subgraph 扩容阶段
@@ -538,6 +540,8 @@ flowchart TB
 运行阶段中，Team Lead 持续监控集群负载指标——包括 CPU 使用率、Inbox 消息积压深度和 Worker 任务队列长度。当综合负载超过 `scaleUpThreshold`（默认 0.7）时，自动创建新的 Worker 加入集群分担任务，Worker 数量上限由 `maxWorkers`（默认 10）控制。扩容后进入 `cooldownPeriod`（默认 60 秒），避免频繁伸缩导致的震荡。若负载未达到阈值，集群维持当前规模继续运行。
 
 #### 缩容阶段
+
+下图展示了集群缩容阶段的执行流程，从空闲 Worker 识别到资源回收的步骤。
 
 ```mermaid  
 flowchart TB
@@ -948,6 +952,8 @@ graph LR
 | `team_task_get` | 查看单个任务详情 | 全体成员 |
 | `team_status` | 查询团队整体状态和成员健康度 | 全体成员 |
 | `team_list` | 列出当前运行的所有 Team | 全体成员（全局查询） |
+
+下图展示了 Team Mode 中 Team Lead 与成员之间的多级任务分配和通信关系。
 
 ```mermaid
 flowchart TB

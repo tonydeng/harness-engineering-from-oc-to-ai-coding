@@ -355,6 +355,8 @@ opencode --profile review
 /profile review
 ```
 
+下图展示了 oh-my-openagent 中 Profile 切换的时间线示例，从开发阶段到审查再到调试的完整过程。
+
 ```mermaid
 timeline
     title Profile 切换时间线 (oh-my-openagent 功能)

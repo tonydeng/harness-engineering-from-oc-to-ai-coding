@@ -54,6 +54,8 @@ Skill 市场的核心是**标准化**。所有 Skill 必须遵守统一的 `fron
 
 ### 架构总览
 
+下图展示了内部 Skill 市场的整体架构，包括注册中心、发布管道和消费端的关系。
+
 ```mermaid
 graph TB
     subgraph "Skill 贡献者"
@@ -288,6 +290,8 @@ allowed-tools:
 ## 团队协作模式
 
 ### "Skill 作者 → 技术审校 → 发布"流水线
+
+下图展示了从 Skill 创建到发布的三阶段协作流水线，涉及作者、审校者和发布管理员三个角色。
 
 ```mermaid
 graph LR

@@ -266,6 +266,8 @@ Ralph Loop（`/ulw-loop`）是 Ultrawork 的自我迭代机制。与普通 Loop 
 
 ### Ralph Loop 决策流程
 
+下图展示了 Ralph Loop 的决策流程，从目标设定到完成验证的循环迭代步骤。
+
 ```mermaid
 flowchart TB
     A[启动 /ulw-loop] --> B[执行当前任务]

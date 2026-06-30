@@ -1601,6 +1601,8 @@ metadata:
 
 **管道模式**：多个 Skill 串联执行
 
+下图展示了管道模式中多个 Skill 按顺序串联执行的数据流。
+
 ```mermaid
 flowchart LR
     A[调查研究] --> B[架构设计] --> C[代码审查] --> D[安全审计]
@@ -1612,6 +1614,8 @@ flowchart LR
 ```
 
 **并行模式**：多个 Skill 同时执行
+
+下图展示了并行模式中多个 Skill 同时执行并汇总结果的工作流。
 
 ```mermaid
 flowchart TB

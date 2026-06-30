@@ -520,6 +520,8 @@ OMO 内置了 11 个 Agent，分三个层次。以下是你真正需要知道的
 
 ### 概览
 
+下图以分层图形式展示了 OMO 内置 11 个 Agent 的分层架构概览。
+
 ```mermaid
 graph TB
     subgraph Planning["规划层 · 只读分析"]

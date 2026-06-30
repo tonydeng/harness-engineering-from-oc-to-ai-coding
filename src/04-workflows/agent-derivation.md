@@ -693,6 +693,8 @@ flowchart TB
 
 ### 组件开发派生流程
 
+下图展示了前端组件开发中 Agent 派生模式的工作流程，从需求分析到组件实现的分工协作。
+
 ```mermaid
 flowchart TB
     A[前端架构师 Agent<br/>组件需求分析] --> B{派生决策}

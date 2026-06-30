@@ -217,3 +217,20 @@ The existing traceability matrix (`docs/planning/requirements/traceability-matri
 | US-AE-01 | 2/3 | Strong on Skill composition, dependency management, interface contracts. Still no AGENTS.md linkage. |
 | US-AE-02 | 1/3 | Pipeline input/output standardization implicitly helps context flow. No explicit context budget. |
 | US-AE-03 | 2/3 | Best article for loop engineering — orchestration and pipeline patterns, quality gates, error handling. Missing generator-evaluator, iterative refinement, and explicit stop conditions. |
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

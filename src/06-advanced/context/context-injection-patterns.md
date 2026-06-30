@@ -184,6 +184,8 @@ Lazy Loading 和 Pre-fetching 解决的是"什么时候加载"，Hierarchical Co
 
 ### 三层架构
 
+下图展示了分级上下文的三层架构，按重要性、时效性和访问频率将上下文分为三个层级。
+
 ```mermaid
 graph TB
     subgraph Tier1["Tier 1: Hot Layer (热层)"]
@@ -594,6 +596,8 @@ def calculate_total(items):
 AST感知分块做的事很简单：把源码解析成一棵树，然后沿着树的分支找到自然边界（函数、类、方法、接口），只在边界处切割。每个生成的代码块都是一个完整的语义单元——不会把函数一分为二，不会把方法从类中剥离，不会把接口定义和它的实现注释分开。
 
 #### 完整流水线
+
+下图展示了 AST 感知分块的完整处理流水线，从源码解析到语义单元生成的各步骤。
 
 ```mermaid
 flowchart TB

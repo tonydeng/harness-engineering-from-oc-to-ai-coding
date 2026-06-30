@@ -62,6 +62,8 @@ opencode logs --session latest --level error
 
 ### 2.1 三层优化模型
 
+下图展示了成本管控的三层优化模型，从 Prompt 优化到缓存策略再到模型选择。
+
 ```mermaid
 flowchart TB
     subgraph T["Type-level（任务类型层）"]
@@ -262,6 +264,8 @@ Token 降 95%，搜索快 14 倍。
 | `conservative` | 深度架构讨论 | 10-20% |
 
 ## 五、性能决策树
+
+下图展示了性能优化方案的决策树，帮助根据场景选择合适的上下文配置策略。
 
 ```mermaid
 flowchart TB

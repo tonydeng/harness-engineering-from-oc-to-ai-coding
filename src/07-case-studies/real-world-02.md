@@ -266,6 +266,8 @@ npx secretlint "src/**/*" --format json > secretlint-report.json
 
 ### 审计维度与并行流程
 
+下图展示了安全审计的多维评估框架和并行执行流程。
+
 ```mermaid
 flowchart TB
     TL[Team Lead<br/>任务分发与汇总] --> SA[Static Analyzer<br/>静态代码分析]
@@ -489,6 +491,8 @@ function authMiddleware(req, res, next) {
 | **结果** | 分阶段方案被采纳。经评估，四期总耗时约 10 周，每期交付后立即部署验证 |
 
 ### 四期修复路线图
+
+下图以甘特图形式展示了安全修复的四期分阶段实施路线图和时间安排。
 
 ```mermaid
 gantt
@@ -725,6 +729,8 @@ git revert HEAD --no-edit && npm test
 - **扫描工具出错**——误报导致 CI 频繁失败，团队学会跳过。解决方案：白名单机制 + 人工审批跳过
 
 ### 改进效果总结
+
+下图总结了安全改进措施实施前后的效果对比，从问题发现到修复率的关键指标变化。
 
 ```mermaid
 flowchart LR

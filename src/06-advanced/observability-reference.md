@@ -438,6 +438,8 @@ logEvent 支持三种内容捕获模式，控制 `payload` 中是否包含请求
 
 ### 仪表板布局
 
+下图展示了可观测性仪表板的布局结构，包含各监控面板的区域划分和数据流向。
+
 ```mermaid
 flowchart TB
     subgraph Row1["第一行：实时概况"]

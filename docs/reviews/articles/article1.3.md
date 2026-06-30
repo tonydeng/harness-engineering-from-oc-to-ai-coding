@@ -116,3 +116,20 @@
 ### 一句话结论
 
 **三位视角的共同结论：这是一个优秀的理论框架说明，但不是一个合格的"框架采用决策支持"文章。** Karpathy 指出三阶段时间线和四支柱映射过于干净、可观测性被高估；Munger 指出框架实质绑定 OpenCode 却声称通用、在"工程"旗帜下提供的主要是分类法和叙事；TechLead 指出从"理解框架"到"落到团队"之间的断层基本是空的——没回答 ROI、风险、资源投入这几个最核心的问题。如果能在某处给出一个"Harness Engineering 采用决策框架"（含团队规模判断、优先级推荐、实施周期参考、ROI 估算模型），整个理论体系的可用性会大幅提升。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

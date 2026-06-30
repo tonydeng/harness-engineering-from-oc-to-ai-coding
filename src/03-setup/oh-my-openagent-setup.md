@@ -189,6 +189,8 @@ OMO 采用双层架构设计：**Plugin 层**负责与 OpenCode 集成，**Agent
 
 ### 整体架构
 
+下图展示了 OMO 的双层架构设计，包括 Plugin 层和 Agent 系统层的组件关系。
+
 ```mermaid
 flowchart TB
     subgraph User["用户层"]

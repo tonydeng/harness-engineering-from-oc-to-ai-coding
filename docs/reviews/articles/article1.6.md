@@ -103,3 +103,20 @@
 **第三优先级**：增加企业级信息——SLA/uptime 数据、供应商稳定性分析、学习曲线和团队培训成本。
 
 **保留价值**：混合架构策略、"追赶"叙事的诚实部分（跨模块推理/安全审计/架构设计的能力差距）、中文场景优势的定性分析——这些在三个视角中均被认可为真实有价值的内容。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+
