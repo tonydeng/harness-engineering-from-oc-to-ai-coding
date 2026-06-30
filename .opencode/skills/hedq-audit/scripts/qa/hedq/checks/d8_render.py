@@ -2,6 +2,8 @@
 
 Usage:
     python d8_render.py [--output DIR] [--parallel N] [--timeout N]
+    python d8_render.py --files path/to/file1.md path/to/file2.md
+    python d8_render.py --files-changed  # auto-detect from git diff HEAD~1
 
 Output:
     - Renders each block to SVG in output dir
@@ -24,9 +26,36 @@ BANNED_PATTERNS = [
     (r'```mermaid\s*\n(.*?)```', re.DOTALL),
 ]
 
-def collect_blocks(src_dir):
-    """Collect all mermaid code blocks from src/ .md files."""
+def collect_blocks(src_dir, file_filter=None):
+    """Collect all mermaid code blocks from src/ .md files.
+    
+    Args:
+        src_dir: Root directory to scan.
+        file_filter: Optional list of relative file paths to restrict scanning.
+                     If None, scan all .md files in src_dir.
+    """
     blocks = []
+    
+    if file_filter:
+        for rel in file_filter:
+            fp = os.path.join(src_dir, rel)
+            if not os.path.isfile(fp):
+                continue
+            with open(fp, 'r', encoding='utf-8') as fh:
+                content = fh.read()
+            for i, m in enumerate(re.finditer(r'```mermaid\s*\n(.*?)```', content, re.DOTALL)):
+                body = m.group(1).strip()
+                if not body:
+                    continue
+                blocks.append({
+                    'file': rel,
+                    'idx': i,
+                    'body': body,
+                    'first_line': body.split('\n')[0][:80],
+                    'is_empty': len(body.strip()) < 10,
+                })
+        return blocks
+    
     for root, dirs, files in os.walk(src_dir):
         for f in sorted(files):
             if not f.endswith('.md'):
@@ -82,6 +111,10 @@ def main():
                         help='Output directory for SVG renders')
     parser.add_argument('--timeout', '-t', type=int, default=MMDC_TIMEOUT,
                         help=f'Timeout per render in seconds (default: {MMDC_TIMEOUT})')
+    parser.add_argument('--files', nargs='*', default=None,
+                        help='Specific .md files (relative to src/) to scan')
+    parser.add_argument('--files-changed', action='store_true',
+                        help='Auto-detect changed files via git diff HEAD~1')
     parser.add_argument('--no-fail', action='store_true',
                         help='Exit with 0 even if renders fail')
     parser.add_argument('--verbose', '-v', action='store_true',
@@ -100,8 +133,27 @@ def main():
         print(f"ERROR: src/ not found at {src_dir}")
         sys.exit(1)
 
+    file_filter = None
+    if args.files_changed:
+        try:
+            result = subprocess.run(
+                ['git', 'diff', '--name-only', 'HEAD~1'],
+                capture_output=True, text=True, timeout=30, cwd=PROJECT_ROOT
+            )
+            changed = [l.strip() for l in result.stdout.split('\n') if l.strip().endswith('.md') and l.strip().startswith('src/')]
+            file_filter = [os.path.relpath(f, str(src_dir)) for f in changed]
+            print(f"Auto-detected {len(file_filter)} changed .md files via git diff")
+            if file_filter:
+                for f in file_filter:
+                    print(f"  - {f}")
+        except Exception as e:
+            print(f"git diff failed: {e}, falling back to full scan")
+    elif args.files:
+        file_filter = args.files
+        print(f"Scanning {len(file_filter)} specified files")
+
     print(f"Collecting mermaid blocks from {src_dir} ...")
-    blocks = collect_blocks(str(src_dir))
+    blocks = collect_blocks(str(src_dir), file_filter=file_filter)
     print(f"Found {len(blocks)} mermaid blocks in {len(set(b['file'] for b in blocks))} files")
 
     # Check mmdc availability

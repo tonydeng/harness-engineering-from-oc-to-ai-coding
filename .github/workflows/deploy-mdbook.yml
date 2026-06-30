@@ -85,6 +85,25 @@ jobs:
             echo "✅ HEDQ score ${PERCENTAGE}% meets threshold ${HEDQ_THRESHOLD_WARN}%"
           fi
 
+      - name: Mermaid render check (changed files only)
+        shell: bash
+        run: |
+          echo "Checking Mermaid render for changed .md files..."
+          if ! command -v npx &> /dev/null; then
+            echo "::warning title=Mermaid Render::npx not available, skipping render check"
+            exit 0
+          fi
+          CHANGED=$(git diff --name-only HEAD~1 -- 'src/**/*.md' 2>/dev/null || echo "")
+          if [ -z "${CHANGED}" ]; then
+            echo "No changed .md files in src/ — skipping render check"
+            exit 0
+          fi
+          FILES=$(echo "${CHANGED}" | sed 's|^src/||' | tr '\n' ' ')
+          echo "Changed files: ${FILES}"
+          python .opencode/skills/hedq-audit/scripts/qa/hedq/checks/d8_render.py \
+            --files ${FILES} --no-fail --verbose 2>&1 || \
+            echo "::warning title=Mermaid Render::Some Mermaid blocks failed to render"
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
