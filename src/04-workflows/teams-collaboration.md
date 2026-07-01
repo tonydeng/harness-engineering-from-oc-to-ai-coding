@@ -30,6 +30,8 @@
 
 Teams 架构通过并行 Agent 协作解决这些问题：每个 Team 成员是同一进程内的独立 Agent 会话实例，拥有独立的 **Prompt（提示词）** 上下文和故障边界。
 
+> **相关 Skill**：OpenCode 内置了 `team-mode` Skill，可通过 `skill(name="team-mode")` 加载团队编排的完整指令参考，了解 Team 成员角色定义、通信协议和生命周期管理的详细规范。完整内置 Skill 列表见 [附录 B 内置 Skill 参考](../appendix-b/opencode/capabilities.md#内置-skill-参考)。
+
 ### Team 的成员角色定义
 
 Team 成员的角色定义遵循职责分离原则。每个成员专注于特定领域，通过消息传递协作完成复杂任务。

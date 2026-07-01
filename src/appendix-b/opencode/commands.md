@@ -115,6 +115,50 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 ---
 
+### 功能规格工具包（Speckit）
+
+Speckit 系列命令提供从需求澄清到实现验证的全流程规格管理能力，适合需要结构化功能开发的团队：
+
+| 命令 | 功能 | 适用场景 |
+|------|------|----------|
+| `/speckit.constitution` | 创建/更新项目章程 | 新项目启动时定义编码原则和团队规范 |
+| `/speckit.clarify` | 识别规格中的模糊点并提问 | 需求不明确时自动追问澄清 |
+| `/speckit.specify` | 从自然语言生成功能规格 | 将需求描述转化为结构化的规格文档 |
+| `/speckit.plan` | 根据规格生成实现计划 | 将规格分解为有依赖关系的实现步骤 |
+| `/speckit.tasks` | 生成可执行任务列表 | 从设计产物生成细粒度的开发任务 |
+| `/speckit.taskstoissues` | 将任务转为 GitHub Issues | 将任务列表自动创建为 GitHub issues |
+| `/speckit.implement` | 按任务列表依次执行实现 | 自动化执行 tasks.md 中的所有任务 |
+| `/speckit.converge` | 检查代码与规格的差距 | 验证已实现的功能是否符合原定规格 |
+| `/speckit.analyze` | 跨产物一致性分析 | 检查 spec/plan/tasks 之间的内容一致性 |
+| `/speckit.checklist` | 根据需求生成检查清单 | 将验收标准转化为可勾选的检查项 |
+| `/speckit.agent-context.update` | 刷新 Agent 上下文中的 Speckit 部分 | 在多会话工作中保持规格信息同步 |
+
+**工作流示例**：一个完整的功能开发流通常按以下顺序使用 Speckit 命令：
+
+```text:terminal
+/speckit.clarify         → 澄清模糊需求
+/speckit.specify         → 生成功能规格
+/speckit.plan            → 制定实现计划
+/speckit.tasks           → 分解为执行任务
+/speckit.implement       → 自动化执行实现
+/speckit.converge        → 验证实现完整性
+```
+
+### 持久记忆系统（Supermemory）
+
+Supermemory 系列命令提供跨会话的持久记忆管理能力，适用于需要长期积累项目知识的场景：
+
+| 命令 | 功能 | 适用场景 |
+|------|------|----------|
+| `/supermemory-init` | 用代码库知识初始化记忆 | 首次使用时构建项目知识索引 |
+| `/supermemory-login` | 通过浏览器登录 Supermemory | 首次使用或凭证过期时需要认证 |
+| `/supermemory-logout` | 退出登录并清除凭证 | 在共享设备上使用后退出 |
+| `/supermemory-status` | 查看连接状态 | 确认记忆系统是否正常运行 |
+
+→ [记忆系统设计](../../06-advanced/memory-system.md) 讲解 Supermemory 的架构和使用策略。
+
+---
+
 ## Custom Commands（自定义命令）
 
 OpenCode 支持用户创建自己的命令。两种方式各有优势，Markdown 文件方式更适合团队协作，JSON 配置方式更适合精细控制。
@@ -315,6 +359,8 @@ model: claude-opus-4
 | `/hyperplan` | 对抗性多 Agent 规划 | 任务执行 |
 | `/handoff` | 创建上下文摘要用于续接 | 会话续接 |
 | `/stop-continuation` | 停止所有续接机制 | 会话续接 |
+| `/speckit.*` | Speckit 功能规格工具包（11 个命令） | 功能规格 |
+| `/supermemory-*` | Supermemory 持久记忆系统（4 个命令） | 记忆管理 |
 
 ### 自定义命令配置速查
 

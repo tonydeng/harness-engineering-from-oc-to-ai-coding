@@ -92,6 +92,8 @@ AI 编程工具的依赖链长，第三方组件的风险不可忽视：
 5. 持续监控：定期审查审计日志，更新风险分类规则
 ```
 
+> **内置 Skill 辅助**：OpenCode 内置了 `security-research` Skill，可编排 3 个漏洞猎手和 2 个 PoC 工程师并行审计代码库。建议在执行安全审计流程前通过 `skill(name="security-research")` 加载，获取完整的审计操作指引。完整内置 Skill 列表见 [附录 B 内置 Skill 参考](../appendix-b/opencode/capabilities.md#内置-skill-参考)。
+
 ## 6 种权限模式
 
 权限 = **作用域** × **策略级别**，共 6 种组合覆盖从"完全放行"到"完全阻止"。

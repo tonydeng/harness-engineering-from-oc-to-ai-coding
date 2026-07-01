@@ -254,6 +254,29 @@ opencode /hyperplan
    opencode skills add myorg/my-skill
    ```
 
+## 内置 Skill 参考
+
+OpenCode 内置了多个 Skill，可通过 `skill(name="skill-name")` 加载。它们覆盖开发工作流中的常见场景，无需额外安装即可使用。
+
+| Skill 名称 | 一句话 | 适用场景 |
+|-----------|--------|----------|
+| **customize-opencode** | OpenCode 配置参考手册 | 修改 `opencode.json`、创建 agent/skill/MCP/plugin 定义时 |
+| **playwright** | 浏览器自动化 | 网页抓取、截图、E2E 测试、浏览器交互操作 |
+| **frontend-ui-ux** | 前端 UI/UX 设计实现 | 没有设计稿时从零构建前端界面 |
+| **git-master** | Git 操作专家 | commit、rebase、squash、blame、bisect、log 搜索 |
+| **review-work** | 实现后自动审查 | 完成重要功能后启动 5 个并行子 Agent 全面审查 |
+| **remove-ai-slops** | 清除 AI 代码异味 | 清理 AI 生成的冗余代码、过度工程和反模式 |
+| **init-deep** | 初始化 AGENTS.md 知识库 | 为新项目创建结构化项目知识库 |
+| **debugging** | 全语言运行时调试 | 崩溃、静默失败、内存泄漏、死锁、逆向工程 |
+| **security-research** | 安全漏洞研究 | 编排多 Agent 并行审计代码库安全 |
+| **visual-qa** | UI 视觉质量验证 | 截图对比、CJK 文字检查、布局对齐验证 |
+| **team-mode** | 团队编排 | 创建和管理并行 Agent 团队 |
+
+> 以上 Skill 在 opencode 启动时自动注册，无需额外安装。使用时直接通过 `skill(name="...")` 加载即可。
+
+→ [OpenCode 内置命令参考](./commands.md) 列出了所有内置命令的详细用法。
+→ [Skill 开发](../../05-skills/) 章节讲解如何创建自定义 Skill。
+
 ## 常见反模式
 
 使用 OpenCode 内置能力时，以下反模式会导致效率不升反降：

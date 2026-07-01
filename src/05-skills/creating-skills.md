@@ -72,6 +72,8 @@ description: "用于需要网络研究的任何问题。提供系统化的多角
 description: "[一句话说明核心能力]。提供：[该 Skill 包含的资源]。适用：[触发场景]。不适用：[边界场景]"
 ```
 
+> **参考案例**：OpenCode 内置的 `git-master`、`debugging`、`security-research` 等 Skill 都遵循上述描述规范。你可以通过 `skill(name="...")` 加载它们，观察其 description 如何精确描述能力边界作为设计参考。
+
 #### 权限控制字段
 
 | 字段 | 类型 | 必需 | 说明 | 安全含义 |

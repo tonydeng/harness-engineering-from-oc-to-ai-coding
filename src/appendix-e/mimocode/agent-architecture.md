@@ -309,26 +309,6 @@ MiMo Code 的实现兼容 Anthropic Dynamic Workflow 的核心语义，并扩展
 | **结果持久化** | 每个 `agent()` 调用的结果同步写入磁盘 |
 | **沙箱文件操作** | 在沙箱内可以直接读写文件 |
 
-## 架构优势总结
-
-MiMo Code 的架构设计解决了长任务自动化的三个核心挑战：
-
-| 挑战 | 解决方案 | 效果 |
-|------|---------|------|
-| **决策错误累积** | Max Mode + Goal | 单步错误率降低 10-20% |
-| **上下文耗尽** | 检查点 + 四层记忆 + 重建 | 逻辑会话无限延伸 |
-| **经验无法积累** | Dream + Distill | 跨会话持续改进 |
-
-这些设计使得 MiMo Code 在 200+ 步骤的长任务中，相比 Claude Code 有 65%+ 的胜率。
-
-## 下一步
-
-- 想了解具体的驾驭工程优化？→ [驾驭工程优化设计](./harness-optimizations.md)
-- 想了解具体的循环工程优化？→ [循环工程优化设计](./loop-optimizations.md)
-- 想对比 OpenCode？→ [MiMo Code vs OpenCode 对比分析](./comparison.md)
-
-(End of file - total 328 lines)
-
 ## 记忆层 API 参考
 
 ### SessionMemoryStore
@@ -338,8 +318,7 @@ interface SessionMemoryStore {
   read(sessionId: string, key?: string): Promise<MemoryEntry | Record<string, MemoryEntry> | null>;
   write(sessionId: string, key: string, value: MemoryEntry, options?: WriteOptions): Promise<void>;
   query(sessionId: string, filter: QueryFilter): Promise<MemoryEntry[]>;
-  clear(sessionId: string, keyPattern?: string): Promise<void>;
-}
+  clear(sessionId: string, keyPattern?: string): Promise<v
 ```
 
 ### ProjectMemoryStore
