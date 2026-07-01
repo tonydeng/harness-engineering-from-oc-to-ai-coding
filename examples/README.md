@@ -14,6 +14,7 @@ examples/
 ├── validation/            ← 安全/输入验证规则
 ├── ast-grep-rules/        ← AST 模式匹配规则
 ├── case-study/            ← 案例研究数据
+├── attck-rag/             ← 第7章案例: 本地RAG知识库（Python + Java 示例）
 └── this README
 ```
 
@@ -24,7 +25,7 @@ examples/
 | ch01-introduction | `opencode-configs/`, `workflows/`, `quality-gates/`, `audit-logs/`, `validation/` | 初始配置、安全防护、国产模型集成 |
 | ch02-core-concepts | `opencode-configs/`, `ast-grep-rules/`, `skills/` | 权限系统、Profile、Skill 结构 |
 | ch05-skills | `skills/` | Skill 清单、模板、插件模式 |
-| ch07-case-studies | `opencode-configs/`, `skills/`, `case-study/` | 真实案例配置 |
+| ch07-case-studies | `opencode-configs/`, `skills/`, `case-study/`, `attck-rag/` | 真实案例配置 |
 
 > ch03-setup、ch04-workflows、ch06-advanced 使用 `:terminal` 代码块（无 `examples/` 引用）。
 
