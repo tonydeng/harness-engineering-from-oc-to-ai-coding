@@ -291,3 +291,65 @@ pi --mode rpc
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
 - → [扩展体系详解](./customization.md) — 学习 Pi 的四层扩展体系
+
+---
+
+## 常见反模式
+
+### 在 CI/CD 中使用交互模式而非 Print 模式
+
+有些开发者在自动化管道中使用 `pi`（交互模式）而非 `pi -p "query"`（Print 模式）。交互模式启动 TUI 界面，在没有终端的 CI 环境中会导致渲染错误或进程挂起。更严重的是，交互模式会等待用户输入，这在无人值守的 CI 流水线中意味着永远无法完成。
+
+CI/CD 场景必须使用 Print 模式（`pi -p "query"`）或 JSON 模式（`pi --mode json -p "query"`）。Print 模式执行完毕后自动退出，JSON 模式提供结构化输出便于脚本解析。对于需要复杂工作流的场景，使用 SDK 模式在 Node.js 脚本中直接嵌入 Pi Agent。
+
+### 过度使用 /compact 而不管理上下文窗口
+
+`/compact` 命令手动触发上下文压缩，但它会丢失较早对话的细节。许多用户在每次感到对话变慢时就执行 `/compact`，结果导致之前讨论的设计决策、代码约定和技术选择被摘要简化，Agent 在后续操作中偏离了原始方向。
+
+上下文管理应该是主动的而非被动的。在开始新任务前用 `/new` 创建新会话，而不是在一个超长会话中反复压缩。如果必须使用长会话，将关键约束写入 AGENTS.md（不受压缩影响），并在 `/compact` 时附带自定义指令保留重要信息。
+
+### 在非交互模式下使用需要 UI 的 Slash 命令
+
+Pi 的部分 Slash 命令（如 `/settings`、`/tree`、`/hotkeys`）依赖 TUI 渲染器来显示交互式界面。在 Print 模式或 RPC 模式下执行这些命令会失败或产生无意义的输出。例如 `pi -p "/settings"` 不会打开设置界面，而是把 `/settings` 当作普通 prompt 发送给 LLM。
+
+使用命令前确认当前的运行模式。Print 模式下需要修改配置，直接编辑 `~/.pi/agent/settings.json` 文件而非通过 Slash 命令。RPC 模式下通过 JSONL 协议的 `get_state` 请求获取状态信息。
+
+## 适用场景与限制
+
+### RPC 模式的 JSONL 协议只支持同步请求-响应
+
+Pi 的 RPC 模式通过 stdin/stdout 的 JSONL 帧通信，每个请求对应一个响应。这种同步模式意味着在等待 Agent 响应期间，客户端无法发送其他请求或接收中间状态更新。对于需要并发处理多个请求或实时流式输出的场景，RPC 模式的限制比较明显。
+
+如果需要并发处理，可以在 RPC 服务器端为每个请求创建独立 Session 并行处理。如果需要流式输出，考虑使用 JSON Event Stream 模式（`pi --mode json`），它支持逐行输出事件流，延迟比 RPC 模式的完整响应更低。
+
+### 消息队列的交付策略可能不符合预期
+
+Pi 的编辑器支持 Steering（Enter）和 Follow-up（Alt+Enter）两种消息交付策略。Steering 消息在当前工具调用完成后交付，Follow-up 消息在 Agent 全部工作完成后交付。但如果你不清楚两者的区别，可能在错误的时机发送消息——例如在 Agent 执行 Bash 命令时用 Enter 发送了 Steering 消息，期望它等 Agent 完成全部工作，实际上消息会在当前命令完成后立即被消费。
+
+理解两种交付策略的行为差异，并在 `/settings` 中根据工作流习惯配置默认策略。对于需要严格顺序执行的场景，使用 `one-at-a-time` 模式（默认）；对于可以并行处理的场景，使用 `all` 模式批量交付。
+
+### JSON 模式的事件类型有限
+
+`pi --mode json` 输出的事件类型包括 `assistant`、`tool_call`、`error`、`done` 等基础类型，但不包含完整的 25+ 生命周期事件（如 `turn_start`、`tool_execution_start` 等）。如果你的监控系统需要更细粒度的可观测性（比如追踪每个工具的执行耗时），JSON 模式提供的信息不够充分。
+
+对于需要完整事件流的场景，使用 SDK 模式（`session.on()` 监听所有事件），或者使用 RPC 模式配合自定义的事件收集 Extension。JSON 模式适合轻量级的脚本集成，不适合深度的运行时监控。
+
+## 常见失败与陷阱
+
+### /fork 创建的 Session 分支在进程退出后可能丢失
+
+`/fork` 从当前对话创建新的 Session 文件，但这个操作依赖本地文件系统。如果你在 fork 后立即退出 Pi（`/quit`），且 Pi 在退出时的清理逻辑尚未完成 Session 文件的写入，新创建的分支可能不完整。
+
+使用 `/fork` 后等待几秒钟确认 Session 文件已写入，或者在退出前用 `/export` 手动导出当前 Session。对于需要可靠保存的对话，定期用 `/export` 备份到指定路径，而非仅依赖 Pi 的自动保存机制。
+
+### /trust 的信任决策在非交互模式下不生效
+
+Pi 的 Project Trust 机制在交互模式下会弹出确认对话框，但在 Print 模式或 RPC 模式下没有交互能力。如果 `defaultProjectTrust` 设置为 `"ask"`（默认值），非交互模式下项目级 Extension 和 Skills 不会被加载，Agent 可能缺少必要的工具。
+
+在非交互模式使用前，先在交互模式中用 `/trust` 信任项目，或者通过 `--approve` 标志一次性覆盖信任设置。在 CI/CD 环境中，显式设置 `defaultProjectTrust: "always"` 或使用 `-a` 标志确保项目资源被加载。
+
+### Esc 两次打开 Session Tree 的时机容易误触
+
+在交互模式中，按一次 Esc 取消当前操作，按两次 Esc 打开 Session Tree 导航。但用户在快速按 Esc 试图取消工具执行时，可能因为按了两次而意外打开 Session Tree，打断了工作流。特别是在 Agent 正在执行长时间任务时，误触 Session Tree 会暂停当前操作。
+
+了解 Esc 的单击和双击行为差异。如果只是想取消当前操作，按一次 Esc 然后等待。如果想彻底停止 Agent，使用 Ctrl+C。自定义快捷键（编辑 `~/.pi/agent/keybindings.json`）可以将 Session Tree 绑定到其他不常用的按键组合。

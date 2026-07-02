@@ -344,3 +344,20 @@ mdbook build: 等待运行...
 
 > **总结**: Ch1 的写作质量和内容本身是扎实的（数据准确性在修复后达到 100%，逻辑一致，写作风格统一）。主要问题是基础设施层：19 个示例配置文件全部不存在，7 个 Mermaid 图方向不合规，以及 1 处 residual bug（92% 未清除）。这些问题属于修复成本低、但影响信任度的类型。
 
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

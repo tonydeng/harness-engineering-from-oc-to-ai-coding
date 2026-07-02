@@ -16,6 +16,8 @@
 
 ### 工具矩阵概览
 
+下图以关系图形式展示了国产 AI 编程工具的产品矩阵及它们之间的生态关系。
+
 ```mermaid
 graph TB
     subgraph 国产AI编程工具生态
@@ -64,6 +66,8 @@ graph TB
 ## 国产 vs 国际工具差异分析
 
 ### 多维度对比矩阵
+
+下图从多个维度对比了国产与国际 AI 编程工具的差异和各自优势。
 
 ```mermaid
 graph LR
@@ -138,6 +142,8 @@ graph LR
 ## OpenCode 与国产模型结合使用
 
 ### 混合架构示意
+
+下图展示了 OpenCode 与国产模型结合使用的混合架构，包括 API 网关和模型路由层。
 
 ```mermaid
 graph TB

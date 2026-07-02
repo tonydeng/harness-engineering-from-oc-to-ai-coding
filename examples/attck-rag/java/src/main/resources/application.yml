@@ -1,0 +1,50 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: attck-rag
+
+  # ---- PostgreSQL + pgvector ----
+  datasource:
+    url: jdbc:postgresql://localhost:5432/attck_rag
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  # ---- Spring AI (Scorpius: OpenAI-compatible client → Ollama) ----
+  ai:
+    # OpenAI-compatible client 指向 Ollama（Scorpius 标准配置风格）
+    openai:
+      base-url: http://localhost:11434/v1
+      api-key: ollama  # Ollama API key 占位
+      chat:
+        options:
+          model: qwen2.5:7b-instruct-q4_K_M
+          temperature: 0.1
+      embedding:
+        options:
+          model: nomic-embed-text  # Ollama 支持的 embed 模型
+
+    vectorstore:
+      pgvector:
+        index-type: IVFFlat
+        distance-type: COSINE_DISTANCE
+        dimensions: 768
+
+# ---- ATT&CK RAG 自定义配置 ----
+attck:
+  rag:
+    # 模型降级链（按查询类型路由不同模型）
+    models:
+      exact: qwen2.5:3b-instruct-q4_K_M
+      factual: qwen2.5:3b-instruct-q4_K_M
+      analysis: qwen2.5:7b-instruct-q4_K_M
+    # 检索参数
+    retrieval:
+      top-k: 5
+      similarity-threshold: 0.3
+      rrf-constant: 60
+      over-retrieve-factor: 2
+    # 数据源路径 (mdBook 源码)
+    source-path: /path/to/attck-knowledge/src

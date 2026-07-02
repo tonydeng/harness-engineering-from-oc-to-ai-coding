@@ -22,6 +22,8 @@
 
 ### 角色分类树状图
 
+下图以思维导图形式展示了 14 种读者角色的分类体系，分为 6 个核心角色和 8 个扩展角色。
+
 ```mermaid
 mindmap
   root((读者角色))
@@ -513,8 +515,8 @@ graph TB
 - [快速上手](../03-setup/quickstart.md)（已有 OpenCode 基础，可跳过）
 - [Skill 系统](../02-core-concepts/skills-system.md)、[工作流模式](../02-core-concepts/workflow-patterns.md)（核心概念，了解即可）
 - [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)、[国产模型供应商配置](../03-setup/chinese-providers.md)（如无国产模型需求）
-- [Skill 开发章节](../05-skills/creating-skills.md)（按需阅读，非核心路径）
-- [案例研究](../07-case-studies/real-world-02.md)（初期可跳过）
+- [创建 **Skill（技能）**](../05-skills/creating-skills.md)（按需阅读，非核心路径）
+- [案例二：遗留系统现代化](../07-case-studies/real-world-02.md)（初期可跳过）
 
 **路径特点**：
 - 聚焦 Agent 配置和上下文工程
@@ -626,7 +628,7 @@ graph TB
 - [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md)（入门章节，可快速浏览）
 - [Agent 编排](../02-core-concepts/agent-orchestration.md)（了解即可，无需深入）
 - [快速上手](../03-setup/quickstart.md)（已有 OpenCode 使用经验）
-- [工作流实战](../04-workflows/ultrawork-mode.md)（了解即可，重点在 Skill 开发）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（了解即可，重点在 Skill 开发）
 - [自定义 Agent](../06-advanced/custom-agents.md)（与 Skill 开发关联度较低）
 - [上下文压缩与Token 预算](../06-advanced/context-compression.md)（高级优化，按需阅读）
 
@@ -661,9 +663,9 @@ graph TB
 | 12 | [全流程自动化](../07-case-studies/case-full-pipeline.md) | 精读 | 25-35 分钟 | ✅ 已完成 |
 
 **跳过建议**：
-- [环境搭建章节](../03-setup/quickstart.md)（技术实施细节，可交给团队）
-- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节，可交给团队）
-- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节，可交给团队）
+- [快速上手](../03-setup/quickstart.md)（技术实施细节，可交给团队）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（技术实施细节，可交给团队）
+- [创建 **Skill（技能）**](../05-skills/creating-skills.md)（技术实施细节，可交给团队）
 - [MCP 服务器](../06-advanced/mcp-servers.md), [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md) 高级话题（技术细节，可跳过）
 
 **路径特点**：
@@ -724,14 +726,14 @@ graph TB
 | 4 | [为什么选择 OpenCode](../01-introduction/why-opencode.md) | 精读 | 15-25 分钟 | ✅ 已完成 |
 | 5 | [Harness Engineering 理论框架](../01-introduction/harness-engineering-theory.md) | 精读 | 25-35 分钟 | ✅ 已完成 |
 | 6 | [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md) | 浏览 | 15 分钟 | ✅ 已完成 |
-| 7 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 浏览 | 60 分钟 | ✅ 已完成 |
-| 8 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 浏览 | 60 分钟 | ✅ 已完成 |
+| 7 | [**Agent（智能体）** 编排](../02-core-concepts/agent-orchestration.md) | 浏览 | 60 分钟 | ✅ 已完成 |
+| 8 | [案例一：从零搭建微服务](../07-case-studies/real-world-01.md) | 浏览 | 60 分钟 | ✅ 已完成 |
 
 **跳过建议**：
-- [环境搭建](../03-setup/quickstart.md)（技术实施细节）
-- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节）
-- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节）
-- [高级话题](../06-advanced/mcp-servers.md)（技术细节）
+- [快速上手](../03-setup/quickstart.md)（技术实施细节）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（技术实施细节）
+- [创建 **Skill（技能）**](../05-skills/creating-skills.md)（技术实施细节）
+- [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md)（技术细节）
 
 **路径特点**：
 - 全局视角，验证需求覆盖
@@ -843,7 +845,7 @@ graph TB
 - [快速上手](../03-setup/quickstart.md), [oh-my-openagent 集成](../03-setup/oh-my-openagent-setup.md), [国产模型供应商配置](../03-setup/chinese-providers.md), [多环境部署方案](../03-setup/multi-env-setup.md)（环境搭建细节，按需阅读）
 - [多 Agent 协作](../04-workflows/multi-agent-collab.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 并行 Agent 协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（MCP 和插件化，按需阅读）
-- [高级话题](../06-advanced/mcp-servers.md)（高级话题，按需阅读）
+- [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md)（高级话题，按需阅读）
 
 **路径特点**：
 - 通过组件化类比理解 Skill 系统
@@ -864,15 +866,15 @@ graph TB
 |------|----------|----------|----------|------|
 | 1 | [读者导航](./) | 精读 | 15-25 分钟 | ✅ 已完成 |
 | 2 | [多角色阅读路径](reading-paths.md) | 精读 | 20-30 分钟 | ✅ 已完成 |
-| 3 | [简介（全部）](../01-introduction/what-is-harness-engineer.md) | 浏览 | 40 分钟 | ✅ 已完成 |
-| 4 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 浏览 | 50 分钟 | ✅ 已完成 |
-| 5 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 浏览 | 50 分钟 | ✅ 已完成 |
+| 3 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 浏览 | 40 分钟 | ✅ 已完成 |
+| 4 | [**Agent（智能体）** 编排](../02-core-concepts/agent-orchestration.md) | 浏览 | 50 分钟 | ✅ 已完成 |
+| 5 | [案例一：从零搭建微服务](../07-case-studies/real-world-01.md) | 浏览 | 50 分钟 | ✅ 已完成 |
 
 **跳过建议**：
-- [环境搭建](../03-setup/quickstart.md)（技术实施细节）
-- [工作流实战](../04-workflows/ultrawork-mode.md)（技术实施细节）
-- [Skill 开发](../05-skills/creating-skills.md)（技术实施细节）
-- [高级话题](../06-advanced/mcp-servers.md)（技术细节）
+- [快速上手](../03-setup/quickstart.md)（技术实施细节）
+- [Ultrawork 模式](../04-workflows/ultrawork-mode.md)（技术实施细节）
+- [创建 **Skill（技能）**](../05-skills/creating-skills.md)（技术实施细节）
+- [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md)（技术细节）
 
 **路径特点**：
 - 全局视角，关注文档体验
@@ -893,13 +895,13 @@ graph TB
 |------|----------|----------|----------|------|
 | 1 | [读者导航](./) | 精读 | 15-25 分钟 | ✅ 已完成 |
 | 2 | [多角色阅读路径](reading-paths.md) | 精读 | 20-30 分钟 | ✅ 已完成 |
-| 3 | [简介（全部）](../01-introduction/what-is-harness-engineer.md) | 精读 | 60-70 分钟 | ✅ 已完成 |
-| 4 | [核心概念（全部）](../02-core-concepts/agent-orchestration.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
-| 5 | [环境搭建（全部）](../03-setup/quickstart.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
-| 6 | [工作流实战（全部）](../04-workflows/ultrawork-mode.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
-| 7 | [Skill 开发（全部）](../05-skills/creating-skills.md) | 精读 | 75-85 分钟 | ✅ 已完成 |
-| 8 | [高级话题（全部）](../06-advanced/mcp-servers.md) | 精读 | 120-130 分钟 | ✅ 已完成 |
-| 9 | [案例研究（全部）](../07-case-studies/real-world-01.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
+| 3 | [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md) | 精读 | 60-70 分钟 | ✅ 已完成 |
+| 4 | [**Agent（智能体）** 编排](../02-core-concepts/agent-orchestration.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
+| 5 | [快速上手](../03-setup/quickstart.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
+| 6 | [Ultrawork 模式](../04-workflows/ultrawork-mode.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
+| 7 | [创建 **Skill（技能）**](../05-skills/creating-skills.md) | 精读 | 75-85 分钟 | ✅ 已完成 |
+| 8 | [**MCP（模型上下文协议）** 服务器](../06-advanced/mcp-servers.md) | 精读 | 120-130 分钟 | ✅ 已完成 |
+| 9 | [案例一：从零搭建微服务](../07-case-studies/real-world-01.md) | 精读 | 90-100 分钟 | ✅ 已完成 |
 
 **跳过建议**：无（需要全面验证）
 
@@ -971,7 +973,7 @@ graph TB
 **跳过建议**：
 - [什么是 Harness Engineer](../01-introduction/what-is-harness-engineer.md), [为什么选择 OpenCode](../01-introduction/why-opencode.md), [AI 编程工具生态对比](../01-introduction/ecosystem-comparison.md), [国产 AI 编程生态适配](../01-introduction/chinese-ecosystem.md)（入门章节，可快速浏览）
 - [Skill 系统](../02-core-concepts/skills-system.md), [工作流模式](../02-core-concepts/workflow-patterns.md), [上下文工程核心](../02-core-concepts/context-engineering-core.md), [验证护栏体系](../02-core-concepts/validation-harness.md)（核心概念细节，了解即可）
-- [环境搭建细节](../03-setup/quickstart.md)（环境搭建细节，按需阅读）
+- [快速上手](../03-setup/quickstart.md)（环境搭建细节，按需阅读）
 - [Ultrawork 模式](../04-workflows/ultrawork-mode.md), [自定义工作流](../04-workflows/custom-workflows.md), [Agent 派生模式](../04-workflows/agent-derivation.md), [Teams 并行 Agent 协作](../04-workflows/teams-collaboration.md)（工作流细节，了解即可）
 - [Skill 模板](../05-skills/skill-templates.md), [Skill-MCP 桥接](../05-skills/skill-mcp-bridge.md), [Skill 插件化模式](../05-skills/plugin-patterns.md)（Skill 开发细节，按需阅读）
 - [自定义 Agent](../06-advanced/custom-agents.md), [上下文压缩与Token 预算](../06-advanced/context-compression.md), [提示词缓存机制](../06-advanced/context/prompt-caching.md), [记忆系统设计](../06-advanced/memory-system.md), [AGENTS.md 约定系统](../06-advanced/agents-dot-md.md), [可观测性](../06-advanced/observability.md), [Feature Flags 路线图](../06-advanced/feature-flags.md)（高级话题，按需阅读）
@@ -1133,6 +1135,37 @@ graph TB
 本书设计了 14 种读者角色和对应的阅读路径，确保每位读者都能高效获取所需知识。通过全局架构依赖图，你可以理解 77 篇正文之间的概念关系；通过路径交叉热度图，你可以发现不同角色之间的共同关注点；通过路径切换指南，你可以在角色需求变化时平滑过渡。
 
 无论你是刚接触 AI 编程的新手，还是评估企业级部署的架构师，都能在这里找到属于自己的路线。开始你的 Harness Engineering 之旅吧！
+
+---
+
+## 用户故事追溯矩阵
+
+> 映射 55 个用户故事 → 14 个读者角色的覆盖文章。数据源：[traceability-matrix.md](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/blob/main/docs/planning/requirements/traceability-matrix.md) · [角色满意度审计](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/blob/main/docs/reviews/reader-role-satisfaction-audit-2026-06-28.md)
+
+| 状态 | 含义 | 角色数 |
+|------|------|--------|
+| ✅ | 完整：用户故事被实质性满足 | 8 |
+| ◐ | 大部分：映射存在但实质深度待加强 | 5 |
+| ○ | 部分：有明确缺失故事 | 1 |
+
+| 角色 | 用户故事 | 覆盖文章 | 状态 |
+|------|----------|----------|------|
+| **入门开发者** | US-BEGINNER-01~05 | 读者导航·快速体验, Ch1 简介(6篇), Ch2 Agent编排/Skill/工作流, Ch3 快速上手/配置, Ch4 Ultrawork, Ch7 从零搭建微服务 | ✅ |
+| **效率开发者** | US-POWER-01~06, US-CL-02~03, US-PI-01 | Ch2 Agent/工作流/上下文/约束, Ch3 oh-my-openagent, Ch4 工作流实战全部(6篇), Ch6 性能/上下文压缩/缓存/记忆, Ch7 微服务/遗留系统/全流程 | ✅ |
+| **技术负责人** | US-LEAD-01~04 | Ch1 简介(4篇), Ch2 Agent/Skill/工作流, Ch3 配置/多环境, Ch4 多Agent/Teams, Ch6 安全总览/沙箱, Ch7 微服务/Skill市场 | ✅ |
+| **Skill 作者** | US-SKILL-01~05 | Ch2 Skill/约束, Ch3 配置, Ch5 全部(5篇), Ch6 MCP服务器, Ch7 团队Skill市场 | ✅ |
+| **工程经理** | US-MANAGER-01~02, US-CL-01, US-PI-02 | Ch1 生态对比/Why, Ch2 Agent/Skill/工作流, Ch6 性能/上下文压缩, Ch7 微服务/遗留系统/全流程/混合架构 | ✅ |
+| **后端开发者** | US-BACKEND-01~04 | Ch2 Agent/Skill, Ch3 配置/国产模型, Ch4 多Agent, Ch5 Skill-MCP桥接, Ch6 MCP服务器/安全总览, Ch7 微服务/混合架构 | ✅ |
+| **安全工程师** | US-SECURITY-01~03 | Ch2 约束, Ch3 配置, Ch4 多Agent, Ch5 Skill最佳实践, Ch6 MCP/安全总览/沙箱/AGENTS.md/可观测性, Ch7 安全审计 | ✅ |
+| **红队成员** | US-REDTEAM-01~03 | Ch2 Agent/约束, Ch4 多Agent, Ch5 创建Skill/最佳实践, Ch6 MCP/安全总览/沙箱, Ch7 安全审计 | ✅ |
+| **智能体开发工程师** | US-AE-01~03 | Ch1 Harness理论, Ch2 Agent/上下文/约束/验证, Ch3 配置/多环境, Ch4 全部(6篇), Ch6 全部(12篇), Ch7 微服务 | ◐ |
+| **需求分析师** | US-ANALYST-01~03 | 读者导航全部, Ch1 简介(4篇), Ch2 Agent, Ch7 微服务 | ◐ |
+| **系统架构师** | US-SYSA-01~03 | Ch1 生态对比/Why, Ch2 Agent/Skill/约束, Ch3 配置/多环境, Ch4 多Agent/Teams, Ch5 Skill最佳实践, Ch6 MCP/安全总览/沙箱, Ch7 安全审计 | ◐ |
+| **前端开发者** | US-FRONTEND-01~03 | Ch2 Skill/工作流, Ch3 配置, Ch4 Ultrawork, Ch5 全部(5篇), Ch7 微服务/全流程 | ◐ |
+| **文档 UX 专家** | US-UX-01~03 | 读者导航全部, Ch1 Harness Engineer, Ch2 Agent, Ch7 微服务 | ◐ |
+| **技术审校/QA** | US-QA-01~03 | 读者导航全部, Ch1 Harness Engineer, Ch2 Agent, Ch3 快速上手, Ch4 Ultrawork, Ch5 创建Skill, Ch6 MCP服务器, Ch7 微服务 | ○ |
+
+> 注：QA 角色缺失 **US-QA-02**（内容一致性自动化检查——CI 缺少 Markdown lint/Mermaid 预渲染/术语一致性检查），计划 v1.1 补齐。其余 13 个角色覆盖率为 100%。
 
 ---
 

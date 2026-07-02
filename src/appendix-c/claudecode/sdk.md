@@ -524,7 +524,7 @@ Claude: 正在通过天气 MCP 服务器查询三个城市...
 
 ## 相关资源
 
-- [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考（生产级配置、上下文管理、错误重试）
+- [Claude **Agent（智能体）** SDK：编程式 Agent 开发](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考（生产级配置、上下文管理、错误重试）
 - [扩展机制参考](./plugins.md) — Claude Code 六层扩展体系详解
 - [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践（跨工具参考）
 - [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
@@ -606,5 +606,67 @@ claude
    ```
 
 ### 与前/后文章的衔接
-- ← [Claude Code Agent SDK 编程](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考
+- ← [Claude **Agent（智能体）** SDK：编程式 Agent 开发](./agent-sdk.md) — `@anthropic-ai/claude-agent-sdk` 深入参考
 - → [Claude Code 生态参考](./ecosystem.md) — 社区扩展和最佳实践
+
+---
+
+## 常见反模式
+
+### MCP 服务器中不做输入验证就透传外部数据
+
+天气预报智能体案例中展示了数据规范化的完整流程（API 调用 → normalize → validate），但许多开发者在自己的 MCP 服务器中跳过了验证步骤，直接将外部 API 的原始数据返回给 Claude。外部 API 可能返回异常值（如温度 -200°C）、格式变更或恶意注入的数据。未经验证的数据直接传递给 LLM 可能导致错误的推理结果，甚至通过 Prompt 注入影响 Agent 行为。
+
+每个 MCP 服务器工具都应该实现输入验证和输出规范化。对外部 API 的响应执行字段完整性检查、数值范围检查和格式验证。将验证失败的信息明确返回给 Claude，让它能判断数据质量并调整策略。
+
+### Hooks 脚本中执行耗时操作而不设超时
+
+Hook 脚本（PreToolUse/PostToolUse）在 Agent 的工具调用流程中同步执行。如果你的 Hook 脚本调用了一个响应缓慢的外部 API（如代码质量检查服务），整个 Agent 会话会阻塞等待 Hook 完成。在最坏情况下，一个超时的 Hook 可能导致 Agent 会话挂起。
+
+所有 Hook 脚本都应该设置超时。在 Hook 配置中使用 `timeout` 参数（毫秒），建议设为 5-10 秒。如果 Hook 逻辑需要更长时间完成，改为异步模式：Hook 脚本只做轻量级检查并立即返回，将耗时操作放到后台进程，通过文件或消息队列与主流程同步。
+
+### CLI 程序化调用中不处理 stderr 输出
+
+使用 `claude -p "query"` 进行脚本集成时，许多开发者只读取 stdout 而忽略 stderr。Claude Code 的诊断信息、警告和错误日志都输出到 stderr。忽略 stderr 意味着你无法知道 MCP 服务器连接失败、权限被拒绝或模型降级等问题，直到最终结果出现异常才发现。
+
+在 CI/CD 脚本中，将 stderr 重定向到日志文件或 Sentry 等监控系统。至少检查 Claude CLI 的退出码（0 = 成功，非 0 = 失败），并在失败时捕获 stderr 输出用于调试。
+
+## 适用场景与限制
+
+### MCP 服务器只适合工具级别的扩展
+
+MCP 服务器是 Claude Code 推荐的程序化扩展方式，但它只能提供"工具"——被 Claude 按需调用的函数。MCP 无法实现"行为注入"（在 Agent 推理过程中自动触发）或"流程控制"（决定 Agent 是否应该继续执行）。如果你的需求是后者，MCP 服务器不是正确的抽象层。
+
+对于需要行为注入的场景，使用 Hooks（Shell 脚本在生命周期事件中执行）。对于需要深度控制 Agent 行为的场景，使用 Agent SDK 的编程式 Hook。MCP 服务器最适合的场景是：提供外部数据源（数据库查询、API 调用）和外部操作能力（文件系统、版本控制）。
+
+### CLI 程序化调用的输出格式不稳定
+
+`claude -p "query"` 的输出是自然语言文本，Claude 可能在回答中包含格式化符号、代码块标记或解释性文字。将这种输出作为脚本的输入时，格式不稳定会导致解析错误。即使使用 `--output-format json`，JSON 的 schema 也可能在 Claude Code 版本升级后发生变化。
+
+对于需要稳定结构化输出的场景，优先使用 MCP 服务器（返回 JSON 格式的工具结果）或 Agent SDK（编程式消费消息流）。CLI 调用适合人类消费的场景（CI 日志、PR 评论），不适合作为自动化管道的结构化数据源。
+
+### 天气预报案例无法直接用于生产
+
+本章的天气预报智能体是一个教学示例，展示了 MCP 服务器 + Hooks 的集成模式，但缺少生产环境必需的元素：没有 API Key 的安全注入机制（示例中使用环境变量但没有讨论密钥轮换），没有速率限制（外部 API 可能有调用频率限制），没有缓存层（相同城市的重复查询每次都调用外部 API）。
+
+将案例改造为生产部署时，需要补充：使用 HashiCorp Vault 或 AWS Secrets Manager 管理 API Key，实现 Token 桶速率限制器，添加内存或 Redis 缓存层（天气数据短期有效），以及错误重试和降级策略。
+
+## 常见失败与陷阱
+
+### MCP 服务器配置路径错误导致静默失败
+
+MCP 服务器配置文件的路径查找有优先级顺序：项目级 `.mcp.json` → 用户级 `~/.claude.json` → 插件内 `.mcp.json`。如果在错误的位置配置了 MCP 服务器（比如在 `.claude/settings.json` 中而不是 `.mcp.json` 中），Claude Code 不会报错，只是不加载该服务器。
+
+配置 MCP 服务器后，运行 `claude mcp list` 确认服务器出现在列表中。如果服务器未显示，检查配置文件的位置和格式是否正确。项目级配置必须在项目根目录的 `.mcp.json` 中，格式必须是 `{"mcpServers": {...}}`。
+
+### Hook 环境变量在不同平台上行为不一致
+
+Hook 脚本通过环境变量（`$TOOL_NAME`、`$TOOL_INPUT`、`$TOOL_OUTPUT`）获取上下文信息。这些环境变量的内容在不同操作系统（macOS/Linux/Windows）上的格式可能不同，特别是当输出包含特殊字符或路径分隔符时。一个在 macOS 上正常工作的 Hook 脚本在 Windows 上可能因为路径分隔符差异而失败。
+
+跨平台团队应该在 Hook 脚本中使用跨平台兼容的解析逻辑。避免硬编码路径分隔符，使用 `path` 模块处理路径。对于 JSON 格式的环境变量，使用平台无关的 JSON 解析器而非正则表达式匹配。
+
+### CLI 调用的管道输入在 Windows 上的编码问题
+
+在 Windows 上使用 `echo "query" | claude --print` 进行管道输入时，PowerShell 和 cmd.exe 的默认编码（GBK/UTF-16）可能导致中文内容传递给 Claude 时出现乱码。Claude Code 内部使用 UTF-8，管道输入的编码不匹配会导致 prompt 被错误解析。
+
+Windows 环境中使用管道输入时，确保内容以 UTF-8 编码传递。PowerShell 中使用 `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8` 设置输出编码，或者将 prompt 写入 UTF-8 编码的文件后用 `Get-Content` 读取。

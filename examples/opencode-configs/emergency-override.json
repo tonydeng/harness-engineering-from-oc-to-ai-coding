@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "emergency_mode": {
     "enabled": false,
     "override_model": "openai/gpt-4o",

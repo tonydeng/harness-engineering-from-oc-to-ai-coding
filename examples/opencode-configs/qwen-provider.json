@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "providers": {
     "qwen": {
       "name": "Alibaba Qwen",

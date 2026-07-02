@@ -601,7 +601,7 @@ app.get("/api/weather/:city", async (req, res) => {
 ## 相关资源
 
 - [扩展体系详解](./customization.md) — Pi Extensions 的完整开发指南
-- [生态与集成场景](./ecosystem.md) — Provider、容器化、社区生态
+- [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — Provider、容器化、社区生态
 - Pi SDK 官方文档：[pi.dev/docs/latest/sdk](https://pi.dev/docs/latest/sdk)
 
 ---
@@ -687,4 +687,66 @@ await session.close();
 
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
-- → [生态与集成场景](./ecosystem.md) — 学习 Pi 的生态和集成场景
+- → [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — 学习 Pi 的生态和集成场景
+
+---
+
+## 常见反模式
+
+### Agent Session API 和 Runtime API 混用导致状态管理混乱
+
+Pi SDK 提供 Agent Session API（`createAgentSession`）和 Runtime API（`createAgentSessionRuntime`）两种嵌入方式。Agent Session API 适合简单的嵌入场景，每个 Session 独立管理。Runtime API 适合需要动态替换 Session 的服务端场景。但许多开发者在简单的 CLI 脚本中使用 Runtime API，增加了不必要的复杂度；或者在长运行服务中使用 Agent Session API，导致 Session 累积无法管理。
+
+选择标准很简单：如果你的脚本执行完就退出（CI/CD、一次性分析），用 Agent Session API。如果你的应用需要长期运行并管理多个 Session 的生命周期（Web 服务、后台守护进程），用 Runtime API。
+
+### 直接调用 fetch 而不通过 Extension 注册工具
+
+天气预报案例中展示了两种调用外部 API 的方式：通过 Extension 注册 `get_weather` 工具让 Agent 自动调用，或者在脚本中直接调用 `fetchWeatherFromApi()` 函数。许多开发者选择后者，因为"更简单直接"。但这绕过了 Pi 的工具系统，LLM 无法感知外部 API 的存在，也不能自主决定何时调用。
+
+除非你只是做纯函数式的数据处理（不需要 LLM 参与），否则应该通过 Extension 注册工具。这样 LLM 可以根据用户意图自动选择调用哪些工具，处理错误和边界条件，甚至组合多个工具完成复杂任务。直接调用 fetch 把所有决策逻辑留给了硬编码的脚本。
+
+### RPC 客户端不处理连接断开和重试
+
+从 Python 或 Go 等非 Node.js 语言调用 Pi 的 RPC 模式时，许多客户端实现只处理了正常的消息收发，忽略了连接断开、进程崩溃和消息丢失的情况。Pi 的 RPC 进程可能因为 OOM 或 API 错误而退出，客户端如果没有重连逻辑，整个调用链就会中断。
+
+RPC 客户端应该实现连接健康检查（定期发送 ping）、断线重连（检测 stdout 关闭后重新 spawn 进程）和消息重试（超时后重新发送请求）。将 RPC 服务器封装为一个有生命周期管理的服务对象，在连接断开时自动重建。
+
+## 适用场景与限制
+
+### SDK 嵌入只支持 Node.js/TypeScript
+
+Pi SDK（`@earendil-works/pi-coding-agent`）是一个 Node.js npm 包，只能在 Node.js 或 TypeScript 环境中使用。如果你的后端服务使用 Python（FastAPI/Django）、Go 或 Rust，无法直接使用 SDK 嵌入方式。
+
+对于非 Node.js 环境，使用 RPC 模式（`pi --mode rpc`）通过 JSONL 协议跨语言调用。RPC 模式的延迟比 SDK 嵌入高（多了进程间通信开销），但支持任何能读写 stdin/stdout 的语言。Python 客户端示例见上方的 RPC 服务器章节。
+
+### Agent Session API 不支持并发 prompt 调用
+
+`session.prompt()` 方法在执行期间会锁定 Session 的状态（消息历史、工具注册、上下文窗口）。如果你对同一个 Session 并发发送两个 prompt，第二个调用会等待第一个完成，或者覆盖第一个的上下文。
+
+需要并发处理多个请求时，为每个请求创建独立的 Session。可以在请求处理函数中 `createAgentSession()`，处理完毕后 `session.close()`。重量级对象（`AuthStorage`、`ModelRegistry`）复用，Session 隔离。这与 Web 框架中数据库连接池的模式类似。
+
+### Serverless 环境中的冷启动开销
+
+Pi SDK 的 `createAgentSession()` 是同进程调用，没有子进程启动开销，但仍需要初始化 `AuthStorage`、`ModelRegistry` 和 Provider 连接池（约 500ms）。在 AWS Lambda 等 Serverless 环境中，冷启动的总延迟可能达到 1-2 秒。
+
+利用 Lambda 的热启动保持全局单例：在模块级创建 `AuthStorage` 和 `ModelRegistry`，多次调用间复用。对于延迟敏感的场景，使用 Lambda Provisioned Concurrency 预热函数实例。Session 状态通过 Redis 或 DynamoDB 持久化，热启动时恢复而非重建。
+
+## 常见失败与陷阱
+
+### Extension 工具在 SDK Session 中不自动加载
+
+使用 SDK 创建的 Session 默认通过 `DefaultResourceLoader` 自动发现 `~/.pi/agent/extensions/` 和 `.pi/extensions/` 目录中的 Extension。但如果 Extension 放在非标准路径（如项目内的 `./my-ext/`），需要通过 `resourceLoader` 参数显式指定。忘记配置 `resourceLoader` 会导致 Extension 不被加载，注册的工具对 Agent 不可见。
+
+使用非标准路径的 Extension 时，创建自定义的 `DefaultResourceLoader` 并传入 Extension 路径。或者更简单的方式是使用 `-e` 标志启动时加载 Extension，然后通过 Session 持久化保持 Extension 注册状态。
+
+### 并行 Session 的内存消耗线性增长
+
+Pi SDK 同进程嵌入的特性使得创建多个 Session 非常轻量，但每个 Session 仍然维护完整的消息历史、工具注册表和上下文窗口。同时创建 100 个 Session 可能消耗数 GB 内存，特别是在每个 Session 都有较长对话历史的场景中。
+
+对并行 Session 数量设上限。使用带并发限制的并行模式（如示例中的 `parallelWithLimit` 函数），同时最多处理 3-5 个 Session。对于大批量任务，使用分批处理模式：每批处理完成后关闭所有 Session，释放内存，再启动下一批。
+
+### SDK 创建的 Session 与 CLI Session 不互通
+
+通过 SDK（`createAgentSession()`）创建的 Session 和通过 CLI（`pi`）创建的 Session 使用不同的 SessionManager 实现。SDK 默认使用 `SessionManager.inMemory()`（内存模式），CLI 使用 `SessionManager.fileSystem()`（文件模式）。两者的 Session 数据不互通，SDK 创建的 Session 退出后数据丢失。
+
+如果需要在 SDK 和 CLI 之间共享 Session 状态，使用 `SessionManager.fileSystem(cwd)` 替代 `SessionManager.inMemory()`，将 Session 持久化到文件系统。CLI 的 `/import` 和 `/export` 命令也可以用于在两种模式间迁移 Session 数据。

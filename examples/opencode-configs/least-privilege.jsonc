@@ -1,4 +1,4 @@
-// Requires OpenCode >= v1.16.x
+// OpenCode v1.17.x
 {
   "permission": {
     "read": "allow",

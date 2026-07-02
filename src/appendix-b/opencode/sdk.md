@@ -2,7 +2,7 @@
 
 OpenCode 提供多种程序化集成方式，允许开发者将 **Agent（智能体）** 能力嵌入到自己的应用和流水线中。本章涵盖 OpenCode 的 **Plugin（插件）** SDK、npm 包 SDK、以及命令行程序化调用。
 
-> **SDK 深入参考**：如果你只关心 `@opencode-ai/sdk` npm 包的深入使用（生产级配置、上下文管理、错误重试等），见 [OpenCode Agent SDK 编程](./agent-sdk.md)。
+> **SDK 深入参考**：如果你只关心 `@opencode-ai/sdk` npm 包的深入使用（生产级配置、上下文管理、错误重试等），见 [OpenCode SDK：编程式 **Agent（智能体）** 开发](./agent-sdk.md)。
 
 ---
 
@@ -733,3 +733,63 @@ opencode /hyperplan
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
 - → [OpenCode 内置命令参考](./commands.md) — 详细了解每个命令的用法和参数
+
+---
+
+## 常见反模式
+
+### 不区分三层 SDK 的适用场景
+
+OpenCode 有三种集成方式：Plugin SDK（进程内）、npm SDK（进程外 HTTP）、CLI 程序化（Shell 子进程）。最常见的错误是不管场景一律用 CLI 方式（`opencode -p "..." --json`）。CLI 方式每次调用都启动一个新的 OpenCode 进程，冷启动延迟高（2-5 秒），且无法复用会话上下文。如果你的场景需要多轮对话或上下文累积，应该用 npm SDK 创建持久化的 Session；如果需要自定义 Tool 或 Hook 拦截，应该用 Plugin SDK。
+
+### 在 Plugin SDK 中引入外部依赖而不声明
+
+Plugin SDK 运行在 Agent 进程内，可以 import 任何 npm 包。但很多开发者在 Plugin 中使用了 `axios`、`lodash`、`ws` 等外部依赖，却没有在 `package.json` 中声明。在开发环境中，这些依赖可能恰好存在于 `node_modules` 中（被其他包间接安装），但在生产环境或 CI 中可能因为依赖树不同而报 `MODULE_NOT_FOUND` 错误。所有 Plugin 依赖都必须显式声明在 `package.json` 中。
+
+### CLI 调用不处理 `--json` 输出格式
+
+通过 `opencode -p "..." --json` 调用时，输出是 JSON 格式，包含结构化的消息内容、Token 消耗、工具调用记录等。但很多脚本直接把 `--json` 的输出当作纯文本处理（如 `echo $(opencode -p "..." --json)`），当输出包含多行 JSON 时会截断或解析失败。应该用 `jq` 或编程语言的 JSON 解析器处理输出，而不是字符串操作。
+
+### 用 Plugin SDK 实现本该用 npm SDK 解决的问题
+
+Plugin SDK 适合在 Agent 进程内扩展行为（添加 Tool、Hook 拦截），但有些开发者用它来实现"从外部系统获取数据"的需求——在 Plugin 的 Tool Handler 中调用外部 REST API，把结果返回给 Agent。这虽然可行，但 Plugin 运行在 Agent 进程中，外部 API 调用的延迟和失败会影响 Agent 的响应时间。这种场景更适合用 MCP 服务器实现，MCP 运行在独立进程中，Agent 可以异步调用而不会阻塞自身执行。
+
+---
+
+## 适用场景与限制
+
+### Plugin SDK 只能在 Agent 进程内使用
+
+Plugin SDK 通过 `import { definePlugin } from "opencode"` 在 Agent 进程内注册自定义逻辑。它无法在独立的 Node.js 脚本、CI Runner、Web 服务器中使用。如果你的场景是"在 CI 中调用 OpenCode Agent"，应该用 npm SDK（`createOpencodeClient`）或 CLI 程序化方式。Plugin SDK 的运行时环境是 OpenCode 的 Agent 进程，生命周期与 Session 绑定。
+
+### npm SDK 无法定义新 Agent
+
+`@opencode-ai/sdk` 提供的 REST API 可以创建 Session、发送 prompt、管理文件，但无法定义新的 Agent 类型。Agent 的定义（模型选择、温度、工具权限、System Prompt）仍需在 `opencode.json` 或 OMO 的 `oh-my-openagent.jsonc` 中配置。SDK 只能使用已经存在的 Agent，通过 `app.agents()` 查看可用列表。如果你的场景需要动态创建不同行为的 Agent，应在配置层预定义多个 Category，SDK 层按需选择。
+
+### CLI 程序化方式的输出格式不稳定
+
+`opencode -p "..." --json` 的 JSON 输出格式没有严格的 Schema 约束，不同版本的 OpenCode 可能调整输出结构。脚本依赖特定的 JSON 字段（如 `output.text`）时，OpenCode 升级后字段名变更会导致脚本静默失败。建议对 CLI 输出做宽松的字段存在性检查，使用默认值兜底，并在 CI 中用固定版本的 OpenCode。
+
+### 天气 Agent 案例的 API 限速
+
+本章的天气预报智能体案例使用 OpenWeatherMap API，免费版有 60 次/分钟的调用限制。`batch_weather_check` 工具一次性查询多个城市时，如果城市数量超过 60 个，会触发 API 限速返回 429 错误。在生产环境中应实现请求限速（如每秒最多 5 次调用）和重试逻辑，或使用付费版 API 获取更高的配额。
+
+---
+
+## 常见失败与陷阱
+
+### OpenCode Server 未启动导致连接失败
+
+npm SDK（`createOpencodeClient`）和 CLI 方式都依赖 OpenCode Server 正在运行。新手最常见的错误是直接运行 SDK 脚本而忘记先启动 Server，导致 `ECONNREFUSED` 错误。`createOpencodeClient` 默认不抛出 HTTP 错误（`throwOnError: false`），连接失败时返回空响应而不是异常，脚本可能静默跳过错误继续执行。生产环境应设 `throwOnError: true`，并在脚本开头检查 Server 连接状态（`client.global.health()`）。
+
+### `!shell` 模板语法的执行环境差异
+
+自定义命令中的 `!shell` 语法在 OpenCode 的进程环境中执行 Shell 命令。这个环境可能与你的终端环境不同——环境变量、工作目录、PATH 都可能有差异。例如，`!git branch --show-current` 在终端中正常工作，但在 CI Runner 中可能因为 `git` 不在 PATH 中而失败。建议 `!shell` 只用于轻量级的快速命令，并在 AGENTS.md 中说明命令的环境依赖。
+
+### 结构化输出与模型能力不匹配
+
+`format` 参数请求 JSON Schema 格式输出时，并非所有模型都支持。Claude Sonnet 和 GPT-4 系列模型支持良好，但一些小型模型或本地部署的模型可能不支持结构化输出，会忽略 `format` 参数并返回自然语言文本。此时 SDK 的 `structuredOutput` 字段为空，需要从文本内容中回退解析 JSON。在使用结构化输出前，应确认目标模型支持此功能。
+
+### 多实例并行时的端口冲突
+
+在 CI/CD 中并行运行多个 SDK Agent 时，如果都使用默认端口（4096），会发生端口冲突。`createOpencode()` 自动启动 Server 实例时会绑定端口，第二个实例启动失败。解决方案是为每个实例分配不同的端口（从环境变量或随机端口获取），或使用预启动的 Server 池（所有实例连接同一个 Server，用不同 Session 隔离任务）。

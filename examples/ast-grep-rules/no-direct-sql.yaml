@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 规则：禁止在 Controller 中直接写 SQL
 id: no-direct-sql-in-controller
 language: typescript

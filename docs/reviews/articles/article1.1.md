@@ -107,3 +107,20 @@
 ### 一句话结论
 
 **三位视角的共同结论：文章的核心框架（Agent = Model + Harness、三大原则、五大能力）是站得住的，但它在"说服读者相信这个框架"上花的力气远多于"帮助读者理解这个框架的真实边界"。** Karpathy 指出没说明可靠性天花板，Munger 指出没给读者反偏误工具，TechLead 指出没回答"我该怎么落地"——这三个缺口指向同一个问题：文章需要从"概念宣言"升级为"决策支持文档"。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

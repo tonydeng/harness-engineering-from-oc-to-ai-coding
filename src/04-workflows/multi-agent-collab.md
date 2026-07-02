@@ -446,6 +446,8 @@ function mergeTaskResults(results, strategy) {
 
 ### 执行模型
 
+下图展示了后台任务的执行模型，包括父 Agent 派发子任务和异步收集结果的流程。
+
 ```mermaid
 flowchart TB
     subgraph 同步["同步调用（默认）"]
@@ -632,6 +634,8 @@ background_cancel(taskId: "bg_abc123")
 
 ### 同步 vs 异步：选择决策树
 
+下图展示了在同步调用和异步调用之间做选择的决策树。
+
 ```mermaid
 graph TB
     A[选择执行模式] --> B{子任务是否需要<br/>结果才能继续?}
@@ -644,9 +648,9 @@ graph TB
     F -->|有| G[异步（后台）]
     F -->|没有| H[同步即可]
     
-    C --> I[使用 task() 默认调用]
+    C --> I["使用 task() 默认调用"]
     E --> I
-    G --> J[使用 delegate_task()<br/>run_in_background: true]
+    G --> J["使用 delegate_task()<br/>run_in_background: true"]
     H --> I
     
     style C fill:#4A90D9,color:#fff
@@ -724,6 +728,8 @@ delegate_task(
 7-Agent Pipeline 是当前最成熟的多 Agent 协作方案，将软件开发流程拆分为七个独立角色，每个角色专注于单一职责。
 
 ### 七个角色的职责定义
+
+下图展示了 7-Agent Pipeline 中每个 Agent 角色的职责分工和执行顺序。
 
 ```mermaid
 flowchart TB
@@ -1103,6 +1109,8 @@ export async function login(req: Request, res: Response) {
 
 ### 状态流转图
 
+下图以状态机图展示了 Agent 在 Pipeline 中的状态流转，从就绪到完成的完整生命周期。
+
 ```mermaid
 stateDiagram-v2
     [*] --> planning: 启动 Pipeline
@@ -1137,6 +1145,8 @@ stateDiagram-v2
 前端开发有其独特的工作流需求：UI 设计、组件实现、响应式适配、视觉测试等环节需要紧密配合。以下是针对前端场景定制的 Agent 编排方案。
 
 ### AI 辅助组件生成工作流
+
+下图展示了前端 AI 辅助组件生成的工作流程，从设计稿分析到组件渲染的完整链路。
 
 ```mermaid
 flowchart TB
@@ -1327,6 +1337,8 @@ UI Reviewer Agent 在审查时会检查以下项目：
 | `manual` | 手动触发 | - | - |
 
 ### 失败处理策略
+
+下图展示了 Pipeline 中不同失败场景的处理策略和降级方案。
 
 ```mermaid
 flowchart TB
@@ -1592,6 +1604,50 @@ WORKFLOW_STATE.md 中记录三类恢复信息：
 > WORKFLOW_STATE.md 的完整模板和字段说明见上文 [WORKFLOW_STATE.md 文件交接模式](#workflow_statemd-文件交接模式)。
 
 ---
+
+## 常见反模式
+
+### 所有 Agent 共享同一个权限等级
+
+**现象**：在 7-Agent Pipeline 中，Planner、Implementor、Reviewer 都使用相同的权限设置，Reviewer 和 Tester 也能修改代码。
+
+**原因**：配置时图省事，对所有 Agent 使用统一的权限模板，忽略了职责分离的安全原则。
+
+**对策**：严格执行权限矩阵——Reviewer 和 Tester 使用 `edit: deny`，Committer 的权限设为 `ask`（需确认）。Planner 和 Debater 只需要读权限。Implementor 和 Linter 可以编辑代码。
+
+### Pipeline 中某个 Agent 超时不处理
+
+**现象**：Pipeline 串行执行中，某个 Agent 执行时间过长（如 Tester 运行全量测试），后续 Agent 被阻塞。
+
+**原因**：未为每个 Agent 设置合理的超时时间，导致单个环节拖慢整个 Pipeline。
+
+**对策**：为每个 Agent 设置 `timeout` 参数。测试类 Agent 可以限制测试范围（只跑变更相关的测试用例）。Pipeline 设计时考虑异步执行的可能性：前后端实现可以并行。
+
+## 常见错误与陷阱
+
+### 权限隔离导致无法读取测试结果
+
+**场景**：Implementor 生成的测试报告文件，Tester 因为权限隔离无法读取。
+
+**后果**：Tester 无法分析测试结果，Pipeline 卡在测试阶段。
+
+**预防**：设计 Pipeline 时明确文件交接方案。Implementor 的输出写入 WORKFLOW_STATE.md 或指定输出文件，Tester 通过文件路径读取。使用共享输出目录（仅写入）配合独立工作目录。
+
+### 后台任务 ID 混淆
+
+**场景**：同时启动多个后台任务，使用 `bg_xxx` ID 获取结果时混淆了任务对应关系。
+
+**后果**：获取了错误的任务结果，导致后续决策基于错误信息。
+
+**预防**：为每个后台任务分配语义化的变量名，建立任务 ID → 描述 → 预期结果的映射表。获取结果后先验证 `title` 和 `metadata` 字段是否匹配预期。
+
+## 适用场景与限制
+
+多 Agent 协作适合中到大型工程任务：涉及前后端同步开发、需要多角色审查、需要自动化流水线的场景。7-Agent Pipeline 是协作模式的完整实现。
+
+以下情况多 Agent 协作可能过度设计：单人完成的小型任务——单个 Agent 效率更高；步骤顺序固定且不需要审查的简单变更——Ultrawork 模式更轻量；需要高度人工介入的探索性任务——每个步骤都需要人类决策。
+
+7-Agent Pipeline 需要 OMO v4.0+ 支持。串行 Pipeline 的总执行时间取决于最慢的 Agent。Pipeline 的执行日志需要通过 WORKFLOW_STATE.md 持久化。建议在 Pipeline 启动前确认所有依赖工具已就绪。
 
 ## 学习检查清单
 

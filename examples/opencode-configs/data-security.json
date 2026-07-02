@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "data_security": {
     "transit_encryption": {
       "min_tls_version": "1.3",

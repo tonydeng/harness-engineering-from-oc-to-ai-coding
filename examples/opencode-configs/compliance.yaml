@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 金融行业合规配置示例
 providers:
   - name: internal-llm

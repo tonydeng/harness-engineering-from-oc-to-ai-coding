@@ -2,7 +2,7 @@
 
 > 通过 `@opencode-ai/sdk` 用代码控制 OpenCode Server，实现 CI/CD 集成、自定义工作流和远程 Agent 调度。
 
-OpenCode SDK 提供了一套类型安全的 JavaScript/TypeScript 客户端，通过 REST API 与运行中的 OpenCode Server 通信。和 [Agent 架构参考](./agent-architecture.md) 中介绍的配置式自定义 Agent（Category/`task()`）不同，SDK 面向的是**将 OpenCode 嵌入到你的应用或流水线中**的场景。
+OpenCode SDK 提供了一套类型安全的 JavaScript/TypeScript 客户端，通过 REST API 与运行中的 OpenCode Server 通信。和 [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md) 中介绍的配置式自定义 Agent（Category/`task()`）不同，SDK 面向的是**将 OpenCode 嵌入到你的应用或流水线中**的场景。
 
 ---
 
@@ -971,7 +971,7 @@ const session: Session = await client.session.get({
 ## 相关章节
 
 - → [OpenCode SDK 与程序化集成](./sdk.md) — 三层次 SDK 总览（Plugin SDK / CLI 管道 / 天气 Agent 案例）
-- → [OpenCode Agent 架构参考](./agent-architecture.md) — 配置式自定义 Agent（Category + `task()`）
+- → [oh-my-openagent **Agent（智能体）** 设计与开发指南](./agent-architecture.md) — 配置式自定义 Agent（Category + `task()`）
 - → [OpenCode Plugin 系统参考](./plugins.md) — Plugin 方式的扩展机制
 - → [OpenCode 内置能力](./capabilities.md) — 整体能力索引
 - → [OpenCode 生态参考](./ecosystem.md) — 社区生态与 SDK 相关项目
@@ -1060,3 +1060,63 @@ opencode /hyperplan
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
 - → [OpenCode 内置命令参考](./commands.md) — 详细了解每个命令的用法和参数
+
+---
+
+## 常见反模式
+
+### 不区分 SDK 与配置式 Agent 的适用边界
+
+最常见的错误是把 SDK 当作配置式 Agent 的替代品。在 TUI 交互式开发中使用 SDK，会失去 OMO 的 Plugin Hook 链、Skill 系统和 Team Mode 等完整生态支持。SDK 暴露的是 REST API 的能力子集，很多配置式 Agent 天然拥有的功能（如 `context:assemble` Hook 的上下文注入、`onQualityGate` 质量门禁）在 SDK 层面需要手动实现。如果你的业务逻辑大部分在 OpenCode 内部完成，配置式 Agent 更省心；只有当 OpenCode 只是你系统中的一个组件时，SDK 才是正确选择。
+
+### 每次 prompt 都创建新 Session
+
+有些开发者为了"隔离上下文"，给每个 prompt 请求都创建一个新的 Session。这导致多轮对话无法利用之前的上下文，Agent 每次都要从头理解项目结构和任务背景。正确的做法是：同一任务的多轮对话复用同一个 Session，跨任务的调用才使用独立 Session。单轮即可完成的任务（如文件列表查询）适合创建即删的 Session，但需要上下文累积的分析任务应该复用 Session 并在必要时手动调用 `session.summarize()` 压缩。
+
+### 不处理网络错误和部分失败
+
+SDK 通过 HTTP 与 OpenCode Server 通信，网络不稳定、Server 过载、超时等情况随时可能发生。很多初版 SDK 代码直接 `await client.session.prompt(...)` 而不包 try-catch，一旦 Server 503 或网络抖动就直接崩溃。生产环境中必须实现指数退避重试（仅对 429、503、ECONNREFUSED 等可重试错误），对长时间运行的 prompt 设置超时中止（`AbortSignal`），并对结构化输出检查 `partial` 字段处理部分失败。
+
+### 在代码中硬编码 API Key
+
+SDK Client 通过 REST API 与 Server 通信，不需要传递 API Key。但有些开发者习惯性地把 `ANTHROPIC_API_KEY` 写进代码或配置文件中，然后把 SDK Client 代码提交到 Git 仓库。正确的做法是在 Server 端通过环境变量注入 API Key，Client 端只连接 Server 的 HTTP 端口。在 CI/CD 中，API Key 通过 GitHub Secrets 或 Vault 注入，永远不出现在源码中。
+
+---
+
+## 适用场景与限制
+
+### SDK 不适合的场景
+
+SDK 无法替代配置式 Agent 在 TUI 交互式开发中的角色。当你需要人工介入、实时调整 prompt、查看 Agent 的思考链路（`/thinking`）、或者使用 OMO 的自动化循环（`/ralph-loop`、`/ulw-loop`）时，SDK 做不到。配置式 Agent 的上下文由 OMO 自动维护，多轮调用上下文自动延续；SDK 每次调用的上下文通过在同一个 Session 中累积来保持，你需要自己设计上下文的生命周期和压缩策略。
+
+### REST API 能力子集
+
+SDK 通过 REST API 暴露的是 OpenCode Server 能力的子集。文件操作、搜索、会话管理等核心功能可用，但 Plugin 系统、TUI 交互、某些高级 Agent 功能（如实时流式输出、交互式权限确认）不可用。如果你的场景依赖 Plugin Hook 链（如 `file:beforeWrite` 安全审查、`llm:before` Prompt 注入），SDK 无法直接使用这些能力，需要通过其他方式（如 MCP 服务器）实现等效功能。
+
+### Server 版本兼容性
+
+SDK 的 TypeScript 类型定义是从 Server 的 OpenAPI 规范自动生成的。这意味着 Server 版本更新后，类型定义会自动同步，但也可能导致 SDK Client 与 Server 版本不匹配的问题。在 CI 中应验证 SDK 版本与 Server 版本的兼容性，避免使用过旧的 SDK 连接新版 Server 时出现 API 不兼容。建议使用语义化版本约束（如 `^1.17.0`）并定期更新。
+
+### E2B Sandbox 的冷启动延迟
+
+在 E2B Sandbox 中运行 OpenCode Server 时，冷启动需要等待 Server 进程就绪（通常 3-10 秒）。轮询等待循环是必须的，500ms 间隔是经验值。对于需要低延迟响应的场景（如 Web 应用中的 AI 助手），建议预热 Sandbox 或使用常驻 Server 实例，而不是每次请求都创建新的 Sandbox。
+
+---
+
+## 常见失败与陷阱
+
+### 上下文窗口溢出
+
+SDK 开发中最常见的故障是 Session 累积的消息超出模型上下文窗口。自动压缩在 Token 达到 95% 时触发，但如果单轮 prompt 的输入 + 输出已经超过窗口容量，压缩机制来不及工作。症状表现为 Server 返回 400 错误或 Agent 输出截断。预防措施包括：每次 prompt 后检查 `session.promptTokens`，达到阈值（经验值 50K Token）时主动创建新会话，以及在 prompt 中加入范围限制（"只分析前 100 行"）。
+
+### 结构化输出解析失败
+
+使用 `format` 参数请求 JSON Schema 格式输出时，模型可能返回不符合 Schema 的内容（尤其是复杂嵌套结构）。虽然 SDK 支持 `retryCount` 自动重试，但默认只重试 2 次。对于关键的自动化流水线，建议增大 `retryCount` 到 5，并实现客户端的 JSON 解析回退逻辑：先尝试 `structuredOutput` 字段，失败则从文本内容中提取 JSON。
+
+### Session 泄露导致资源耗尽
+
+在 CI/CD 或 Web 应用中，如果 Session 创建后没有及时删除，会累积大量历史消息和 Token 消耗。OpenCode Server 不会自动清理长时间未使用的 Session。当 Session 数量过多时，Server 的内存和磁盘压力增大，响应变慢甚至 OOM。每次 prompt 完成后应评估是否需要保留 Session，不保留时调用 `session.delete()` 释放资源。
+
+### 成本失控
+
+没有 Token 预算控制的 SDK 调用容易产生意外的高额账单。一个不受限的 prompt（如"列出所有文件并分析每个文件的复杂度"）可能消耗数万 Token。生产环境中应实现三层防护：在 prompt 中加入范围限制、配置 `maxTokens` 限制每次响应长度、每次 prompt 后检查 `session.cost` 字段是否超过预算阈值。超预算时记录告警并中止后续调用。

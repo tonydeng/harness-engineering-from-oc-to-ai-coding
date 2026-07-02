@@ -833,6 +833,76 @@ opencode --log-level debug
 }
 ```
 
+## 常见反模式
+
+### 自定义 Agent 使用过度
+
+**现象**：为每个微小任务都创建自定义 Agent，导致 Agent 列表膨胀到十几个，切换成本高于收益。
+
+**原因**：认为"自定义 Agent 越多，分工越细，效率越高"。实际上大多数场景 Default Agent 就能覆盖。
+
+**对策**：只有当你需要明确的角色分工（不同的系统提示词、工具权限、模型配置）时才创建自定义 Agent。可以先从 2-3 个 Agent 开始（例如：开发 Agent、审查 Agent），按需逐步增加。
+
+### Plugin 功能膨胀
+
+**现象**：一个 Plugin 既做安全检查、又做日志记录、又做工具扩展、还做上下文注入，变成"万能插件"。
+
+**原因**：认为"一个 Plugin 解决多个问题更方便"，忽略了 Plugin 的单一职责原则。
+
+**对策**：每个 Plugin 只负责一个领域的能力扩展。安全检查一个 Plugin，日志记录另一个。通过多个 Plugin 的组合实现完整功能。
+
+### Hook 点理解错误导致副作用
+
+**现象**：在 `file:afterRead` 中修改文件内容，期望影响 Agent 后续的处理，但实际上 `file:afterRead` 是只读 Hook。
+
+**原因**：没有理解不同 Hook 点的职责——有些 Hook 用于观察（不能修改数据），有些用于拦截（可以阻止操作），有些用于转换（可以修改数据）。
+
+**对策**：开发 Plugin 前仔细阅读 Hook 点文档。确认所选 Hook 点的 payload 是否允许修改。在 `resultTransform` 类 Hook 中修改数据，在 `before` 类 Hook 中做验证和拦截。
+
+## 常见错误与陷阱
+
+### Plugin 加载顺序假设
+
+**场景**：Plugin A 假设 Plugin B 先于自己加载，依赖 Plugin B 注册的工具或 Hook。
+
+**后果**：当 OpenCode 调整加载顺序时，Plugin A 因找不到 Plugin B 提供的功能而报错。
+
+**预防**：Plugin 之间不应存在加载顺序依赖。如果必须依赖另一个 Plugin 的功能，通过 Plugin API 的依赖声明机制（`dependencies` 字段）显式声明。
+
+### Hook 异步处理不当
+
+**场景**：在同步 Hook（如 `permission:check`）中执行异步操作（如网络请求）。
+
+**后果**：Hook 执行超时，导致 Agent 操作被延迟或阻塞。
+
+**预防**：区分同步 Hook 和异步 Hook 的使用场景。在同步 Hook 中仅做快速判断（读缓存、匹配模式、本地决策），异步操作放在异步 Hook 中。
+
+### 自定义 Tool 命名污染
+
+**场景**：自定义 Plugin 注册了一个名为 `search` 的工具，但没有意识到 Agent 内置工具中也有一个 `search`。
+
+**后果**：Plugin 的 `search` 工具覆盖了内置的 `search`，影响了系统中其他部分对搜索功能的依赖。
+
+**预防**：自定义工具的命名遵守命名空间前缀约定（如 `plugin_search`）。在 opencode.json 中使用 ToolRegistry 优先级配置显式控制覆盖行为。
+
+## 适用场景与限制
+
+### 自定义 Agent 和 Plugin 的最佳场景
+
+- 需要为不同角色配置不同的系统提示词和工具权限（架构师 Agent、开发者 Agent、安全审查 Agent）
+- 需要扩展 Agent 不具备的能力（如敏感信息检测、自定义代码生成模板）
+- 需要在 Agent 执行的关键节点插入安全检查或日志记录
+
+### 自定义 Agent 和 Plugin 的局限
+
+- **维护成本**：每个自定义 Agent 和 Plugin 都需要持续的兼容性测试和版本管理
+- **调试难度**：多个 Plugin 同时工作时，问题定位需要逐个排查
+- **性能影响**：复杂的 Hook 链会增加 Agent 每次操作的延迟
+
+### 何时不需要自定义
+
+默认 Agent 配合 2-3 个精选的社区 Plugin（如 DCP、opencode-mem）可以覆盖 80% 以上的场景。先确认现有能力确实不够时再创建自定义 Agent 或 Plugin。
+
 ## 验证标准
 
 完成本文学习后，你应该能：

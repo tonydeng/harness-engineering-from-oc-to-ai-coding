@@ -30,6 +30,8 @@
 
 Teams 架构通过并行 Agent 协作解决这些问题：每个 Team 成员是同一进程内的独立 Agent 会话实例，拥有独立的 **Prompt（提示词）** 上下文和故障边界。
 
+> **相关 Skill**：OpenCode 内置了 `team-mode` Skill，可通过 `skill(name="team-mode")` 加载团队编排的完整指令参考，了解 Team 成员角色定义、通信协议和生命周期管理的详细规范。完整内置 Skill 列表见 [附录 B 内置 Skill 参考](../appendix-b/opencode/capabilities.md#内置-skill-参考)。
+
 ### Team 的成员角色定义
 
 Team 成员的角色定义遵循职责分离原则。每个成员专注于特定领域，通过消息传递协作完成复杂任务。
@@ -521,6 +523,8 @@ flowchart TB
 
 #### 扩容阶段
 
+下图展示了集群扩容阶段的执行流程，从负载检测到新 Worker 加入的完整步骤。
+
 ```mermaid
 flowchart TB
     subgraph 扩容阶段
@@ -538,6 +542,8 @@ flowchart TB
 运行阶段中，Team Lead 持续监控集群负载指标——包括 CPU 使用率、Inbox 消息积压深度和 Worker 任务队列长度。当综合负载超过 `scaleUpThreshold`（默认 0.7）时，自动创建新的 Worker 加入集群分担任务，Worker 数量上限由 `maxWorkers`（默认 10）控制。扩容后进入 `cooldownPeriod`（默认 60 秒），避免频繁伸缩导致的震荡。若负载未达到阈值，集群维持当前规模继续运行。
 
 #### 缩容阶段
+
+下图展示了集群缩容阶段的执行流程，从空闲 Worker 识别到资源回收的步骤。
 
 ```mermaid  
 flowchart TB
@@ -949,6 +955,8 @@ graph LR
 | `team_status` | 查询团队整体状态和成员健康度 | 全体成员 |
 | `team_list` | 列出当前运行的所有 Team | 全体成员（全局查询） |
 
+下图展示了 Team Mode 中 Team Lead 与成员之间的多级任务分配和通信关系。
+
 ```mermaid
 flowchart TB
     subgraph L1["Level 1: 项目级 Team"]
@@ -1320,6 +1328,50 @@ Teams 并行 Agent 协作是超越单 Agent 限制的关键架构。通过基于
 从渗透测试员视角，Team Mode 的数据隔离是关键安全边界。完全隔离、共享读取、完全共享三种隔离级别适用于不同场景，安全检查清单确保敏感数据不泄露。
 
 ---
+
+## 常见反模式
+
+### 在 Teams 中混入有竟态依赖的任务
+
+**现象**：将两个 Worker 分别分配了需要读取对方输出的任务，形成循环依赖。
+
+**原因**：Task 分解时未识别任务间的依赖关系，默认所有任务应该可以并行。
+
+**对策**：在 Team Lead 层面设计明确的 DAG（有向无环图）依赖。Worker A 的输出作为 Worker B 的输入时，使用串行调度而非并行。使用 `requireCompletionBeforeNewTask: true` 控制消息处理顺序。
+
+### 所有成员共享同一个上下文窗口
+
+**现象**：Team 中所有 Agent 使用相同的模型和上下文配置，高成本模型浪费在简单 Worker 上。
+
+**原因**：配置时使用默认模板，未针对不同角色优化模型选择和上下文大小。
+
+**对策**：为 Team Lead 配置最强模型（决策和协调需要高质量输出），为 Worker 配置性价比模型（执行具体任务不需要最强能力）。Worker 的上下文窗口可以设置得比 Lead 更小，因为 Worker 只需要关注自己的子任务。
+
+## 常见错误与陷阱
+
+### Team 间竞态条件导致数据不一致
+
+**场景**：两个 Team 同时写入同一个文件或共享目录，导致文件损坏或数据丢失。
+
+**后果**：Team 的最终输出不完整，部分结果被覆盖。
+
+**预防**：为每个 Team 分配独立的工作目录，输出文件使用唯一命名模式（如 `{team_id}_{task_id}_{timestamp}.json`）。跨 Team 的数据交换通过消息传递而非共享文件。
+
+### Inbox 溢出导致消息丢失
+
+**场景**：Team Lead 同时向多个 Worker 广播消息，Worker 处理速度跟不上，Inbox 目录积压超过容量。
+
+**后果**：消息丢失且无重试机制，Worker 漏掉关键任务。
+
+**预防**：控制并发消息数，避免一次性广播。设置 `maxConcurrentMessages` 限制。Worker 处理完当前任务后再接收新消息。监控 Inbox 文件数量，超过阈值时告警。
+
+## 适用场景与限制
+
+Team Mode 适合需要大规模多 Agent 并行协作的复杂工程场景：全栈应用开发（前后端并行）、安全审计（多角度同时扫描）、大规模代码审查（多 Reviewer 并行审查）。
+
+以下情况 Team Mode 不是最佳选择：简单串行任务——独立 Agent 开箱即用且协调开销更小；单一技能即可完成的任务——不需要 Team 的多角色能力；对隔离性要求极高的安全敏感任务——独立进程的 Agent 更安全。
+
+Team Mode 硬性限制：单 Team 最多 10 个成员，最多同时 5 个 Team，禁止嵌套 Team，禁止 Team 成员调用 `delegate_task()`。这些限制是为了防止资源无限扩张。Team Mode 所有成员运行在同一 OMO 进程中，不存在进程级别的隔离。
 
 ## 学习检查清单
 

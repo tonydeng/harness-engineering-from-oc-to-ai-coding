@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 # 敏感信息检测规则
 sensitive_patterns:
   - name: API Key

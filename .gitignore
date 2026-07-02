@@ -71,6 +71,9 @@ temp/
 # OpenCode
 .omo/
 
+# Git Worktrees
+.worktrees/
+
 # Trae
 .trae/
 
@@ -79,6 +82,9 @@ temp/
 
 # playwright
 .playwright-mcp/
+
+# Mermaid temp renders
+_mermaid_renders/
 
 # log
 logs/

@@ -299,6 +299,8 @@ agent_permissions:
 
 **措施二：操作预览与确认**
 
+下图展示了操作预览与确认机制的流程，确保 AI 执行前经过人工审核。
+
 ```mermaid
 flowchart TB
     A[AI 提议执行操作] --> B[生成预览报告]

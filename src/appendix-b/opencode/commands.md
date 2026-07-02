@@ -115,6 +115,50 @@ oh-my-openagent（简称 OMO）是 OpenCode 的增强插件，提供了 9 个扩
 
 ---
 
+### 功能规格工具包（Speckit）
+
+Speckit 系列命令提供从需求澄清到实现验证的全流程规格管理能力，适合需要结构化功能开发的团队：
+
+| 命令 | 功能 | 适用场景 |
+|------|------|----------|
+| `/speckit.constitution` | 创建/更新项目章程 | 新项目启动时定义编码原则和团队规范 |
+| `/speckit.clarify` | 识别规格中的模糊点并提问 | 需求不明确时自动追问澄清 |
+| `/speckit.specify` | 从自然语言生成功能规格 | 将需求描述转化为结构化的规格文档 |
+| `/speckit.plan` | 根据规格生成实现计划 | 将规格分解为有依赖关系的实现步骤 |
+| `/speckit.tasks` | 生成可执行任务列表 | 从设计产物生成细粒度的开发任务 |
+| `/speckit.taskstoissues` | 将任务转为 GitHub Issues | 将任务列表自动创建为 GitHub issues |
+| `/speckit.implement` | 按任务列表依次执行实现 | 自动化执行 tasks.md 中的所有任务 |
+| `/speckit.converge` | 检查代码与规格的差距 | 验证已实现的功能是否符合原定规格 |
+| `/speckit.analyze` | 跨产物一致性分析 | 检查 spec/plan/tasks 之间的内容一致性 |
+| `/speckit.checklist` | 根据需求生成检查清单 | 将验收标准转化为可勾选的检查项 |
+| `/speckit.agent-context.update` | 刷新 Agent 上下文中的 Speckit 部分 | 在多会话工作中保持规格信息同步 |
+
+**工作流示例**：一个完整的功能开发流通常按以下顺序使用 Speckit 命令：
+
+```text:terminal
+/speckit.clarify         → 澄清模糊需求
+/speckit.specify         → 生成功能规格
+/speckit.plan            → 制定实现计划
+/speckit.tasks           → 分解为执行任务
+/speckit.implement       → 自动化执行实现
+/speckit.converge        → 验证实现完整性
+```
+
+### 持久记忆系统（Supermemory）
+
+Supermemory 系列命令提供跨会话的持久记忆管理能力，适用于需要长期积累项目知识的场景：
+
+| 命令 | 功能 | 适用场景 |
+|------|------|----------|
+| `/supermemory-init` | 用代码库知识初始化记忆 | 首次使用时构建项目知识索引 |
+| `/supermemory-login` | 通过浏览器登录 Supermemory | 首次使用或凭证过期时需要认证 |
+| `/supermemory-logout` | 退出登录并清除凭证 | 在共享设备上使用后退出 |
+| `/supermemory-status` | 查看连接状态 | 确认记忆系统是否正常运行 |
+
+→ [记忆系统设计](../../06-advanced/memory-system.md) 讲解 Supermemory 的架构和使用策略。
+
+---
+
 ## Custom Commands（自定义命令）
 
 OpenCode 支持用户创建自己的命令。两种方式各有优势，Markdown 文件方式更适合团队协作，JSON 配置方式更适合精细控制。
@@ -315,6 +359,8 @@ model: claude-opus-4
 | `/hyperplan` | 对抗性多 Agent 规划 | 任务执行 |
 | `/handoff` | 创建上下文摘要用于续接 | 会话续接 |
 | `/stop-continuation` | 停止所有续接机制 | 会话续接 |
+| `/speckit.*` | Speckit 功能规格工具包（11 个命令） | 功能规格 |
+| `/supermemory-*` | Supermemory 持久记忆系统（4 个命令） | 记忆管理 |
 
 ### 自定义命令配置速查
 
@@ -412,3 +458,63 @@ opencode /hyperplan
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
 - → [OpenCode **Plugin（插件）** 系统参考](./plugins.md) — 了解 Plugin 系统的完整参考
+
+---
+
+## 常见反模式
+
+### 滥用 `/ralph-loop` 和 `/ulw-loop` 自动化循环
+
+自动化循环命令（`/ralph-loop`、`/ulw-loop`）是 OpenCode 最强大的能力之一，但也最容易被滥用。一些开发者在任务描述模糊、范围不明确的情况下直接启动循环，导致 Agent 陷入无限迭代或产出大量无用代码。正确做法是：先用 `/hyperplan` 或 Prometheus 模式生成明确的实现计划，确认计划中的每个步骤都有清晰的输入和预期输出后，再用 `/start-work` 启动执行。循环机制适合"知道要做什么，只是需要持续执行"的场景，不适合"边做边想"的探索式开发。
+
+### 在生产环境频繁使用 `/undo` 和 `/redo`
+
+`/undo` 和 `/redo` 撤销的是文件修改和命令执行，但不会回滚数据库变更、环境变量修改或外部服务调用。在生产环境中频繁使用这两个命令，可能导致部分操作被撤销而另一部分未被撤销，产生不一致的中间状态。更安全的做法是通过 Git 分支隔离生产环境变更，用 `git stash` 或 `git checkout` 回滚，而不是依赖 OpenCode 的会话级撤销。
+
+### 把所有任务塞进同一个会话
+
+有些开发者习惯在一个长会话中完成所有工作，从代码编写到测试到部署都在同一个 Session 中进行。这导致上下文膨胀、Token 消耗失控，而且不同任务的上下文会互相污染（例如调试 Bug 的上下文影响了后续的代码审查）。正确做法是按任务类型使用独立会话：代码编写、代码审查、Bug 调试、部署操作分别使用不同的 Session，通过 `/sessions` 在会话间切换。
+
+### 自定义命令不使用 `$ARGUMENTS` 参数化
+
+创建自定义命令时，有些开发者把所有参数硬编码在 Markdown 文件中，每次修改参数都要编辑文件。这在个人使用时勉强可以，但团队共享时效率低下。应该使用 `$ARGUMENTS` 模板语法让命令参数化，调用时通过 `/command 参数` 传入不同值。这样同一个命令可以适配不同的文件路径、分支名或配置参数，团队成员只需记住命令格式而不需要了解内部实现。
+
+---
+
+## 适用场景与限制
+
+### OMO 扩展命令需要额外安装
+
+核心内置命令（`/init`、`/new`、`/compact` 等）开箱即用，但 OMO 扩展命令（`/ralph-loop`、`/refactor`、`/hyperplan` 等 9 个命令）需要安装 oh-my-openagent 插件后才可用。如果团队中部分成员没有安装 OMO，他们无法使用这些高级命令，可能导致工作流不一致。建议在项目 README 或 AGENTS.md 中明确标注所需的命令和插件依赖。
+
+### `/init` 生成的 AGENTS.md 可能不够精确
+
+`/init` 通过扫描项目结构自动生成 AGENTS.md，但它对项目架构的理解是浅层的——识别技术栈、列出目录结构，但无法理解业务逻辑、领域模型和团队约定。生成的 AGENTS.md 需要人工补充：业务规则、代码审查标准、部署流程、安全约束等只有人才能定义的内容。把 `/init` 的输出当作起点而非终点。
+
+### Speckit 命令链的顺序依赖
+
+Speckit 系列命令（`/speckit.clarify` → `/speckit.specify` → `/speckit.plan` → `/speckit.tasks` → `/speckit.implement`）有严格的顺序依赖。跳过前面的步骤直接执行后面的结果会失败或产出质量低下的结果。例如，没有经过 `/speckit.clarify` 澄清的需求直接 `/speckit.specify`，生成的规格文档会包含大量模糊和矛盾的描述。
+
+### 自定义命令的模板注入安全
+
+`!shell` 语法在每次执行时动态运行 Shell 命令，如果命令中包含用户输入的参数，可能造成命令注入。`@file` 语法会将指定文件的完整内容注入 Prompt，如果文件包含敏感信息（API Key、密码），这些信息会暴露给 LLM。团队共享自定义命令时，应审查模板中的 `!shell` 和 `@file` 用法，避免在命令模板中引入安全风险。
+
+---
+
+## 常见失败与陷阱
+
+### `/compact` 压缩后丢失关键上下文
+
+`/compact` 通过摘要替代原始对话来释放 Token 空间，但摘要过程可能丢失重要的细节信息（如特定的错误日志、代码片段、决策记录）。压缩后如果 Agent 继续基于不完整的上下文工作，可能产出偏差的结果。建议在压缩前手动记录关键决策和待处理事项，压缩后检查 Agent 是否仍能正确理解任务上下文。
+
+### `!shell` 命令执行超时
+
+自定义命令中的 `!shell` 语法在命令执行时动态运行 Shell 命令。如果 Shell 命令耗时过长（如 `git log --all` 在大型仓库中、`find` 在包含大量文件的目录中），会阻塞命令的执行。OpenCode 没有为 `!shell` 提供超时控制，长时间运行的命令可能导致会话卡住。建议 `!shell` 只用于轻量级的快速命令（如 `git branch --show-current`），耗时操作应该用 Agent 的 Bash 工具执行。
+
+### `/handoff` 摘要不完整
+
+`/handoff` 生成的上下文摘要依赖当前会话的历史消息。如果会话历史被压缩过（`/compact`），摘要可能遗漏早期的重要信息。此外，`/handoff` 的摘要格式是固定的，无法自定义包含哪些信息。新会话中导入摘要后，Agent 需要重新建立对项目的理解，这个过程可能需要额外的交互。建议在 `/handoff` 前手动记录关键上下文，摘要生成后检查是否覆盖了所有重要信息。
+
+### Speckit 任务列表与实际代码不匹配
+
+`/speckit.tasks` 从设计产物（spec、plan）生成任务列表，但任务描述可能与实际代码结构不匹配。例如，任务要求"修改 UserService"，但代码中实际的文件名是 `user-service.ts` 或 `UserService.ts`。`/speckit.implement` 执行任务时会逐个匹配文件名，匹配失败会导致任务跳过或错误执行。建议在 `/speckit.tasks` 生成后先人工审核任务列表，确认文件路径和类名与实际代码一致。

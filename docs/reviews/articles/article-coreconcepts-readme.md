@@ -146,3 +146,20 @@
 | 官方术语对齐 | 3/10 | 全书概念框架与官方命名存在系统性偏差（非本文独有） |
 
 **总体评价**：作为章节 README，文章的导航功能完整——链接有效、术语前后一致、交叉引用正确。两个表格描述错误已修正。但全书层面的概念框架命名与 OpenCode 官方术语存在系统性偏差（将行业通用概念和作者分类框架包装为 OpenCode 平台特性），这一问题是全书架构层面的，不应在单篇 README 中解决，建议在后续全书面修订时统一考量。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

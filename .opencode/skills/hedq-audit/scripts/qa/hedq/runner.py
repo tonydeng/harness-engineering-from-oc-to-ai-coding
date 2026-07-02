@@ -17,6 +17,15 @@ logger = logging.getLogger(__name__)
 # 快速模式只跑 D1（结构）+ D6（文风）+ D7（术语），耗时 ~10s
 QUICK_CHECKS = {"D1", "D6", "D7"}
 
+# 百分制缩放：所有总分统一为 /100 输出
+# raw ΣDIM_MAX = 14+6+6+4+13+2+10+3.5 = 58.5（full）/ 14+2+10 = 26（quick）
+_FULL_RAW_MAX = sum(DIM_MAX[d] for d in DIM_MAX)  # 58.5
+_QUICK_RAW_MAX = sum(DIM_MAX[d] for d in QUICK_CHECKS)  # 26
+
+def _scale_factor(quick: bool) -> float:
+    """返回将 raw 总分缩放到 100 的系数。"""
+    return 100.0 / (_QUICK_RAW_MAX if quick else _FULL_RAW_MAX)
+
 # 审计报告默认输出目录
 DEFAULT_REPORT_DIR = Path(__file__).resolve().parent.parent / "reports"
 
@@ -57,6 +66,14 @@ class HEDQRunner:
         except (subprocess.SubprocessError, OSError) as e:
             logger.warning("git command error: %s", e)
             return "unknown"
+
+    def _scale(self, raw: float) -> float:
+        """将 raw 分数缩放到百分制（/100）。"""
+        return raw * _scale_factor(self.quick)
+
+    def _scale_dim(self, raw_score: float, raw_max: float) -> tuple:
+        """将维度原始得分/满分缩放到百分制贡献值。"""
+        return (round(self._scale(raw_score), 1), round(self._scale(raw_max), 1))
 
     def _calc_dim_scores(self, results: List[CheckResult]) -> Dict[str, float]:
         """将各维度子项得分合并为该维度总分。
@@ -145,17 +162,18 @@ class HEDQRunner:
             else:
                 icon = "🔴"
 
-            lines.append(f"| {dim} | {name} | {icon} {score:.1f}/{max_s} | {details} |")
+            # 百分制：显示缩放后的 /100 贡献值
+            score_100, max_100 = self._scale_dim(score, max_s)
+            lines.append(f"| {dim} | {name} | {icon} {score_100:.1f}/{max_100:.1f} | {details} |")
 
         lines.append("")
-        pct = (total_score / total_max * 100) if total_max > 0 else 0
-        grade, grade_emoji = self._get_grade(pct)
+        total_100 = round(self._scale(total_score), 1)
+        grade, grade_emoji = self._get_grade(total_100)
 
         lines.append("## 总分\n")
         lines.append(f"| 指标 | 值 |")
         lines.append(f"|------|-----|")
-        lines.append(f"| 总分 | {total_score:.1f} / {total_max} |")
-        lines.append(f"| 百分比 | {pct:.1f}% |")
+        lines.append(f"| 总分 | {total_100:.1f} / 100 |")
         lines.append(f"| 评级 | {grade_emoji} **{grade}** |\n")
 
         lines.append("## 详细检查结果\n")
@@ -182,23 +200,24 @@ class HEDQRunner:
             raw_score = dim_scores.get(dim, 0.0)
             max_s = DIM_MAX[dim]
             score = min(raw_score, max_s)
+            score_100, max_100 = self._scale_dim(score, max_s)
             dims.append({
                 "dimension": dim,
                 "name": DIM_NAMES.get(dim, dim),
-                "score": round(score, 1),
-                "max": max_s,
+                "score": score_100,
+                "max": max_100,
             })
 
-        pct = round((total_score / total_max * 100) if total_max > 0 else 0, 1)
-        grade, grade_emoji = self._get_grade(pct)
+        total_100 = round(self._scale(total_score), 1)
+        grade, grade_emoji = self._get_grade(total_100)
 
         report = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "mode": "quick" if self.quick else "full",
             "dimensions": dims,
-            "total_score": round(total_score, 1),
-            "total_max": total_max,
-            "percentage": pct,
+            "total_score": total_100,
+            "total_max": 100.0,
+            "percentage": total_100,
             "grade": grade,
             "grade_emoji": grade_emoji,
         }
@@ -239,42 +258,43 @@ class HEDQRunner:
             dim_scores[r.dim] = dim_scores.get(r.dim, 0.0) + r.score
 
         mode = "quick" if self.quick else "full"
-        pct = round((total_score / total_max * 100) if total_max > 0 else 0, 1)
-        grade, grade_emoji = self._get_grade(pct)
+        total_100 = round(self._scale(total_score), 1)
+        grade, grade_emoji = self._get_grade(total_100)
         commit = self._get_git_commit()
 
-        # --- 构建维度得分表（按排序，截断到 max）---
+        # --- 构建维度得分表（百分制）---
         dimensions = []
         dim_values: Dict[str, float] = {}
         for dim in sorted(DIM_MAX.keys()):
             raw = dim_scores.get(dim, 0.0)
             max_s = DIM_MAX[dim]
-            capped = round(min(raw, max_s), 1)
+            capped = min(raw, max_s)
+            score_100, max_100 = self._scale_dim(capped, max_s)
             dimensions.append({
                 "dimension": dim,
                 "name": DIM_NAMES.get(dim, dim),
-                "score": capped,
-                "max": max_s,
+                "score": score_100,
+                "max": max_100,
             })
-            dim_values[dim] = capped
+            dim_values[dim] = score_100
 
         # --- 1) 保存 JSON 快照（完整详情）---
         snapshot = {
             "timestamp": ts_human,
             "commit": commit,
             "mode": mode,
-            "total_score": round(total_score, 1),
-            "total_max": total_max,
-            "percentage": pct,
+            "total_score": total_100,
+            "total_max": 100.0,
             "grade": grade,
             "grade_emoji": grade_emoji,
             "dimensions": dimensions,
             # 子项级别详情，每条 CheckResult 一条
-            # 保留 float 精度，避免 1.5 被截断为 1
             "details": [
                 {"dim": r.dim, "subitem": r.subitem,
-                 "score": round(r.score, 1),
-                 "max": r.max_score if isinstance(r.max_score, float) and r.max_score != int(r.max_score) else int(r.max_score),
+                 "score": round(self._scale(r.score), 1),
+                 "max": round(self._scale(
+                     r.max_score if isinstance(r.max_score, float) and r.max_score != int(r.max_score) else int(r.max_score)
+                 ), 1),
                  "details": r.details}
                 for r in results
             ],
@@ -283,27 +303,25 @@ class HEDQRunner:
         with open(snapshot_file, "w", encoding="utf-8") as f:
             json.dump(snapshot, f, ensure_ascii=False, indent=2)
 
-        # --- 2) 追加 results.tsv（紧凑趋势行，取代 _index.json）---
-        # TSV 格式：每行 = 一次审计运行，各维度得分一目了然
+        # --- 2) 追加 results.tsv（百分制趋势）---
+        # v3.0 变更：2026-06-30 起所有值为百分制（/100）
         tsv_file = self.report_dir / "results.tsv"
         is_new = not tsv_file.exists()
 
         with open(tsv_file, "a", encoding="utf-8") as f:
-            # 新建文件时写表头行
             if is_new:
-                f.write("# HEDQ Quality Audit — Trend History\n")
-                f.write("# Each row = one audit run\n")
+                f.write("# HEDQ Quality Audit — Trend History (百分制 v3.0)\n")
+                f.write("# Each row = one audit run, all scores scaled to /100\n")
                 f.write("# columns: timestamp\tcommit\tmode\t"
                         "d1\td2\td3\td4\td5\td6\td7\td8\t"
-                        "total\tmax\tpercentage\tgrade\n")
-            # 数据行
+                        "total\tmax\tgrade\n")
             row = (
                 f"{ts_human}\t{commit}\t{mode}\t"
                 f"{dim_values.get('D1', 0):.1f}\t{dim_values.get('D2', 0):.1f}\t"
                 f"{dim_values.get('D3', 0):.1f}\t{dim_values.get('D4', 0):.1f}\t"
                 f"{dim_values.get('D5', 0):.1f}\t{dim_values.get('D6', 0):.1f}\t"
                 f"{dim_values.get('D7', 0):.1f}\t{dim_values.get('D8', 0):.1f}\t"
-                f"{round(total_score, 1)}\t{total_max}\t{pct}\t{grade}\n"
+                f"{total_100}\t100.0\t{grade}\n"
             )
             f.write(row)
 
@@ -312,28 +330,34 @@ class HEDQRunner:
         print(f"  Results TSV:  {tsv_file}", file=sys.stderr)
         prev = self._get_previous_score(tsv_file)
         if prev is not None:
-            delta = round(total_score - prev, 1)
+            # 如果上一条是旧版（58.5 制），缩放到百分制再对比
+            delta = round(total_100 - prev, 1)
             sign = "+" if delta >= 0 else ""
             print(f"  Score change: {sign}{delta} pts from previous full run", file=sys.stderr)
 
     @staticmethod
     def _get_previous_score(tsv_file: Path) -> Optional[float]:
-        """从 results.tsv 倒序读取最近一次 full 模式的总分。
-        用于终端打印"得分变化"提示。
+        """从 results.tsv 倒序读取最近一次 full 模式的总分（已缩放到百分制）。
+        兼容 v2.0（58.5 制）和 v3.0（100 制）TSV 行。
         """
         if not tsv_file.exists():
             return None
         try:
             with open(tsv_file, "r", encoding="utf-8") as f:
                 lines = f.readlines()
-            # 从最后一行往前找 full 模式行
             for line in reversed(lines):
                 line = line.strip()
                 if not line or line.startswith("#"):
                     continue
                 parts = line.split("\t")
                 if len(parts) >= 14 and parts[2] == "full":
-                    return float(parts[11])  # total 列
+                    total = float(parts[11])
+                    max_val = float(parts[12])
+                    # v2.0: max=58.5, 缩放为百分制
+                    # v3.0: max=100.0, 已是百分制
+                    if max_val == 58.5:
+                        total = round(total / 58.5 * 100, 1)
+                    return total
         except (ValueError, IndexError, OSError):
             return None
         return None

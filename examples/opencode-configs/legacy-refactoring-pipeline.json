@@ -1,4 +1,5 @@
 {
+  "_comment": "OpenCode v1.17.x",
   "workflow": {
     "name": "legacy-refactoring-pipeline",
     "mode": "serial-with-parallel-steps",

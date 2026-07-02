@@ -768,6 +768,68 @@ Skill 是 OpenCode 生态中将领域知识工程化的核心载体。通过 fro
 
 ---
 
+## 常见反模式
+
+### 反模式一：一个 Skill 包罗万象
+
+**现象**：创建一个名为"developer"的 Skill，description 写"帮助所有开发工作"，正文涵盖前端、后端、测试、部署等全部领域，单个 SKILL.md 长达数百行。
+
+**原因**：图方便，不想管理多个 Skill 文件，低估了 Skill 单一职责原则的重要性。
+
+**对策**：遵循单一职责原则——每个 Skill 只解决一个领域问题。拆分为 frontend-dev、backend-dev、test-engineer 等独立 Skill，每个 Skill 的描述和指令聚焦于单一领域。
+
+### 反模式二：description 过于宽泛
+
+**现象**：Skill 的 description 写成"帮助开发"、"代码工具"等模糊描述，语义匹配时频繁误触发或根本匹配不到。
+
+**原因**：低估了 description 在语义匹配中的关键作用，认为反正自己知道这个 Skill 是做什么的。
+
+**对策**：description 应包含领域关键词（React、安全、测试）和核心能力（精通、专注、擅长）。对比：❌"帮助写代码" ✅"React Hooks 最佳实践，专注状态管理、性能调优和内存泄漏排查"。
+
+### 反模式三：权限配置与 Skill 需求不匹配
+
+**现象**：一个只需要读取文件的代码审查 Skill 被授予了 edit 和 bash 权限，或者一个需要执行测试的 Skill 被禁止了 bash 命令。
+
+**原因**：使用默认的全局权限配置，没有针对 Skill 的使用场景做差异化配置。
+
+**对策**：基于最小权限原则，按 Skill 的实际需求配置工具权限。代码审查 Skill 只需 read/glob/grep，部署 Skill 需要 read/edit/bash。权限配置在 opencode.json 中集中管理。
+
+## 常见错误与陷阱
+
+### 场景一：Skill 名称冲突导致行为不一致
+
+**场景**：项目级 Skill 和用户级 Skill 重名（如"code-review"），但内容不同。Agent 按优先级加载了其中一个，开发者在不同机器上看到不同的审查行为。
+
+**后果**：团队内 Skill 行为不一致，代码审查标准因环境而异，降低协作效率。
+
+**预防**：项目级 Skill 加项目名前缀（如"myproject-code-review"）；在 AGENTS.md 中声明项目使用的 Skill 列表；定期检查 Skill 加载日志确认实际加载的版本。
+
+### 场景二：跨平台兼容性问题
+
+**场景**：在 oh-my-openagent 下创建的 Skill 包含 allowed-tools 和 target_agent 字段，在原生 OpenCode 中这些字段被静默忽略。Skill 在 OMO 下工作正常，但在 OpenCode 下权限不受控。
+
+**后果**：Skill 行为在不同平台不一致，安全假设失效，"只读审查"的 Skill 在原生 OpenCode 下可能获得写入权限。
+
+**预防**：明确标注 Skill 的目标平台；跨平台 Skill 只使用 OpenCode 原生字段（name/description/license/metadata）；权限控制统一通过 opencode.json 而非 SKILL.md。
+
+### 场景三：Skill 依赖未声明导致执行失败
+
+**场景**：Skill 正文中使用了 scripts/ 目录下的 Python 脚本，但执行环境中没有安装所需的第三方库。Agent 调用脚本时直接失败。
+
+**后果**：Skill 执行中断，Agent 无法完成任务，开发者需要手动排查环境问题。
+
+**预防**：在 SKILL.md 正文首段声明所有外部依赖（如"需要 Python 环境和 requests 库"）；在 scripts/ 目录加入 requirements.txt；Skill 首次加载时增加环境检测步骤，自动提示缺失的依赖。
+
+## 适用场景与限制
+
+**Skill 系统最有效的场景**：需要可复用的领域知识编码（如代码审查、安全扫描、架构设计）、团队需要统一 AI 辅助行为的规范流程、复杂的多步骤任务需要按步骤执行。在这些场景中，Skill 的结构化指令包显著优于普通 Prompt，权限控制提供了工程化复用的基础。
+
+**Skill 系统不太适用的场景**：一次性任务（用完即弃）、极端快速的单步操作（如"修改变量名"）、需要与 Agent 高度交互的探索性对话。在这些场景中，创建和维护 Skill 的开销超过了收益，直接使用自然语言指令更高效。
+
+**高效使用 Skill 系统需要满足的前提条件**：团队对 SKILL.md 格式和字段含义有共识；建立了合理的目录结构和命名规范；项目的 opencode.json 权限配置稳定且与 Skill 需求匹配；有定期审查和更新 Skill 的机制；清楚区分 OpenCode 原生字段和 OMO 扩展字段，避免平台依赖。
+
+---
+
 ## 学习检查清单
 
 完成本章学习后，请确认你能够：

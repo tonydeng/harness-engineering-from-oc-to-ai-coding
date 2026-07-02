@@ -21,7 +21,7 @@
 | Ch4 工作流实战 | 6 | ✅ 全部完成 | 372-1280 行，充实 |
 | Ch5 Skill 开发 | 5 | ✅ 全部完成 | 688-1668 行，充实 |
 | Ch6 高级话题 | 15（含 5 篇 context 子专题） | ✅ 全部完成 | 310-1014 行，充实 |
-| Ch7 案例研究 | 6 | ✅ 全部完成 | 570-770 行，充实 |
+| Ch7 案例研究 | 9 | ✅ 全部完成 | 328-767 行，充实 |
 | 附录 A（术语与参考） | 2 | ✅ 完成 | glossary(202) + references(429) 行 |
 | 附录 B（OpenCode 内置能力） | 7 | ✅ 完成 | 161-782 行，覆盖 7 个能力维度 |
 | 附录 C（Claude Code 内置能力） | 8 | ✅ 完成 | 8 篇涵盖 commands/sdk/plugins/ecosystem 等 |
@@ -119,7 +119,7 @@
 | 任务 | 状态 | 说明 |
 |------|------|------|
 | Ch1/Ch3/Ch4/Ch5 增补（8篇） | ✅ 完成 | 659-1668 行 |
-| Ch7 案例扩展（6篇） | ✅ 完成 | real-world-01(715), real-world-02(770), case-security-audit(716), case-full-pipeline(620), case-multi-model(570), case-skills-marketplace(643) |
+| Ch7 案例扩展（9篇） | ✅ 完成 | real-world-01(767), real-world-02(647), case-security-audit(632), case-full-pipeline(694), case-multi-model(477), case-skills-marketplace(537), case-research-data-analysis(328), case-frontend-react(342), case-local-rag-knowledge(381) |
 
 ### Phase 4: 内容编写 ✅ 已完成
 
@@ -244,7 +244,7 @@
 | ID | 任务 | 文件 | 最终行数 | 状态 |
 |----|------|------|---------|------|
 | R-3-1→R-3-8 | Ch1/Ch3/Ch4/Ch5 增补（8篇） | 8 个文件 | 659-1668 | ✅ 全部完成 |
-| R-3-9→R-3-14 | Ch7 案例扩展（6篇） | `07-case-studies/*` | 570-770 | ✅ 全部完成 |
+| R-3-9→R-3-14 | Ch7 案例扩展（9篇） | `07-case-studies/*` | 328-767 | ✅ 全部完成 |
 | R-3-15 | 侧边栏 + AGENTS.md + README | 项目根 | — | ✅ 完成 |
 | R-3-16 | 交叉引用验证 | 全部 `src/` | — | ✅ 已完成（2026-06-11，887 条内部链接零断链） |
 

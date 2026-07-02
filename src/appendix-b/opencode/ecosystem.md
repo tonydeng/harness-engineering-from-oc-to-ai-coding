@@ -374,3 +374,63 @@ opencode /hyperplan
 - → [OpenCode 内置命令参考](./commands.md) — 详细了解每个命令的用法和参数
 
 > 数据来源：官方文档、awesome-opencode 注册表、skills.sh 排行榜、BuySkills 市场。数据截止 2026 年 6 月。
+
+---
+
+## 常见反模式
+
+### 盲目安装大量 MCP 服务器
+
+OpenCode 支持同时启用多个 MCP 服务器，但每增加一个 MCP 服务器就会增加 Agent 的上下文占用。有些开发者看到社区推荐就全部安装，同时启用 GitHub MCP、PostgreSQL MCP、Puppeteer MCP、Brave Search MCP 等十几个服务器。结果是 Agent 的上下文窗口被工具描述填满，留给实际任务的 Token 空间大幅缩减，响应质量下降。正确做法是按当前任务按需启用，不用的 MCP 服务器注释掉或设为 `enabled: false`。
+
+### 直接复制社区配置模板而不适配
+
+awesome-opencode 和 skills.sh 上有大量社区配置模板，但这些模板是为特定项目和技术栈设计的。直接复制到自己的项目中，可能引入不相关的 Skill、过时的版本约束、或不适合团队工作流的 Agent 配置。例如，一个 React 项目的配置模板中包含 Vue 相关的 Skill 和规则，复制后 Agent 会产生与项目技术栈矛盾的建议。应该把社区模板当作参考框架，根据项目实际情况增删配置。
+
+### 在 Skill 安装时不验证来源和兼容性
+
+Skill 生态中的安装量数据可能具有误导性——高安装量的 Skill 不一定适合你的场景。有些 Skill 是为特定版本的 OpenCode 编写的，在新版本中可能因为 API 变更而失效。有些 Skill 的功能与你已安装的其他 Skill 重叠，同时启用会导致 Agent 行为混乱。安装新 Skill 前应检查：版本兼容性、与其他 Skill 的冲突、是否需要额外的 MCP 服务器依赖。
+
+### 迁移时只改配置不改工作流
+
+从 Claude Code 或 Pi Agent 迁移到 OpenCode 时，很多人只把配置文件格式转换过来（CLAUDE.md → AGENTS.md、Extension → Skill），但没有重新设计工作流。不同工具的工作流模式差异很大——Claude Code 的 Subagent 是 Markdown 驱动的轻量级分工，OpenCode 的 Category 系统是 OMO 框架内的重量级编排。简单地把 Claude Code 的工作流搬到 OpenCode 中，可能无法发挥 OpenCode 的 Agent 编排、Hook 链和质量门禁等核心优势。
+
+---
+
+## 适用场景与限制
+
+### 生态项目的成熟度差异大
+
+OpenCode 生态中的项目来自不同开发者和团队，成熟度差异显著。核心仓库（opencode、oh-my-openagent）有完整的文档和测试，而社区项目的质量参差不齐。一些高星项目可能已经停止维护，一些新项目可能缺少关键的安全审计。在生产环境中使用社区项目前，应评估：最近一次提交时间、Issue 响应速度、是否有安全扫描结果、是否在真实项目中被验证过。
+
+### MCP 服务器的网络依赖
+
+MCP 服务器分为本地（stdio）和远程（HTTP/WebSocket）两种模式。本地模式需要在运行 OpenCode 的机器上安装并启动 MCP Server 进程，远程模式依赖网络连接。在离线环境或网络受限的企业内网中，远程 MCP 服务器不可用。本地 MCP 服务器也需要 Node.js 运行时和对应的 npm 包，在某些受限环境中可能无法安装。建议在 AGENTS.md 中标注项目依赖的 MCP 服务器和网络要求。
+
+### Skill 的版本锁定风险
+
+通过 `skills add` 安装的 Skill 默认使用最新版本（`@latest`），这意味着 Skill 更新可能引入行为变更。在团队协作中，不同成员安装 Skill 的时间点不同，可能导致使用不同版本的 Skill，产生不一致的 Agent 行为。建议在项目配置中锁定 Skill 版本（如 `@owner/repo@1.2.3`），并在 CI 中验证 Skill 版本的一致性。
+
+### 迁移后遗留的工具习惯
+
+从其他工具迁移到 OpenCode 后，用户可能延续旧工具的习惯用法。例如，Claude Code 用户习惯在 CLAUDE.md 中写大量的行内指令，迁移后把所有指令堆进 AGENTS.md 而不利用 Skill 系统分层管理。Pi Agent 用户可能继续用 YAML 配置格式管理 Provider，而不是使用 OpenCode 的 JSON 格式。这些习惯虽然不会导致功能错误，但无法发挥 OpenCode 生态的最佳实践，建议迁移后花时间学习 OpenCode 的推荐工作流。
+
+---
+
+## 常见失败与陷阱
+
+### AGENTS.md 过度膨胀导致 Agent 行为退化
+
+`/init` 生成的 AGENTS.md 如果不加控制地追加内容，最终会膨胀到数千行。过长的 AGENTS.md 会占用大量上下文窗口空间，Agent 在执行具体任务时可用的有效上下文减少，输出质量下降。社区中已有项目发现，当 AGENTS.md 超过 500 行后，Agent 开始忽略其中的规则（因为 System Prompt 过长导致注意力分散）。建议 AGENTS.md 控制在 200-300 行以内，详细的领域知识用 Skill 分层管理。
+
+### Skill 安装后 Agent 行为冲突
+
+同时安装多个功能重叠的 Skill（如同时安装了 `code-reviewer` 和 `grill-me` 两个代码审查 Skill），Agent 在执行代码审查时可能收到矛盾的指令。一个 Skill 要求"关注安全漏洞"，另一个要求"关注代码风格"，Agent 需要在两个冲突的指令间做选择，结果可能是两个方面都做得不深入。建议每个功能域只保留一个 Skill，通过 Skill 的描述确认其覆盖范围后安装。
+
+### 迁移后配置残留导致功能异常
+
+从 Claude Code 迁移到 OpenCode 时，如果旧的配置文件（如 `.claude/` 目录）没有清理干净，OpenCode 可能读取到残留的配置。例如，CLAUDE.md 中的某些指令在 AGENTS.md 中没有对应翻译，Agent 执行时会产生预期外的行为。迁移完成后应彻底删除旧工具的配置目录，并在新环境中运行完整的功能验证。
+
+### MCP 服务器连接失败拖慢 Agent 响应
+
+如果配置的 MCP 服务器启动失败或网络不可达，Agent 在每次工具调用时都会尝试连接并等待超时，导致响应延迟从毫秒级膨胀到秒级。症状是 Agent 行为正常但速度明显变慢，用户以为是模型响应慢，实际上是 MCP 连接超时在拖后腿。建议在启动 OpenCode 时检查所有 MCP 服务器的连接状态（`/plugin list` 或日志），确保每个启用的 MCP 服务器都能正常响应。

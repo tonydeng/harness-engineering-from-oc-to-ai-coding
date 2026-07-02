@@ -1,3 +1,4 @@
+# OpenCode v1.17.x
 workflow:
   name: user-auth-implementation
   steps:

@@ -103,3 +103,20 @@
 ### 一句话结论
 
 **三位视角的共同结论：这是一篇优质的"OpenCode 功能展示"文章，但不是一个合格的"工具选型决策支持"文章。** Karpathy 指出对比表衡量的是"功能存在"而非"工程可靠性"；Munger 指出维度选择本身就是一个激励信号，表格是在 OpenCode 的优势维度上比赛；TechLead 指出市场选择信号（Cursor/Copilot 的商业规模）与功能对比结论的矛盾没有解释。最大的修复方向不是减少信息量，而是改变叙事立场——增加竞品优势的正视、诚实地暴露项目的成熟度和风险，让读者觉得"这本书是在帮我想清楚，而不是在帮 OpenCode 卖货"。
+
+
+---
+
+## 修复计划与检查清单
+
+| 优先级 | 说明 |
+|--------|------|
+| P0 | 附录B断链/US-QA-02 CI/品牌名/代码块path — 详见 reader-needs-deep-analysis §8.2 |
+| P1 | D3角色声明/AE/SYSA/FRONTEND/UX — 详见 reader-needs-deep-analysis §8.3 |
+| P2 | MOD-009暂缓/角色专属内容v1.1 |
+
+**检查清单**：
+- [ ] P0: 见顶层修复计划 reader-needs-deep-analysis §8.2
+- [ ] P1: 见顶层修复计划 reader-needs-deep-analysis §8.3
+- [ ] ✅ 最终验证: `mdbook build` 0 错误
+

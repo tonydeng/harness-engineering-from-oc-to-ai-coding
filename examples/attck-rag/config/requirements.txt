@@ -1,0 +1,12 @@
+# ATT&CK RAG — Python 依赖
+# 安装: pip install -r requirements.txt
+
+# ---- 核心依赖 (sentence-transformers 会自动拉 torch + transformers) ----
+sentence-transformers>=3.0.0
+sqlite-vec>=0.1.0
+
+# ---- 网络 ----
+httpx>=0.28.0
+
+# ---- 工具 ----
+pydantic>=2.9.0

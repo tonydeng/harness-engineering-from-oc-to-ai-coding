@@ -1137,3 +1137,63 @@ opencode /hyperplan
 ### 与前/后文章的衔接
 - ← [OpenCode 内置能力](./capabilities.md) — 了解 OpenCode 的核心功能和能力
 - → [OpenCode 内置命令参考](./commands.md) — 详细了解每个命令的用法和参数
+
+---
+
+## 常见反模式
+
+### 用 Plugin 替代 Skill 或 MCP
+
+最常见的反模式是把本应由 Skill 或 MCP 解决的需求用 Plugin 实现。Plugin 运行在 Agent 进程内部，通过 Hook 拦截行为，适合安全审计、Prompt 改写、工具参数篡改等场景。但如果你只是想教 Agent 某个领域的知识（如"React 最佳实践"），用 Skill 就够了；如果你想接一个外部 API（如天气服务、数据库查询），用 MCP 更合适。Plugin 的开发和维护成本高于 Skill，运行时风险也更高（它可以拦截任意 Hook 点），不到万不得已不要用。
+
+### 注册不需要的 Hook 点
+
+一些 Plugin 开发者为了"功能全面"，注册了远超实际需要的 Hook 点。一个只做文件写入检查的 Plugin 却注册了 `permission:check`、`tool:before`、`llm:before` 等所有高危 Hook。这不仅增加了不必要的性能开销（每个 Hook 触发时都要执行检查逻辑），更重要的是扩大了攻击面——注册了 `permission:check` 的 Plugin 可以放行所有权限校验，即使它原本只是用来做文件过滤的。最小 Hook 原则：只注册真正需要的 Hook。
+
+### 在 Hook 中执行同步阻塞操作
+
+Hook 处理函数的返回值决定了 Pipeline 的下一步行为，如果 Hook 中执行了同步阻塞操作（如同步文件读写、同步网络请求），整个 Agent 执行链都会被卡住。有些开发者在 `tool:before` Hook 中同步读取配置文件来判断是否放行，当配置文件较大或磁盘 I/O 慢时，Agent 的响应延迟会显著增加。所有 Hook 中的 I/O 操作都应该用 async/await 异步执行，避免阻塞 Pipeline。
+
+### 直接修改传入的 params 对象
+
+Hook 的 `params` 对象在 Pipeline 中会传递给后续的 Hook 和默认行为。如果在 Hook 中直接修改 `params`（如 `params.args.filePath = "new-path"`），修改会影响后续所有 Hook 的输入，导致难以追踪的级联错误。正确做法是返回一个新的 `modify` 对象：`return { skip: false, modify: { ...params, args: { ...params.args, filePath: "new-path" } } }`，保持原始对象不可变。
+
+---
+
+## 适用场景与限制
+
+### Plugin 只能在 Agent 进程内运行
+
+Plugin 通过 `definePlugin` 注册，运行在 OpenCode Agent 的进程空间内。它无法访问独立的数据库连接池、无法运行独立的 HTTP 服务器、无法作为独立服务部署。如果你的扩展逻辑需要独立运行（如定时任务、Webhook 接收），应该用 MCP 服务器或外部服务实现，Plugin 只负责在 Agent 执行的关键节点拦截和转发。
+
+### OMO 扩展 Hook 依赖 oh-my-openagent
+
+本参考手册中列出的 53+ Hook 点（如 `onWorkflowStart`、`onAgentSelect`、`onQualityGate`）是 oh-my-openagent (OMO) 对 OpenCode Plugin 系统的扩展。原生 OpenCode 只提供 20+ 个 Hook 点。如果你的项目没有安装 OMO，使用这些扩展 Hook 的 Plugin 将无法加载。在团队中推广 Plugin 时，应明确标注需要 OMO 支持的 Hook 点。
+
+### Plugin 无法直接调用 MCP 工具
+
+Plugin 的 Tool Handler 可以调用外部 API，但无法直接调用已配置的 MCP 服务器提供的工具。MCP 工具是通过 OpenCode 的工具调度器暴露给 Agent 的，Plugin 运行在更底层的 Hook 链中。如果 Plugin 需要 MCP 工具的能力（如数据库查询），需要在 Tool Handler 中自行实现对应的 API 调用，而不是假设 MCP 工具可用。
+
+### TypeScript 编译和加载有延迟
+
+Plugin 使用 TypeScript 编写，在 OpenCode 启动时编译并加载。复杂的 Plugin（依赖多、逻辑多）可能导致启动延迟增加 2-5 秒。在开发阶段频繁修改 Plugin 代码时，每次重启 OpenCode 都要等待编译完成。建议在开发阶段使用 `bun build` 预编译 Plugin，或使用 `file://` 协议加载预编译的 JS 文件，减少等待时间。
+
+---
+
+## 常见失败与陷阱
+
+### Hook 异常导致整个 Pipeline 中断
+
+Hook 处理函数中的异常如果未被 catch，会沿着 Pipeline 向上传播，可能导致后续的 Hook 和默认行为都不执行。例如，`tool:before` Hook 中的网络请求超时未处理，会导致工具调用本身不执行，Agent 以为工具不可用。每个 Hook 都应该用 try-catch 包裹，异常时返回安全的默认值（如 `{ skip: false }`）而不是让异常传播。
+
+### Pipeline 顺序劫持导致安全检查被绕过
+
+Pipeline 中"后注册的 Hook 覆盖先注册的结果"的特性是双刃剑。安全检查 Plugin（如 Env Guard）注册在 `priority: 100`，但如果另一个 Plugin 注册在更高的优先级并在 `tool:before` 中返回 `{ skip: true }`，安全检查会被跳过。这在 Plugin 供应链攻击中尤其危险——恶意 Plugin 通过注册在 Pipeline 末端来覆盖所有安全检查。应对措施：安全 Plugin 使用最高优先级，并对 `skip` 和 `reject` 操作开启审计日志。
+
+### 事件总线内存泄漏
+
+使用 EventEmitter 实现 Plugin 间通信时，如果事件监听器没有在 `session:end` 中正确移除，多次创建 Session 后会累积大量监听器。Node.js 的 EventEmitter 默认最多 10 个监听器（超过后打印警告），如果 Plugin 的 `session:start` 中注册了监听但 `session:end` 中没有移除，最终会导致内存泄漏和性能下降。使用 `pluginBus.setMaxListeners(100)` 只是绕过了警告，真正的问题是监听器没有被清理。
+
+### Plugin 版本与 OpenCode 版本不兼容
+
+Plugin 作为 npm 包发布时声明了 `min_version` 约束，但 OpenCode 启动时不一定检查此约束。如果 Plugin 使用了新版 OpenCode 才有的 API（如新的 Hook 参数格式），在旧版 OpenCode 上运行时会产生运行时错误。反过来，如果 OpenCode 升级后修改了 Plugin API 的行为（如 Hook 返回值的处理逻辑变更），旧版 Plugin 可能产生预期外的行为。建议在 CI 中用 `--dry-run` 验证 Plugin 加载正常。

@@ -46,18 +46,49 @@ jobs:
             echo "mdbook-mermaid already installed"
           fi
 
-      - name: Check internal links
+      - name: Check SUMMARY.md link targets
         run: |
           echo "Checking SUMMARY.md for broken link targets..."
           cd src && awk -F '[()]' '/\.md\)/ {print $2}' SUMMARY.md | while read f; do
             [ -f "$f" ] || echo "BROKEN LINK: $f (referenced in SUMMARY.md)"
           done && echo "All SUMMARY.md links OK"
+      - name: Check body internal links
+        shell: bash
+        run: |
+          echo "Checking body .md internal links..."
+          BROKEN=0
+          find src -name '*.md' -not -path 'src/SUMMARY.md' -exec grep -no ']([^)]*\.md)' {} + | while IFS=: read -r file lineno raw; do
+            link=$(echo "$raw" | sed 's/.*](//;s/).*//;s/#.*//')
+            dir=$(dirname "$file")
+            # Skip external URLs and anchors-only links
+            echo "$link" | grep -qE '^(https?://|#)' && continue
+            # Resolve relative to file's directory
+            resolved=$(cd "$dir" 2>/dev/null && realpath -m "$link" 2>/dev/null) || continue
+            if [ ! -f "$resolved" ]; then
+              echo "BROKEN LINK: $file:$lineno → $link"
+              BROKEN=$((BROKEN + 1))
+            fi
+          done
+          if [ "$BROKEN" -gt 0 ]; then
+            echo "❌ $BROKEN broken body links found"
+            exit 1
+          fi
+          echo "✅ All body internal links OK"
+      - name: Check code block path annotations
+        shell: bash
+        run: |
+          COUNT=$(awk '/^```[a-z]/ && !/mermaid/ && !/:/ {count++} END {print count+0}' src/**/*.md 2>/dev/null)
+          if [ "$COUNT" -gt 0 ]; then
+            echo "::warning title=Code Block Format::$COUNT code blocks missing :path annotation (MOD-009)"
+          else
+            echo "✅ All code blocks have :path annotations"
+          fi
       - name: Build mdBook
         run: mdbook build
 
       - name: HEDQ full quality check
         env:
-          HEDQ_THRESHOLD_WARN: ${{ vars.HEDQ_THRESHOLD_WARN || '60' }}
+          HEDQ_THRESHOLD_WARN: ${{ vars.HEDQ_THRESHOLD_WARN || '75' }}
         run: |
           echo "Running HEDQ full quality check (threshold: ${HEDQ_THRESHOLD_WARN}%)..."
           RAW=$(python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --json --no-save 2>&1) || {
@@ -84,6 +115,30 @@ jobs:
           else
             echo "✅ HEDQ score ${PERCENTAGE}% meets threshold ${HEDQ_THRESHOLD_WARN}%"
           fi
+
+      - name: Setup Node.js for Mermaid CLI
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Mermaid render check (changed files only)
+        shell: bash
+        run: |
+          echo "Checking Mermaid render for changed .md files..."
+          if ! command -v npx &> /dev/null; then
+            echo "::warning title=Mermaid Render::npx not available, skipping render check"
+            exit 0
+          fi
+          CHANGED=$(git diff --name-only HEAD~1 -- 'src/**/*.md' 2>/dev/null || echo "")
+          if [ -z "${CHANGED}" ]; then
+            echo "No changed .md files in src/ — skipping render check"
+            exit 0
+          fi
+          FILES=$(echo "${CHANGED}" | sed 's|^src/||' | tr '\n' ' ')
+          echo "Changed files: ${FILES}"
+          python .opencode/skills/hedq-audit/scripts/qa/hedq/checks/d8_render.py \
+            --files ${FILES} --no-fail --verbose 2>&1 || \
+            echo "::warning title=Mermaid Render::Some Mermaid blocks failed to render"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
