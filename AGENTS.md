@@ -135,13 +135,13 @@ awk '/^```[a-z]/ && !/mermaid/ && !/:/ {count++} END {print count+0 " blocks wit
 
 ### HEDQ 质量审计
 
-8 维度内容质量评分（满分 52.5，自动检测口径）。标准详见 [.opencode/skills/hedq-audit/references/hedq-quality-standard.md](.opencode/skills/hedq-audit/references/hedq-quality-standard.md)。
+8 维度内容质量评分（满分 100，自动检测口径按权重缩放）。标准详见 [.opencode/skills/hedq-audit/references/hedq-quality-standard.md](.opencode/skills/hedq-audit/references/hedq-quality-standard.md)。
 
 ```bash
-# 快速模式：D1 结构 + D6 文风 + D7 术语（满分 23，约 10 秒）
+# 快速模式：D1 结构 + D6 文风 + D7 术语（满分 100，约 10 秒）
 python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --quick
 
-# 完整模式：8 个维度全检（满分 52.5，约 30 秒）
+# 完整模式：8 个维度全检（满分 100，约 30 秒）
 python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py
 
 # JSON 输出（供 CI/脚本消费）

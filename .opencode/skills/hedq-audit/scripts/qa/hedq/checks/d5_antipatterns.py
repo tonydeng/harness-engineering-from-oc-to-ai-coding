@@ -58,7 +58,7 @@ class D5AntipatternsCheck(BaseCheck):
         score_anti = round(4 * anti / total, 1) if total else 0
         score_fail = round(3 * failure / total, 1) if total else 0
         score_bound = round(3 * bound / total, 1) if total else 0
-        score = min(round(score_anti + score_fail + score_bound, 1), 10)
+        # score = min(round(score_anti + score_fail + score_bound, 1), 10)  # unused, removed
 
         # --- D5.4 内容厚度检查 ---
         # 对于已识别到有相关章节的文章，检查章节下的段落数是否 >= 3
@@ -78,6 +78,7 @@ class D5AntipatternsCheck(BaseCheck):
             current_section_depth = 0     # 0=无活跃 section，1=反模式，2=失败，3=边界
             section_para_count = 0
             in_thickness_check = False
+            first_para_since_entry = True  # 标记标题后的首段（无论有无空行分隔）
 
             for i, line in enumerate(lines):
                 stripped = line.rstrip()
@@ -101,6 +102,7 @@ class D5AntipatternsCheck(BaseCheck):
                     in_thickness_check = False
                     section_para_count = 0
                     current_section_depth = 0
+                    first_para_since_entry = True
 
                     if anti_pat.search(stripped):
                         current_section_depth = 1
@@ -136,11 +138,13 @@ class D5AntipatternsCheck(BaseCheck):
                     # 空行分隔段落，连续非空行视为一段
                     if stripped == "":
                         # 空行不影响计数，但前一段已结束
-                        pass
+                        first_para_since_entry = False  # 非首段位置了
                     else:
-                        # 非空行：如果是段落的第一行就 +1，否则是延续
-                        # 我们通过"空行后第一行非空"来计数段落数
-                        if i == 0 or (lines[i-1].strip() == ""):
+                        # 非空行计数：标题后首段始终计数（即使无空行），后续段落按空行分隔
+                        if first_para_since_entry:
+                            section_para_count += 1
+                            first_para_since_entry = False
+                        elif i == 0 or (lines[i-1].strip() == ""):
                             section_para_count += 1
 
             # 文件末尾的活跃 section 也需要结算

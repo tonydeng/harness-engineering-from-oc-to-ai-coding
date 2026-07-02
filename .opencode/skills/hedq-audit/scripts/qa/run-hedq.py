@@ -86,9 +86,11 @@ def main():
     if not args.no_save:
         runner.save_report(results, total_score, total_max)
 
-    # 在 stderr 打印汇总
-    pct = (total_score / total_max * 100) if total_max > 0 else 0
-    print(f"\n总分：{total_score:.1f}/{total_max}（{pct:.1f}%）", file=sys.stderr)
+    # 在 stderr 打印汇总（百分制）
+    from hedq.runner import _scale_factor
+    sf = _scale_factor(args.quick)
+    total_100 = round(total_score * sf, 1)
+    print(f"\n总分：{total_100:.1f}/100（{total_100:.1f}%）", file=sys.stderr)
 
 
 if __name__ == "__main__":
