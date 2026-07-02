@@ -59,13 +59,6 @@ mdbook serve
 | 🟠 NEEDS WORK | 60–74% | 需修改 |
 | 🔴 DRAFT | <60% | 不可发布 |
 
-运行审计：
-
-```bash
-python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py        # 完整模式（~30秒）
-python .opencode/skills/hedq-audit/scripts/qa/run-hedq.py --quick # 快速模式（~10秒）
-```
-
 ## 目录说明
 
 ```

@@ -29,5 +29,6 @@
 | [案例：团队级 Skill 市场](case-skills-marketplace.md) | 团队内部 Skill 的创建、发布、发现和治理机制 |
 | [案例：前端 React 仪表板开发](case-frontend-react.md) | 使用 OpenCode + React 开发数据仪表板的完整流程 |
 | [案例：学术数据分析辅助](case-research-data-analysis.md) | 研究人员使用 OpenCode 辅助完成数据分析全流程 |
+| [案例：本地 RAG 知识库构建](case-local-rag-knowledge.md) | 基于 MITRE ATT&CK 知识库的本地 RAG 系统构建决策过程 |
 
 > [上一页：高级话题](../06-advanced/) | [返回首页](../)
