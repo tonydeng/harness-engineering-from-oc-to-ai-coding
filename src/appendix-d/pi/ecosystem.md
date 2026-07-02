@@ -397,3 +397,65 @@ pi packages install my-pi-package
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
 - → [Pi **Agent（智能体）** SDK 与程序化集成](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用
+
+---
+
+## 常见反模式
+
+### 在生产环境中使用 --approve 跳过项目信任检查
+
+`--approve` 标志用于一次性跳过 Project Trust 确认对话框，方便开发阶段快速测试 Extension。但许多开发者在 CI/CD 脚本和生产部署中也使用 `--approve`，这会自动加载所有项目级 Extension 和 Skills，即使它们来自不受信任的来源。
+
+生产环境应该显式配置 `defaultProjectTrust` 策略，而非使用 `--approve` 临时覆盖。在 CI 中使用 `--no-approve`（`-na`）确保项目级资源不被加载，除非你在流水线中明确信任了特定的 Extension。信任决策应该通过 `trust.json` 持久化，而非每次运行时覆盖。
+
+### 安装过多 Provider 导致认证管理复杂化
+
+Pi 支持 20+ Provider，许多开发者同时配置了 Anthropic、OpenAI、Google、DeepSeek 等多个 Provider 的 API Key。每个 Provider 的认证方式不同（API Key、OAuth、云平台 IAM），Key 的轮换策略和过期时间也不同。维护 5 个以上 Provider 的认证状态会显著增加运维负担。
+
+按实际使用频率分层管理 Provider：主力模型（如 Sonnet）保持常驻配置，备选模型（如 GPT-4o）在需要时临时配置，很少使用的模型不要预先注册。使用 `AuthStorage` 的加密持久化功能安全存储 API Key，避免在环境变量中暴露明文密钥。
+
+### 不使用容器化就执行不受信任的 Extension
+
+Pi 没有内置沙箱，Extension 拥有宿主机的完整权限。但许多开发者直接从 npm 或 GitHub 安装第三方 Extension，不审查代码就加载执行。一个恶意 Extension 可以读取所有环境变量（包括 API Key）、修改项目文件、执行任意 Shell 命令。
+
+安装第三方 Extension 前，审查其 TypeScript 源码（通常只有几十到几百行），确认没有可疑的文件操作或网络调用。优先选择 Pi 官方仓库中的 Extension 示例。在生产环境中，使用 Docker 或 Gondolin 容器化运行 Pi，即使 Extension 有问题也被限制在容器内。
+
+## 适用场景与限制
+
+### Pi 不提供内置的 Agent 编排层
+
+Pi 的设计哲学是"极简核心 + 扩展驱动"，它不内置 OpenCode 的 Category 编排系统或 Claude Code 的 Subagent 文件系统。多 Agent 协作需要通过 SDK 多实例或 tmux 手动编排，没有开箱即用的后台 Agent 调度能力。
+
+对于需要复杂 Agent 编排的场景（如多 Agent 并行审查、后台任务调度），Pi 的原生能力不如 OpenCode 或 Claude Code。你需要自行实现调度逻辑，或者使用 tmux 启动多个 Pi 实例并在它们之间手动协调。
+
+### Gondolin 沙箱只隔离内置工具
+
+Gondolin 是 Pi 推荐的安全隔离方案，但它只将内置工具（read/write/edit/bash/grep/find/ls）路由到微 VM 中执行。Extension 中注册的自定义工具不经过 Gondolin 沙箱——它们直接在宿主进程中运行。这意味着一个注册了自定义 `bash` 工具的 Extension 可以绕过 Gondolin 的隔离。
+
+不要假设 Gondolin 提供了完整的进程隔离。对于需要全进程隔离的场景（如执行不受信任的 Extension 代码），使用 Docker 或 OpenShell 将整个 Pi 进程容器化。Gondolin 适合本地开发中隔离内置工具的执行环境。
+
+### OSS Session 共享社区的数据安全
+
+Pi 的 OSS Session 分享功能允许用户通过 GitHub Gist 共享对话 Session。这些 Session 可能包含代码片段、API 调用记录、项目结构信息等敏感数据。一旦通过 Gist 共享，数据就在公网上可访问（即使是私有 Gist 也可能被有权访问 GitHub 账户的人看到）。
+
+分享 Session 前审查内容，移除 API Key、密码、内部项目路径等敏感信息。使用 `/export` 导出前先在编辑器中删除敏感消息。团队内部的 Session 分享应使用私有仓库或内部文件共享，而非 GitHub Gist。
+
+## 常见失败与陷阱
+
+### Provider API Key 在容器化环境中的注入问题
+
+在 Docker 或 Gondolin 中运行 Pi 时，API Key 需要从宿主机传递到容器内部。常见的错误是直接在 Dockerfile 中 `ENV ANTHROPIC_API_KEY=xxx`，这会将密钥写入镜像层，任何能拉取镜像的人都能提取密钥。
+
+正确的做法是使用 Docker 的 `--env` 或 `--env-file` 在运行时注入环境变量，或者使用 Docker Secrets / Kubernetes Secrets 管理敏感信息。`docker run -e ANTHROPIC_API_KEY` 会将密钥传递给容器但不写入镜像，这是最简单且安全的方式。
+
+### Session 文件格式在版本升级后不兼容
+
+Pi 的 Session 以 JSONL 格式存储在 `~/.pi/agent/sessions/` 目录中。当 Pi 版本升级时，消息格式可能发生变化（新增字段、修改字段类型）。旧版本创建的 Session 文件可能无法在新版本中正确加载，导致 `/resume` 恢复历史会话失败。
+
+定期用 `/export` 备份重要的 Session 到独立目录。升级 Pi 版本后测试 `/resume` 功能是否正常。如果恢复失败，使用 `/import` 导入备份的 Session 文件。对于需要长期保留的对话，导出为纯文本或 Markdown 格式。
+
+### Extension 依赖的 npm 包在容器中安装失败
+
+在 Docker 中运行 Pi 时，如果 Extension 依赖第三方 npm 包，需要在容器构建阶段安装这些依赖。常见的错误是只安装了 `@earendil-works/pi-coding-agent` 而没有安装 Extension 的依赖，导致 Extension 加载时 import 报错。
+
+在 Dockerfile 中先复制 Extension 的 `package.json` 并运行 `npm install`，再复制 Extension 源码。或者将 Extension 的依赖打包到 Pi Package 中，通过 `pi packages install` 一键安装。使用 `npm install --omit=dev` 确保只安装生产依赖，减小镜像体积。

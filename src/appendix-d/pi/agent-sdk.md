@@ -997,3 +997,67 @@ const result = await session.prompt("审查当前目录的代码");
 - → [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — 容器化、Provider 生态
 - → [OpenCode SDK：编程式 **Agent（智能体）** 开发](../../appendix-b/opencode/agent-sdk.md) — REST API 方式对比参考
 - → [Claude **Agent（智能体）** SDK：编程式 Agent 开发](../../appendix-c/claudecode/agent-sdk.md) — 子进程方式对比参考
+
+---
+
+## 适用场景与限制
+
+### 只支持 Node.js/TypeScript 环境
+
+Pi SDK 是一个 Node.js npm 包，只能在 Node.js 或 TypeScript 环境中使用。如果你的后端服务使用 Python（FastAPI/Django）、Go、Rust 或 Java，无法直接通过 SDK 嵌入 Pi Agent 能力。对于非 Node.js 环境，需要使用 RPC 模式（`pi --mode rpc`）通过 JSONL 协议进行跨语言调用，但这会增加进程间通信的延迟和复杂度。
+
+如果你的团队技术栈以 Node.js 为主，Pi SDK 的同进程嵌入模式提供了最佳的性能和开发体验。如果团队使用多语言栈，建议评估 OpenCode 的 REST API SDK（`@opencode-ai/sdk`），它对任何 HTTP 客户端都可用。
+
+### 并发 prompt 调用受限于单 Session 锁
+
+`session.prompt()` 方法在执行期间会锁定 Session 的状态，包括消息历史、工具注册表和上下文窗口。对同一个 Session 并发发送两个 prompt 会导致第二个调用排队等待或覆盖第一个的上下文。这与 OpenCode SDK 的 REST API 不同，后者可以通过多 Session 并发处理请求。
+
+需要并发处理多个用户请求时，为每个请求创建独立的 Session。可以在请求处理函数中 `createAgentSession()`，处理完毕后 `session.close()`。重量级对象（`AuthStorage`、`ModelRegistry`）复用以减少初始化开销，Session 隔离以避免上下文污染。
+
+### Serverless 冷启动延迟不可避免
+
+Pi SDK 的 `createAgentSession()` 虽然是同进程调用，但仍然需要初始化 `AuthStorage`、`ModelRegistry` 和 Provider 连接池，首次调用约需 500ms。在 AWS Lambda 等 Serverless 环境中，冷启动的总延迟可能达到 1-2 秒，这对于延迟敏感的 API 端点可能不可接受。
+
+利用 Lambda 的热启动特性：在模块级创建 `AuthStorage` 和 `ModelRegistry` 的全局单例，多次调用间复用这些重量级对象。使用 Provisioned Concurrency 预热函数实例以消除冷启动延迟。Session 状态通过 Redis 或 DynamoDB 持久化，热启动时恢复而非重建。
+
+---
+
+## 常见反模式
+
+### 在循环中创建独立的 AuthStorage 和 ModelRegistry
+
+这是 Pi SDK 使用中最常见的性能反模式。许多开发者在处理批量任务时，为每个文件或每次查询都创建全新的 `AuthStorage.create()` 和 `ModelRegistry.create()` 实例。每个实例都需要初始化 Provider 连接池和认证状态，单次初始化耗时约 500ms。处理 100 个文件时，仅初始化开销就浪费 50 秒。
+
+正确的做法是在应用的入口处创建一次 `AuthStorage` 和 `ModelRegistry`，然后在所有 Session 创建中复用这两个实例。只在 Session 级别创建新的 `SessionManager`（因为 Session 状态需要隔离）。这样批量任务的启动开销从 O(n) 降低到 O(1)。
+
+### 忽略 session.close() 导致资源泄漏
+
+`createAgentSession()` 创建的 Session 会占用内存和保持与 Provider 的连接。如果不调用 `session.close()`，Session 对象会在 JavaScript 垃圾回收时被回收，但异步资源（如 HTTP 连接池、事件监听器）可能不会被及时释放。在高并发场景中，累积的未关闭 Session 可能导致文件描述符耗尽或内存溢出。
+
+始终使用 try/finally 模式确保 Session 被关闭。推荐封装一个 `withSession()` 高阶函数，在 finally 中保证清理。对于 Express/Fastify 等 Web 框架，确保在请求处理完毕后关闭 Session，即使处理过程中发生了异常。
+
+### 不设 maxTurns 导致成本失控
+
+Pi SDK 默认不限制 `maxTurns`，这意味着 Agent 可以无限轮次地调用 LLM 和工具。一个模糊的 prompt 可能让 Agent 进入循环推理：反复读取文件、分析、得出不满意的结论、再次读取……每轮消耗数百个 Token，在使用 Opus 模型时可能在一分钟内消耗数十美元。
+
+生产环境必须设置 `maxTurns`。对于简单查询设 10-20，对于代码分析设 30-50，对于复杂的多步骤任务设 50-100。结合 `session.on("turn_end")` 事件监控累计 Token 消耗，设置成本告警阈值。
+
+## 常见失败与陷阱
+
+### RPC 模式下多客户端共享 Session 导致上下文泄漏
+
+在 RPC 服务器实现中，如果多个客户端请求共享同一个 Agent Session，用户 A 的对话历史会泄漏到用户 B 的上下文中。这是因为 Session 维护了完整的对话消息列表，不同用户的 prompt 会被追加到同一个消息历史中。
+
+每个 RPC 请求必须创建独立的 Session。可以在请求处理函数中为每次 `prompt` 调用创建新的 `createAgentSession()`，处理完毕后立即 `session.close()`。重量级对象（`AuthStorage`、`ModelRegistry`）可以复用，但 Session 必须隔离。
+
+### Extension 内的未捕获异常导致 Agent 静默失败
+
+Pi SDK 创建的 Session 中加载的 Extension，如果在工具执行时抛出未捕获的异常，Agent 会收到一个错误结果（`details.isError: true`），但不会中断整个 Session。LLM 可能根据错误结果做出不正确的推理，或者反复重试同一个失败的工具调用。
+
+每个 Extension 的 `execute()` 函数都必须用 try-catch 包裹。返回结果时检查是否需要设置 `details.isError: true`，让 LLM 能感知错误并调整策略。在生产环境中，通过 `session.on("error")` 事件监听器捕获所有未预期的异常。
+
+### Serverless 冷启动时 Session 状态丢失
+
+在 AWS Lambda 等 Serverless 环境中，每次冷启动会重新初始化 Node.js 进程，之前创建的 Session 状态（对话历史、工具注册信息）会丢失。如果用户在上一次调用中建立的上下文没有持久化，新的调用会从空白状态开始，Agent 不记得之前的对话内容。
+
+实现 Session 状态的外部持久化：在每次 `turn_end` 事件后将 Session 状态序列化到 Redis 或 DynamoDB，在下次调用时尝试恢复。Pi SDK 的 `session.exportState()` 和 `sessionManager.importState()` 方法提供了状态序列化能力。同时在全局模块级复用 `AuthStorage` 和 `ModelRegistry`，利用 Lambda 的热启动保持 Provider 连接池。

@@ -611,3 +611,65 @@ jobs:
 - → [MCP 服务器](../../06-advanced/mcp-servers.md) — MCP 协议在 OpenCode 中的配置和实践
 
 > 数据来源：Anthropic 官方文档 code.claude.com/docs，社区项目 awesome-claude-code。基于 Claude Code v2.1.x（2026 年 6 月）。Claude Code 生态发展迅速，建议参考官方文档获取最新信息。
+
+---
+
+## 常见反模式
+
+### 在 CLAUDE.md 中实现应由 Hook 处理的逻辑
+
+许多开发者把所有定制逻辑都塞进 CLAUDE.md，包括本应由 Hook 实现的自动化操作。例如，在 CLAUDE.md 中写"每次修改文件后运行 Prettier 格式化"，期望 Claude 记住并执行。但 LLM 的遵循率不是 100%，特别是在长会话中，这类指令容易被遗忘或忽略。
+
+自动化操作（格式化、lint 修复、审计日志）应该用 Hook 实现，因为 Hook 是确定性执行的——Shell 脚本返回退出码 0 或 2，行为完全可预测。CLAUDE.md 适合放行为规范和约束规则，Hook 适合放必须执行的操作。两者结合才能构建可靠的扩展体系。
+
+### Subagent 定义过于复杂导致委派失败
+
+当 Subagent 的 System Prompt 过长或工具列表过多时，LLM 在判断"是否应该委派给这个 Subagent"时可能产生混淆。一个包含 10 个工具和 500 行指令的 Subagent 定义，其描述信息可能让主 Agent 无法准确理解它的适用场景，导致该委派时不委派，不该委派时误委派。
+
+Subagent 的定义应该遵循"单一职责"原则：每个 Subagent 只做一件事，描述控制在 2-3 句话内，工具列表只包含该任务必需的工具。如果一个 Subagent 需要覆盖多个场景，拆分为多个更小的 Subagent。
+
+### MCP 服务器配置未纳入版本控制
+
+`.mcp.json` 文件包含团队共享的 MCP 服务器配置（如 GitHub Token、数据库连接串），许多团队选择将其加入 `.gitignore`。这导致新加入团队的成员需要手动配置每个 MCP 服务器，容易遗漏或配置错误。更严重的是，不同成员可能安装了不同版本的 MCP 服务器，导致行为不一致。
+
+将 `.mcp.json` 提交到 Git（脱敏后），确保团队成员获得一致的 MCP 配置。对于包含敏感信息的环境变量（如 API Key），使用 `${ENV_VAR}` 占位符，让每个成员在本地环境变量中设置实际值。这样既保证了配置一致性，又避免了凭据泄露。
+
+## 适用场景与限制
+
+### 六层扩展体系的学习成本较高
+
+Claude Code 的六层扩展体系（CLAUDE.md → Skills → MCP → Subagents → Hooks → Plugins）提供了丰富的定制能力，但也意味着新人需要理解六个层次的配置格式、存储位置和交互关系。一个完整的 Claude Code 项目可能同时包含 CLAUDE.md 规则、多个 Skills 定义、MCP 服务器配置、自定义 Subagent、Shell Hook 脚本和 Plugin 打包清单。
+
+对于简单项目，只使用 CLAUDE.md 和 1-2 个 MCP 服务器就足够了。随着项目复杂度增长，逐步引入 Skills（封装重复操作）和 Hooks（自动化格式化）。Subagents 和 Plugins 是高级功能，只在团队有多人协作需求时才考虑。
+
+### Hooks 只能通过外部 Shell 进程执行
+
+Claude Code 的 Hook 系统通过 JSON 配置声明，实际执行由外部 Shell 脚本完成。这意味着 Hook 无法访问 Claude Code 的内部状态（如完整的消息历史、Agent 的推理过程），只能通过环境变量获取有限的上下文信息（`$TOOL_NAME`、`$TOOL_INPUT`、`$TOOL_OUTPUT`）。
+
+如果你需要在 Hook 中访问 Agent 的完整上下文（例如分析整个对话历史来决定是否放行），Claude Code 的 Hook 系统做不到。此时需要使用 Agent SDK 的编程式 Hook（`PreToolUse`/`PostToolUse` 回调），它在进程内部执行，可以访问完整的运行时状态。
+
+### Plugin 无法在 Agent 进程内注入运行时逻辑
+
+Claude Code 的 Plugin 本质上是打包分发单元（Skills + Hooks + MCP 服务器的组合），不提供类似 OpenCode `definePlugin` 的代码级扩展 API。你不能通过 Plugin 在 Agent 的推理循环中插入自定义逻辑——Plugin 只能组合已有的扩展机制。
+
+对于需要深度定制 Agent 行为的场景（如自定义推理策略、动态工具注册），Claude Code 的 Plugin 机制不够灵活。需要通过 Agent SDK 进行编程式集成，或者评估是否应该迁移到扩展体系更丰富的工具。
+
+## 常见失败与陷阱
+
+### Hook 脚本的退出码语义不一致
+
+Claude Code Hook 的退出码语义是：0 = 成功继续，2 = 阻断操作，其他 = 记录警告但不阻断。许多开发者习惯性地在 Shell 脚本中使用 `exit 1` 表示失败，这在 Hook 系统中不会阻断操作，只是记录一条警告。如果你的安全检查脚本在检测到违规时 `exit 1`，Agent 会继续执行被标记为危险的操作。
+
+安全相关的 Hook 必须使用 `exit 2` 来阻断操作。在编写 Hook 脚本后，用一个已知违规的输入测试，确认操作确实被阻断而非仅记录警告。建议在团队的 Hook 开发规范中明确"安全检查必须使用 exit 2"的约定。
+
+### Skills 的三级加载导致指令执行不确定
+
+Skills 的内容分三级加载：YAML frontmatter 始终加载，SKILL.md 正文在 Claude 判断需要时加载，辅助文件在 Agent 需要时才读取。这种设计节省了上下文空间，但也意味着 Skill 中的关键指令不一定在每次会话中都生效。
+
+如果你的 Skill 包含必须始终执行的规则（如安全检查清单），确保它放在 SKILL.md 的 body 部分且 description 足够明确，让 Claude 判断"始终需要这个 Skill"。或者更稳妥的做法是将核心规则放在 CLAUDE.md 中，Skill 只封装可选的增强行为。
+
+### MCP 服务器的传输类型选择错误
+
+MCP 支持 stdio、http 和 sse 三种传输类型。stdio 适合本地工具（最低延迟、最高安全性），http 适合远程服务。许多开发者习惯性地使用 http 传输连接本地 MCP 服务器，这增加了不必要的网络开销和安全暴露面。
+
+本地 MCP 服务器应该使用 stdio 传输，远程服务才使用 http。stdio 通信通过标准输入输出进行，不监听任何端口，不受网络攻击影响。如果你的 MCP 服务器只在本地运行，使用 http 传输不仅浪费资源，还可能在本地暴露一个 HTTP 端口。

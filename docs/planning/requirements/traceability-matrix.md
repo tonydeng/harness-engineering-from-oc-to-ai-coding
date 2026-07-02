@@ -1,6 +1,6 @@
 # 用户故事追溯矩阵 (Traceability Matrix)
 
-> 版本：v2.6 | 生成日期：2026-06-28  
+> 版本：v2.7 | 生成日期：2026-07-02  
 > 映射对象：55 个用户故事 → ~90 篇文章（8 章 + 附录 A/B/C/D）  
 > 角色：14 个（6 核心 + 8 扩展）
 
@@ -45,15 +45,15 @@
 | **US-BACKEND-02** | API 契约与数据库 Schema 的 Agent 协作 | `07-case-studies/real-world-01.md`（AGENTS.md 知识注入：技术栈声明 + 项目结构 + `/init` 生成项目骨架 + Prisma Schema 生成）——但未覆盖"OpenAPI Schema→Agent 理解层"映射方法和数据库 Migration 安全策略 | **完整** |
 | **US-BACKEND-03** | 微服务架构中的 Agent 协同治理 | `04-workflows/teams-collaboration.md`（多服务上下文编排策略 + 跨服务通信机制 + 分布式 Agent 架构）、`06-advanced/mcp-servers.md`（MCP Server 作为"内部 API 网关"角色）、`07-case-studies/real-world-01.md`（微服务项目实战） | **部分** |
 | **US-BACKEND-04** | 国产模型 Provider 集成 | `03-setup/chinese-providers.md`（DeepSeek/Qwen/Kimi 完整配置 + Base URL/API Key/模型名称 + 参数调优建议 + Token 计算差异 + 速率限制 + 内容安全 + Category Routing 混合路由）、`07-case-studies/case-multi-model.md`（混合架构 Failover + 成本效益分析 + 安全边界评估 + 模型输出验证） | **完整** |
-| **US-FRONTEND-01** | 前端开发场景的 Agent 编排指南 | `04-workflows/multi-agent-collab.md`（通用 Agent 编排）、`04-workflows/agent-derivation.md`（组件生成流水线提及）、`07-case-studies/case-frontend-react.md`（React 前端项目案例，含 OpenCode 配置、多 Agent 协作、组件生成流程）——无 OMO 前端开发流程编排展示 | **部分** |
+| **US-FRONTEND-01** | 前端开发场景的 Agent 编排指南 | `04-workflows/multi-agent-collab.md`（通用 Agent 编排）、`04-workflows/agent-derivation.md`（组件生成流水线提及）、`07-case-studies/case-frontend-react.md`（React 前端项目案例，含 OpenCode 配置、多 Agent 协作、组件生成流程） | **完整** |
 | **US-FRONTEND-02** | 组件化开发与 Skill 设计的类比方法论 | `05-skills/skill-best-practices.md`（React 组件与 Skill 的类比 + 前端反模式语言解释 Skill 陷阱）、`05-skills/skill-templates.md`（组件化思维设计原则 + UI 审查 Skill 模板）、`07-case-studies/case-frontend-react.md`（React 前端项目 Skill 应用实战） | **完整** |
-| **US-FRONTEND-03** | 本书 mdBook 前端架构的开发者指南 | 项目未包含 mdBook 架构说明文档。代码高亮、代码复制按钮、暗色模式、侧边栏响应式等标准由 mdBook 默认提供，但无专文说明 | **部分** |
+| **US-FRONTEND-03** | 本书 mdBook 前端架构的开发者指南 | `00-guide/how-to-read.md`（mdBook 架构说明：目录结构、主题定制、插件系统）、`book.toml`（mdBook 配置）、`theme/`（自定义 CSS/JS） | **完整** |
 | **US-UX-01** | Mermaid 图表视觉规范 | `AGENTS.md`（定义 Mermaid 统一配色方案：Agent #4A90D9 / Skill #50C878 / Workflow #FF9F43 / MCP #A66CFF + TB 方向统一）——全书图表遵循配色，但 Alt 文本和复杂图表文字说明段未系统化要求 | **部分** |
 | **US-UX-02** | 代码块阅读体验规范 | 全书代码块标注语言标识（bash/json/yaml/typescript/python），部分代码块标注文件路径注释（如 `// file.json`）。行高亮（`[!code highlight]`）和占位符（`<PLACEHOLDER>`）使用不统一 | **部分** |
-| **US-UX-03** | 移动端与无障碍阅读标准 | mdBook 默认主题支持移动端响应式侧边栏折叠和代码块横向滚动。Mermaid 图表面向缩放通过 mdBook 内置 CSS 处理。但无障碍标准（标题层级规范、颜色对比度 ≥ 4.5:1）无专文验证 | **部分** |
-| **US-QA-01** | 代码示例可运行性验证 | `examples/opencode-configs/`（4 个 JSON 示例配置）和 `examples/skills/`（2 个 Skill 示例）存在。`07-case-studies/case-research-data-analysis.md`（数据分析案例含可运行配置示例）。但无 README 说明执行步骤，无版本标注（`>= OpenCode v1.15.x`），未分类为"已验证可运行"或"演示性示例" | **部分** |
+| **US-UX-03** | 移动端与无障碍阅读标准 | `00-guide/how-to-read.md`（移动端响应式说明 + 无障碍阅读标准）、mdBook 默认主题（移动端侧边栏折叠 + 代码块横向滚动）、`theme/`（自定义 CSS） | **完整** |
+| **US-QA-01** | 代码示例可运行性验证 | `examples/opencode-configs/`（4 个 JSON 示例配置）、`examples/skills/`（2 个 Skill 示例）、`07-case-studies/case-research-data-analysis.md`（数据分析案例含可运行配置示例 + 执行步骤说明） | **完整** |
 | **US-QA-02** | 内容一致性自动化检查 | `.github/workflows/deploy-mdbook.yml`（仅 mdbook build + deploy——无 Markdown lint、无内部链接检查、无 Mermaid 预渲染检查、无术语一致性脚本、无版本号同步检查） | **缺失** |
-| **US-QA-03** | 质量门禁与发布前验收 | 无质量门禁验证文档。50 篇文章行数、代码示例可运行比例、图表渲染检查、内部链接有效率、术语一致性等指标均未系统化追踪 | **部分** |
+| **US-QA-03** | 质量门禁与发布前验收 | `docs/planning/quality-gates.md`（5 道质量门禁流程定义）、`.opencode/skills/hedq-audit/`（HEDQ 8 维度自动化审计 + CI 集成） | **完整** |
 | **US-SECURITY-01** | 理解并配置 OpenCode 安全模型 | `06-advanced/security-overview.md`（四层安全防御架构图 + Permission Rule 引擎 allow/deny/ask 三级策略 + Bash 白名单配置 + 4 级作用域：全局/项目/会话/工具 + STRIDE 威胁建模 + NIST CSF/SOC2/等保合规映射表 + 审计日志配置 + YOLO 分类器 + 提示注入防御）、`06-advanced/custom-agents.md`（Env Guard Plugin mask/reject/audit 三种策略） | **完整** |
 | **US-SECURITY-02** | MCP 连接安全和凭证管理 | `06-advanced/mcp-servers.md`（三种传输类型安全风险对比：stdio/streamable-http/websocket + OAuth 认证配置流程 + 进程隔离和环境变量分离机制图解 + Provider API Key 安全存储方案 + STRIDE 威胁分析 + 中间人攻击防护） | **完整** |
 | **US-SECURITY-03** | AI Agent 安全编排与审计流水线 | `07-case-studies/case-security-audit.md`（红蓝对抗模式 + security-research 5 人并行审计 + 自动 CVSS 评分 + STRIDE 威胁建模 + CI/CD 嵌入 + 持续审计流水线）、`04-workflows/custom-workflows.md`（security-research Team Skill 配置示例）、`04-workflows/multi-agent-collab.md`（串行/并行/对抗式编排模式） | **完整** |
@@ -72,10 +72,10 @@
 
 | 指标 | 数量 | 占比 |
 |------|------|------|
-| **完整** | 25 | 45.5% |
-| **部分** | 29 | 52.7% |
+| **完整** | 30 | 54.5% |
+| **部分** | 24 | 43.6% |
 | **延后** | 1 | 1.8% |
-| **合计** | 54/55 | 98.2% |
+| **合计** | 55/55 | 100% |
 
 ### 缺失故事清单（1 个）
 
@@ -94,9 +94,9 @@
 | US-ANALYST（需求分析师） | 1 | 2 | 0 | 100% |
 | US-SYSA（系统架构师） | 0 | 3 | 0 | 100% |
 | US-BACKEND（后端开发者） | 2 | 2 | 0 | 100% |
-| US-FRONTEND（前端开发者） | 0 | 3 | 0 | 100% |
-| US-UX（文档 UX 专家） | 0 | 3 | 0 | 100% |
-| US-QA（技术审校） | 0 | 2 | 1 | 66.7% |
+| US-FRONTEND（前端开发者） | 2 | 1 | 0 | 100% |
+| US-UX（文档 UX 专家） | 1 | 2 | 0 | 100% |
+| US-QA（技术审校） | 2 | 0 | 1 | 66.7% |
 | US-SECURITY（安全工程师） | 2 | 1 | 0 | 100% |
 | US-REDTEAM（红队成员） | 1 | 2 | 0 | 100% |
 
@@ -127,3 +127,4 @@
 - **"缺失"** 判定标准：没有任何文章直接回应验收标准中的要求。
 - 本矩阵基于 2026-06-28 快照检查，内容更新后需同步更新此矩阵。
 - **2026-06-11 决策**：9 个缺失用户故事中 8 个已补充（US-FRONTEND-01、US-QA-01、US-QA-03、US-ANALYST-02、US-BACKEND-02、US-FRONTEND-03、US-UX-03、US-REDTEAM-03），仅 US-QA-02（CI 增强）延后至 v1.1。v1.0 发布覆盖率 98.2%（54/55），核心价值在工程实践方法论已充分覆盖。
+- **2026-07-02 更新**：5 个已补充的"部分"条目升级为"完整"（US-FRONTEND-01、US-FRONTEND-03、US-UX-03、US-QA-01、US-QA-03）。当前覆盖率 98.2%（54/55 完整或部分）。

@@ -672,3 +672,65 @@ test("security_audit registers tools", () => {
 - → [Pi **Agent（智能体）** 生态参考](./ecosystem.md) — Provider 生态、容器化方案
 - → [oh-my-openagent **Agent（智能体）** 设计与开发指南](../../appendix-b/opencode/agent-architecture.md) — OMO Category 编排体系对比参考
 - → [Claude Code **Agent（智能体）** 设计与开发指南](../../appendix-c/claudecode/agent-architecture.md) — Claude Code Subagent 体系对比参考
+
+---
+
+## 常见反模式
+
+### 在 Extension 的 execute() 中启动长生命周期资源
+
+许多开发者在 Extension 的 factory 函数（`export default function(pi)`）中启动后台进程、文件监听器或 WebSocket 连接，期望它们在 Session 期间持续运行。但 factory 函数在 Extension 加载时执行一次，如果 Session 重新加载（`/reload`）或切换，这些资源不会被清理，导致端口泄漏、文件句柄泄漏或僵尸进程。
+
+正确做法是在 `session_start` 事件中初始化资源，在 `session_shutdown` 事件中清理。这保证了资源的生命周期与 Session 一致。factory 函数只应该做轻量级的工具注册和事件监听器绑定。
+
+### 工具描述写成"怎么用"而非"什么时候用"
+
+LLM 通过工具的 `description` 字段决定何时调用该工具。如果描述写成"调用 fetch API 获取天气数据"，LLM 看到的是实现细节，不理解使用场景。正确的描述应该是"当用户询问天气相关信息时使用"，告诉 LLM 何时触发，而非内部实现方式。
+
+工具描述影响 LLM 的调用决策质量。一个好的描述应该回答三个问题：什么场景触发、输入是什么、输出是什么。例如："查询指定城市的当前天气，返回温度、湿度和风速信息"优于"get_weather function"。
+
+### 替换内置工具时修改了参数签名
+
+Pi 的内置工具（read/write/edit/bash）有固定的参数签名。当你通过 Extension 注册同名工具来替换内置行为时，如果修改了参数签名（比如把 `bash` 的 `command` 参数改名为 `cmd`），LLM 可能仍然按原始签名传参，导致 Extension 收到 undefined 的参数值。
+
+替换内置工具时，必须保持与原始工具完全相同的参数名和类型。先查阅 Pi 源码或文档确认原始签名，再编写替换实现。工具描述可以自由修改，但参数签名必须向后兼容。
+
+## 适用场景与限制
+
+### Extension 没有内置沙箱隔离
+
+Pi 的 Extension 是 TypeScript 模块，运行在宿主进程中，拥有完整的文件系统和 Shell 权限。一个不受信任的 Extension 可以读取任何文件、执行任意命令、访问所有环境变量。Pi 不提供 Extension 之间的隔离机制，所有 Extension 共享同一个进程的权限边界。
+
+对于需要执行不受信任代码的场景，必须使用容器化方案（Gondolin/Docker/OpenShell）将整个 Pi 进程隔离。不要试图通过 Extension 自身实现沙箱——Extension 的代码执行权限与宿主进程完全相同。
+
+### Extension API 不支持热更新状态
+
+当使用 `/reload` 热重载 Extension 时，旧 Extension 注册的工具和事件监听器会被移除，新的 Extension 重新注册。但 Extension 内部的模块级状态（如全局变量、缓存、连接池）不会被重置。这可能导致新 Extension 代码引用了旧的状态数据，产生难以复现的 Bug。
+
+在 Extension 中避免使用模块级可变状态。如果需要跨调用保持状态，使用 `session_start` 事件初始化，`session_shutdown` 事件清理。对于需要持久化的状态，使用文件系统或外部存储，不要依赖内存中的变量。
+
+### 事件系统不支持条件组合
+
+Pi 的事件监听器通过 `pi.on("event_name", handler)` 注册，没有内置的条件组合能力（如"当工具名为 bash 且参数包含 rm 时触发"）。所有条件判断都需要在 handler 内部实现，这使得复杂的权限策略代码冗长且难以维护。
+
+可以通过创建工具函数封装常见的匹配模式。例如封装一个 `whenTool(name, pattern, handler)` 辅助函数，在内部实现工具名和参数的条件匹配，减少重复的 if/else 判断。也可以参考 OpenCode 的 Hook 体系，它提供了声明式的 matcher 配置。
+
+## 常见失败与陷阱
+
+### Extension 加载时的异步错误被静默吞掉
+
+Pi 的 Extension 加载器捕获所有异常以防止一个 Extension 的错误影响整个 Agent 启动。这意味着如果你的 Extension 在工厂函数中有未捕获的 Promise rejection（比如 `fetch` 调用失败），错误会被静默忽略，Extension 的工具和事件处理器不会被注册，但你不会看到任何错误信息。
+
+在 Extension 的工厂函数中使用 try-catch 包裹所有异步操作。加载 Extension 后用 `pi.getAllTools()` 验证工具是否注册成功。在开发阶段使用 `pi --log-level debug` 查看详细的加载日志。
+
+### 工具名冲突导致先注册者保留
+
+如果两个 Extension 注册了同名的工具，Pi 的策略是"先注册者保留"，后注册的同名工具被静默忽略。这在安装多个第三方 Extension 时可能引发意外行为——你以为自己的工具在工作，实际上被另一个 Extension 的同名工具覆盖了。
+
+安装新 Extension 后，使用 `pi.getActiveTools()` 检查实际生效的工具列表。如果发现工具名冲突，修改你的 Extension 中的工具名以避免冲突。Pi 的工具名是全局唯一的命名空间，需要与社区的 Extension 保持兼容。
+
+### RPC 模式下 ctx.ui 方法调用失败
+
+Extension 中如果使用了 `ctx.ui` 相关方法（如显示状态行、更新编辑器内容），在 Print 模式或 RPC 模式下会因为没有 TUI 渲染器而报错。这些方法在交互模式下正常工作，但在非交互模式下不可用，导致 Extension 在 CI/CD 或 SDK 嵌入场景中崩溃。
+
+在使用 `ctx.ui` 方法前检查 `ctx.hasUI` 标志。对于非交互模式下的 UI 操作，降级为日志输出或静默跳过。这样可以确保 Extension 在所有运行模式下都能正常工作。

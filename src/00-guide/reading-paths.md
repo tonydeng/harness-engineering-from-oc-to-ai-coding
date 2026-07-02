@@ -1140,7 +1140,7 @@ graph TB
 
 ## 用户故事追溯矩阵
 
-> 映射 55 个用户故事 → 14 个读者角色的覆盖文章。数据源：[traceability-matrix.md](/docs/planning/requirements/traceability-matrix.md) · [角色满意度审计](/docs/reviews/reader-role-satisfaction-audit-2026-06-28.md)
+> 映射 55 个用户故事 → 14 个读者角色的覆盖文章。数据源：[traceability-matrix.md](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/blob/main/docs/planning/requirements/traceability-matrix.md) · [角色满意度审计](https://github.com/tonydeng/harness-engineering-from-oc-to-ai-coding/blob/main/docs/reviews/reader-role-satisfaction-audit-2026-06-28.md)
 
 | 状态 | 含义 | 角色数 |
 |------|------|--------|

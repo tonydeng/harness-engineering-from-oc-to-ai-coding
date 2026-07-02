@@ -377,3 +377,65 @@ claude /plan
 ### 与前/后文章的衔接
 - ← [Claude Code 扩展机制](./extensions.md) — 详细讲解自定义命令和 Skills 系统
 - → [Claude Code 命令参考](./commands.md) — 内置命令和捆绑 Skill 的详细用法
+
+---
+
+## 常见反模式
+
+### 只用 Claude Code 的默认工具集而不探索扩展能力
+
+许多开发者初次使用 Claude Code 时只停留在内置的 Read/Write/Edit/Bash/Grep/Glob 工具上，从不配置 MCP 服务器或创建自定义命令。Claude Code 的真正价值不在于它内置了什么，而在于它能连接什么。一个没有配置 GitHub MCP Server 的 Claude Code，无法直接操作 PR 和 Issue；一个没有连接数据库 MCP Server 的 Claude Code，只能通过 Bash 执行 `psql` 命令来查询数据，既不安全也不高效。
+
+在开始正式使用前，花 10 分钟配置你最常用的 MCP 服务器（GitHub、文件系统、数据库），并为团队的高频操作创建自定义命令。这一步投入能将后续的效率提升放大数倍。
+
+### 在 CLAUDE.md 中堆砌冗余规则
+
+另一个常见反模式是把 CLAUDE.md 写成"百科全书"，包含 Claude 本身就能推断的规则（比如"使用 TypeScript"），或者过于详细的 API 文档。过长的 CLAUDE.md 会消耗宝贵的上下文窗口，导致后续对话中 Claude 对项目规则的遵循率下降，这被称为 "lost in the middle" 效应。
+
+CLAUDE.md 应聚焦于 Claude 无法从代码推断的内容：构建命令、环境怪异之处、团队特有的架构决策、常见陷阱。保持在 200 行以内，把详细的 API 文档改为链接引用。定期审查和修剪 CLAUDE.md，删除不再适用的规则。
+
+### 混淆 acceptEdits 和 bypassPermissions 的适用场景
+
+有些开发者为了减少交互确认，直接使用 `bypassPermissions` 模式，即使他们的 Agent 需要执行写入操作。`bypassPermissions` 意味着 Agent 可以不经确认执行任何操作，包括删除文件、执行任意 Shell 命令、修改系统配置。在团队共享的项目中，一个人配置的宽松权限可能影响整个团队的安全边界。
+
+正确做法是根据任务类型选择最小权限模式：只读分析用 `plan`，常规开发用 `acceptEdits`，只有在严格隔离的 CI/CD 沙箱环境中才考虑 `bypassPermissions`。使用 `--permission-mode` 标志或 `/permissions` 命令配置白名单，把常用的构建和测试命令加入 allow 列表。
+
+## 适用场景与限制
+
+### 仅支持 Claude 模型族
+
+Claude Code 最显著的限制是只支持 Anthropic 的 Claude 模型系列（Sonnet、Opus、Haiku）。如果你的团队已经在使用 GPT-4o、Gemini 或其他模型，Claude Code 无法直接切换。这意味着你在不同项目中可能需要维护多套 AI 编程工具的配置，增加了团队的工具链复杂度。
+
+对于需要多模型灵活切换的场景，OpenCode 提供了更好的支持。它内置了 75+ LLM 供应商的集成，可以在同一会话中按需切换模型。如果你的团队有混合模型需求，建议评估 OpenCode 作为替代方案。
+
+### 缺乏代码级扩展 API
+
+Claude Code 的扩展全部通过配置文件（CLAUDE.md、Skills JSON、Hook Shell 脚本）和外部进程（MCP 服务器）实现，没有类似 OpenCode `definePlugin` 的 TypeScript 回调 API。这意味着你无法在 Agent 进程内部拦截和修改任意行为——例如，你不能像 OpenCode 那样注册一个 Hook 在每次工具调用前注入自定义验证逻辑。
+
+如果你需要深度定制 Agent 行为（比如实现复杂的审批流、自定义 Agent 编排），Claude Code 的配置驱动方式可能不够灵活。此时可以考虑使用 Agent SDK 进行编程式集成，或者迁移到扩展体系更丰富的 OpenCode。
+
+### 工具集相对精简
+
+Claude Code 内置工具集只有 7 个核心工具（Read、Write、Edit、Bash、Grep、Glob、WebFetch），没有 AST-grep、LSP、CodeGraph 等代码智能工具。对于需要精确代码重构、跨文件引用分析、AST 级别操作的场景，纯靠内置工具的 LLM 推理能力可能不够精确。
+
+弥补方式是通过 MCP 服务器接入外部工具，或者使用 Agent SDK 的 `tool()` API 创建自定义工具。但这些都需要额外的配置和开发工作，不如 OpenCode 的开箱即用体验。
+
+## 常见失败与陷阱
+
+### /init 生成的 CLAUDE.md 质量参差不齐
+
+执行 `/init` 后 Claude Code 会自动生成 CLAUDE.md 文件，但生成质量取决于项目结构的清晰度和 Claude 的推断能力。对于技术栈不常见、目录结构不规范的项目，自动生成的 CLAUDE.md 可能包含错误的构建命令或遗漏关键规则。
+
+不要盲目信任 `/init` 的输出。生成后必须人工审查：验证构建命令是否正确执行，检查是否有遗漏的环境变量要求，确认架构决策是否与团队约定一致。将审查后的 CLAUDE.md 提交到 Git，确保团队成员获得一致的行为。
+
+### MCP 服务器连接失败时的静默降级
+
+Claude Code 在 MCP 服务器连接失败时不会中断会话，而是静默降级到不包含该工具的工作模式。这意味着你可能以为 Agent 有 GitHub 集成能力，实际上 MCP 服务器早已断开，Agent 在每次尝试调用时都失败但没有明确报错。
+
+定期运行 `/mcp` 检查服务器连接状态。在 CI/CD 环境中，建议在会话启动时验证关键 MCP 服务器的可用性。对于生产级工作流，可以在 CLAUDE.md 中添加"如果 GitHub MCP 不可用，请明确告知用户"的指令，让 Claude 主动报告工具缺失。
+
+### 上下文压缩导致早期指令丢失
+
+Claude Code 的自动压缩（Compaction）在上下文接近窗口上限时触发，它会对较早的对话历史进行摘要。这意味着你在会话早期给出的详细指令可能在压缩后被简化或丢失，Agent 的行为在长会话中可能偏离预期。
+
+关键规则和约束应该放在 CLAUDE.md 中而非对话 prompt 中。CLAUDE.md 在每次请求时都会重新注入，不受压缩影响。对于需要跨整个会话保持的重要状态，使用 `/compact` 时附带自定义指令来保留关键信息，或者拆分为多个短会话。

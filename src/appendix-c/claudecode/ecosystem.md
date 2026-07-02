@@ -407,3 +407,65 @@ claude
 ### 与前/后文章的衔接
 - ← [Claude Code 内置能力](./capabilities.md) — 命令、工具、配置方式的完整参考
 - → [OpenCode 生态参考](../../appendix-b/opencode/ecosystem.md) — OpenCode 开源生态对比
+
+---
+
+## 常见反模式
+
+### 盲目安装大量 MCP 服务器而不评估性能影响
+
+Claude Code 生态中有 9,000+ MCP 服务器，许多开发者倾向于安装尽可能多的 MCP 服务器来"扩展能力"。但每个 MCP 服务器在启动时都需要建立进程间通信连接，在每次工具发现时都会增加系统提示词的大小。安装 10 个 MCP 服务器后，Claude Code 的启动延迟可能从 2 秒增加到 10 秒以上，且系统提示词膨胀会压缩实际可用的上下文窗口。
+
+应该按实际使用频率评估 MCP 服务器的必要性。把 MCP 服务器分为"每次会话都需要"（如 GitHub）、"偶尔使用"（如 Notion）、"很少使用"（如 Stripe）三类。只加载第一类到项目级配置（`.mcp.json`），第二类和第三类通过 `claude mcp add` 按需手动添加。
+
+### 从社区模板复制 CLAUDE.md 而不理解其原理
+
+社区提供的 CLAUDE-template 和 awesome-claude-code 资源非常有价值，但直接复制粘贴最大的模板而不理解每条规则的作用，会导致 CLAUDE.md 包含与你项目无关的约束。例如，一个 Python 项目可能包含了 TypeScript 的格式化规则，或者一个单体应用包含了微服务架构的约定。
+
+使用社区模板作为起点，但必须逐条审查和裁剪。删除与你项目技术栈不匹配的规则，修改路径引用使其指向你的实际目录结构。最好的 CLAUDE.md 是从零开始编写、只包含你项目独特约束的文件，社区模板的价值在于提供"应该考虑哪些方面"的思路。
+
+### 在 CI/CD 中不使用 --bare 模式
+
+在 CI/CD 流水线中使用 `claude -p "query"` 时，如果不加 `--bare` 标志，Claude Code 会尝试加载所有 hooks、skills、plugins 和 MCP 服务器配置。这在 CI 环境中通常是不必要的——CI 只需要执行特定的自动化任务，不需要团队的个人 Skills 和 Hook 配置。加载这些内容会增加启动延迟，且可能因为 CI 环境缺少依赖而报错。
+
+CI/CD 场景应该使用 `claude --bare -p "query"` 跳过所有扩展加载，只保留核心能力。如果需要特定工具（如 GitHub MCP），单独用 `--allowedTools` 指定即可。
+
+## 适用场景与限制
+
+### Claude Code 生态仅覆盖 Claude 模型生态
+
+Claude Code 的生态紧密围绕 Anthropic 产品体系，MCP 协议虽然是开放标准，但 Claude Code 的核心价值（CLAUDE.md、Skills、Subagents）都深度绑定 Claude 模型。如果你的团队主要使用 GPT-4o、Gemini 或本地模型，Claude Code 生态中的大部分最佳实践和社区资源都不直接适用。
+
+对于多模型团队，建议以 OpenCode 为主力工具，Claude Code 作为特定 Claude 模型场景的补充。OpenCode 完全兼容 MCP 协议，可以复用 Claude Code 社区的 MCP 服务器实现。
+
+### 社区扩展的质量和维护状态参差不齐
+
+awesome-claude-code 等资源列表收录了大量社区项目，但项目的维护状态差异很大。部分项目可能已经停止更新、与最新版 Claude Code 不兼容、或者存在安全漏洞。安装一个长期未维护的 MCP 服务器可能引入已知的安全风险。
+
+安装社区扩展前，检查 GitHub 仓库的最近提交日期、Issue 响应速度和 Star 增长趋势。优先选择 Anthropic 官方维护的 MCP 服务器和近期活跃的社区项目。对于生产环境，建议 fork 社区项目到自己的仓库，确保可以控制更新节奏。
+
+### Skills 生态与 OpenCode Skill 不完全兼容
+
+Claude Code 的 Skills 和 OpenCode 的 Skills 都遵循 SKILL.md + YAML frontmatter 的格式，但两者在 frontmatter 字段、加载机制和执行模式上存在差异。Claude Code 的 Skills 支持 `context: fork` 隔离执行和 `allowed-tools` 工具授权，而 OpenCode 的 Skills 通过触发词匹配和 Category 路由。直接将 OpenCode 的 SKILL.md 复制到 Claude Code 中可能无法正常工作。
+
+跨工具复用 Skills 时，需要检查 frontmatter 字段的兼容性。保留 `name` 和 `description`（两者通用），调整 `allowed-tools` 等工具特定字段。推荐的做法是维护一份核心指令的 Markdown 正文，在两个工具中分别配置各自的 frontmatter。
+
+## 常见失败与陷阱
+
+### 从 OpenCode 迁移时遗漏 Plugin 中的 Hook 逻辑
+
+从 OpenCode 迁移到 Claude Code 时，许多团队只迁移了 AGENTS.md 中的规则，却忽略了 Plugin 中的 Hook 逻辑。OpenCode 的 Plugin 可以在 Agent 进程内部以 TypeScript 函数拦截任意行为（53+ Hook 点），而 Claude Code 的 Hook 只能通过 Shell 脚本在外部执行。Plugin 中的复杂验证逻辑（如跨文件一致性检查、数据库状态验证）无法直接迁移。
+
+迁移前需要审计所有 OpenCode Plugin 的 Hook 实现，按功能分类：简单的文件操作和命令执行可以迁移到 Claude Code 的 Shell Hook；复杂的运行时逻辑需要重构为 MCP 工具或 Agent SDK 的编程式 Hook。建议制作一份 Hook 迁移对照表，逐个验证功能等价性。
+
+### MCP 服务器的 OAuth 配置在团队间不一致
+
+通过 `claude mcp add --transport http` 添加的远程 MCP 服务器可能需要 OAuth 认证。不同团队成员的 OAuth Token 刷新策略可能不同，导致部分成员的 MCP 连接频繁断开。更糟的是，OAuth 凭据可能存储在 `~/.claude.json` 中，不会通过 Git 共享，新加入团队的成员需要手动重新配置。
+
+推荐使用项目级的 `.mcp.json` 文件管理 MCP 服务器配置，将不需要 OAuth 的服务器（如本地 stdio 服务器）纳入版本控制。对于需要认证的远程服务器，在团队文档中明确记录配置步骤，或者使用环境变量注入 Token（如 `${GITHUB_TOKEN}`）。
+
+### Skills 目录结构不规范导致自动发现失败
+
+Claude Code 按特定目录结构自动发现 Skills（`~/.claude/skills/<name>/SKILL.md` 或 `.claude/skills/<name>/SKILL.md`）。如果目录层级不正确（比如把 SKILL.md 直接放在 `.claude/skills/` 而非子目录中），或者文件名不是 `SKILL.md`，自动发现机制会静默跳过，不产生任何错误提示。
+
+创建新 Skill 时，严格遵循目录结构规范。使用 `/skills` 命令验证 Skill 是否被正确识别。如果 Skill 安装后没有出现在列表中，首先检查目录层级和文件名是否正确，然后检查 YAML frontmatter 的 `name` 和 `description` 字段是否完整。

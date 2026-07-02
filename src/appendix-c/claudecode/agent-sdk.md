@@ -1213,3 +1213,47 @@ main()
 ### 与前/后文章的衔接
 - ← [Claude Code **Agent（智能体）** 设计与开发指南](./agent-architecture.md) — Subagent 配置方式对比参考
 - → [Claude Code SDK 与程序化集成](./sdk.md) — 三层次 SDK 总览
+
+---
+
+## 常见反模式
+
+### 在生产环境使用 bypassPermissions 而不限制 allowedTools
+
+这是 SDK 使用中最危险的反模式。许多开发者在快速原型阶段使用 `bypassPermissions` 来跳过交互确认，然后直接将代码复制到生产环境。当 `bypassPermissions` 和宽松的 `allowedTools`（甚至不限制 `allowedTools`）组合使用时，Agent 拥有对文件系统和 Shell 的完全控制权。恶意构造的 prompt 可能通过 Prompt 注入触发 `rm -rf` 或 `curl | bash` 等高危操作。
+
+正确的做法是在 CI/CD 环境中使用 `bypassPermissions` 时，严格限制 `allowedTools` 为只读工具集合（`Read`、`Glob`、`Grep`），或者在需要修改文件的场景中使用 `acceptEdits` 模式配合 Hook 验证。如果 Agent 必须执行写入操作，至少用 `PreToolUse` Hook 拦截对敏感路径的写入。
+
+### 每次 query() 都重新创建 AuthStorage 和 ModelRegistry
+
+`AuthStorage` 和 `ModelRegistry` 是重量级对象，涉及 Provider 连接池初始化和认证验证。在循环或高频调用场景中，每次 `query()` 都重新创建这些对象会导致不必要的延迟累积。一个简单的数据分析脚本如果在循环中处理 100 个文件，每次重新初始化可能浪费 50 秒以上的连接建立时间。
+
+正确做法是在应用生命周期内复用 `AuthStorage` 和 `ModelRegistry` 实例。只在 Session 级别创建新的 `sessionManager`。这样可以将单次查询的启动开销从秒级降低到毫秒级。
+
+### 忽略 maxTurns 和 maxBudgetUsd 防护
+
+不设置 `maxTurns` 和 `maxBudgetUsd` 是另一个常见错误。Agent 在面对模糊或复杂的 prompt 时可能进入循环推理，反复调用工具但无法收敛到解决方案。没有轮次限制的 Agent 可能在一次查询中消耗数百美元的 API 费用，特别是在使用 Opus 模型时。
+
+生产环境必须同时设置 `maxTurns`（建议 30-100，视任务复杂度而定）和 `maxBudgetUsd`（硬性成本上限）。两者形成双重防护：`maxTurns` 防止无限循环，`maxBudgetUsd` 防止 Token 消耗失控。监控 `result` 消息的 `subtype` 可以识别 Agent 是正常完成还是触发了防护机制。
+
+---
+
+## 常见失败与陷阱
+
+### 子进程 OOM 导致退出码 137
+
+SDK 每次 `query()` 调用都会 spawn 一个 Claude Code 子进程。当子进程消耗的内存超过系统限制时，Linux 的 OOM Killer 会发送 SIGKILL 信号，子进程以退出码 137 终止。这在处理大型代码库时特别常见——Agent 读取大量文件后上下文膨胀，内存占用飙升。
+
+处理退出码 137 的错误时不要简单重试，因为重试只会再次 OOM。应该减小任务范围（拆分为更小的子任务）、减少 `allowedTools` 的数量、或增加系统的内存限制。在 Docker 环境中，通过 `--memory` 参数为容器设置合理的内存上限，并在 `dmesg` 中监控 OOM 事件。
+
+### API Key 过期或配额耗尽导致静默失败
+
+SDK 通过环境变量 `ANTHROPIC_API_KEY` 获取认证凭据。如果 Key 过期或 API 配额耗尽，子进程会在第一次 API 调用时失败。但 SDK 的错误处理可能将这类错误包装为通用的 `ProcessError`，不包含明确的"认证失败"信息，导致调试困难。
+
+在 `query()` 调用前验证 API Key 的有效性（例如发一个简单的 API 请求）。在生产环境中监控 API 使用量，在配额接近上限时发送告警。对于关键任务，配置 `fallbackModel` 在主模型不可用时自动切换到备选模型。
+
+### Session 持久化的文件系统依赖
+
+SDK 的 `sessionId` 参数依赖本地文件系统存储 Session 数据。在多容器或 Serverless 环境中，不同实例的文件系统不共享，`sessionId` 无法跨实例恢复上下文。即使在同一容器中，容器重启后 Session 文件也可能丢失。
+
+对于需要跨实例共享 Session 的场景，实现自定义的 Session 存储后端（数据库或 Redis）。将 Session 数据序列化后存储在外部系统中，在新实例启动时反序列化恢复。不要依赖本地文件系统作为 Session 持久化的唯一机制。

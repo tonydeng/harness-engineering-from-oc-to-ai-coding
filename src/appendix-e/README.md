@@ -66,7 +66,7 @@ MiMo Code 的核心价值在于，它将 OpenCode 的所有能力（多供应商
 | **长任务能力** | 200+ 步骤胜率 65%+ | 基础长任务支持 | 基础长任务支持 |
 | **适用人群** | 长周期自动化任务、需要持久记忆的项目 | 多模型团队、复杂编排 | Claude 生态用户 |
 
-> 详细对比见 [comparison.md 八维度对比](./mimocode/comparison.md)。附录 B/C 分别提供 OpenCode 和 Claude Code 的完整参考。
+> 详细对比见 [MiMo Code vs OpenCode 对比分析](./mimocode/comparison.md)。附录 B/C 分别提供 OpenCode 和 Claude Code 的完整参考。
 
 ## 内容概要
 

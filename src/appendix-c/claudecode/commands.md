@@ -376,3 +376,65 @@ claude /code-review --fix
 ### 与前/后文章的衔接
 - ← [Claude Code 内置能力](./capabilities.md) — 命令、工具集、配置方式的完整参考
 - → [Claude Code 扩展机制](./extensions.md) — Skills、Subagent、Hook、MCP 等扩展体系
+
+---
+
+## 常见反模式
+
+### 过度依赖 /compact 而不优化 prompt 结构
+
+许多用户在上下文窗口接近上限时才想到用 `/compact` 压缩，但压缩本身是有代价的——它会丢弃早期对话的细节。如果你的整个工作流依赖一个超长的对话（比如"一次会话完成整个功能开发"），压缩后 Agent 可能丢失之前讨论的设计决策和代码约定，导致后续操作与前期方向矛盾。
+
+更好的做法是从一开始就控制上下文的使用节奏。将大任务拆分为多个短会话，每个会话聚焦一个子任务，用 `/commit` 和 `/resume` 在会话间传递状态。在必须使用长会话时，将关键约束写入 CLAUDE.md 而非依赖对话历史。
+
+### 在非交互场景使用默认权限模式
+
+在 CI/CD 脚本或自动化管道中使用 `claude -p` 时，如果忘记指定 `--permission-mode`，Claude Code 会使用默认模式，这意味着每次需要文件写入或命令执行时都会等待用户确认。在无人值守的 CI 环境中，这会导致流水线永远挂起。
+
+非交互场景必须显式设置权限模式。CI/CD 脚本中推荐使用 `--permission-mode auto` 或 `--permission-mode dontAsk`，配合 `--allowedTools` 精确控制 Agent 可使用的工具范围。这样既保证了自动化流程不被阻塞，又维持了最小权限原则。
+
+### 混淆 /code-review 和 /review 的使用场景
+
+`/code-review` 用于审查本地分支的 diff，检测正确性 Bug；而 `/review` 用于审查 Pull Request。许多用户在需要审查 PR 时误用了 `/code-review`，结果只看到了本地未提交的变更，遗漏了 PR 的完整内容。反过来，在本地开发阶段使用 `/review` 也会因为没有 PR 而失败。
+
+正确用法是：开发阶段用 `/code-review` 检查当前分支的变更质量；提交 PR 后用 `/review` 审查完整的 PR diff。如果你想要云端多 Agent 深度审查，使用 `/ultrareview`，它会启动沙箱环境进行更全面的分析。
+
+## 适用场景与限制
+
+### Print 模式的输出不可靠用于程序解析
+
+`claude -p "query"` 的文本输出是为人类阅读设计的，Claude 可能在回答前后添加解释文字、格式化符号或多余信息。如果你的脚本需要解析 Claude 的输出（比如提取 JSON 结果或特定字段），纯文本输出格式经常导致解析失败。
+
+对于需要结构化输出的场景，使用 `--output-format json` 或 `--output-format stream-json` 标志获取机器可读的格式。JSON 模式下每个响应都有确定的结构，不会包含多余的解释文字。如果需要流式处理，`stream-json` 模式逐条输出 JSON 事件，适合实时监控。
+
+### 大型项目的命令发现可能超时
+
+在包含数千个文件的大型项目中，`/help` 或 Skills 自动发现可能因为扫描过多文件而变慢。Claude Code 需要遍历 `.claude/skills/`、`.claude/commands/`、`.claude/agents/` 等目录来注册可用命令，文件数量过多会增加会话启动延迟。
+
+解决方法是在大型 Monorepo 中使用目录级 CLAUDE.md 和按需加载的 Skills，避免将所有配置放在项目根目录。也可以使用 `--bare` 标志跳过所有 hooks/skills/plugins/MCP 加载，只保留核心功能，适合快速执行一次性命令。
+
+### RPC 模式的 JSONL 协议限制
+
+RPC 模式通过 stdin/stdout 的 JSONL 协议通信，这意味着你不能在 JSON 载荷中使用换行符（必须转义为 `\n`）。对于需要传输大段文本（如代码审查结果）的场景，单行 JSON 的长度可能超出某些终端或管道的缓冲区限制。
+
+处理大输出时，考虑将结果分块传输，或者使用文件作为中间存储——Agent 写入文件，外部进程读取文件。对于实时流式场景，使用 `--output-format stream-json` 比 RPC 模式的延迟更低，因为 stream-json 直接输出到 stdout 而不需要 JSONL 帧封装。
+
+## 常见失败与陷阱
+
+### /commit 生成的提交信息不符合团队规范
+
+`/commit` 命令让 Claude 根据变更内容自动生成提交信息，但 Claude 的默认风格可能与你团队的 Conventional Commits 或其他规范不一致。它可能生成过于冗长的描述，或者使用不正确的 type（比如用 `fix` 代替 `refactor`）。
+
+在 CLAUDE.md 中明确指定提交信息规范，例如"所有提交信息必须遵循 Conventional Commits 格式：type(scope): description"。你也可以创建一个自定义的 `/commit-conventional` 命令，在 `.claude/commands/commit-conventional.md` 中定义符合团队规范的提交模板。
+
+### /fork 后台子 Agent 的结果可能丢失
+
+使用 `/fork` 创建的后台子 Agent 会在主会话中异步运行，结果通过通知返回。但如果你在通知到达前关闭了终端会话，或者子 Agent 执行时间过长，结果可能无法被主会话接收。特别是在网络不稳定的环境中，后台 Agent 的状态同步可能不可靠。
+
+对于关键任务，建议使用 `/background` 而非 `/fork`，前者提供更可靠的任务管理和状态追踪。对于需要保证结果不丢失的场景，让 Agent 将结果写入文件而非依赖会话间的消息传递。
+
+### 权限提示频繁打断工作流
+
+默认权限模式（`default`）在每次工具调用前都会提示用户确认，这在交互式编码中会严重打断工作流。特别是在 Agent 需要执行多步操作（读取文件 → 分析 → 修改 → 测试）时，每一步都要确认会消耗大量时间。
+
+使用 `/fewer-permission-prompts` 命令扫描日志并自动添加白名单，减少重复的权限提示。对于常用的构建和测试命令，手动添加到 `.claude/settings.json` 的 `permissions.allow` 列表中。在团队层面，将权限配置提交到 Git，确保所有成员共享一致的权限策略。

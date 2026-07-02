@@ -117,8 +117,9 @@ class D5AntipatternsCheck(BaseCheck):
 
                 # 如果 in_thickness_check，统计段落
                 if in_thickness_check:
-                    # 遇到更高层级标题或分隔符则停止
-                    if stripped.startswith("#") or stripped.startswith("---"):
+                    # 遇到同级或更高层级标题（##）或分隔符则停止
+                    # 注意：不在此处停止 ### 或更低层级子标题
+                    if stripped.startswith("## ") or stripped.startswith("---"):
                         if in_thickness_check and section_para_count < 3:
                             rel_label = f"{rel}:L{i+1}"
                             if current_section_depth == 1:

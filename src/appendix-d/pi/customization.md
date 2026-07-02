@@ -656,3 +656,65 @@ description: 天气助手
 ### 与前/后文章的衔接
 - ← [Pi Agent 概述与核心概念](./overview.md) — 提供 Pi 的设计哲学和核心架构
 - → [Pi **Agent（智能体）** SDK 与程序化集成](./sdk.md) — 学习 Pi 的程序化集成和 SDK 使用
+
+---
+
+## 常见反模式
+
+### 用 Extension 做本应由 Skill 完成的事
+
+Extension 是强大的 TypeScript 编程工具，但许多开发者用它来实现简单的指令集（比如"审查代码时关注安全问题"）。这种场景完全可以用 Skill 实现——一个 SKILL.md 文件就能定义角色和规则，不需要编写任何 TypeScript 代码。用 Extension 做 Skill 的事不仅增加了维护成本，还因为 Extension 的加载和初始化开销拖慢了会话启动速度。
+
+区分标准是：如果你需要的是"系统指令注入"（告诉 Agent 怎么做），用 Skill；如果你需要的是"新能力"（让 Agent 能做之前做不到的事），用 Extension。Skill 是声明式的，Extension 是编程式的。声明式能解决的问题不要升级到编程式。
+
+### Skill 的 description 写得过于笼统
+
+Pi 的 Skill 通过 `description` 字段让 LLM 判断何时激活该 Skill。如果描述写成"一个有用的 Skill"或"处理各种任务"，LLM 几乎会在所有场景下激活它，导致系统提示词膨胀、响应延迟增加，且 Skill 的专业指令被稀释在大量无关上下文中。
+
+每个 Skill 的 description 应该明确描述触发条件。例如"当用户需要审查代码安全性时使用"优于"代码审查 Skill"。好的描述让 LLM 能精确判断何时需要、何时不需要，避免不必要的激活。
+
+### Pi Package 打包时包含不必要的依赖
+
+通过 `pi packages install` 安装的 Extension 使用 `npm install --omit=dev` 安装依赖，确保只包含生产依赖。但许多开发者在打包 Pi Package 时没有清理 `node_modules` 中的开发依赖（TypeScript、测试框架、linter），导致安装包体积膨胀数倍。
+
+使用 `pi-build` CLI 工具打包前，确保 `package.json` 的 `dependencies` 只包含运行时必需的包，`devDependencies` 包含开发工具。打包后用 `npm pack --dry-run` 检查包内容，确认不包含源码测试文件和开发配置。
+
+## 适用场景与限制
+
+### Skills 不支持运行时动态内容注入
+
+Skills 通过 SKILL.md 的 YAML frontmatter 和正文提供静态指令。虽然 Pi 支持 `` !`command` `` 语法在 Skill 加载时执行 Shell 命令并注入输出，但这种注入是一次性的——Skill 加载后内容就固定了，不会随着上下文变化而更新。
+
+如果需要动态内容注入（比如在每次工具调用前注入最新的 Git 状态），应该用 Extension 的事件监听器实现。Extension 可以在 `before_agent_start`、`tool_call` 等事件中动态构造和注入内容，灵活性远高于 Skill。
+
+### Prompt Templates 的命名空间是全局的
+
+Pi 的 Prompt Templates 通过文件名作为命令名（如 `/cl`、`/pr`）。如果两个 Pi Package 定义了同名的 Prompt Template，后加载的会覆盖先加载的，且没有冲突提示。这在安装多个第三方 Package 时可能导致意外行为。
+
+安装新 Package 后，检查它提供的 Prompt Templates 是否与你的自定义模板冲突。对于团队共享的模板，使用明确的命名约定（如项目前缀 `myproject-cl`）避免冲突。Pi 的 Prompt Templates 没有版本控制机制，Package 升级时模板可能被静默替换。
+
+### Theme 系统只支持颜色定制
+
+Pi 的 Theme 系统通过 JSON 配置 TUI 的颜色方案，支持 dark、light 和自定义主题。但它不支持布局定制（如修改面板大小、调整侧边栏位置）或字体配置。对于需要深度 UI 定制的场景，Theme 系统的能力有限。
+
+如果需要修改 TUI 的布局或组件结构，需要通过 Extension 的 UI 定制能力（Widget、Overlay、编辑器替换）实现。Theme 只是 Pi UI 定制的最浅层，更深层次的定制需要编写 TypeScript Extension。
+
+## 常见失败与陷阱
+
+### Extension 热重载后旧状态残留
+
+使用 `/reload` 热重载 Extension 时，Pi 会重新加载所有 Extension 文件。但如果旧 Extension 在模块级维护了状态（全局变量、缓存、连接池），这些状态不会被清理。新 Extension 代码可能意外引用了旧状态，产生"明明改了代码但行为没变"的困惑。
+
+热重载后立即验证 Extension 的行为是否符合预期。在开发阶段，使用 `pi --log-level debug` 查看 Extension 的加载和初始化日志。避免在 Extension 中使用模块级可变状态，改为在事件处理器中使用局部变量或通过 `ctx` 传递状态。
+
+### Skills 的 SKILL.md.ignore 文件不生效
+
+Pi 支持 `.gitignore` 风格的忽略文件（`SKILL.md.ignore`）来排除特定 Skill。但如果忽略文件的路径或格式不正确（比如放在了错误的目录层级，或者使用了不支持的 glob 模式），Skill 不会被排除，仍然会被加载和注入到系统提示中。
+
+创建忽略文件后，用 `/skills` 命令检查 Skill 列表，确认被忽略的 Skill 不在列表中。忽略文件必须放在 Skills 目录的根层级（如 `~/.pi/agent/skills/SKILL.md.ignore`），且每行一个 glob 模式。
+
+### 多个 Extension 注册同名事件处理器的执行顺序不确定
+
+当多个 Extension 监听同一个事件（如 `tool_call`）时，Pi 不保证执行顺序。如果你的两个 Extension 都监听 `tool_call` 事件并返回 `{ block: true }`，哪个先执行取决于 Extension 的加载顺序，而加载顺序可能因文件系统遍历顺序而不同。
+
+不要依赖多个 Extension 对同一事件的处理顺序。每个 Extension 的事件处理器应该独立工作，不假设自己是第一个或最后一个执行的。如果需要有序处理，考虑将多个逻辑合并到一个 Extension 中，用内部的优先级队列控制执行顺序。
