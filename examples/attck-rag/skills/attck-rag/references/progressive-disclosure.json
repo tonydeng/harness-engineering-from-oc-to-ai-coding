@@ -1,0 +1,87 @@
+{
+  "_comment": "渐进披露 (Progressive Disclosure) 配置 — ATT&CK 知识库专用",
+
+  "principle": "不是把所有信息一次性塞给 LLM，而是按查询类型和用户意图控制上下文披露的深度和范围",
+
+  "query_types": {
+    "exact": {
+      "description": "精确 TID / TA ID 查询",
+      "trigger": "正则匹配 T\\d{4}(\\.\\d{3})?|TA\\d{4}",
+      "examples": ["T1059 是什么", "TA0001 包含哪些技术", "什么是 T1059.001"],
+      "disclosure_depth": "level_1",
+      "scope": "只返回目标文档本身",
+      "metadata_filter": "t_id='{tid}' OR sub_id='{tid}'",
+      "prompt_template": [
+        "请根据以下文档回答问题。只使用给定的上下文，不要添加外部知识。",
+        "",
+        "## 上下文",
+        "{chunk_text}",
+        "",
+        "## 问题",
+        "{query}"
+      ],
+      "recommended_model": "qwen2.5:3b-instruct-q4_K_M",
+      "note": "TID 精确命中走 FTS5 全文索引，3B 模型足够"
+    },
+    "factual": {
+      "description": "事实性查询 — 需要特定事实或定义",
+      "trigger": "含关键词: 是什么, 定义, 含义, 编号, 包括哪些",
+      "examples": ["侦察阶段有哪些技术", "命令执行包括哪些子技术", "持久化的定义"],
+      "disclosure_depth": "level_2",
+      "scope": "同战术下所有技术的标题 + 摘要",
+      "metadata_filter": "ta_id='{ta_id}' OR (level='tactic' AND ta_name LIKE '%{keyword}%')",
+      "prompt_template": [
+        "请根据以下 ATT&CK 知识库内容回答问题。",
+        "",
+        "## 战术概览",
+        "{tactic_summary}",
+        "",
+        "## 技术列表",
+        "{technique_list}",
+        "",
+        "## 问题",
+        "{query}"
+      ],
+      "recommended_model": "qwen2.5:3b-instruct-q4_K_M",
+      "note": "需要聚合同战术下多个技术信息，3B 处理结构化列表没问题"
+    },
+    "analysis": {
+      "description": "分析/推理类查询 — 需要跨战术关联、比较或判断",
+      "trigger": "默认分类（非 exact 也非 factual 时）",
+      "examples": [
+        "DLL 侧加载怎么检测",
+        "哪些技术能绕过 Windows Defender",
+        "对比进程注入的 4 种子技术"
+      ],
+      "disclosure_depth": "level_3",
+      "scope": "全库 Top-5 结果 + 战术聚合摘要 + 关联检测建议",
+      "metadata_filter": "无限制",
+      "prompt_template": [
+        "你是一个 MITRE ATT&CK 安全分析师。根据以下检索结果回答问题。",
+        "",
+        "## 检索结果",
+        "{results:5}",
+        "",
+        "## 战术聚合",
+        "{tactic_aggregation}",
+        "",
+        "## 问题",
+        "{query}",
+        "",
+        "## 要求",
+        "- 引用具体的 TID 编号",
+        "- 标注信息来源的战术归属",
+        "- 不确定的信息请说明"
+      ],
+      "recommended_model": "qwen2.5:7b-instruct-q4_K_M",
+      "note": "需要跨技术关联推理，7B 模型的深度推理能力有实质差异"
+    }
+  },
+
+  "implementation_notes": [
+    "QueryClassifier 返回 queryType + depth + filter 三元组",
+    "ProgressiveDisclosureFilter 在 RRF 融合后过滤结果集",
+    "PromptBuilder 根据 depth 选择不同的 prompt 模板",
+    "模型路由通过 CostRouter.select(queryType) 实现"
+  ]
+}

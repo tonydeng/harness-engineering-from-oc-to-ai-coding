@@ -1,0 +1,77 @@
+{
+  "_comment": "ATT&CK 知识库元数据字段设计 — mdBook 层级感知的分块策略",
+
+  "source": "attck-knowledge (mdBook)",
+  "total_docs": 274,
+  "estimated_chunks": 3500,
+
+  "directory_structure": {
+    "example": "src/00-reconnaissance/README.md",
+    "pattern": "src/{NN}-{TacticName}/README.md",
+    "nav_aware": true,
+    "parsing_strategy": "按目录层级而非 ## 标题切割，保留 mdBook SUMMARY.md 的层次关系"
+  },
+
+  "metadata_fields": {
+    "level": {
+      "type": "enum",
+      "values": ["tactic", "technique", "sub_technique"],
+      "description": "知识层级，用于 Progressive Disclosure 控制披露深度"
+    },
+    "ta_id": {
+      "type": "string",
+      "pattern": "TA\\d{4}",
+      "example": "TA0001",
+      "description": "MITRE ATT&CK 战术 ID，从 README.md 正文中正则提取"
+    },
+    "ta_name": {
+      "type": "string",
+      "example": "侦察",
+      "description": "战术中文名，从目录名 {NN}-{Name} 提取"
+    },
+    "t_id": {
+      "type": "string",
+      "pattern": "T\\d{4}",
+      "example": "T1059",
+      "description": "技术 ID，从文件名 T{NNNN}-{Name}.md 提取"
+    },
+    "t_name": {
+      "type": "string",
+      "example": "命令和脚本解释器",
+      "description": "技术中文名，从文件名或正文 H1 提取"
+    },
+    "sub_id": {
+      "type": "string",
+      "pattern": "T\\d{4}\\.\\d{3}",
+      "example": "T1059.001",
+      "description": "子技术 ID，从子技术目录下的文件名提取"
+    },
+    "difficulty": {
+      "type": "string",
+      "example": "⭐⭐⭐",
+      "description": "技术难度，从正文 front matter 或固定段落提取"
+    },
+    "section": {
+      "type": "enum",
+      "values": ["攻击流程", "检测建议", "Sigma 规则", "红蓝视角"],
+      "description": "文档内部小节类型，精确查询时可定位到具体章节"
+    }
+  },
+
+  "retrieval_optimization": {
+    "exact_match": {
+      "fields": ["ta_id", "t_id", "sub_id"],
+      "method": "pgvector FTS5 精确匹配",
+      "weight": "BM25 0.7, Vector 0.3"
+    },
+    "semantic_match": {
+      "fields": ["chunk_text", "t_name", "ta_name"],
+      "method": "embedding cosine similarity",
+      "weight": "Vector 0.6, BM25 0.4"
+    },
+    "metadata_filter": {
+      "example": "WHERE metadata->>'ta_id' = 'TA0001'",
+      "use_case": "按战术维度限制检索范围"
+    }
+  }
+}
